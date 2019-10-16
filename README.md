@@ -1,0 +1,3 @@
+# uruguay
+
+Odoo Uruguay Localization
