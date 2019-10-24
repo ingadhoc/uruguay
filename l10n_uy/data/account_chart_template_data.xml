@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+
+    <record id="l10n_uy_chart_template" model="account.chart.template">
+        <field name="name">Plan Contable Genérico Uruguay</field>
+        <field name="transfer_account_code_prefix">6.0.0.100</field>
+        <field name="currency_id" ref="base.UYU"/>
+        <field name="bank_account_code_prefix">1.1.1.</field>
+        <field name="cash_account_code_prefix">1.1.2.</field>
+        <field name="localization">uruguay</field>
+        <field name="code_digits">9</field>
+    </record>
+
+</odoo>

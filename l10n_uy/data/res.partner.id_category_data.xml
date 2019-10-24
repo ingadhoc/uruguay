@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="it_nie" model="res.partner.id_category">
+        <field name="code">NIE</field>
+        <field name="name">Número de Identidad de Extranjero</field>
+        <field name="sequence">10</field>
+        <field name="l10n_uy_dgi_code">1</field>
+    </record>
+
+    <!-- <record id="it_ruc" model="res.partner.id_category">
+        <field name="code">RUC</field>
+        <field name="name">Registro Único de Contribuyente</field>
+        <field name="sequence">20</field>
+    </record> -->
+
+    <record id="it_rut" model="res.partner.id_category">
+        <field name="code">RUT</field>
+        <field name="name">Registro Único Tributario</field>
+        <field name="sequence">30</field>
+        <field name="l10n_uy_dgi_code">2</field>
+    </record>
+
+    <record id="it_ci" model="res.partner.id_category">
+        <field name="code">CI</field>
+        <field name="name">Cedula de Identidad</field>
+        <field name="sequence">40</field>
+        <field name="l10n_uy_dgi_code">3</field>
+    </record>
+
+    <record id="it_other" model="res.partner.id_category">
+        <field name="code">OTR</field>
+        <field name="name">Otros</field>
+        <field name="sequence">50</field>
+        <field name="l10n_uy_dgi_code">4</field>
+    </record>
+
+    <record id="it_pass" model="res.partner.id_category">
+        <field name="code">PAS</field>
+        <field name="name">Pasaporte (todos los paises)</field>
+        <field name="sequence">60</field>
+        <field name="l10n_uy_dgi_code">5</field>
+    </record>
+
+    <record id="it_dni" model="res.partner.id_category">
+        <field name="code">DNI</field>
+        <field name="name">Documento Nacional de identidad de Argentinam Brasilm Chile o Paraguay</field>
+        <field name="sequence">70</field>
+        <field name="l10n_uy_dgi_code">6</field>
+    </record>
+
+    <record id="it_nife" model="res.partner.id_category">
+        <field name="code">NIFE</field>
+        <field name="name">Número de identificación fiscal extranjero</field>
+        <field name="sequence">80</field>
+        <field name="l10n_uy_dgi_code">7</field>
+    </record>
+
+</odoo>

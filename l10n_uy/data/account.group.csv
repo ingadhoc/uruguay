@@ -1,0 +1,35 @@
+id,code_prefix,name,parent_id/id
+l10n_uy.account_group_activo,1,Activo,
+l10n_uy.account_group_disponiblidades,1.1,DISPONIBILIDADES,l10n_uy.account_group_activo
+l10n_uy.account_group_caja,1.1.1,Caja,l10n_uy.account_group_disponiblidades
+l10n_uy.account_group_bancos,1.1.2,Bancos,l10n_uy.account_group_disponiblidades
+l10n_uy.account_group_exigible,1.2,EXIGIBLE,l10n_uy.account_group_activo
+l10n_uy.account_group_deudores_varios,1.2.1,DEUDORES VARIOS,l10n_uy.account_group_exigible
+l10n_uy.account_group_creditos_diversos,1.2.2,CRÉDITOS DIVERSOS,l10n_uy.account_group_exigible
+l10n_uy.account_group_realizable,1.3,REALIZABLE,l10n_uy.account_group_activo
+l10n_uy.account_group_bienes_de_cambio,1.3.1,BIENES DE CAMBIO,l10n_uy.account_group_realizable
+l10n_uy.account_group_bienes_en_proceso,1.3.2,BIENES EN PROCESO,l10n_uy.account_group_realizable
+l10n_uy.account_group_fijo,1.4,FIJO,l10n_uy.account_group_activo
+l10n_uy.account_group_bienes_de_uso,1.4.1,BIENES DE USO,l10n_uy.account_group_fijo
+l10n_uy.account_group_amorttiz_acumuladas,1.4.5,AMORTIZ.ACUMULADAS,l10n_uy.account_group_fijo
+l10n_uy.account_group_pasivo,2,Pasivo,
+l10n_uy.account_group_pasivo_exigible,2.1,EXIGIBLE,l10n_uy.account_group_pasivo
+l10n_uy.account_group_deudas_comerciales,2.1.1,DEUDAS COMERCIALES,l10n_uy.account_group_pasivo_exigible
+l10n_uy.account_group_deudas_financieras,2.1.2,DEUDAS FINANCIERAS,l10n_uy.account_group_pasivo_exigible
+l10n_uy.account_group_deudas_diversas,2.1.3,DEUDAS DIVERSAS,l10n_uy.account_group_pasivo_exigible
+l10n_uy.account_group_pasivos_ctas_de_orden,2.9,CTAS.DE ORDEN,l10n_uy.account_group_pasivo
+l10n_uy.account_group_patrimonio,3,PATRIMONIO,
+l10n_uy.account_group_capital,3.1.1,CAPITAL,l10n_uy.account_group_patrimonio
+l10n_uy.account_group_ajuste_patrimonio,3.1.2,AJUSTES AL PATRIMONIO,l10n_uy.account_group_patrimonio
+l10n_uy.account_group_reservas,3.1.3,RESERVAS,l10n_uy.account_group_patrimonio
+l10n_uy.account_group_patrimonio_resultados,3.2.1,RESULTADOS,l10n_uy.account_group_patrimonio
+l10n_uy.account_group_perdidas,4,PERDIDAS,
+l10n_uy.account_group_gastos_administrativos,4.1,GASTOS DE ADMINISTRAC.,l10n_uy.account_group_perdidas
+l10n_uy.account_group_gastos_de_produccion,4.2,GASTOS DE PRODUCCION,l10n_uy.account_group_perdidas
+l10n_uy.account_group_costo_de_lo_vendido,4.3,COSTO DE LO VENDIDO,l10n_uy.account_group_perdidas
+l10n_uy.account_group_gastos_financieros,4.4,GASTOS FINANCIEROS,l10n_uy.account_group_perdidas
+l10n_uy.account_group_perdidas_resultados,4.5,RESULTADOS,l10n_uy.account_group_perdidas
+l10n_uy.account_group_ganancias,5,GANANCIAS,
+l10n_uy.account_group_ventas_brutas,5.1.1,VENTAS BRUTAS,l10n_uy.account_group_ganancias
+l10n_uy.account_group_ingresos_financieros,5.2.1,INGRESOS FINANCIEROS,l10n_uy.account_group_ganancias
+l10n_uy.account_group_otros_ingresos,5.3.1,OTROS INGRESOS,l10n_uy.account_group_ganancias
