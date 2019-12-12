@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record model='res.partner' id='partner_company'>
+        <field name='name'>1 Bid Uruguay</field>
+        <field name='main_id_category_id' ref='it_rut'/>
+        <field name='main_id_number'>218435730016</field>
+        <field name="customer" eval="True"/>
+        <field name="supplier" eval="True"/>
+    </record>
+
+    <record model='res.partner' id='partner_cfu'>
+        <field name='name'>2 Consumidor Final Uruguayo</field>
+    </record>
+
+</odoo>

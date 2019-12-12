@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- TODO found proper refund accounts -->
+
+    <record id="tax_template_vat_exento_ventas" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_uy_chart_template"/>
+        <field name="description">IVA Exento</field>
+        <field name="name">IVA Ventas Exento</field>
+        <field name="sequence">2</field>
+        <field name="amount_type">fixed</field>
+        <field eval="0.0" name="amount"/>
+        <field name="tax_group_id" ref="l10n_uy.tax_group_vat_exempt"/>
+        <field name="type_tax_use">sale</field>
+    </record>
+
+    <record id="tax_template_vat_exento_compras" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_uy_chart_template"/>
+        <field name="description">IVA Exento</field>
+        <field name="name">IVA Compras Exento</field>
+        <field name="sequence">2</field>
+        <field name="amount_type">fixed</field>
+        <field eval="0.0" name="amount"/>
+        <field name="tax_group_id" ref="l10n_uy.tax_group_vat_exempt"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+
+    <record id="tax_template_vat_10_ventas" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_uy_chart_template"/>
+        <field name="description">IVA 10%</field>
+        <field name="name">IVA Ventas 10%</field>
+        <field name="sequence">2</field>
+        <field eval="10" name="amount"/>
+        <field name="amount_type">percent</field>
+        <field name="account_id" ref="base_iva_s_ventas_10"/>
+        <field name="refund_account_id" ref="base_iva_s_ventas_10"/>
+        <field name="tax_group_id" ref="l10n_uy.tax_group_vat_10"/>
+        <field name="type_tax_use">sale</field>
+    </record>
+
+    <record id="tax_template_vat_10_compras" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_uy_chart_template"/>
+        <field name="description">IVA 10%</field>
+        <field name="name">IVA Compras 10%</field>
+        <field name="sequence">2</field>
+        <field eval="10" name="amount"/>
+        <field name="amount_type">percent</field>
+        <field name="account_id" ref="base_iva_s_compras_10"/>
+        <field name="refund_account_id" ref="base_iva_s_compras_10"/>
+        <field name="tax_group_id" ref="l10n_uy.tax_group_vat_10"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+
+    <record id="tax_template_vat_22_ventas" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_uy_chart_template"/>
+        <field name="name">IVA Ventas 22%</field>
+        <field name="description">IVA 22%</field>
+        <field name="sequence">1</field>
+        <field eval="22" name="amount"/>
+        <field name="amount_type">percent</field>
+        <field name="account_id" ref="base_iva_s_ventas_22"/>
+        <field name="refund_account_id" ref="base_iva_s_ventas_22"/>
+        <field name="tax_group_id" ref="l10n_uy.tax_group_vat_22"/>
+        <field name="type_tax_use">sale</field>
+    </record>
+
+    <record id="tax_template_vat_22_compras" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_uy_chart_template"/>
+        <field name="name">IVA Compras 22%</field>
+        <field name="description">IVA 22%</field>
+        <field name="sequence">1</field>
+        <field eval="22" name="amount"/>
+        <field name="amount_type">percent</field>
+        <field name="account_id" ref="base_iva_s_compras_22"/>
+        <field name="refund_account_id" ref="base_iva_s_compras_22"/>
+        <field name="tax_group_id" ref="l10n_uy.tax_group_vat_22"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+
+</odoo>

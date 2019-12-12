@@ -1,0 +1,37 @@
+id,code,name,internal_type,doc_code_prefix,localization,taxes_included
+dc_e_ticket,101,E-TICKET,invoice,IN ,uruguay,False
+dc_cn_e_ticket,102,NOTA DE CREDITO DE E-TICKET,credit_note,CN ,uruguay,False
+dc_dn_e_ticket,103,NOTA DE DEBITO DE E-TICKET,debit_note,DB ,uruguay,False
+dc_e_inv,111,E-FACTURA,invoice,IN ,uruguay,False
+dc_cn_e_inv,112,NOTA DE CREDITO DE E-FACTURA,credit_note,CN ,uruguay,False
+dc_dn_e_inv,113,NOTA DE DEBITO DE E-FACTURA,debit_note,DB ,uruguay,False
+dc_e_inv_exp,121,E-FACTURA EXPORTACION,invoice,IN ,uruguay,False
+dc_cn_e_inv_exp,122,NOTA DE CREDITO DE E-FACTURA EXPORTACION,credit_note,CN ,uruguay,False
+dc_dn_e_inv_exp,123,NOTA DE DEBITO DE E-FACTURA EXPORTACION,debit_note,DB ,uruguay,False
+dc_e_remito_expo,124,E-REMITO EXPORTACION,,REM,uruguay,False
+dc_e_ticket_venta_por_cuenta_ajena,131,e-Ticket Venta por Cuenta Ajena,invoice,IN ,uruguay,False
+dc_nota_de_credito_e_ticket_venta_por_cuenta_ajena,132,Nota de credito e-Ticket Venta por Cuenta Ajena,credit_note,CN ,uruguay,False
+dc_nota_de_debito_e_ticket_venta_por_cuenta_ajena,133,Nota de debito e-Ticket Venta por Cuenta Ajena,debit_note,DB ,uruguay,False
+dc_e_factura_venta_por_cuenta_ajena,141,e-Factura Venta por Cuenta Ajena,invoice,IN ,uruguay,False
+dc_nota_de_credito_e_factura_venta_por_cuenta_ajena,142,Nota de credito e-Factura Venta por Cuenta Ajena,credit_note,CN ,uruguay,False
+dc_nota_de_debito_e_factura_venta_por_cuenta_ajena,143,Nota de debito e-Factura Venta por Cuenta Ajena,debit_note,DB ,uruguay,False
+dc_e_remito,181,E-REMITO,,REM,uruguay,False
+dc_e_resguardo,182,E-RESGUARDO,,RES,uruguay,False
+dc_e_ticket_cont,201,E-TICKET CONTINGENCIA,invoice,IN ,uruguay,False
+dc_cn_e_ticket_cont,202,NOTA DE CREDITO DE E-TICKET CONTINGENCIA,credit_note,CN ,uruguay,False
+dc_dn_e_ticket_cont,203,NOTA DE DEBITO DE E-TICKET CONTINGENCIA,debit_note,DB ,uruguay,False
+dc_e_factura_contingencia,211,e-Factura Contingencia,invoice,IN ,uruguay,False
+dc_nota_de_crédito_de_e_factura_contingencia,212,Nota de Crédito de e-Factura Contingencia,credit_note,CN ,uruguay,False
+dc_nota_de_débito_de_e_factura_contingencia,213,Nota de Débito de e-Factura Contingencia,debit_note,DB ,uruguay,False
+dc_e_factura_exportación_contingencia,221,e-Factura Exportación Contingencia,invoice,IN ,uruguay,False
+dc_nota_de_crédito_de_e_factura_exportación_contingencia,222,Nota de Crédito de e-Factura Exportación Contingencia,credit_note,CN ,uruguay,False
+dc_nota_de_débito_de_e_factura_exportación_contingencia,223,Nota de Débito de e-Factura Exportación Contingencia,debit_note,DB ,uruguay,False
+dc_e_remito_de_exportación_contingencia,224,e-Remito de Exportación Contingencia,,REM,uruguay,False
+dc_e_ticket_venta_por_cuenta_ajena_contingencia,231,e-Ticket Venta por Cuenta Ajena Contingencia,invoice,RES,uruguay,False
+dc_nota_de_crédito_de_e_ticket_venta_por_cuenta_ajena_contingencia,232,Nota de Crédito de e-Ticket Venta por Cuenta Ajena Contingencia,credit_note,CN ,uruguay,False
+dc_nota_de_débito_de_e_ticket_venta_por_cuenta_ajena_contingencia,233,Nota de Débito de e-Ticket Venta por Cuenta Ajena Contingencia,debit_note,DB ,uruguay,False
+dc_e_factura_venta_por_cuenta_ajena_contingencia,241,e-Factura Venta por Cuenta Ajena Contingencia,invoice,IN ,uruguay,False
+dc_nota_de_crédito_de_e_factura_venta_por_cuenta_ajena_contingencia,242,Nota de Crédito de e-Factura Venta por Cuenta Ajena Contingencia,credit_note,CN ,uruguay,False
+dc_nota_de_débito_de_e_factura_venta_por_cuenta_ajena_contingencia,243,Nota de Débito de e-Factura Venta por Cuenta Ajena Contingencia,debit_note,DB ,uruguay,False
+dc_ e_remito_contingencia,281, e-Remito Contingencia,,REM,uruguay,False
+dc_ e_resguardo_contingencia,282, e-Resguardo Contingencia,,RES,uruguay,False
