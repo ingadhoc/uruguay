@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="invoice_form" model="ir.ui.view">
+        <field name="name">account.invoice.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+
+            <field name="currency_id" position="after">
+                <field name="l10n_uy_currency_rate"/>
+            </field>
+
+            <field name="incoterm_id" position="after">
+                <field name="l10n_uy_cfe_sale_mod"/>
+                <field name="l10n_uy_cfe_transport_route"/>
+            </field>
+
+            <notebook position="inside">
+                <page name="uy_dgi" string="DGI">
+                    <group>
+                        <group string="UCFE">
+                            <field name="l10n_uy_ucfe_state"/>
+                            <field name="l10n_uy_ucfe_msg"/>
+                            <field name="l10n_uy_ucfe_notif"/>
+                            <field name="l10n_uy_cfe_partner_status"/>
+                            <field name="l10n_uy_cfe_uuid"/>
+                            <field name="l10n_uy_cfe_file"/>
+                            <button name="action_l10n_uy_get_pdf" type="object" string="Print Legal PDF" class="oe_inline oe_link" attrs="{'invisible': [('document_number', '=', False)]}"/>
+                        </group>
+                        <group string="DGI">
+                            <field name="document_number"/>
+                            <label for="l10n_uy_cfe_dgi_state"/>
+                            <div>
+                                <field name="l10n_uy_cfe_dgi_state"/>
+                                <button name="action_l10n_uy_get_dgi_state" type="object" string="Consult DGI State" class="oe_inline oe_link" attrs="{'invisible': ['|', ('l10n_uy_cfe_dgi_state', '=', '-2'), ('document_number', '=', False)]}"/>
+                            </div>
+                            <field name="l10n_uy_dgi_acceptation_status"/>
+                            <field name="l10n_uy_dgi_barcode"/>
+                        </group>
+                        <group colspan="2">
+                            <button name="action_l10n_uy_validate_cfe" type="object" string="Validate CFE XML" class="oe_inline oe_link" attrs="{'invisible': [('l10n_uy_cfe_xml', '=', False)]}"/>
+                            <field name="l10n_uy_cfe_xml" colspan="2" nolabel="1" widget="ace"/>
+                            <!-- <label for="l10n_uy_dgi_xml_request"/>
+                            <field name="l10n_uy_dgi_xml_request" colspan="2" nolabel="1" widget="ace"/>
+                            <label for="l10n_uy_dgi_xml_response"/>
+                            <field name="l10n_uy_dgi_xml_response" colspan="2" nolabel="1" widget="ace"/> -->
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>
