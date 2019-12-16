@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <!-- TODO found proper refund accounts -->
-
     <record id="tax_template_vat_exento_ventas" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_uy_chart_template"/>
         <field name="description">IVA Exento</field>
