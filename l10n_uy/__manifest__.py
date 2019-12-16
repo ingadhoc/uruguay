@@ -7,7 +7,7 @@
     'author': 'ADHOC SA',
     'category': 'Localization',
     'license': 'AGPL-3',
-    'version': '11.0.1.0.0',
+    'version': '11.0.1.1.0',
     'depends': [
         'account_document',
         'account_check',
@@ -37,10 +37,3 @@
     'installable': True,
     'pre_init_hook': 'pre_init_hook',  # remove when moving to 13.0
 }
-
-# TODO not electronic invoice types
-# dc_inv,,FACTURA (A CREDITO),invoice,IN ,uruguay,False
-# dc_boleta_venta_contado,,BOLETA (A CONTADO),invoice,IN ,uruguay,False
-# dc_cn_inv,,NOTA DE CREDITO,credit_note,CN ,uruguay,False
-# dc_dn_inv,,NOTA DE DEBITO (DEVOLUCION DE CONTADO),debit_note,DB ,uruguay,False
-# dc_recibo_cobranza,,RECIBO COBRANZA,invoice,IN ,uruguay,False

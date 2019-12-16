@@ -17,7 +17,7 @@ class AccountInvoice(models.Model):
                 self.env.ref('l10n_uy.it_pass') + self.env.ref('l10n_uy.it_other'),
                 company=self.env.ref('l10n_uy.it_rut'))
 
-            # TODO we can imporve this if we separete ticket and invoice tye documents, but we have a problem, need to
+            # TODO we can improve this if we separete ticket and invoice tye documents, but we have a problem, need to
             # add a new seperation for dn and cn
             if commercial_partner.main_id_category_id in partner_type['final_consumer']:
                 # e-tickets docs
@@ -44,7 +44,7 @@ class AccountInvoice(models.Model):
         res = self._get_available_journal_document_types(self.journal_id, self.type, self.partner_id)
         self.journal_document_type_id = res['journal_document_type']
 
-        # TODO maybe we sould move this to account_document directly, and add a localization field to the document type
+        # TODO maybe we should move this to account_document directly, and add a localization field to the document type
         if self.partner_id:
             uy_partner_ids = self.env.ref("l10n_uy.it_nie") + self.env.ref("l10n_uy.it_rut") + \
                 self.env.ref("l10n_uy.it_ci") + self.env.ref("l10n_uy.it_other") + self.env.ref("l10n_uy.it_pass") + \

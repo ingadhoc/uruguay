@@ -44,11 +44,11 @@ msgstr "Código DGI"
 #: model:ir.actions.act_window,name:l10n_uy.action_document_type_uruguay
 #: model:ir.ui.menu,name:l10n_uy.menu_document_type_uruguay
 msgid "Document Types"
-msgstr "Tipps de Comprobantes"
+msgstr "Tipos de Comprobantes"
 
 #. module: l10n_uy
 #: model:res.partner.id_category,name:l10n_uy.it_dni
-msgid "Documento Nacional de identidad de Argentinam Brasilm Chile o Paraguay"
+msgid "Documento Nacional de identidad de Argentina, Brasil, Chile o Paraguay"
 msgstr ""
 
 #. module: l10n_uy
