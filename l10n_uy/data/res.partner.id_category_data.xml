@@ -44,7 +44,7 @@
 
     <record id="it_dni" model="res.partner.id_category">
         <field name="code">DNI</field>
-        <field name="name">Documento Nacional de identidad de Argentinam Brasilm Chile o Paraguay</field>
+        <field name="name">Documento Nacional de identidad de Argentina, Brasil, Chile o Paraguay</field>
         <field name="sequence">70</field>
         <field name="l10n_uy_dgi_code">6</field>
     </record>
