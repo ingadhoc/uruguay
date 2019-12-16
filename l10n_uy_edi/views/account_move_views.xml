@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="view_move_form" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+
+            <field name="journal_id" position="after">
+                <field name="l10n_uy_journal_type" invisible="1"/>
+                <field name="l10n_uy_cfe_state" attrs="{'invisible': [('l10n_uy_journal_type', 'not in', ['electronic', 'contingency'])]}"/>
+                <button name="action_l10n_uy_get_dgi_state" type="object" string="(UY) Consult DGI State" class="oe_inline oe_link" attrs="{'invisible': [('l10n_uy_cfe_state', '!=', 'received')]}" icon="fa-refresh"/>
+                <button name="action_l10n_uy_get_pdf" type="object" string="(UY) Print Legal PDF" class="oe_inline oe_link" attrs="{
+                    'invisible': [('l10n_uy_cfe_state', 'not in', ['received', 'ui_indexada'])]}" icon="fa-print"/>
+            </field>
+
+
+            <!-- TODO need to find a way to hide computed_currency_rate field, this one is added in l10n_ar_ux, so.. maybe we should add it in another base
+            ux module. to be re used. Meanwhile we do not show l10n_uy_currency_rate -->
+            <!--  <div name="currency" position="inside">
+                <field name="l10n_uy_currency_rate" attrs="{'invisible': ['|', '|', ('l10n_uy_currency_rate', '=', False), ('l10n_uy_currency_rate', '=', 0.0), ('l10n_uy_currency_rate', '=', 1.0)]}"/>
+            </div> -->
+
+            <field name="invoice_incoterm_id" position="after">
+                <field name="l10n_uy_cfe_sale_mod"/>
+                <field name="l10n_uy_cfe_transport_route"/>
+            </field>
+
+            <notebook position="inside">
+                <page name="uy_dgi" string="DGI" attrs="{'invisible': [('l10n_uy_journal_type', 'not in', ['electronic', 'contingency'])]}">
+                    <group>
+                        <group colspan="2">
+                            <notebook>
+                                <page string="Detail">
+                                    <group string="UCFE">
+                                        <field name="l10n_uy_ucfe_state"/>
+                                        <field name="l10n_uy_ucfe_msg"/>
+                                        <field name="l10n_uy_ucfe_notif"/>
+                                        <field name="l10n_uy_cfe_partner_status"/>
+                                        <field name="l10n_uy_cfe_uuid"/>
+                                        <field name="l10n_uy_cfe_file"/>
+                                    </group>
+                                    <group string="DGI">
+                                        <field name="l10n_latam_document_number"/>
+                                        <label for="l10n_uy_cfe_dgi_state"/>
+                                        <div>
+                                            <field name="l10n_uy_cfe_dgi_state"/>
+                                        </div>
+                                        <field name="l10n_uy_dgi_acceptation_status"/>
+                                        <field name="l10n_uy_dgi_barcode"/>
+                                    </group>
+                                </page>
+                                <page string="XML CFE">
+                                    <button name="action_l10n_uy_validate_cfe" type="object" string="Validate CFE XML" class="oe_inline oe_link"/>
+                                    <field name="l10n_uy_cfe_xml" nolabel="1" widget="ace"/>
+                                </page>
+                                <page string="XML Request">
+                                    <field name="l10n_uy_dgi_xml_request" nolabel="1" widget="ace"/>
+                                </page>
+                                <page string="XML Response">
+                                    <field name="l10n_uy_dgi_xml_response" nolabel="1" widget="ace"/>
+                                </page>
+                            </notebook>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+    <record id="view_invoice_tree" model="ir.ui.view">
+        <field name="name">account.move.view.tree</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="l10n_uy_cfe_state" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">account.move.view.search</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <search>
+                <field name="l10n_uy_cfe_state"/>
+            </search>
+            <group>
+                <filter string="CFE State" name="cfe_state" context="{'group_by':'l10n_uy_cfe_state'}"/>
+            </group>
+
+        </field>
+    </record>
+
+</odoo>
