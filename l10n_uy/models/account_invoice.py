@@ -1,9 +1,10 @@
-from odoo import api, models, _
+from odoo import api, models, fields, _
 
 
 class AccountInvoice(models.Model):
 
     _inherit = 'account.invoice'
+    l10n_uy_invoice_type = fields.Selection([('cash', 'Cash'), ('credit', 'Credit')], 'Invoice Type', default='cash')
 
     @api.model
     def _get_available_journal_document_types(self, journal, invoice_type, partner):
