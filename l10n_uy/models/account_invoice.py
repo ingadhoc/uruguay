@@ -1,9 +1,10 @@
-from odoo import api, models, _
+from odoo import api, models, fields, _
 
 
 class AccountInvoice(models.Model):
 
     _inherit = 'account.invoice'
+    l10n_uy_invoice_type = fields.Selection([('cash', 'Cash'), ('credit', 'Credit')], 'Invoice Type', default='cash')
 
     @api.model
     def _get_available_journal_document_types(self, journal, invoice_type, partner):
@@ -21,11 +22,11 @@ class AccountInvoice(models.Model):
             # add a new seperation for dn and cn
             if commercial_partner.main_id_category_id in partner_type['final_consumer']:
                 # e-tickets docs
-                available_types = [101, 102, 103, 131, 132, 133, 201, 202, 203, 231, 232, 233]
+                available_types = [000, 101, 102, 103, 131, 132, 133, 201, 202, 203, 231, 232, 233]
             elif commercial_partner.main_id_category_id in partner_type['company']:
                 # e-invoices docs
                 available_types = [
-                    111, 112, 113, 121, 122, 123, 141, 142, 143, 211, 212, 213, 221, 222, 223, 241, 242, 243]
+                    000, 111, 112, 113, 121, 122, 123, 141, 142, 143, 211, 212, 213, 221, 222, 223, 241, 242, 243]
             else:
                 res['available_journal_document_types'] = False
                 res['journal_document_type'] = False

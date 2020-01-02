@@ -1,4 +1,9 @@
 id,code,name,internal_type,doc_code_prefix,localization,taxes_included
+dc_inv,000,FACTURA,invoice,FA ,uruguay,False
+dc_boleta_venta_contado,000,BOLETA,invoice,BO ,uruguay,False
+dc_cn_inv,000,NOTA DE CREDITO,credit_note,NC ,uruguay,False
+dc_dn_inv,000,NOTA DE DEBITO,debit_note,ND ,uruguay,False
+dc_recibo_cobranza,000,RECIBO COBRANZA,invoice,RC ,uruguay,False
 dc_e_ticket,101,E-TICKET,invoice,IN ,uruguay,False
 dc_cn_e_ticket,102,NOTA DE CREDITO DE E-TICKET,credit_note,CN ,uruguay,False
 dc_dn_e_ticket,103,NOTA DE DEBITO DE E-TICKET,debit_note,DB ,uruguay,False

@@ -7,7 +7,7 @@
     'author': 'ADHOC SA',
     'category': 'Localization',
     'license': 'AGPL-3',
-    'version': '11.0.1.1.0',
+    'version': '11.0.1.2.0',
     'depends': [
         'account_document',
         'account_check',
@@ -27,6 +27,7 @@
         'data/account_fiscal_position_template_data.xml',
         'views/account_document_type_views.xml',
         'views/res_partner_id_category_view.xml',
+        'views/account_invoice_views.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [

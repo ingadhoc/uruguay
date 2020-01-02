@@ -27,9 +27,9 @@ class AccountJournal(models.Model):
         # should be removed in future when we add the other documents.
         if self.type == 'sale':
             document_types = document_types.filtered(lambda x: int(x.code) in [
-                101, 102, 103, 111, 112, 113, 121, 122, 123, 201, 202, 203, 211, 212, 213, 221, 222, 223])
+                000, 101, 102, 103, 111, 112, 113, 121, 122, 123, 201, 202, 203, 211, 212, 213, 221, 222, 223])
         elif self.type == 'purchase':
-            document_types = document_types.filtered(lambda x: int(x.code) in [111, 112, 113, 211, 212, 213])
+            document_types = document_types.filtered(lambda x: int(x.code) in [000, 111, 112, 113, 211, 212, 213])
 
         self._create_document_sequences(document_types)
 
