@@ -7,7 +7,7 @@
     'author': 'ADHOC SA',
     'category': 'Localization',
     'license': 'AGPL-3',
-    'version': '11.0.1.1.0',
+    'version': '11.0.1.2.0',
     'depends': [
         'account_document',
         'account_check',
