@@ -26,7 +26,7 @@ class AccountInvoice(models.Model):
             elif commercial_partner.main_id_category_id in partner_type['company']:
                 # e-invoices docs
                 available_types = [
-                    000, 111, 112, 113, 121, 122, 123, 141, 142, 143, 211, 212, 213, 221, 222, 223, 241, 242, 243]
+                    000, 111, 112, 113, 121, 122, 123, 141, 142, 143, 201, 211, 212, 213, 221, 222, 223, 241, 242, 243]
             else:
                 res['available_journal_document_types'] = False
                 res['journal_document_type'] = False
