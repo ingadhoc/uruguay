@@ -1,4 +1,5 @@
 from odoo import api, models, fields, _
+from odoo.exceptions import ValidationError
 
 
 class AccountInvoice(models.Model):
@@ -55,3 +56,26 @@ class AccountInvoice(models.Model):
                     'title': _('Not Been able to filter the document types'),
                     'message': _('Please set the partner ID type in order to proper filter the document types'),
                 }}
+
+    @api.multi
+    def action_move_create(self):
+        """ Be able to check uruguayan invoices before create the moves """
+        self.check_uruguayan_invoices()
+        return super(AccountInvoice, self).action_move_create()
+
+    @api.multi
+    def check_uruguayan_invoices(self):
+        uruguayan_invoices = self.filtered(lambda x: (x.localization == 'uruguay' and x.use_documents))
+        if not uruguayan_invoices:
+            return True
+
+        uruguayan_vat_taxes = self.env.ref('l10n_uy.tax_group_vat_22') + self.env.ref('l10n_uy.tax_group_vat_10') \
+            + self.env.ref('l10n_uy.tax_group_vat_exempt')
+
+        # We check that there is one and only one vat tax per line
+        for inv_line in uruguayan_invoices.mapped('invoice_line_ids'):
+            vat_taxes = inv_line.invoice_line_tax_ids.filtered(lambda x: x.tax_group_id in uruguayan_vat_taxes)
+            if len(vat_taxes) != 1:
+                raise ValidationError(_(
+                    'Should be one and only one VAT tax per line. Verify lines with product "%s" (Id Invoice: %s)' % (
+                        inv_line.product_id.name, inv_line.invoice_id.id)))

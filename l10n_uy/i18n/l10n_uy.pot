@@ -18,12 +18,12 @@ msgstr ""
 #. module: l10n_uy
 #: model:ir.model.fields,field_description:l10n_uy.field_res_partner_id_category__afip_code
 msgid "AFIP Code"
-msgstr "Código AFsIP"
+msgstr ""
 
 #. module: l10n_uy
 #: selection:account.invoice,l10n_uy_invoice_type:0
 msgid "Cash"
-msgstr "Contado"
+msgstr ""
 
 #. module: l10n_uy
 #: model:res.partner.id_category,name:l10n_uy.it_ci
@@ -33,12 +33,12 @@ msgstr ""
 #. module: l10n_uy
 #: model:ir.model,name:l10n_uy.model_res_company
 msgid "Companies"
-msgstr "Compañías"
+msgstr ""
 
 #. module: l10n_uy
 #: selection:account.invoice,l10n_uy_invoice_type:0
 msgid "Credit"
-msgstr "Crédito"
+msgstr ""
 
 #. module: l10n_uy
 #: model:ir.ui.menu,name:l10n_uy.menu_dgi_config
@@ -48,13 +48,13 @@ msgstr ""
 #. module: l10n_uy
 #: model:ir.model.fields,field_description:l10n_uy.field_res_partner_id_category__l10n_uy_dgi_code
 msgid "DGI Code"
-msgstr "Código DGI"
+msgstr ""
 
 #. module: l10n_uy
 #: model:ir.actions.act_window,name:l10n_uy.action_document_type_uruguay
 #: model:ir.ui.menu,name:l10n_uy.menu_document_type_uruguay
 msgid "Document Types"
-msgstr "Tipos de Documentos"
+msgstr ""
 
 #. module: l10n_uy
 #: model:res.partner.id_category,name:l10n_uy.it_dni
@@ -64,33 +64,33 @@ msgstr ""
 #. module: l10n_uy
 #: selection:res.company,localization:0
 msgid "Generic"
-msgstr "Genérico"
+msgstr ""
 
 #. module: l10n_uy
 #: model:ir.model,name:l10n_uy.model_account_invoice
 msgid "Invoice"
-msgstr "Factura"
+msgstr ""
 
 #. module: l10n_uy
 #: model:ir.model.fields,field_description:l10n_uy.field_account_invoice__l10n_uy_invoice_type
 msgid "Invoice Type"
-msgstr "Tipo de factura"
+msgstr ""
 
 #. module: l10n_uy
 #: model:ir.model,name:l10n_uy.model_account_journal
 msgid "Journal"
-msgstr "Diario"
+msgstr ""
 
 #. module: l10n_uy
 #: model:ir.model.fields,field_description:l10n_uy.field_res_company__localization
 msgid "Localization"
-msgstr "Localización"
+msgstr ""
 
 #. module: l10n_uy
 #: code:addons/l10n_uy/models/account_invoice.py:56
 #, python-format
 msgid "Not Been able to filter the document types"
-msgstr "No es posible filtrar los tipos de documents"
+msgstr ""
 
 #. module: l10n_uy
 #: model:res.partner.id_category,name:l10n_uy.it_nie
@@ -110,7 +110,7 @@ msgstr ""
 #. module: l10n_uy
 #: model:ir.model,name:l10n_uy.model_res_partner_id_category
 msgid "Partner ID Category"
-msgstr "Categoría Empresa"
+msgstr ""
 
 #. module: l10n_uy
 #: model:res.partner.id_category,name:l10n_uy.it_pass
@@ -121,7 +121,7 @@ msgstr ""
 #: code:addons/l10n_uy/models/account_invoice.py:57
 #, python-format
 msgid "Please set the partner ID type in order to proper filter the document types"
-msgstr "Por favor seleccione el tipo de Identificación den el contacto para poder filtrar correctamente los tipos de Comprobantes"
+msgstr ""
 
 #. module: l10n_uy
 #: model:res.partner.id_category,name:l10n_uy.it_rut
@@ -132,7 +132,7 @@ msgstr ""
 #: code:addons/l10n_uy/models/account_invoice.py:80
 #, python-format
 msgid "Should be one and only one VAT tax per line. Verify lines with product \"%s\" (Id Invoice: %s)"
-msgstr "Debe haber un único y solo un impuesto de IVA por línea. Revise la línea con el producto \"%s\" (Id Factura: %s)"
+msgstr ""
 
 #. module: l10n_uy
 #: selection:res.company,localization:0
@@ -142,15 +142,15 @@ msgstr ""
 #. module: l10n_uy
 #: model:account.tax.group,name:l10n_uy.tax_group_vat_10
 msgid "VAT 10%"
-msgstr "IVA 10%"
+msgstr ""
 
 #. module: l10n_uy
 #: model:account.tax.group,name:l10n_uy.tax_group_vat_22
 msgid "VAT 22%"
-msgstr "IVA 22%"
+msgstr ""
 
 #. module: l10n_uy
 #: model:account.tax.group,name:l10n_uy.tax_group_vat_exempt
 msgid "VAT Exempt"
-msgstr "IVA Exento"
+msgstr ""
 
