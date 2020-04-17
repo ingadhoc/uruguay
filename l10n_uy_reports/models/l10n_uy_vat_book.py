@@ -27,6 +27,18 @@ class L10nARVatBook(models.AbstractModel):
             {'name': _('Total'), 'class': 'number'},
         ]
 
+    def print_pdf(self, options):
+        options.update({
+            'journal_type': self.env.context.get('journal_type')
+        })
+        return super(L10nARVatBook, self).print_pdf(options)
+
+    def print_xlsx(self, options):
+        options.update({
+            'journal_type': self.env.context.get('journal_type')
+        })
+        return super(L10nARVatBook, self).print_xlsx(options)
+
     @api.model
     def _get_report_name(self):
         journal_type = self.env.context.get('journal_type')
@@ -36,7 +48,7 @@ class L10nARVatBook(models.AbstractModel):
     @api.model
     def _get_lines(self, options, line_id=None):
         context = self.env.context
-        journal_type = context.get('journal_type', 'sale')
+        journal_type = context.get('journal_type') or options.get('journal_type', 'sale')
         company_ids = context.get('company_ids')
 
         lines = []
