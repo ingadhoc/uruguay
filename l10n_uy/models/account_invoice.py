@@ -16,8 +16,8 @@ class AccountInvoice(models.Model):
             commercial_partner = partner.commercial_partner_id
             partner_type = dict(
                 final_consumer=self.env.ref('l10n_uy.it_dni') + self.env.ref('l10n_uy.it_ci') +
-                self.env.ref('l10n_uy.it_pass') + self.env.ref('l10n_uy.it_other'),
-                company=self.env.ref('l10n_uy.it_rut'))
+                self.env.ref('l10n_uy.it_pass') + self.env.ref('l10n_uy.it_other') + self.env.ref('l10n_uy.it_nie'),
+                company=self.env.ref('l10n_uy.it_rut') + self.env.ref('l10n_uy.it_nife'))
 
             # TODO we can improve this if we separete ticket and invoice tye documents, but we have a problem, need to
             # add a new seperation for dn and cn
@@ -50,7 +50,7 @@ class AccountInvoice(models.Model):
         if self.partner_id:
             uy_partner_ids = self.env.ref("l10n_uy.it_nie") + self.env.ref("l10n_uy.it_rut") + \
                 self.env.ref("l10n_uy.it_ci") + self.env.ref("l10n_uy.it_other") + self.env.ref("l10n_uy.it_pass") + \
-                self.env.ref("l10n_uy.it_dni")
+                self.env.ref("l10n_uy.it_dni") + self.env.ref("l10n_uy.it_nife") + self.env.ref('l10n_uy.it_nie')
             if not self.partner_id.main_id_category_id or self.partner_id.main_id_category_id not in uy_partner_ids:
                 return {'warning': {
                     'title': _('Not Been able to filter the document types'),
