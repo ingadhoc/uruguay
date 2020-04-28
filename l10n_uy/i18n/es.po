@@ -28,7 +28,7 @@ msgstr "Contado"
 #. module: l10n_uy
 #: model:res.partner.id_category,name:l10n_uy.it_ci
 msgid "Cedula de Identidad"
-msgstr ""
+msgstr "Prueba"
 
 #. module: l10n_uy
 #: model:ir.model,name:l10n_uy.model_res_company
@@ -132,7 +132,7 @@ msgstr ""
 #: code:addons/l10n_uy/models/account_invoice.py:80
 #, python-format
 msgid "Should be one and only one VAT tax per line. Verify lines with product \"%s\" (Id Invoice: %s)"
-msgstr "Debe haber un único y solo un impuesto de IVA por línea. Revise la línea con el producto \"%s\" (Id Factura: %s)"
+msgstr "Debe haber un único y solo un impuesto de IVA por línea. Revise la línea con el producto \%s\ (Id Factura: %s)"
 
 #. module: l10n_uy
 #: selection:res.company,localization:0
