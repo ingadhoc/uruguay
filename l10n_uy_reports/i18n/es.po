@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-21 14:53+0000\n"
-"PO-Revision-Date: 2020-02-21 14:53+0000\n"
+"POT-Creation-Date: 2020-02-21 14:52+0000\n"
+"PO-Revision-Date: 2020-02-21 14:52+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -44,7 +44,7 @@ msgstr "Moneda"
 #. module: l10n_uy_reports
 #: selection:account.uy.vat.line,type:0
 msgid "Customer Credit Note"
-msgstr "Rectificativa de cliente"
+msgstr "Rectificativa de cliente2"
 
 #. module: l10n_uy_reports
 #: selection:account.uy.vat.line,type:0
@@ -57,7 +57,7 @@ msgstr "Factura de Cliente"
 #: model_terms:ir.ui.view,arch_db:l10n_uy_reports.view_account_uy_vat_line_search
 #, python-format
 msgid "Date"
-msgstr "Fecha"
+msgstr "Fecha2"
 
 #. module: l10n_uy_reports
 #: model:ir.model.fields,field_description:l10n_uy_reports.field_account_uy_vat_line__display_name
