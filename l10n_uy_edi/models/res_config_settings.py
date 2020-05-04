@@ -7,16 +7,17 @@ class ResConfigSettings(models.TransientModel):
 
     _inherit = 'res.config.settings'
 
-    l10n_ar_country_code = fields.Char(related='company_id.country_id.code', string='Country Code')
+    l10n_uy_country_code = fields.Char(related='company_id.country_id.code', string='Country Code')
 
-    l10n_uy_uruware_user = fields.Interger(related='company_id.l10n_uy_uruware_user', readonly=False)
+    # TODO This one should be interger but does not work because the interger is to long
+    l10n_uy_uruware_user = fields.Char(related='company_id.l10n_uy_uruware_user', readonly=False)
     l10n_uy_uruware_password = fields.Char(related='company_id.l10n_uy_uruware_password', readonly=False)
     l10n_uy_uruware_commerce_code = fields.Char(related='company_id.l10n_uy_uruware_commerce_code', readonly=False)
     l10n_uy_uruware_terminal_code = fields.Char(related='company_id.l10n_uy_uruware_terminal_code', readonly=False)
-    l10n_uy_uruware_inbox_url = fields.Interger(related='company_id.l10n_uy_uruware_inbox_url', readonly=False)
-    l10n_uy_uruware_query_url = fields.Interger(related='company_id.l10n_uy_uruware_query_url', readonly=False)
+    l10n_uy_uruware_inbox_url = fields.Char(related='company_id.l10n_uy_uruware_inbox_url', readonly=False)
+    l10n_uy_uruware_query_url = fields.Char(related='company_id.l10n_uy_uruware_query_url', readonly=False)
 
-    def l10n_ar_connection_test(self):
+    def l10n_uy_connection_test(self):
         """ Prueba de eco UCFE """
         self.ensure_one()
         client, _auth = self.company_id._get_client()
@@ -29,11 +30,14 @@ class ResConfigSettings(models.TransientModel):
                 'CodComercio': self.l10n_uy_uruware_commerce_code,
                 'CodTerminal': self.l10n_uy_uruware_terminal_code}
 
+        import pdb; pdb.set_trace()
+
         response = client.service.Invoke(data)
-        # TODO ensure that we do not have error and that we receive a 'TipoMensaje': '821', result
-        # Codigo de respuesta CodRta
-        # codigo de CodTerminal CodTerminal
-        raise UserError(_('Everything is ok %s') % response)
+
+        if response.ErrorCode == 0 and response.ErrorMessage is None and response.Resp.TipoMensaje == 821:
+            raise UserError(_('Everything is ok!'))
+
+        raise UserError(_('Connection problems, this is what we get %s') % response)
 
 # TODO interpretar CodRta
 # 00 Petición aceptada y procesada.

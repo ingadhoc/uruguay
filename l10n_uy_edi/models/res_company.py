@@ -29,29 +29,32 @@ class ResCompany(models.Model):
 
     _inherit = "res.company"
 
-    l10n_uy_uruware_user = fields.Interger('Uruware User', groups="base.group_system")
+    l10n_uy_uruware_user = fields.Char('Uruware User', groups="base.group_system")
     l10n_uy_uruware_password = fields.Char('Uruware Password', groups="base.group_system")
     l10n_uy_uruware_commerce_code = fields.Char('Uruware Commerce code', groups="base.group_system")
     l10n_uy_uruware_terminal_code = fields.Char('Uruware Terminal code', groups="base.group_system")
-    l10n_uy_uruware_inbox_url = fields.Interger('Uruware Inbox URL', groups="base.group_system")
-    l10n_uy_uruware_query_url = fields.Interger('Uruware Query URL', groups="base.group_system")
+    l10n_uy_uruware_inbox_url = fields.Char('Uruware Inbox URL', groups="base.group_system")
+    l10n_uy_uruware_query_url = fields.Char('Uruware Query URL', groups="base.group_system")
 
     def _is_connection_info_complete(self):
         """ Raise exception if not all the connection info is available """
-        if not all(self.l10n_uy_uruware_user, self.l10n_uy_uruware_password, self.l10n_uy_uruware_commerce_code,
-                   self.l10n_uy_uruware_terminal_code, self.l10n_uy_uruware_inbox_url, self.l10n_uy_uruware_query_url):
+        if not all([self.l10n_uy_uruware_user, self.l10n_uy_uruware_password, self.l10n_uy_uruware_commerce_code,
+                   self.l10n_uy_uruware_terminal_code, self.l10n_uy_uruware_inbox_url, self.l10n_uy_uruware_query_url]):
             raise UserError(_('Please complete the uruware data to test the connection'))
 
     def _get_client(self, return_transport=False):
         """ Get zeep client to connect to the webservice """
         self.ensure_one()
-        self.company_id._is_connection_info_complete()
+        self._is_connection_info_complete()
         auth = {'Username': self.l10n_uy_uruware_user, 'Password': self.l10n_uy_uruware_password}
+
+        wsdl = self.l10n_uy_uruware_inbox_url
+        if not wsdl.endswith('?wsdl'):
+            wsdl += '?wsdl'
 
         try:
             transport = UYTransport(operation_timeout=60, timeout=60)
-            client = Client(self.l10n_uy_uruware_inbox_url, transport=transport, wsse=UsernameToken(
-                self.l10n_uy_uruware_user, self.l10n_uy_uruware_password))
+            client = Client(wsdl, transport=transport, wsse=UsernameToken(self.l10n_uy_uruware_user, self.l10n_uy_uruware_password))
         except Exception as error:
             raise UserError(_('Connection is not working. This is what we get %s' % repr(error)))
 

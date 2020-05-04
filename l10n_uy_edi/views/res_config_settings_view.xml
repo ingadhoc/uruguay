@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="res_config_settings_view_form">
+        <field name="name">res.config.settings.view.form.inherit.l10n_ar_afip_ws</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='account']/div" position="after">
+                <field name="l10n_uy_country_code" invisible="1"/>
+                <h2 attrs="{'invisible':[('l10n_uy_country_code', '!=', 'UY')]}">Uruguay Localization</h2>
+                <div class="row mt16 o_settings_container" name="uruguay_localization">
+                    <div class="col-xs-12 col-md-6 o_setting_box" groups="base.group_no_one">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Uruware Web Services</span>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="l10n_uy_uruware_inbox_url" string="Inbox Url" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_uy_uruware_inbox_url"/>
+                                    <label for="l10n_uy_uruware_query_url"  string="Query Url" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_uy_uruware_query_url"/>
+                                    <label for="l10n_uy_uruware_user" string="Username" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_uy_uruware_user"/>
+                                    <label for="l10n_uy_uruware_password" string="Password" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_uy_uruware_password"/>
+                                    <label for="l10n_uy_uruware_commerce_code" string="Commerce Code" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_uy_uruware_commerce_code"/>
+                                    <label for="l10n_uy_uruware_terminal_code"  string="Terminal Code" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_uy_uruware_terminal_code"/>
+                                    <button name="l10n_uy_connection_test" type="object" class="oe_link oe_inline" string="⇒ Test Connections"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -12,6 +12,7 @@
         'l10n_uy',
     ],
     'data': [
+        'views/res_config_settings_view.xml',
     ],
     'demo': [
     ],
