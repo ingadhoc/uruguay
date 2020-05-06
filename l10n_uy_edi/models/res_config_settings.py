@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, fields, _
 from odoo.exceptions import UserError
+from datetime import datetime
 
 
 class ResConfigSettings(models.TransientModel):
@@ -21,35 +22,20 @@ class ResConfigSettings(models.TransientModel):
         """ Prueba de eco UCFE """
         self.ensure_one()
         client, _auth = self.company_id._get_client()
+        # TODO review if odoo already save utc, if true then use fields.Datetime.now() directly
+        now = datetime.utcnow()
+
         data = {'Req': {'TipoMensaje': '820', 'CodComercio': self.l10n_uy_uruware_commerce_code,
                         'CodTerminal': self.l10n_uy_uruware_terminal_code,
-                        'FechaReq': fields.Date.today().strftime('%Y%m%d'),  # '20200428'
-                        'HoraReq': '120000'},           # TODO find format and add it,
-                'RequestDate': '2020-04-28T12:00:00',   # TODO find format and applied,
-                'Tout': '30000',                        # TODO found what it means this
+                        'FechaReq': now.date().strftime('%Y%m%d'),        # '20200428'
+                        'HoraReq': now.strftime('%H%M%S')},               # '120000'
+                'RequestDate': now.replace(microsecond=0).isoformat(),  # '2020-04-28T12:00:00'
+                'Tout': '30000',
                 'CodComercio': self.l10n_uy_uruware_commerce_code,
                 'CodTerminal': self.l10n_uy_uruware_terminal_code}
 
-        import pdb; pdb.set_trace()
-
         response = client.service.Invoke(data)
-
         if response.ErrorCode == 0 and response.ErrorMessage is None and response.Resp.TipoMensaje == 821:
             raise UserError(_('Everything is ok!'))
 
         raise UserError(_('Connection problems, this is what we get %s') % response)
-
-# TODO interpretar CodRta
-# 00 Petición aceptada y procesada.
-# 01 Petición denegada.
-# 03 Comercio inválido.
-# 05 CFE rechazado por DGI.
-# 06 CFE observado por DGI.
-# 11 CFE aceptado por UCFE, en espera de respuesta de DGI.
-# 12 Requerimiento inválido.
-# 30 Error en formato.
-# 31 Error en formato de CFE.
-# 89 Terminal inválida.
-# 96 Error en sistema.
-# 99 Sesión no iniciada.
-# ?  Cualquier otro código no especificado debe entenderse como requerimiento denegado.
