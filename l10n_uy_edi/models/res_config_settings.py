@@ -19,20 +19,24 @@ class ResConfigSettings(models.TransientModel):
     l10n_uy_uruware_query_url = fields.Char(related='company_id.l10n_uy_uruware_query_url', readonly=False)
 
     def l10n_uy_connection_test(self):
-        """ Prueba de eco UCFE """
+        """ Make a ECO test to UCFE """
         self.ensure_one()
         client, _auth = self.company_id._get_client()
-        # TODO review if odoo already save utc, if true then use fields.Datetime.now() directly
         now = datetime.utcnow()
 
-        data = {'Req': {'TipoMensaje': '820', 'CodComercio': self.l10n_uy_uruware_commerce_code,
-                        'CodTerminal': self.l10n_uy_uruware_terminal_code,
-                        'FechaReq': now.date().strftime('%Y%m%d'),        # '20200428'
-                        'HoraReq': now.strftime('%H%M%S')},               # '120000'
-                'RequestDate': now.replace(microsecond=0).isoformat(),  # '2020-04-28T12:00:00'
-                'Tout': '30000',
+        # TODO review if odoo already save utc, if true then use fields.Datetime.now() directly
+        data = {
+            'Req': {
+                'TipoMensaje': '820',
                 'CodComercio': self.l10n_uy_uruware_commerce_code,
-                'CodTerminal': self.l10n_uy_uruware_terminal_code}
+                'CodTerminal': self.l10n_uy_uruware_terminal_code,
+                'FechaReq': now.date().strftime('%Y%m%d'),
+                'HoraReq': now.strftime('%H%M%S')},
+            'RequestDate': now.replace(microsecond=0).isoformat(),
+            'Tout': '30000',
+            'CodComercio': self.l10n_uy_uruware_commerce_code,
+            'CodTerminal': self.l10n_uy_uruware_terminal_code
+        }
 
         response = client.service.Invoke(data)
         if response.ErrorCode == 0 and response.ErrorMessage is None and response.Resp.TipoMensaje == 821:

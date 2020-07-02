@@ -36,11 +36,14 @@ class ResCompany(models.Model):
     l10n_uy_uruware_inbox_url = fields.Char('Uruware Inbox URL', groups="base.group_system")
     l10n_uy_uruware_query_url = fields.Char('Uruware Query URL', groups="base.group_system")
 
-    def _is_connection_info_complete(self):
+    def _is_connection_info_complete(self, raise_exception=True):
         """ Raise exception if not all the connection info is available """
         if not all([self.l10n_uy_uruware_user, self.l10n_uy_uruware_password, self.l10n_uy_uruware_commerce_code,
                    self.l10n_uy_uruware_terminal_code, self.l10n_uy_uruware_inbox_url, self.l10n_uy_uruware_query_url]):
-            raise UserError(_('Please complete the uruware data to test the connection'))
+            if raise_exception:
+                raise UserError(_('Please complete the uruware data to test the connection'))
+            return False
+        return True
 
     def _get_client(self, return_transport=False):
         """ Get zeep client to connect to the webservice """
