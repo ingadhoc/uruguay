@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id='ucfe_id_request_sequence' model='ir.sequence'>
+        <field name='name'>IdReq UCFE</field>
+        <field name='padding'>6</field>
+    </record>
+</odoo>
