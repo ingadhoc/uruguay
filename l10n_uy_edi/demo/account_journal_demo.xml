@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo noupdate="1">
+
+    <record id="cfe_journal" model="account.journal">
+        <field name='name'>Testing CFE UY</field>
+        <field name='company_id' ref="l10n_uy.company_uy"/>
+        <field name='type'>sale</field>
+        <field name='code'>CFE</field>
+        <field name='l10n_latam_use_documents' eval="True"/>
+        <field name='l10n_uy_type'>electronic</field>
+        <field name='sequence'>1</field>
+    </record>
+
+</odoo>
