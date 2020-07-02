@@ -14,7 +14,18 @@ class AccountMove(models.Model):
 
     _inherit = "account.move"
 
-    l10n_uy_dgi_state = fields.Selection([('not', 'Not Sent yet'), ('sent', 'Sent and waiting DGI validation'), ('post', 'Validated in DGI'), ('rejected', 'Rejected by DGI')], 'DGI State')
+    l10n_uy_dgi_state = fields.Selection([
+        ('not_sent', 'Not Sent yet'),
+        ('sent', 'Sent and waiting DGI validation'),
+        ('post', 'Validated in DGI'),
+        ('rejected', 'Rejected by DGI')
+        # ('ask_for_status', 'Ask For Status'),
+        # ('accepted', 'Accepted'),
+        # ('objected', 'Accepted With Objections'),
+        # ('cancelled', 'Cancelled'),
+        # ('manual', 'Manual'),
+    ], 'DGI State', copy=False)
+
     l10n_uy_document_number = fields.Char('Document Number', copy=False)
     l10n_uy_uuid = fields.Char('Uuid request to Uruware', copy=False)
     l10n_uy_dgi_xml_request = fields.Text('DGI XML Request', copy=False, readonly=True, groups="base.group_system")
