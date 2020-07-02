@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="res_config_settings_view_form">
+        <field name="name">res.config.settings.view.form.inherit.l10n_uy_dgi</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='account']/div" position="after">
+                <field name="l10n_uy_country_code" invisible="1"/>
+                <div attrs="{'invisible':[('l10n_uy_country_code', '!=', 'UY')]}">
+                    <h2>Uruguay Localization</h2>
+                    <div class="row mt16 o_settings_container" name="uruguay_localization">
+                        <div class="col-xs-12 col-md-6 o_setting_box" groups="base.group_no_one">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">UCFE Web Services</span>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                <div class="content-group">
+                                    <div class="row">
+                                        <label for="l10n_uy_ucfe_env" class="col-lg-3 o_light_label"/>
+                                        <field name="l10n_uy_ucfe_env"/>
+
+                                        <label for="l10n_uy_ucfe_inbox_url" string="Inbox Url" class="col-lg-3 o_light_label"/>
+                                        <field name="l10n_uy_ucfe_inbox_url"/>
+                                        <label for="l10n_uy_ucfe_query_url"  string="Query Url" class="col-lg-3 o_light_label"/>
+                                        <field name="l10n_uy_ucfe_query_url"/>
+                                        <label for="l10n_uy_ucfe_user" string="Username" class="col-lg-3 o_light_label"/>
+                                        <field name="l10n_uy_ucfe_user"/>
+                                        <label for="l10n_uy_ucfe_password" string="Password" class="col-lg-3 o_light_label"/>
+                                        <field name="l10n_uy_ucfe_password"/>
+                                        <label for="l10n_uy_ucfe_commerce_code" string="Commerce Code" class="col-lg-3 o_light_label"/>
+                                        <field name="l10n_uy_ucfe_commerce_code"/>
+                                        <label for="l10n_uy_ucfe_terminal_code"  string="Terminal Code" class="col-lg-3 o_light_label"/>
+                                        <field name="l10n_uy_ucfe_terminal_code"/>
+
+                                        <!-- Improve, move this info to company view to simplify this for the user -->
+                                        <label for="l10n_uy_ucfe_prod_env" string="Production Data" class="col-lg-3 o_light_label"/>
+                                        <field name="l10n_uy_ucfe_prod_env" widget="ace"/>
+                                        <label for="l10n_uy_ucfe_test_env" string="Testing Data" class="col-lg-3 o_light_label"/>
+                                        <field name="l10n_uy_ucfe_test_env" widget="ace"/>
+
+                                        <button name="l10n_uy_connection_test" type="object" class="oe_link oe_inline" string="⇒ Test Connection"/>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box" groups="base.group_no_one">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">DGI</span>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                <div class="content-group">
+                                    <div class="row">
+                                        <label for="l10n_uy_dgi_house_code" string="Código Sucursal" class="col-lg-3 o_light_label"/>
+                                        <field name="l10n_uy_dgi_house_code"/>
+                                        <field name="l10n_uy_dgi_crt_fname" invisible="1" force_save="1"/>
+                                        <label for="l10n_uy_dgi_crt" string="Digital Certificate" class="col-lg-3 o_light_label"/>
+                                        <field name="l10n_uy_dgi_crt" widget="binary" filename="l10n_uy_dgi_crt_fname" help="Here need to upload the file with the Digital Certificate to operate in DGI"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
