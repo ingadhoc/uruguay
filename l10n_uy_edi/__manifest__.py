@@ -15,6 +15,7 @@
         'views/res_config_settings_view.xml',
     ],
     'demo': [
+        'demo/res_company_demo.xml',
     ],
     'installable': True,
 }

@@ -18,6 +18,9 @@ class ResConfigSettings(models.TransientModel):
     l10n_uy_uruware_inbox_url = fields.Char(related='company_id.l10n_uy_uruware_inbox_url', readonly=False)
     l10n_uy_uruware_query_url = fields.Char(related='company_id.l10n_uy_uruware_query_url', readonly=False)
 
+    l10n_uy_dgi_crt = fields.Binary(related='company_id.l10n_uy_dgi_crt', readonly=False)
+    l10n_uy_dgi_crt_fname = fields.Char(related='company_id.l10n_uy_dgi_crt_fname')
+
     def l10n_uy_connection_test(self):
         """ Make a ECO test to UCFE """
         self.ensure_one()

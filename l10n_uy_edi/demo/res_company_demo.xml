@@ -1,0 +1,7 @@
+<odoo>
+
+    <record id="l10n_uy.company_uy" model="res.company">
+        <field name="l10n_uy_dgi_crt" type="base64" file="l10n_uy_edi/demo/CorreoUruguayoCA.crt"/>
+    </record>
+
+</odoo>
