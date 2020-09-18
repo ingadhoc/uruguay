@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="cfe_template">
+           <CFE xmlns="http://cfe.dgi.gub.uy" version="1.0">
+           <!-- TODO eTck debe ser modificado depende del tipo de documento   -->
+            <eTck>
+                <Encabezado>
+                    <IdDoc>
+                        <TipoCFE t-esc="int(move.journal_document_type_id.document_type_id.code)"/>
+                        <FchEmis t-esc="FchEmis"/>
+                        <MntBruto>1</MntBruto>
+                        <FmaPago>1</FmaPago>
+                    </IdDoc>
+                    <Emisor>
+                        <RUCEmisor t-esc="int(move.company_id.main_id_number)"/>
+                        <RznSoc t-esc="move.company_id.name"/>
+                        <NomComercial t-esc="move.company_id.short_name or move.company_id.name"/>
+                        <!-- <EmiSucursal>Central</EmiSucursal> es opcional para todos asi que mejor no lo pasamos -->
+                        <CdgDGISucur t-esc="move.company_id.l10n_uy_dgi_house_code"/>
+                        <!-- A48 -->
+                        <DomFiscal t-esc="(move.company_id.street + (' ' + move.company_id.street or ''))[:70]"/>
+                        <Ciudad t-esc="move.company_id.city"/>
+                        <Departamento t-esc="move.company_id.state_id.name"/>
+                    </Emisor>
+                    <Totales>
+                        <TpoMoneda t-esc="move.currency_id and move.currency_id.name or move.company_id.currency_id.name"/>
+                        <MntNetoIVATasaBasica>14.75</MntNetoIVATasaBasica>
+                        <IVATasaMin>10</IVATasaMin>
+                        <IVATasaBasica>22</IVATasaBasica>
+                        <MntIVATasaBasica>3.25</MntIVATasaBasica>
+                        <MntTotal t-esc="move.amount_total"/>
+                        <CantLinDet t-esc="len(move.invoice_line_ids)"/>
+                        <MntPagar t-esc="move.amount_total"/>
+                    </Totales>
+                </Encabezado>
+                <Detalle>
+                    <t t-foreach="item_detail" t-as="item_line">
+                        <Item>
+                            <NroLinDet t-esc="item_line['NroLinDet']"/>
+                            <IndFact t-esc="item_line['IndFact']"/>
+                            <NomItem t-esc="item_line['NomItem']"/>
+                            <Cantidad t-esc="item_line['Cantidad']"/>
+                            <UniMed t-esc="item_line['UniMed']"/>
+                            <PrecioUnitario t-esc="item_line['PrecioUnitario']"/>
+                            <MontoItem t-esc="item_line['MontoItem']"/>
+                        </Item>
+                    </t>
+                </Detalle>
+            </eTck>
+            </CFE>
+        </template>
+    </data>
+</odoo>

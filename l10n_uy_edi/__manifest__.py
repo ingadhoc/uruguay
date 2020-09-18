@@ -13,6 +13,9 @@
     ],
     'data': [
         'views/res_config_settings_view.xml',
+        'data/cfe_template.xml',
+        'data/CFEType.xsd',
+        # 'data/dgi_eTck.xml',
     ],
     'demo': [
         'demo/res_company_demo.xml',
