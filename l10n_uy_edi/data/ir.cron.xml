@@ -26,7 +26,7 @@
             <field name="active" eval="True"/>
         </record> -->
 
-        <record id="ir_cron_load_sii_xsd_files" model="ir.cron">
+        <record id="ir_cron_load_dgi_xsd_files" model="ir.cron">
             <field name="name">0. Cron Job - Load XSD Files (Uruguay DGI)</field>
             <field name="interval_number">1</field>
             <field name="interval_type">weeks</field>

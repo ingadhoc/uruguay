@@ -20,6 +20,7 @@ class ResConfigSettings(models.TransientModel):
 
     l10n_uy_dgi_crt = fields.Binary(related='company_id.l10n_uy_dgi_crt', readonly=False)
     l10n_uy_dgi_crt_fname = fields.Char(related='company_id.l10n_uy_dgi_crt_fname')
+    l10n_uy_dgi_house_code = fields.Integer(related='company_id.l10n_uy_dgi_house_code', readonly=False)
 
     def l10n_uy_connection_test(self):
         """ Make a ECO test to UCFE """

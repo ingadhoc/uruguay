@@ -13,8 +13,8 @@
     ],
     'data': [
         'views/res_config_settings_view.xml',
+        'views/account_move_views.xml',
         'data/cfe_template.xml',
-        'data/CFEType.xsd',
         # 'data/dgi_eTck.xml',
     ],
     'demo': [

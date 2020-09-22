@@ -17,6 +17,8 @@ def _hint_msg(response):
         res.append(get_error_message(_('Código de error de la solicitud'), response.ErrorCode, error_code))
     if response.ErrorMessage:
         res.append(get_error_message(_('Mensaje código de error'), response.ErrorCode))
+
+    # TODO si esto lo logramos agregar como campo borrar de aca ya que no seria necesario
     if response.Resp.CodRta:
         codrta_codes = {
             '00': 'Petición aceptada y procesada',

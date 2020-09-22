@@ -16,7 +16,7 @@
                             <span class="o_form_label">Uruware Web Services</span>
                             <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                             <div class="content-group">
-                                <div class="row mt16">
+                                <div class="row">
                                     <label for="l10n_uy_uruware_inbox_url" string="Inbox Url" class="col-lg-3 o_light_label"/>
                                     <field name="l10n_uy_uruware_inbox_url"/>
                                     <label for="l10n_uy_uruware_query_url"  string="Query Url" class="col-lg-3 o_light_label"/>
@@ -29,12 +29,23 @@
                                     <field name="l10n_uy_uruware_commerce_code"/>
                                     <label for="l10n_uy_uruware_terminal_code"  string="Terminal Code" class="col-lg-3 o_light_label"/>
                                     <field name="l10n_uy_uruware_terminal_code"/>
-
-                                    <field name="l10n_uy_dgi_crt_fname" invisible="1" force_save="1"/>
-                                    <label for="l10n_uy_dgi_crt" class="col-lg-3 o_light_label"/>
-                                    <field name="l10n_uy_dgi_crt" widget="binary" filename="l10n_uy_dgi_crt_fname" help="Here need to upload the file with the Digital Certificate to operate in DGI"/>
-
                                     <button name="l10n_uy_connection_test" type="object" class="oe_link oe_inline" string="⇒ Test Connections"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box" groups="base.group_no_one">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">DGI</span>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                            <div class="content-group">
+                                <div class="row">
+                                    <label for="l10n_uy_dgi_house_code" string="Código Sucursal" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_uy_dgi_house_code"/>
+                                    <field name="l10n_uy_dgi_crt_fname" invisible="1" force_save="1"/>
+                                    <label for="l10n_uy_dgi_crt" string="Digital Certificate" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_uy_dgi_crt" widget="binary" filename="l10n_uy_dgi_crt_fname" help="Here need to upload the file with the Digital Certificate to operate in DGI"/>
                                 </div>
                             </div>
                         </div>

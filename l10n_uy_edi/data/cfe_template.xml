@@ -24,14 +24,14 @@
                         <Departamento t-esc="move.company_id.state_id.name"/>
                     </Emisor>
                     <Totales>
-                        <TpoMoneda t-esc="move.currency_id and move.currency_id.name or move.company_id.currency_id.name"/>
-                        <MntNetoIVATasaBasica>14.75</MntNetoIVATasaBasica>
-                        <IVATasaMin>10</IVATasaMin>
-                        <IVATasaBasica>22</IVATasaBasica>
-                        <MntIVATasaBasica>3.25</MntIVATasaBasica>
-                        <MntTotal t-esc="move.amount_total"/>
-                        <CantLinDet t-esc="len(move.invoice_line_ids)"/>
-                        <MntPagar t-esc="move.amount_total"/>
+                        <TpoMoneda t-esc="totals_detail['TpoMoneda']"/>
+                        <MntNetoIVATasaBasica t-esc="totals_detail['MntNetoIVATasaBasica']"/>
+                        <IVATasaMin t-esc="totals_detail['IVATasaMin']"/>
+                        <IVATasaBasica t-esc="totals_detail['IVATasaBasica']"/>
+                        <MntIVATasaBasica t-esc="totals_detail['MntIVATasaBasica']"/>
+                        <MntTotal t-esc="totals_detail['MntTotal']"/>
+                        <CantLinDet t-esc="totals_detail['CantLinDet']"/>
+                        <MntPagar t-esc="totals_detail['MntPagar']"/>
                     </Totales>
                 </Encabezado>
                 <Detalle>

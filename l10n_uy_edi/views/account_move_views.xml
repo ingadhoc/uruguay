@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="invoice_form" model="ir.ui.view">
+        <field name="name">account.invoice.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page name="uy_dgi" string="DGI">
+                    <group>
+                        <field name="l10n_uy_cfe_dgi_state"/>
+                        <field name="l10n_uy_cfe_ufce_state"/>
+                        <field name="l10n_uy_dgi_acceptation_status"/>
+                        <field name="l10n_uy_cfe_partner_status"/>
+                        <field name="l10n_uy_document_number"/>
+                        <field name="l10n_uy_cfe_uuid"/>
+                        <field name="l10n_uy_dgi_xml_request" widget="ace"/>
+                        <field name="l10n_uy_dgi_xml_response" widget="ace"/>
+                        <field name="l10n_uy_dgi_barcode"/>
+                        <field name="l10n_uy_cfe_file"/>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

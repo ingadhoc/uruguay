@@ -38,7 +38,7 @@ class AccountInvoice(models.Model):
         ('ask_for_status', 'Ask For Status'),
         ('accepted', 'Accepted'),
         ('post', 'Validated in DGI'),
-        ('rejected', 'Rejected by DGI')
+        ('rejected', 'Rejected by DGI'),
         ('cancelled', 'Cancelled'),
         # TODO no segura aun si lo vamos a usar, veriticar tambien todos los estados arriba.
         # ('objected', 'Accepted With Objections'),
@@ -92,7 +92,6 @@ class AccountInvoice(models.Model):
     # TODO 13.0 change method to post / 14.0 _post or action_post
     def action_invoice_open(self):
         """ After validate the invoices in odoo we send it to dgi via uruware """
-        super().action_invoice_open()
 
         uy_invoices = self.filtered(
             lambda x: x.company_id.country_id == self.env.ref('base.uy') and
@@ -102,6 +101,8 @@ class AccountInvoice(models.Model):
             int(x.journal_document_type_id.document_type_id.code) in [
                 101, 102, 103, 111, 112, 113, 181, 182, 121, 122, 123, 124, 131, 132, 133, 141, 142, 143, 151, 152,
                 153])
+
+        no_validated = self.env['account.invoice']
 
         # Send invoices to DGI and get the return info
         for inv in uy_invoices:
@@ -115,8 +116,10 @@ class AccountInvoice(models.Model):
             # TODO maybe this can be moved to outside the for loop
             client, auth, transport = inv.company_id._get_client(return_transport=True)
             inv._l10n_uy_dgi_post(client, auth, transport)
+            if inv.l10n_uy_cfe_dgi_state != '00':
+                no_validated += inv
 
-        raise UserError('WIP')
+        super(AccountInvoice, self - no_validated).action_invoice_open()
 
     # Main methods
 
@@ -181,11 +184,10 @@ class AccountInvoice(models.Model):
     def _l10n_uy_dgi_post(self, client, auth, transport):
         """ Implementation via web service of service 310 – Firma y envío de CFE (individual) """
         for inv in self:
-
             now = datetime.utcnow()
-            CfeXmlOTexto = self._l10n_uy_create_cfe()  # TODO WIP make this properly work
+            CfeXmlOTexto = self._l10n_uy_create_cfe().get('cfe_str')  # TODO WIP make this properly work
             req_data = {
-                'Uuid': self._model + int(self.id),  # TODO we need to set this unique how?
+                'Uuid': 'account.invoice-' + str(self.id),  # TODO we need to set this unique how?
                 'TipoCfe': int(inv.journal_document_type_id.document_type_id.code),
                 'HoraReq': now.strftime('%H%M%S'),
                 'FechaReq': now.date().strftime('%Y%m%d'),
@@ -193,15 +195,18 @@ class AccountInvoice(models.Model):
             }
             data = inv._l10n_uy_get_data('310', req_data)
             response = client.service.Invoke(data)
-            print('--- response %s' % response)  # TODO delete this line
-            import pdb; pdb.set_trace()
-            self.message_post(boyd=ucfe_errors._hint_msg(response))
+            self.message_post(body=ucfe_errors._hint_msg(response))
+
+            self.l10n_uy_dgi_xml_request = CfeXmlOTexto
+            self.l10n_uy_dgi_xml_response = transport.xml_response
+            self.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido
+            self.l10n_uy_cfe_uuid = response.Resp.Uuid
+
+            if response.Resp.CodRta != '00':
+                return
 
             # If everything is ok we save the return information
-            self.l10n_uy_dgi_xml_request = CfeXmlOTexto
             self.l10n_uy_document_number = response.Resp.Serie + '%07d' % int(response.Resp.NumeroCfe)
-            self.l10n_uy_cfe_uuid = response.Resp.Uuid
-            self.l10n_uy_dgi_xml_response = response.Resp.XmlCfeFirmado
             self.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido
 
             # TODO este viene vacio, ver cuando realmente es seteado para asi setearlo en este momento
@@ -325,7 +330,7 @@ class AccountInvoice(models.Model):
         elif len(self.invoice_line_ids) > 200:
             raise UserError('Para este tipo de CFE solo puede reportar hasta 200 lineas')
 
-        for k, line in enumerate(self, 1):
+        for k, line in enumerate(self.invoice_line_ids, 1):
             res.append({
                 'NroLinDet': k,  # B1 No de línea o No Secuencial. a partir de 1
                 'IndFact': line._l10n_uy_get_cfe_indfact(),  # B4 Indicador de facturación
@@ -336,8 +341,8 @@ class AccountInvoice(models.Model):
                 # TODO Valor numerico 14 enteros y 3 decimales. debemos convertir el formato a representarlo
 
                 'UniMed': line.uom_id.name[:4] if line.uom_id else 'N/A',  # B10 Unidad de medida
-                'PrecioUnitario': line.price_unit,  # B11 Precio unitario
-                'MontoItem': line.price_subtotal,  # B24 Monto Item,
+                'PrecioUnitario': line.price_total,  # B11 Precio unitario
+                'MontoItem': line.price_total,  # B24 Monto Item,
             })
         return res
 
@@ -349,10 +354,10 @@ class AccountInvoice(models.Model):
         # TODO wip
         self.ensure_one()
 
-        now = datetime.utcnow(),  # TODO this need to be the same as the tipo de mensaje?
+        now = datetime.utcnow()  # TODO this need to be the same as the tipo de mensaje?
         cfe = self.env.ref('l10n_uy_edi.cfe_template').render({
             'move': self,
-            'FchEmis': now.date().strftime('%Y%m%d'),
+            'FchEmis': now.date().strftime('%Y-%m-%d'),
             'item_detail': self._l10n_uy_get_invoice_line_item_detail(),
             'totals_detail': self._l10n_uy_get_invoice_line_totals_detail(),
             # 'get_cl_current_strftime': self._get_cl_current_strftime,
@@ -371,20 +376,22 @@ class AccountInvoice(models.Model):
         self.l10n_uy_cfe_file = cfe_attachment.id
 
         # Check using the XSD
+        # TODO do the validation here, using the xsd or the api
         # xsd_file_path = get_module_resource('l10n_uy_edi', 'data', 'CFEType.xsd')
         # file_content = open(xsd_file_path, 'rb').read()
         # xsd_datas = base64.b64decode(file_content)  # TODO I think this is not neccesary, test it
         # if xsd_datas:
-        try:
-            # xml_utils._check_with_xsd(cfe, xsd)
-            return xml_utils._check_with_xsd(cfe, xsd_fname, self.env)
-        except FileNotFoundError:
-            _logger.info(_('The XSD validation files from DGI has not been found, please run manually the cron: "Download XSD"'))
-        except Exception as e:
-            return {'errors': str(e).split('\\n')}
+        # try:
+        #     # xml_utils._check_with_xsd(cfe, xsd)
+        #     return xml_utils._check_with_xsd(cfe, xsd_fname, self.env)
+        # except FileNotFoundError:
+        #     _logger.info(_('The XSD validation files from DGI has not been found, please run manually the cron: "Download XSD"'))
+        # except Exception as e:
+        #     return {'errors': str(e).split('\\n')}
 
         return {
-            'cfe_str': etree.tostring(cfe, pretty_print=True, xml_declaration=True, encoding='UTF-8'),
+            # 'cfe_str': etree.tostring(cfe, pretty_print=True, xml_declaration=True, encoding='UTF-8'),
+            'cfe_str': cfe,
         }
 
     def _l10n_uy_get_currency(self):
@@ -413,27 +420,19 @@ class AccountInvoice(models.Model):
         res = {}
         res.update({
             'TpoMoneda': self._l10n_uy_get_currency(),  # A-C110 Tipo moneda transacción
-            'MntNetoIVATasaBasica': 14.75,  # A-C116 Total Monto Neto - IVA Tasa Minima
-            'IVATasaMin': 10,  # A119 Tasa Mínima IVA
-            'IVATasaBasica': 22,  # A120 Tasa Mínima IVA
-            'MntIVATasaBasica': 3.25,  # A-C122 Total IVA Tasa Básica? Monto del IVA Tasa Basica
+            'MntNetoIVATasaBasica': 14.75,  # A-C116 Total Monto Neto - IVA Tasa Minima TODO
+            'IVATasaMin': 10,  # A119 Tasa Mínima IVA TODO
+            'IVATasaBasica': 22,  # A120 Tasa Mínima IVA TODO
+            'MntIVATasaBasica': 3.25,  # A-C122 Total IVA Tasa Básica? Monto del IVA Tasa Basica TODO
             'MntTotal': self.amount_total,  # TODO A-C124? Total Monto Total SUM(A121:A123)
             'CantLinDet': len(self.invoice_line_ids),  # A-C126 Lineas
             'MntPagar': self.amount_total,  # A-C130 Monto Total a Pagar
+            # TODO
+            # <MntIVATasaBasica>3.25</MntIVATasaBasica>  importe impuesto
+            # <MntNetoIVATasaBasica>14.75</MntNetoIVATasaBasica>  valor precio linea
+            # <MntTotal>18.00</MntTotal>
         })
         return res
-
-
-
-    def _l10n_uy_edi_get_invoice_cfe_values(self, invoice):
-        """ Return dictionary with the values to use in the CFE """
-        # TODO re generate for uy
-        cfe_values = {}
-        # ==== Invoice Values ====
-        # ==== Invoice lines ====
-        # ==== Totals ====
-        # ==== Taxes ====
-        return cfe_values
 
 
 class AccountInvoiceLine(models.Model):
@@ -447,7 +446,7 @@ class AccountInvoiceLine(models.Model):
         # TODO por ahora, esto esta solo funcionando para un impuesto de tipo iva por cada linea de factura, debemos
         # implementar el resto de los casos
         self.ensure_one()
-        taxes = self.env('account.tax').search([])
+        taxes = self.env['account.tax'].search([])
         tax_vat_exempt = taxes.filtered(lambda x: x.tax_group_id == self.env.ref("l10n_uy.tax_group_vat_exempt"))
         tax_vat_10 = taxes.filtered(lambda x: x.tax_group_id == self.env.ref("l10n_uy.tax_group_vat_10"))
         tax_vat_22 = taxes.filtered(lambda x: x.tax_group_id == self.env.ref("l10n_uy.tax_group_vat_22"))
