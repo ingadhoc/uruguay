@@ -9,16 +9,30 @@
             <notebook position="inside">
                 <page name="uy_dgi" string="DGI">
                     <group>
-                        <field name="l10n_uy_cfe_dgi_state"/>
-                        <field name="l10n_uy_cfe_ufce_state"/>
-                        <field name="l10n_uy_dgi_acceptation_status"/>
-                        <field name="l10n_uy_cfe_partner_status"/>
-                        <field name="l10n_uy_document_number"/>
-                        <field name="l10n_uy_cfe_uuid"/>
-                        <field name="l10n_uy_dgi_xml_request" widget="ace"/>
-                        <field name="l10n_uy_dgi_xml_response" widget="ace"/>
-                        <field name="l10n_uy_dgi_barcode"/>
-                        <field name="l10n_uy_cfe_file"/>
+                        <group string="UCFE">
+                            <field name="l10n_uy_ufce_state"/>
+                            <field name="l10n_uy_ufce_msg"/>
+                            <field name="l10n_uy_ufce_notif"/>
+                            <field name="l10n_uy_cfe_partner_status"/>
+                            <field name="l10n_uy_cfe_uuid"/>
+                            <field name="l10n_uy_cfe_file" widget="binary"/>
+                        </group>
+                        <group string="DGI">
+                            <field name="l10n_uy_document_number"/>
+                            <label for="l10n_uy_cfe_dgi_state"/>
+                            <div>
+                                <field name="l10n_uy_cfe_dgi_state"/>
+                                <button name="action_l10n_uy_get_dgi_state" type="object" string="Consult state in DGI" attrs="{'invisible': [('l10n_uy_ufce_state', '!=', '11')]}" class="oe_inline"/>
+                            </div>
+                            <field name="l10n_uy_dgi_acceptation_status"/>
+                            <field name="l10n_uy_dgi_barcode"/>
+                        </group>
+                        <group colspan="2">
+                            <label for="l10n_uy_dgi_xml_request"/>
+                            <field name="l10n_uy_dgi_xml_request" colspan="2" nolabel="1" widget="ace"/>
+                            <label for="l10n_uy_dgi_xml_response"/>
+                            <field name="l10n_uy_dgi_xml_response" colspan="2" nolabel="1" widget="ace"/>
+                        </group>
                     </group>
                 </page>
             </notebook>

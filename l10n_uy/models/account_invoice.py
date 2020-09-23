@@ -16,10 +16,11 @@ class AccountInvoice(models.Model):
             commercial_partner = partner.commercial_partner_id
             partner_type = dict(
                 final_consumer=self.env.ref('l10n_uy.it_dni') + self.env.ref('l10n_uy.it_ci') +
-                self.env.ref('l10n_uy.it_pass') + self.env.ref('l10n_uy.it_other') + self.env.ref('l10n_uy.it_nie'),
+                self.env.ref('l10n_uy.it_pass') + self.env.ref('l10n_uy.it_other') + self.env.ref('l10n_uy.it_nie')
+                + self.env.ref('l10n_uy.it_rut'),
                 company=self.env.ref('l10n_uy.it_rut') + self.env.ref('l10n_uy.it_nife'))
 
-            # TODO we can improve this if we separete ticket and invoice tye documents, but we have a problem, need to
+            # TODO we can improve this if we separete ticket and invoice type documents, but we have a problem, need to
             # add a new seperation for dn and cn
             if commercial_partner.main_id_category_id in partner_type['final_consumer']:
                 # e-tickets docs

@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record model='res.partner' id='partner_test'>
+        <field name='name'>3 Empresa Prueba</field>
+        <field name='main_id_category_id' ref='it_rut'/>
+        <field name='main_id_number'>219999830019</field>
+        <field name="customer" eval="True"/>
+        <field name="supplier" eval="True"/>
+    </record>
+
+</odoo>

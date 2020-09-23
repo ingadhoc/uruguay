@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import fields, models, _
+from odoo import fields, models, _, api
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_round
 from datetime import datetime
@@ -21,6 +21,7 @@ class AccountInvoice(models.Model):
 
     # CFE Status
     l10n_uy_cfe_dgi_state = fields.Selection([
+        ('-1', 'No enviado, monto menor a 10.000 UI'),
         ('00', 'aceptado por DGI'),
         ('05', 'rechazado por DGI'),
         ('06', 'observado por DGI'),
@@ -31,26 +32,46 @@ class AccountInvoice(models.Model):
         ('20', 'aceptado por DGI pero la consulta QR indica que hay diferencias con el CFE recibido'),
         ('25', 'rechazado por DGI pero la consulta QR indica que hay diferencias con el CFE recibido'),
         ('26', 'observado por DGI pero la consulta QR indica que hay diferencias con el CFE recibido'),
-    ], 'CFE DGI State', copy=False)  # EstadoEnDgiCfeRecibido
-    l10n_uy_cfe_ufce_state = fields.Selection([
-        ('not_sent', 'Not Sent yet'),
-        ('sent', 'Sent and waiting DGI validation'),
-        ('ask_for_status', 'Ask For Status'),
-        ('accepted', 'Accepted'),
-        ('post', 'Validated in DGI'),
-        ('rejected', 'Rejected by DGI'),
-        ('cancelled', 'Cancelled'),
-        # TODO no segura aun si lo vamos a usar, veriticar tambien todos los estados arriba.
-        # ('objected', 'Accepted With Objections'),
-        # ('manual', 'Manual'),
-    ], 'CFE DGI State', copy=False)
-
+    ], 'CFE DGI State', copy=False, readonly=True, track_visibility='onchange')  # EstadoEnDgiCfeRecibido
+    l10n_uy_ufce_state = fields.Selection([
+        ('00', 'Petición aceptada y procesada'),
+        ('01', 'Petición denegada'),
+        ('03', 'Comercio inválido'),
+        ('05', 'CFE rechazado por DGI'),
+        ('06', 'CFE observado por DGI'),
+        ('11', 'CFE aceptado por UCFE, en espera de respuesta de DGI'),
+        ('12', 'Requerimiento inválido'),
+        ('30', 'Error en formato'),
+        ('31', 'Error en formato de CFE'),
+        ('89', 'Terminal inválida'),
+        ('96', 'Error en sistema'),
+        ('99', 'Sesión no iniciada'),
+    ], 'UFCE State', copy=False, readonly=True, track_visibility='onchange')  # CodRta
+    l10n_uy_ufce_msg = fields.Char('UFCE Mensaje de Respuesta', copy=False, readonly=True, track_visibility='onchange')  # MensajeRta
+    l10n_uy_ufce_notif = fields.Selection([
+        ('5', 'Aviso de CFE emitido rechazado por DGI'),
+        ('6', 'Aviso de CFE emitido rechazado por el receptor electrónico'),
+        ('7', 'Aviso de CFE recibido'),
+        ('8', 'Aviso de anulación de CFE recibido'),
+        ('9', 'Aviso de aceptación comercial de un CFE recibido'),
+        ('10', 'Aviso de aceptación comercial de un CFE recibido en la gestión UCFE'),
+        ('11', 'Aviso de que se ha emitido un CFE'),
+        ('12', 'Aviso de que se ha emitido un CFE en la gestión UCFE'),
+        ('13', 'Aviso de rechazo comercial de un CFE recibido'),
+        ('14', 'Aviso de rechazo comercial de un CFE recibido en la gestión UCFE'),
+        ('15', 'Aviso de CFE emitido aceptado por DGI'),
+        ('16', 'Aviso de CFE emitido aceptado por el receptor electrónico'),
+        ('17', 'Aviso que a un CFE emitido se lo ha etiquetado'),
+        ('18', 'Aviso que a un CFE emitido se le removió una etiqueta'),
+        ('19', 'Aviso que a un CFE recibido se lo ha etiquetado'),
+        ('20', 'Aviso que a un CFE recibido se le removió una etiqueta'),
+        ], 'UFCE Tipo de Notificacion', copy=False, readonly=True, track_visibility='onchange')  # TipoNotificacion
     l10n_uy_dgi_acceptation_status = fields.Selection([
         ('received', 'Received'),
         ('ack_sent', 'Acknowledge Sent'),
         ('claimed', 'Claimed'),
         ('accepted', 'Accepted'),
-    ], string='CFE Accept status', copy=False, help="""The status of the CFE Acceptation
+    ], string='CFE Accept status', copy=False, readonly=True, help="""The status of the CFE Acceptation
     * Received: the DTE was received by us for vendor bills, by our customers for customer invoices.
     * Acknowledge Sent: the Acknowledge has been sent to the vendor.
     * Claimed: the DTE was claimed by us for vendor bills, by our customers for customer invoices.
@@ -59,12 +80,12 @@ class AccountInvoice(models.Model):
     l10n_uy_cfe_partner_status = fields.Selection([
         ('not_sent', 'Not Sent'),
         ('sent', 'Sent'),
-    ], string='CFE Partner Status', copy=False, help="""
+    ], string='CFE Partner Status', readonly=True, copy=False, help="""
     Status of sending the CFE to the partner:
     - Not sent: the CFE has not been sent to the partner but it has sent to DGI.
     - Sent: The CFE has been sent to the partner.""")
 
-    l10n_uy_document_number = fields.Char('Document Number', copy=False)
+    l10n_uy_document_number = fields.Char('Document Number', copy=False, readonly=True, track_visibility='onchange')
     l10n_uy_cfe_uuid = fields.Char(
         'Clave o UUID del CFE', help="Unique identification per CFE in UCFE. Currently is formed by the concatenation"
         " of model name + record id", copy=False)
@@ -74,7 +95,7 @@ class AccountInvoice(models.Model):
     l10n_uy_dgi_xml_response = fields.Text('DGI XML Response', copy=False, readonly=True, groups="base.group_system")
     l10n_uy_dgi_barcode = fields.Text('DGI Barcode', copy=False, readonly=True, groups="base.group_system")
 
-    # TODO not sure if we needed ir
+    # TODO not sure if we needed it
     l10n_uy_cfe_file = fields.Many2one('ir.attachment', string='CFE XML file', copy=False)
 
     # TODO review that this button is named this way in v12
@@ -83,7 +104,7 @@ class AccountInvoice(models.Model):
             # The move cannot be modified once the CFE has been accepted by the DGI
             if record.l10n_uy_cfe_dgi_state == '00':
                 raise UserError(_('This %s is accepted by DGI. It cannot be cancelled. '
-                                  'Instead you should revert it.') % record.l10n_latam_document_type_id.name)
+                                  'Instead you should revert it.') % record.journal_document_type_id.name)
             # record.l10n_cl_dte_status = 'cancelled'
         return super().button_cancel()
 
@@ -91,7 +112,7 @@ class AccountInvoice(models.Model):
 
     # TODO 13.0 change method to post / 14.0 _post or action_post
     def action_invoice_open(self):
-        """ After validate the invoices in odoo we send it to dgi via uruware """
+        """ After validate the invoices in odoo we send it to dgi via ucfe """
 
         uy_invoices = self.filtered(
             lambda x: x.company_id.country_id == self.env.ref('base.uy') and
@@ -107,7 +128,7 @@ class AccountInvoice(models.Model):
         # Send invoices to DGI and get the return info
         for inv in uy_invoices:
 
-            # If we are on testing environment and we don't have uruware configuration we validate only locally.
+            # If we are on testing environment and we don't have ucfe configuration we validate only locally.
             # This is useful when duplicating the production database for training purpose or others
             if not inv.company_id._is_connection_info_complete(raise_exception=False):
                 inv._dummy_dgi_validation()
@@ -121,6 +142,19 @@ class AccountInvoice(models.Model):
 
         super(AccountInvoice, self - no_validated).action_invoice_open()
 
+    def action_l10n_uy_get_dgi_state(self):
+        """ 360: Consulta de estado de CFE: estado del comprobante en DGI, """
+        self.ensure_one()
+        client, auth = self.company_id._get_client()
+        req_data = {
+            'Uuid': self.l10n_uy_cfe_uuid,
+            # 'TipoCfe': int(self.journal_document_type_id.document_type_id.code),
+        }
+        data = self._l10n_uy_get_data('360', req_data)
+        response = client.service.Invoke(data)
+        self.message_post(body=ucfe_errors._hint_msg(response))
+        import pdb; pdb.set_trace()
+
     # Main methods
 
     def _l10n_uy_get_data(self, msg_type, extra_req={}):
@@ -130,56 +164,16 @@ class AccountInvoice(models.Model):
         # sequence in odoo?
         now = datetime.utcnow()
         data = {
-            'Req': {'TipoMensaje': msg_type, 'CodComercio': self.company_id.l10n_uy_uruware_commerce_code,
-                    'CodTerminal': self.company_id.l10n_uy_uruware_terminal_code, 'IdReq': id_req},
-            'CodComercio': self.company_id.l10n_uy_uruware_commerce_code,
-            'CodTerminal': self.company_id.l10n_uy_uruware_terminal_code,
+            'Req': {'TipoMensaje': msg_type, 'CodComercio': self.company_id.l10n_uy_ucfe_commerce_code,
+                    'CodTerminal': self.company_id.l10n_uy_ucfe_terminal_code, 'IdReq': id_req},
+            'CodComercio': self.company_id.l10n_uy_ucfe_commerce_code,
+            'CodTerminal': self.company_id.l10n_uy_ucfe_terminal_code,
             'RequestDate': now.replace(microsecond=0).isoformat(),
             'Tout': '30000',
         }
         if extra_req:
             data.get('Req').update(extra_req)
         return data
-
-    # def _l10n_uy_get_certificate(self):
-    #     """ This methos is to consult the Certificate and the Private Key to Sign the CFE documents """
-    #     client, auth, transport = self.company_id._get_client(return_transport=True)
-    #     # TODO Ver si realmente es necesario que guardemos el certificado en local, podemos extaerlo de la factura
-    #     # alidada, pero por lo pronto no parece que lo necesitamos guardar en odoo.
-    #     # certificate = self._l10n_uy_get_certificate()
-    #     # certificate = base64.decodestring(inv.company_id.l10n_uy_dgi_crt).decode('ascii')
-
-    #     # TODO no importa como lo usemos, siempre recibimos
-    #     # Codigo Respuesta: 01 "Petición denegada"
-    #     # Mensaje de Respuesta: Operación no autorizada'
-
-    #     # 200 Solicitar Certificado
-    #     data = self._l10n_uy_get_data('200')
-    #     response = client.service.Invoke(data)
-    #     print(" ---- 200 Solicitar Certificado: %s\n\n%s" % (ucfe_errors._hint_msg(response), response))
-
-    #     # 210 Solicitar clave Certificado
-    #     data = self._l10n_uy_get_data('210')
-    #     response = client.service.Invoke(data)
-    #     print(" ---- 210 Solicitar clave Certificado: %s\n\n%s" % (ucfe_errors._hint_msg(response), response))
-
-    # def _l10n_uy_get_numeration(self):
-    #     # TODO This method cna be delete if we have the certificate in UCFE, review if usefull for local sequences
-    #     self.ensure_one()
-    #     client, auth, transport = self.company_id._get_client(return_transport=True)
-
-    #     # 220 Solicitud de rango de numeración
-    #     now = datetime.utcnow()
-    #     req_data = {
-    #         'TipoCfe': int(self.journal_document_type_id.document_type_id.code),
-    #         'FechaReq': now.date().strftime('%Y%m%d'),
-    #     }
-    #     data = self._l10n_uy_get_data('220', req_data)
-    #     response = client.service.Invoke(data)
-    #     print(response)
-
-    #     # review 'Serie': None,
-    #     raise UserError(ucfe_errors._hint_msg(response))
 
     def _l10n_uy_dgi_post(self, client, auth, transport):
         """ Implementation via web service of service 310 – Firma y envío de CFE (individual) """
@@ -197,10 +191,16 @@ class AccountInvoice(models.Model):
             response = client.service.Invoke(data)
             self.message_post(body=ucfe_errors._hint_msg(response))
 
+            ui_indexada = self._l10n_uy_get_unidad_indexada()
+
             self.l10n_uy_dgi_xml_request = CfeXmlOTexto
             self.l10n_uy_dgi_xml_response = transport.xml_response
-            self.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido
             self.l10n_uy_cfe_uuid = response.Resp.Uuid
+            self.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido or ('-1' if self.amount_total < ui_indexada else False)
+
+            self.l10n_uy_ufce_state = response.Resp.CodRta
+            self.l10n_uy_ufce_msg = response.Resp.MensajeRta
+            self.l10n_uy_ufce_notif = response.Resp.TipoNotificacion
 
             if response.Resp.CodRta != '00':
                 return
@@ -215,16 +215,12 @@ class AccountInvoice(models.Model):
 
             # TODO evaluate if this is usefull to put it in a invoice place?
             # 'Adenda': None,
-            # 'CodRta': '00',
             # 'CodigoSeguridad': 'gKSy8d',
             # 'EstadoSituacion': None,
             # 'Etiquetas': None,
             # 'FechaFirma': '2020-09-17T19:50:50.0000000-03:00',
-            # 'FechaReq': None,
-            # 'HoraReq': None,
             # 'IdCae': '90200001010',
             # 'IdReq': '1',
-            # 'MensajeRta': None,
             # 'RutEmisor': None,
 
             # ??? – Recepcion de CFE en UFCE
@@ -244,80 +240,8 @@ class AccountInvoice(models.Model):
         })
         self.message_post(body=_('Validated locally because is not Uruware parameters are not properly configured'))
 
-    # Consulta si un RUT es emisor electrónico 630 / 631
-    # RUT consultado a DGI (función 640 – Consulta a DGI por datos de RUT)
-
-    # simil to _l10n_mx_edi_create_cfdi_values
-    def _l10n_ar_edi_create_xml_values(self):
-        '''Create the values to fill the xml.'''
-        self.ensure_one()
-        precision_digits = self.currency_id.l10n_mx_edi_decimal_places
-        if precision_digits is False:
-            raise UserError(_(
-                "The SAT does not provide information for the currency %s.\n"
-                "You must get manually a key from the PAC to confirm the "
-                "currency rate is accurate enough."), self.currency_id)
-        partner_id = self.partner_id
-        if self.partner_id.type != 'invoice':
-            partner_id = self.partner_id.commercial_partner_id
-        values = {
-            'record': self,
-            'currency_name': self.currency_id.name,
-            'supplier': self.company_id.partner_id.commercial_partner_id,
-            'issued': self.journal_id.l10n_mx_address_issued_id,
-            'customer': partner_id,
-            'fiscal_regime': self.company_id.l10n_mx_edi_fiscal_regime,
-            'payment_method': self.l10n_mx_edi_payment_method_id.code,
-            'use_cfdi': self.l10n_mx_edi_usage,
-            'conditions': self._get_string_cfdi(
-                self.invoice_payment_term_id.name, 1000) if self.invoice_payment_term_id else False,
-        }
-
-        values.update(self._l10n_mx_get_serie_and_folio(self.name))
-        ctx = dict(company_id=self.company_id.id, date=self.invoice_date)
-        mxn = self.env.ref('base.MXN').with_context(ctx)
-        invoice_currency = self.currency_id.with_context(ctx)
-        values['rate'] = ('%.6f' % (
-            invoice_currency._convert(1, mxn, self.company_id, self.invoice_date or fields.Date.today(), round=False))) if self.currency_id.name != 'MXN' else False
-
-        values['document_type'] = 'ingreso' if self.type == 'out_invoice' else 'egreso'
-        values['payment_policy'] = self._l10n_mx_edi_get_payment_policy()
-        domicile = self.journal_id.l10n_mx_address_issued_id or self.company_id
-        values['domicile'] = '%s %s, %s' % (
-                domicile.city,
-                domicile.state_id.name,
-                domicile.country_id.name,
-        )
-
-        values['decimal_precision'] = precision_digits
-        subtotal_wo_discount = lambda l: float_round(
-            l.price_subtotal / (1 - l.discount/100) if l.discount != 100 else
-            l.price_unit * l.quantity, int(precision_digits))
-        values['subtotal_wo_discount'] = subtotal_wo_discount
-        get_discount = lambda l, d: ('%.*f' % (
-            int(d), subtotal_wo_discount(l) - l.price_subtotal)) if l.discount else False
-        values['total_discount'] = get_discount
-        total_discount = sum([float(get_discount(p, precision_digits)) for p in self.invoice_line_ids])
-        values['amount_untaxed'] = '%.*f' % (
-            precision_digits, sum([subtotal_wo_discount(p) for p in self.invoice_line_ids]))
-        values['amount_discount'] = '%.*f' % (precision_digits, total_discount) if total_discount else None
-
-        values['taxes'] = self._l10n_mx_edi_create_taxes_cfdi_values()
-        values['amount_total'] = '%0.*f' % (precision_digits,
-            float(values['amount_untaxed']) - float(values['amount_discount'] or 0) + (
-                values['taxes']['total_transferred'] or 0) - (values['taxes']['total_withhold'] or 0))
-
-        values['tax_name'] = lambda t: {'ISR': '001', 'IVA': '002', 'IEPS': '003'}.get(t, False)
-
-        if self.l10n_mx_edi_partner_bank_id:
-            digits = [s for s in self.l10n_mx_edi_partner_bank_id.acc_number if s.isdigit()]
-            acc_4number = ''.join(digits)[-4:]
-            values['account_4num'] = acc_4number if len(acc_4number) == 4 else None
-        else:
-            values['account_4num'] = None
-
-        values.update(self._get_external_trade_values(values))
-        return values
+    # TODO Consulta si un RUT es emisor electrónico 630 / 631
+    # TODO RUT consultado a DGI (función 640 – Consulta a DGI por datos de RUT)
 
     def _l10n_uy_get_invoice_line_item_detail(self):
         """ Devuelve una lista con los datos que debemos informar por linea de factura en el CFE """
@@ -346,6 +270,35 @@ class AccountInvoice(models.Model):
             })
         return res
 
+    @api.model
+    def _l10n_uy_get_unidad_indexada(self):
+        # TODO averiguar si realmente esta es la unidad indexada
+        return 4.6988 * 10000
+
+    def _l10n_uy_get_receptor_detail(self):
+        self.ensure_one()
+        res = {}
+        ui_indexada = self._l10n_uy_get_unidad_indexada()
+        document_type = int(self.journal_document_type_id.document_type_id.code)
+        cond_e_fact = document_type in [111, 112, 113, 141, 142, 143]
+        cond_e_ticket = document_type in [101, 102, 103, 131, 132, 133] and self.amount_total > ui_indexada
+        cond_e_boleta = document_type in [151, 152, 153]
+
+        if cond_e_fact or cond_e_ticket or cond_e_boleta:
+            # cond_e_fact: obligatorio RUC (C60= 2).
+            # cond_e_ticket: si monto neto ∑ (C112 a C118) > a tope establecido (ver tabla E), debe identificarse con NIE, RUC, CI, Otro, Pasaporte DNI o NIFE (C 60= 2, 3, 4, 5, 6 o 7).
+
+            tipo_doc = self.partner_id.main_id_category_id.l10n_uy_dgi_code
+            cod_pais = 'UY' if tipo_doc in [2, 3] else '99'
+
+            res.update({
+                # TODO -Free Shop: siempre se debe identificar al receptor.
+                'TipoDocRecep': tipo_doc,  # C60
+                'CodPaisRecep': self.partner_id.country_id.code or cod_pais,   # C61
+                'DocRecep' if tipo_doc in [1, 2, 3] else 'DocRecepExt': self.partner_id.main_id_number,  # C62 / C62.1
+        })
+        return res
+
     def _l10n_uy_create_cfe(self):
         """ Create the CFE xml estructure
         :return: A dictionary with one of the following key:
@@ -353,21 +306,19 @@ class AccountInvoice(models.Model):
             * error: An error if the cefe was not successfuly generated. """
         # TODO wip
         self.ensure_one()
-
         now = datetime.utcnow()  # TODO this need to be the same as the tipo de mensaje?
         cfe = self.env.ref('l10n_uy_edi.cfe_template').render({
             'move': self,
             'FchEmis': now.date().strftime('%Y-%m-%d'),
             'item_detail': self._l10n_uy_get_invoice_line_item_detail(),
             'totals_detail': self._l10n_uy_get_invoice_line_totals_detail(),
-            # 'get_cl_current_strftime': self._get_cl_current_strftime,
-            # 'format_length': self._format_length,
+            'receptor': self._l10n_uy_get_receptor_detail(),
         })
 
         from html import unescape
         cfe = unescape(cfe.decode('utf-8')).replace(r'&', '&amp;')
         cfe_attachment = self.env['ir.attachment'].create({
-            'name': 'CFE_{}.xml'.format(self.name),
+            'name': 'CFE_{}.xml'.format(self.l10n_uy_document_number),
             'res_model': self._name,
             'res_id': self.id,
             'type': 'binary',
@@ -420,18 +371,30 @@ class AccountInvoice(models.Model):
         res = {}
         res.update({
             'TpoMoneda': self._l10n_uy_get_currency(),  # A-C110 Tipo moneda transacción
-            'MntNetoIVATasaBasica': 14.75,  # A-C116 Total Monto Neto - IVA Tasa Minima TODO
             'IVATasaMin': 10,  # A119 Tasa Mínima IVA TODO
             'IVATasaBasica': 22,  # A120 Tasa Mínima IVA TODO
-            'MntIVATasaBasica': 3.25,  # A-C122 Total IVA Tasa Básica? Monto del IVA Tasa Basica TODO
             'MntTotal': self.amount_total,  # TODO A-C124? Total Monto Total SUM(A121:A123)
             'CantLinDet': len(self.invoice_line_ids),  # A-C126 Lineas
             'MntPagar': self.amount_total,  # A-C130 Monto Total a Pagar
-            # TODO
-            # <MntIVATasaBasica>3.25</MntIVATasaBasica>  importe impuesto
-            # <MntNetoIVATasaBasica>14.75</MntNetoIVATasaBasica>  valor precio linea
-            # <MntTotal>18.00</MntTotal>
         })
+
+        # TODO this need to be improved, using a different way to print the tax information
+        tax_vat_22, tax_vat_10, tax_vat_exempt = self.env['account.tax']._l10n_uy_get_taxes()
+
+        tax_line_basica = self.tax_line_ids.filtered(lambda x: x.tax_id == tax_vat_22)
+        if tax_line_basica:
+            res.update({
+                'MntNetoIVATasaBasica': '{:.2f}'.format(tax_line_basica.base),  # A-C117 Total Monto Neto - IVA Tasa Basica
+                'MntIVATasaBasica': '{:.2f}'.format(tax_line_basica.amount_total),  # A-C122 Total IVA Tasa Básica? Monto del IVA Tasa Basica
+            })
+
+        tax_line_minima = self.tax_line_ids.filtered(lambda x: x.tax_id == tax_vat_10)
+        if tax_line_basica:
+            res.update({
+                'MntNetoIVATasaMin': '{:.2f}'.format(tax_line_minima.base),  # A-C116 Total Monto Neto - IVA Tasa Minima
+                'MntIVATasaMin': '{:.2f}'.format(tax_line_minima.amount_total),  # A-C121 Total IVA Tasa Básica? Monto del IVA Tasa Minima
+            })
+
         return res
 
 
@@ -446,10 +409,7 @@ class AccountInvoiceLine(models.Model):
         # TODO por ahora, esto esta solo funcionando para un impuesto de tipo iva por cada linea de factura, debemos
         # implementar el resto de los casos
         self.ensure_one()
-        taxes = self.env['account.tax'].search([])
-        tax_vat_exempt = taxes.filtered(lambda x: x.tax_group_id == self.env.ref("l10n_uy.tax_group_vat_exempt"))
-        tax_vat_10 = taxes.filtered(lambda x: x.tax_group_id == self.env.ref("l10n_uy.tax_group_vat_10"))
-        tax_vat_22 = taxes.filtered(lambda x: x.tax_group_id == self.env.ref("l10n_uy.tax_group_vat_22"))
+        tax_vat_22, tax_vat_10, tax_vat_exempt = self.env['account.tax']._l10n_uy_get_taxes()
         value = {
             tax_vat_exempt.id: 1,   # 1: Exento de IVA
             tax_vat_10.id: 2,       # 2: Gravado a Tasa Mínima

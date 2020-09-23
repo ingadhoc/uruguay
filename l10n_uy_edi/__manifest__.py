@@ -19,6 +19,7 @@
     ],
     'demo': [
         'demo/res_company_demo.xml',
+        'demo/res_partner_demo.xml',
     ],
     'installable': True,
 }

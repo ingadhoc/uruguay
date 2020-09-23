@@ -11,12 +11,12 @@ class ResConfigSettings(models.TransientModel):
     l10n_uy_country_code = fields.Char(related='company_id.country_id.code', string='Country Code')
 
     # TODO This one should be interger but does not work because the interger is to long
-    l10n_uy_uruware_user = fields.Char(related='company_id.l10n_uy_uruware_user', readonly=False)
-    l10n_uy_uruware_password = fields.Char(related='company_id.l10n_uy_uruware_password', readonly=False)
-    l10n_uy_uruware_commerce_code = fields.Char(related='company_id.l10n_uy_uruware_commerce_code', readonly=False)
-    l10n_uy_uruware_terminal_code = fields.Char(related='company_id.l10n_uy_uruware_terminal_code', readonly=False)
-    l10n_uy_uruware_inbox_url = fields.Char(related='company_id.l10n_uy_uruware_inbox_url', readonly=False)
-    l10n_uy_uruware_query_url = fields.Char(related='company_id.l10n_uy_uruware_query_url', readonly=False)
+    l10n_uy_ucfe_user = fields.Char(related='company_id.l10n_uy_ucfe_user', readonly=False)
+    l10n_uy_ucfe_password = fields.Char(related='company_id.l10n_uy_ucfe_password', readonly=False)
+    l10n_uy_ucfe_commerce_code = fields.Char(related='company_id.l10n_uy_ucfe_commerce_code', readonly=False)
+    l10n_uy_ucfe_terminal_code = fields.Char(related='company_id.l10n_uy_ucfe_terminal_code', readonly=False)
+    l10n_uy_ucfe_inbox_url = fields.Char(related='company_id.l10n_uy_ucfe_inbox_url', readonly=False)
+    l10n_uy_ucfe_query_url = fields.Char(related='company_id.l10n_uy_ucfe_query_url', readonly=False)
 
     l10n_uy_dgi_crt = fields.Binary(related='company_id.l10n_uy_dgi_crt', readonly=False)
     l10n_uy_dgi_crt_fname = fields.Char(related='company_id.l10n_uy_dgi_crt_fname')
@@ -32,14 +32,14 @@ class ResConfigSettings(models.TransientModel):
         data = {
             'Req': {
                 'TipoMensaje': '820',
-                'CodComercio': self.l10n_uy_uruware_commerce_code,
-                'CodTerminal': self.l10n_uy_uruware_terminal_code,
+                'CodComercio': self.l10n_uy_ucfe_commerce_code,
+                'CodTerminal': self.l10n_uy_ucfe_terminal_code,
                 'FechaReq': now.date().strftime('%Y%m%d'),
                 'HoraReq': now.strftime('%H%M%S')},
             'RequestDate': now.replace(microsecond=0).isoformat(),
             'Tout': '30000',
-            'CodComercio': self.l10n_uy_uruware_commerce_code,
-            'CodTerminal': self.l10n_uy_uruware_terminal_code
+            'CodComercio': self.l10n_uy_ucfe_commerce_code,
+            'CodTerminal': self.l10n_uy_ucfe_terminal_code
         }
 
         response = client.service.Invoke(data)

@@ -23,6 +23,12 @@
                         <Ciudad t-esc="move.company_id.city"/>
                         <Departamento t-esc="move.company_id.state_id.name"/>
                     </Emisor>
+                    <Receptor t-if="receptor">
+                        <TipoDocRecep t-esc="receptor['TipoDocRecep']"/>
+                        <CodPaisRecep t-esc="receptor['CodPaisRecep']"/>
+                        <DocRecep t-if="receptor.get('DocRecep')" t-esc="receptor['DocRecep']"/>
+                        <DocRecepExt t-if="receptor.get('DocRecepExt')" t-esc="receptor['DocRecepExt']"/>
+                    </Receptor>
                     <Totales>
                         <TpoMoneda t-esc="totals_detail['TpoMoneda']"/>
                         <MntNetoIVATasaBasica t-esc="totals_detail['MntNetoIVATasaBasica']"/>

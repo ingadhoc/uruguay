@@ -32,12 +32,12 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     # Uruware
-    l10n_uy_uruware_user = fields.Char('Uruware User', groups="base.group_system")
-    l10n_uy_uruware_password = fields.Char('Uruware Password', groups="base.group_system")
-    l10n_uy_uruware_commerce_code = fields.Char('Uruware Commerce code', groups="base.group_system")
-    l10n_uy_uruware_terminal_code = fields.Char('Uruware Terminal code', groups="base.group_system")
-    l10n_uy_uruware_inbox_url = fields.Char('Uruware Inbox URL', groups="base.group_system")
-    l10n_uy_uruware_query_url = fields.Char('Uruware Query URL', groups="base.group_system")
+    l10n_uy_ucfe_user = fields.Char('Uruware User', groups="base.group_system")
+    l10n_uy_ucfe_password = fields.Char('Uruware Password', groups="base.group_system")
+    l10n_uy_ucfe_commerce_code = fields.Char('Uruware Commerce code', groups="base.group_system")
+    l10n_uy_ucfe_terminal_code = fields.Char('Uruware Terminal code', groups="base.group_system")
+    l10n_uy_ucfe_inbox_url = fields.Char('Uruware Inbox URL', groups="base.group_system")
+    l10n_uy_ucfe_query_url = fields.Char('Uruware Query URL', groups="base.group_system")
 
     # DGI
     l10n_uy_dgi_house_code = fields.Integer(
@@ -71,10 +71,10 @@ class ResCompany(models.Model):
 
     def _is_connection_info_complete(self, raise_exception=True):
         """ Raise exception if not all the connection info is available """
-        if not all([self.l10n_uy_uruware_user, self.l10n_uy_uruware_password, self.l10n_uy_uruware_commerce_code,
-                   self.l10n_uy_uruware_terminal_code, self.l10n_uy_uruware_inbox_url, self.l10n_uy_uruware_query_url]):
+        if not all([self.l10n_uy_ucfe_user, self.l10n_uy_ucfe_password, self.l10n_uy_ucfe_commerce_code,
+                   self.l10n_uy_ucfe_terminal_code, self.l10n_uy_ucfe_inbox_url, self.l10n_uy_ucfe_query_url]):
             if raise_exception:
-                raise UserError(_('Please complete the uruware data to test the connection'))
+                raise UserError(_('Please complete the ucfe data to test the connection'))
             return False
         return True
 
@@ -82,15 +82,15 @@ class ResCompany(models.Model):
         """ Get zeep client to connect to the webservice """
         self.ensure_one()
         self._is_connection_info_complete()
-        auth = {'Username': self.l10n_uy_uruware_user, 'Password': self.l10n_uy_uruware_password}
+        auth = {'Username': self.l10n_uy_ucfe_user, 'Password': self.l10n_uy_ucfe_password}
 
-        wsdl = self.l10n_uy_uruware_inbox_url
+        wsdl = self.l10n_uy_ucfe_inbox_url
         if not wsdl.endswith('?wsdl'):
             wsdl += '?wsdl'
 
         try:
             transport = UYTransport(operation_timeout=60, timeout=60)
-            user_name_token = UsernameToken(self.l10n_uy_uruware_user, self.l10n_uy_uruware_password)
+            user_name_token = UsernameToken(self.l10n_uy_ucfe_user, self.l10n_uy_ucfe_password)
             client = Client(wsdl, transport=transport, wsse=user_name_token)
 
             # TESTING 1
@@ -99,7 +99,7 @@ class ResCompany(models.Model):
             # session = Session()
             # session.verify = get_module_resource('l10n_uy_edi', 'demo', 'CorreoUruguayoCA.crt')
             # transport = UYTransport(session=session, operation_timeout=60, timeout=60)
-            # client = Client(wsdl, transport=transport, wsse=UsernameToken(self.l10n_uy_uruware_user, self.l10n_uy_uruware_password))
+            # client = Client(wsdl, transport=transport, wsse=UsernameToken(self.l10n_uy_ucfe_user, self.l10n_uy_ucfe_password))
             # # RESULT
             # # Connection is not working. This is what we get SSLError(MaxRetryError('HTTPSConnectionPool(host=\'test.ucfe.com.uy\', port=443): Max retries exceeded with url: /Inbox115/CfeService.svc?wsdl (Caused by SSLError(SSLError("bad handshake: Error([(\'SSL routines\', \'tls_process_server_certificate\', \'certificate verify failed\')],)",),))',),)
 
