@@ -19,7 +19,6 @@ class AccountInvoice(models.Model):
 
     _inherit = "account.invoice"
 
-    # CFE Status
     l10n_uy_cfe_dgi_state = fields.Selection([
         ('-1', 'No enviado, monto menor a 10.000 UI'),
         ('00', 'aceptado por DGI'),
@@ -33,6 +32,7 @@ class AccountInvoice(models.Model):
         ('25', 'rechazado por DGI pero la consulta QR indica que hay diferencias con el CFE recibido'),
         ('26', 'observado por DGI pero la consulta QR indica que hay diferencias con el CFE recibido'),
     ], 'CFE DGI State', copy=False, readonly=True, track_visibility='onchange')  # EstadoEnDgiCfeRecibido
+
     l10n_uy_ufce_state = fields.Selection([
         ('00', 'Petición aceptada y procesada'),
         ('01', 'Petición denegada'),
@@ -47,7 +47,9 @@ class AccountInvoice(models.Model):
         ('96', 'Error en sistema'),
         ('99', 'Sesión no iniciada'),
     ], 'UFCE State', copy=False, readonly=True, track_visibility='onchange')  # CodRta
+
     l10n_uy_ufce_msg = fields.Char('UFCE Mensaje de Respuesta', copy=False, readonly=True, track_visibility='onchange')  # MensajeRta
+
     l10n_uy_ufce_notif = fields.Selection([
         ('5', 'Aviso de CFE emitido rechazado por DGI'),
         ('6', 'Aviso de CFE emitido rechazado por el receptor electrónico'),
@@ -66,6 +68,18 @@ class AccountInvoice(models.Model):
         ('19', 'Aviso que a un CFE recibido se lo ha etiquetado'),
         ('20', 'Aviso que a un CFE recibido se le removió una etiqueta'),
         ], 'UFCE Tipo de Notificacion', copy=False, readonly=True, track_visibility='onchange')  # TipoNotificacion
+
+    l10n_uy_document_number = fields.Char('Document Number', copy=False, readonly=True, track_visibility='onchange')
+    l10n_uy_cfe_uuid = fields.Char(
+        'Clave o UUID del CFE', help="Unique identification per CFE in UCFE. Currently is formed by the concatenation"
+        " of model name + record id", copy=False)
+    # TODO este numero debe ser maximo 36 caracteres máximo. esto debemos mejorarlo
+
+    l10n_uy_dgi_xml_request = fields.Text('DGI XML Request', copy=False, readonly=True, groups="base.group_system")
+    l10n_uy_dgi_xml_response = fields.Text('DGI XML Response', copy=False, readonly=True, groups="base.group_system")
+    l10n_uy_dgi_barcode = fields.Text('DGI Barcode', copy=False, readonly=True, groups="base.group_system")
+
+    # TODO not sure this fields are going to make it
     l10n_uy_dgi_acceptation_status = fields.Selection([
         ('received', 'Received'),
         ('ack_sent', 'Acknowledge Sent'),
@@ -84,19 +98,9 @@ class AccountInvoice(models.Model):
     Status of sending the CFE to the partner:
     - Not sent: the CFE has not been sent to the partner but it has sent to DGI.
     - Sent: The CFE has been sent to the partner.""")
-
-    l10n_uy_document_number = fields.Char('Document Number', copy=False, readonly=True, track_visibility='onchange')
-    l10n_uy_cfe_uuid = fields.Char(
-        'Clave o UUID del CFE', help="Unique identification per CFE in UCFE. Currently is formed by the concatenation"
-        " of model name + record id", copy=False)
-    # TODO este numero debe ser maximo 36 caracteres máximo. esto debemos mejorarlo
-
-    l10n_uy_dgi_xml_request = fields.Text('DGI XML Request', copy=False, readonly=True, groups="base.group_system")
-    l10n_uy_dgi_xml_response = fields.Text('DGI XML Response', copy=False, readonly=True, groups="base.group_system")
-    l10n_uy_dgi_barcode = fields.Text('DGI Barcode', copy=False, readonly=True, groups="base.group_system")
-
-    # TODO not sure if we needed it
     l10n_uy_cfe_file = fields.Many2one('ir.attachment', string='CFE XML file', copy=False)
+
+    # Buttons
 
     # TODO review that this button is named this way in v12
     def button_cancel(self):
@@ -107,8 +111,6 @@ class AccountInvoice(models.Model):
                                   'Instead you should revert it.') % record.journal_document_type_id.name)
             # record.l10n_cl_dte_status = 'cancelled'
         return super().button_cancel()
-
-    # Buttons
 
     # TODO 13.0 change method to post / 14.0 _post or action_post
     def action_invoice_open(self):
@@ -179,7 +181,7 @@ class AccountInvoice(models.Model):
         """ Implementation via web service of service 310 – Firma y envío de CFE (individual) """
         for inv in self:
             now = datetime.utcnow()
-            CfeXmlOTexto = self._l10n_uy_create_cfe().get('cfe_str')  # TODO WIP make this properly work
+            CfeXmlOTexto = self._l10n_uy_create_cfe().get('cfe_str')
             req_data = {
                 'Uuid': 'account.invoice-' + str(self.id),  # TODO we need to set this unique how?
                 'TipoCfe': int(inv.journal_document_type_id.document_type_id.code),

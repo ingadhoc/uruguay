@@ -15,10 +15,8 @@
         'views/res_config_settings_view.xml',
         'views/account_move_views.xml',
         'data/cfe_template.xml',
-        # 'data/dgi_eTck.xml',
     ],
     'demo': [
-        'demo/res_company_demo.xml',
         'demo/res_partner_demo.xml',
     ],
     'installable': True,
