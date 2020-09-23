@@ -6,6 +6,11 @@
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account.invoice_form"/>
         <field name="arch" type="xml">
+
+            <field name="currency_id" position="after">
+                <field name="l10n_uy_currency_rate"/>
+            </field>
+
             <notebook position="inside">
                 <page name="uy_dgi" string="DGI">
                     <group>
@@ -18,11 +23,11 @@
                             <field name="l10n_uy_cfe_file" widget="binary"/>
                         </group>
                         <group string="DGI">
-                            <field name="l10n_uy_document_number"/>
+                            <field name="document_number"/>
                             <label for="l10n_uy_cfe_dgi_state"/>
                             <div>
                                 <field name="l10n_uy_cfe_dgi_state"/>
-                                <button name="action_l10n_uy_get_dgi_state" type="object" string="Consult state in DGI" attrs="{'invisible': [('l10n_uy_ufce_state', '!=', '11')]}" class="oe_inline"/>
+                                <button name="action_l10n_uy_get_dgi_state" type="object" string="Consult DGI State" class="oe_inline"/>
                             </div>
                             <field name="l10n_uy_dgi_acceptation_status"/>
                             <field name="l10n_uy_dgi_barcode"/>

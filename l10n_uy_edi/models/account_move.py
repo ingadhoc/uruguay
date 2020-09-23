@@ -21,7 +21,8 @@ class AccountInvoice(models.Model):
     _inherit = "account.invoice"
 
     l10n_uy_cfe_dgi_state = fields.Selection([
-        ('-1', 'No enviado, monto menor a 10.000 UI'),
+        ('-2', 'No enviado, monto menor a 10.000 UI'),
+        ('-1', 'Esperando Respuesta DGI'),
         ('00', 'aceptado por DGI'),
         ('05', 'rechazado por DGI'),
         ('06', 'observado por DGI'),
@@ -70,7 +71,6 @@ class AccountInvoice(models.Model):
         ('20', 'Aviso que a un CFE recibido se le removió una etiqueta'),
         ], 'UFCE Tipo de Notificacion', copy=False, readonly=True, track_visibility='onchange')  # TipoNotificacion
 
-    l10n_uy_document_number = fields.Char('Document Number', copy=False, readonly=True, track_visibility='onchange')
     l10n_uy_cfe_uuid = fields.Char(
         'Clave o UUID del CFE', help="Unique identification per CFE in UCFE. Currently is formed by the concatenation"
         " of model name + record id", copy=False)
@@ -79,6 +79,10 @@ class AccountInvoice(models.Model):
     l10n_uy_dgi_xml_request = fields.Text('DGI XML Request', copy=False, readonly=True, groups="base.group_system")
     l10n_uy_dgi_xml_response = fields.Text('DGI XML Response', copy=False, readonly=True, groups="base.group_system")
     l10n_uy_dgi_barcode = fields.Text('DGI Barcode', copy=False, readonly=True, groups="base.group_system")
+
+    # TODO integrate with l10n_ar_currency_rate in next versions
+    # solo mostrar en estado draft?
+    l10n_uy_currency_rate = fields.Float(copy=False, digits=(16, 4), string="Currency Rate")
 
     # TODO not sure this fields are going to make it
     l10n_uy_dgi_acceptation_status = fields.Selection([
@@ -103,15 +107,18 @@ class AccountInvoice(models.Model):
 
     # Buttons
 
-    # TODO review that this button is named this way in v12
-    def button_cancel(self):
+    def action_invoice_cancel(self):
         for record in self.filtered(lambda x: x.company_id.country_id == self.env.ref('base.uy')):
+            # The move cannot be modified once has been sent to UCFE
+            if record.l10n_uy_ufce_state in ['00', '05', '06', '11']:
+                raise UserError(_('This %s has been already sent to UFCE. It cannot be cancelled. '
+                                  'You can only click Consult DGI State to update.') % record.journal_document_type_id.document_type_id.name)
             # The move cannot be modified once the CFE has been accepted by the DGI
-            if record.l10n_uy_cfe_dgi_state == '00':
+            elif record.l10n_uy_cfe_dgi_state == '00':
                 raise UserError(_('This %s is accepted by DGI. It cannot be cancelled. '
-                                  'Instead you should revert it.') % record.journal_document_type_id.name)
+                                  'Instead you should revert it.') % record.journal_document_type_id.document_type_id.name)
             # record.l10n_cl_dte_status = 'cancelled'
-        return super().button_cancel()
+        return super().action_invoice_cancel()
 
     # TODO 13.0 change method to post / 14.0 _post or action_post
     def action_invoice_open(self):
@@ -121,6 +128,7 @@ class AccountInvoice(models.Model):
             lambda x: x.company_id.country_id == self.env.ref('base.uy') and
             # 13.0 account.move: x.is_invoice()
             x.type in ['out_invoice', 'out_refund'] and
+            x.l10n_uy_ufce_state not in ['00', '05', '06', '11'] and # Already sent and waiting status from UFCE
             # TODO possible we are missing electronic documents here, review the
             int(x.journal_document_type_id.document_type_id.code) in [
                 101, 102, 103, 111, 112, 113, 181, 182, 121, 122, 123, 124, 131, 132, 133, 141, 142, 143, 151, 152,
@@ -140,7 +148,7 @@ class AccountInvoice(models.Model):
             # TODO maybe this can be moved to outside the for loop
             client, auth, transport = inv.company_id._get_client(return_transport=True)
             inv._l10n_uy_dgi_post(client, auth, transport)
-            if inv.l10n_uy_cfe_dgi_state != '00':
+            if inv.l10n_uy_ufce_state not in ['00', '05', '06', '11']:
                 no_validated += inv
 
         super(AccountInvoice, self - no_validated).action_invoice_open()
@@ -151,12 +159,17 @@ class AccountInvoice(models.Model):
         client, auth = self.company_id._get_client()
         req_data = {
             'Uuid': self.l10n_uy_cfe_uuid,
-            # 'TipoCfe': int(self.journal_document_type_id.document_type_id.code),
         }
         data = self._l10n_uy_get_data('360', req_data)
         response = client.service.Invoke(data)
-        self.message_post(body=ucfe_errors._hint_msg(response))
-        # import pdb; pdb.set_trace()
+
+        ui_indexada = self._l10n_uy_get_unidad_indexada()
+        self.l10n_uy_ufce_state = response.Resp.CodRta or self.l10n_uy_ufce_state
+        self.l10n_uy_ufce_msg = response.Resp.MensajeRta or self.l10n_uy_ufce_msg
+        self.l10n_uy_ufce_notif = response.Resp.TipoNotificacion or self.l10n_uy_ufce_notif
+        self.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido or \
+                ('-2' if self.amount_total < ui_indexada else False) or \
+                ('-1' if self.l10n_uy_ufce_state == '11' else False) or self.l10n_uy_cfe_dgi_state
 
     # Main methods
 
@@ -192,27 +205,32 @@ class AccountInvoice(models.Model):
             }
             data = inv._l10n_uy_get_data('310', req_data)
             response = client.service.Invoke(data)
-            self.message_post(body=ucfe_errors._hint_msg(response))
 
             ui_indexada = self._l10n_uy_get_unidad_indexada()
-
             self.l10n_uy_dgi_xml_request = CfeXmlOTexto
+            # etree.tostring(etree.fromstring(response.Resp.XmlCfeFirmado), pretty_print=True).decode('utf-8')
             self.l10n_uy_dgi_xml_response = transport.xml_response
             self.l10n_uy_cfe_uuid = response.Resp.Uuid
-            self.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido or ('-1' if self.amount_total < ui_indexada else False)
-
             self.l10n_uy_ufce_state = response.Resp.CodRta
+
+            self.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido or \
+                ('-2' if self.amount_total < ui_indexada else False) or \
+                ('-1' if self.l10n_uy_ufce_state == '11' else False)
+
             self.l10n_uy_ufce_msg = response.Resp.MensajeRta
             self.l10n_uy_ufce_notif = response.Resp.TipoNotificacion
 
-            if response.Resp.CodRta != '00':
+            self.l10n_ar_currency_rate = getattr(response.Resp, 'TpoCambio', 0)
+
+            if response.Resp.CodRta not in ['00', '05', '06', '11']:
                 return
 
             # If everything is ok we save the return information
-            self.l10n_uy_document_number = response.Resp.Serie + '%07d' % int(response.Resp.NumeroCfe)
-            self.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido
+            self.document_number = response.Resp.Serie + '%07d' % int(response.Resp.NumeroCfe)
+
+            # TODO this one is failing, review why
             self.l10n_uy_cfe_file = self.env['ir.attachment'].create({
-                'name': 'CFE_{}.xml'.format(self.l10n_uy_document_number), 'res_model': self._name, 'res_id': self.id,
+                'name': 'CFE_{}.xml'.format(self.document_number), 'res_model': self._name, 'res_id': self.id,
                 'type': 'binary', 'datas': base64.b64encode(CfeXmlOTexto.encode('ISO-8859-1'))}).id
 
             # TODO este viene vacio, ver cuando realmente es seteado para asi setearlo en este momento
@@ -316,7 +334,7 @@ class AccountInvoice(models.Model):
             'move': self,
             'FchEmis': now.date().strftime('%Y-%m-%d'),
             'item_detail': self._l10n_uy_get_invoice_line_item_detail(),
-            'totals_detail': self._l10n_uy_get_invoice_line_totals_detail(),
+            'totals_detail': self._l10n_uy_get_totals_detail(),
             'receptor': self._l10n_uy_get_receptor_detail(),
         })
         cfe = unescape(cfe.decode('utf-8')).replace(r'&', '&amp;')
@@ -329,10 +347,9 @@ class AccountInvoice(models.Model):
         # import pdb; pdb.set_trace()
 
         if response.Resp.CodRta != '00':
-            self.message_post(body=ucfe_errors._hint_msg(response))
             # response.Resp.CodRta  30 o 31,   01, 12, 96, 99, ? ?
             # response.Resp.MensajeRta
-            raise UserError(ucfe_errors._hint_msg(response))
+            raise UserError('Error al crear el XML del CFẸ\n\n' + cfe + '\n\n' + ucfe_errors._hint_msg(response))
             # return {'errors': str(e).split('\\n')}s
         return {'cfe_str': cfe}
 
@@ -357,7 +374,7 @@ class AccountInvoice(models.Model):
 
         return currency_name
 
-    def _l10n_uy_get_invoice_line_totals_detail(self):
+    def _l10n_uy_get_totals_detail(self):
         self.ensure_one()
         res = {}
         res.update({
@@ -368,6 +385,12 @@ class AccountInvoice(models.Model):
             'CantLinDet': len(self.invoice_line_ids),  # A-C126 Lineas
             'MntPagar': self.amount_total,  # A-C130 Monto Total a Pagar
         })
+
+        # C111 Tipo de Cambio
+        if self._l10n_uy_get_currency() != 'UYU':
+            res['TpoCambio'] = '{:.3f}'.format(self.currency_id._convert(
+                1.0, self.company_id.currency_id, self.company_id, self.date_invoice or fields.Date.today(),
+                round=False))
 
         # TODO this need to be improved, using a different way to print the tax information
         tax_vat_22, tax_vat_10, tax_vat_exempt = self.env['account.tax']._l10n_uy_get_taxes()

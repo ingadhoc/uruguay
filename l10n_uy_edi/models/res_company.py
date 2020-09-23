@@ -7,6 +7,7 @@ from lxml import etree
 import logging
 import base64
 from OpenSSL import crypto
+from datetime import datetime
 
 
 _logger = logging.getLogger(__name__)
@@ -114,3 +115,20 @@ class ResCompany(models.Model):
         if return_transport:
             return client, auth, transport
         return client, auth
+
+    def _l10n_uy_get_data(self, msg_type, extra_req={}):
+        self.ensure_one()
+        # TODO I think this should be unique? see how we can generated it,  int, need to be assing using a
+        # sequence in odoo? consumir secuencia creada en Odoo
+        id_req = 1
+
+        now = datetime.utcnow()
+        data = {'Req': {'TipoMensaje': msg_type, 'CodComercio': self.l10n_uy_ucfe_commerce_code,
+                        'CodTerminal': self.l10n_uy_ucfe_terminal_code, 'IdReq': id_req},
+                'CodComercio': self.l10n_uy_ucfe_commerce_code,
+                'CodTerminal': self.l10n_uy_ucfe_terminal_code,
+                'RequestDate': now.replace(microsecond=0).isoformat(),
+                'Tout': '30000'}
+        if extra_req:
+            data.get('Req').update(extra_req)
+        return data

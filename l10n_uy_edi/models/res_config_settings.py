@@ -26,22 +26,12 @@ class ResConfigSettings(models.TransientModel):
         """ Make a ECO test to UCFE """
         self.ensure_one()
         client, _auth = self.company_id._get_client()
-        now = datetime.utcnow()
 
         # TODO review if odoo already save utc, if true then use fields.Datetime.now() directly
-        data = {
-            'Req': {
-                'TipoMensaje': '820',
-                'CodComercio': self.l10n_uy_ucfe_commerce_code,
-                'CodTerminal': self.l10n_uy_ucfe_terminal_code,
-                'FechaReq': now.date().strftime('%Y%m%d'),
-                'HoraReq': now.strftime('%H%M%S')},
-            'RequestDate': now.replace(microsecond=0).isoformat(),
-            'Tout': '30000',
-            'CodComercio': self.l10n_uy_ucfe_commerce_code,
-            'CodTerminal': self.l10n_uy_ucfe_terminal_code
-        }
-
+        now = datetime.utcnow()
+        req_data = {'FechaReq': now.date().strftime('%Y%m%d'),
+                    'HoraReq': now.strftime('%H%M%S')}
+        data = self.company_id._l10n_uy_get_data('820', req_data)
         response = client.service.Invoke(data)
         if response.ErrorCode == 0 and response.ErrorMessage is None and response.Resp.TipoMensaje == 821:
             raise UserError(_('Everything is ok!'))

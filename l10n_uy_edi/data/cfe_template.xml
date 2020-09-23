@@ -31,6 +31,7 @@
                     </Receptor>
                     <Totales>
                         <TpoMoneda t-esc="totals_detail['TpoMoneda']"/>
+                        <TpoCambio t-if="totals_detail.get('TpoCambio')" t-esc="totals_detail['TpoCambio']"/>
                         <MntNetoIVATasaBasica t-esc="totals_detail['MntNetoIVATasaBasica']"/>
                         <IVATasaMin t-esc="totals_detail['IVATasaMin']"/>
                         <IVATasaBasica t-esc="totals_detail['IVATasaBasica']"/>
