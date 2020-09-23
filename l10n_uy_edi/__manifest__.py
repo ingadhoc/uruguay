@@ -15,6 +15,7 @@
         'views/res_config_settings_view.xml',
         'views/account_move_views.xml',
         'data/cfe_template.xml',
+        'data/ir_sequence.xml',
     ],
     'demo': [
         'demo/res_partner_demo.xml',

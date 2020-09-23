@@ -9,6 +9,7 @@ from lxml import etree
 from io import BytesIO
 from odoo.tools import xml_utils
 from odoo.modules.module import get_module_resource
+from html import unescape
 import logging
 
 
@@ -155,7 +156,7 @@ class AccountInvoice(models.Model):
         data = self._l10n_uy_get_data('360', req_data)
         response = client.service.Invoke(data)
         self.message_post(body=ucfe_errors._hint_msg(response))
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
 
     # Main methods
 
@@ -210,11 +211,13 @@ class AccountInvoice(models.Model):
             # If everything is ok we save the return information
             self.l10n_uy_document_number = response.Resp.Serie + '%07d' % int(response.Resp.NumeroCfe)
             self.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido
+            self.l10n_uy_cfe_file = self.env['ir.attachment'].create({
+                'name': 'CFE_{}.xml'.format(self.l10n_uy_document_number), 'res_model': self._name, 'res_id': self.id,
+                'type': 'binary', 'datas': base64.b64encode(CfeXmlOTexto.encode('ISO-8859-1'))}).id
 
             # TODO este viene vacio, ver cuando realmente es seteado para asi setearlo en este momento
             # Tambien tenemos ver para que sirve 'DatosQr': 'https://www.efactura.dgi.gub.uy/consultaQRPrueba/cfe?218435730016,101,A,1,18.00,17/09/2020,gKSy8dDHR0YsTy0P4cx%2bcSu4Zvo%3d',
             # self.l10n_uy_dgi_barcode = response.Resp.ImagenQr
-
             # TODO evaluate if this is usefull to put it in a invoice place?
             # 'Adenda': None,
             # 'CodigoSeguridad': 'gKSy8d',
@@ -302,11 +305,11 @@ class AccountInvoice(models.Model):
         return res
 
     def _l10n_uy_create_cfe(self):
-        """ Create the CFE xml estructure
-        :return: A dictionary with one of the following key:
+        """ Create the CFE xml estructure and validate it
+            :return: A dictionary with one of the following key:
             * cfe_str: A string of the unsigned cfe.
-            * error: An error if the cefe was not successfuly generated. """
-        # TODO wip
+            * error: An error if the cfe was not successfully generated. """
+
         self.ensure_one()
         now = datetime.utcnow()  # TODO this need to be the same as the tipo de mensaje?
         cfe = self.env.ref('l10n_uy_edi.cfe_template').render({
@@ -316,22 +319,22 @@ class AccountInvoice(models.Model):
             'totals_detail': self._l10n_uy_get_invoice_line_totals_detail(),
             'receptor': self._l10n_uy_get_receptor_detail(),
         })
-
-        from html import unescape
         cfe = unescape(cfe.decode('utf-8')).replace(r'&', '&amp;')
-        cfe_attachment = self.env['ir.attachment'].create({
-            'name': 'CFE_{}.xml'.format(self.l10n_uy_document_number),
-            'res_model': self._name,
-            'res_id': self.id,
-            'type': 'binary',
-            'datas': base64.b64encode(cfe.encode('ISO-8859-1'))
-        })
-        self.l10n_uy_cfe_file = cfe_attachment.id
 
-        return {
-            # 'cfe_str': etree.tostring(cfe, pretty_print=True, xml_declaration=True, encoding='UTF-8'),
-            'cfe_str': cfe,
-        }
+        # Check CFE XML valid files
+        # 350: Validación de estructura de CFE
+        client, _auth = self.company_id._get_client()
+        data = self._l10n_uy_get_data('350', {'CfeXmlOTexto': cfe})
+        response = client.service.Invoke(data)
+        # import pdb; pdb.set_trace()
+
+        if response.Resp.CodRta != '00':
+            self.message_post(body=ucfe_errors._hint_msg(response))
+            # response.Resp.CodRta  30 o 31,   01, 12, 96, 99, ? ?
+            # response.Resp.MensajeRta
+            raise UserError(ucfe_errors._hint_msg(response))
+            # return {'errors': str(e).split('\\n')}s
+        return {'cfe_str': cfe}
 
     def _l10n_uy_get_currency(self):
         """ Devuelve el codigo de la moneda del comprobante:
