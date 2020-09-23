@@ -328,20 +328,6 @@ class AccountInvoice(models.Model):
         })
         self.l10n_uy_cfe_file = cfe_attachment.id
 
-        # Check using the XSD
-        # TODO do the validation here, using the xsd or the api
-        # xsd_file_path = get_module_resource('l10n_uy_edi', 'data', 'CFEType.xsd')
-        # file_content = open(xsd_file_path, 'rb').read()
-        # xsd_datas = base64.b64decode(file_content)  # TODO I think this is not neccesary, test it
-        # if xsd_datas:
-        # try:
-        #     # xml_utils._check_with_xsd(cfe, xsd)
-        #     return xml_utils._check_with_xsd(cfe, xsd_fname, self.env)
-        # except FileNotFoundError:
-        #     _logger.info(_('The XSD validation files from DGI has not been found, please run manually the cron: "Download XSD"'))
-        # except Exception as e:
-        #     return {'errors': str(e).split('\\n')}
-
         return {
             # 'cfe_str': etree.tostring(cfe, pretty_print=True, xml_declaration=True, encoding='UTF-8'),
             'cfe_str': cfe,

@@ -26,16 +26,5 @@
             <field name="active" eval="True"/>
         </record> -->
 
-        <record id="ir_cron_load_dgi_xsd_files" model="ir.cron">
-            <field name="name">0. Cron Job - Load XSD Files (Uruguay DGI)</field>
-            <field name="interval_number">1</field>
-            <field name="interval_type">weeks</field>
-            <field name="model_id" ref="base.model_ir_attachment"/>
-            <!-- Highest priority at time of module install. -->
-            <field name="priority" eval="0"/>
-            <field name="state">code</field>
-            <field name="code">model._load_xsd_dgi()</field>
-        </record>
-
     </data>
 </odoo>
