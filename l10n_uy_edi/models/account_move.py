@@ -1,15 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models, _, api
 from odoo.exceptions import UserError
-from odoo.tools.float_utils import float_round
-from datetime import datetime
 from . import ucfe_errors
-import base64
-from lxml import etree
-from io import BytesIO
-from odoo.tools import xml_utils
-from odoo.modules.module import get_module_resource
+from datetime import datetime
 from html import unescape
+import base64
 import logging
 
 
@@ -130,9 +125,7 @@ class AccountInvoice(models.Model):
             x.type in ['out_invoice', 'out_refund'] and
             x.l10n_uy_ufce_state not in ['00', '05', '06', '11'] and # Already sent and waiting status from UFCE
             # TODO possible we are missing electronic documents here, review the
-            int(x.journal_document_type_id.document_type_id.code) in [
-                101, 102, 103, 111, 112, 113, 181, 182, 121, 122, 123, 124, 131, 132, 133, 141, 142, 143, 151, 152,
-                153])
+            int(x.journal_document_type_id.document_type_id.code) > 100)
 
         no_validated = self.env['account.invoice']
 
@@ -208,6 +201,7 @@ class AccountInvoice(models.Model):
 
             ui_indexada = self._l10n_uy_get_unidad_indexada()
             self.l10n_uy_dgi_xml_request = CfeXmlOTexto
+            # from lxml import etree
             # etree.tostring(etree.fromstring(response.Resp.XmlCfeFirmado), pretty_print=True).decode('utf-8')
             self.l10n_uy_dgi_xml_response = transport.xml_response
             self.l10n_uy_cfe_uuid = response.Resp.Uuid
@@ -266,7 +260,7 @@ class AccountInvoice(models.Model):
     # TODO Consulta si un RUT es emisor electrónico 630 / 631
     # TODO RUT consultado a DGI (función 640 – Consulta a DGI por datos de RUT)
 
-    def _l10n_uy_get_invoice_line_item_detail(self):
+    def _l10n_uy_get_cfe_item_detail(self):
         """ Devuelve una lista con los datos que debemos informar por linea de factura en el CFE """
         res = []
         # e-Ticket, e-Ticket cta. Ajena y sus respectivas notas de corrección: Hasta 700
@@ -298,7 +292,7 @@ class AccountInvoice(models.Model):
         # TODO averiguar si realmente esta es la unidad indexada
         return 4.6988 * 10000
 
-    def _l10n_uy_get_receptor_detail(self):
+    def _l10n_uy_get_cfe_receptor(self):
         self.ensure_one()
         res = {}
         ui_indexada = self._l10n_uy_get_unidad_indexada()
@@ -322,6 +316,28 @@ class AccountInvoice(models.Model):
         })
         return res
 
+    def _l10n_uy_get_cfe_tag(self):
+        self.ensure_one()
+        cfe_code = int(self.journal_document_type_id.document_type_id.code)
+        if cfe_code in [101, 102, 103, 201]:
+            return 'eTck'
+        elif cfe_code in [111, 112]:
+            return 'eFact'
+        elif cfe_code in [121, 122]:
+            return 'eFact_Exp'
+        else:
+            raise UserError('Este Comprobante aun no ha sido implementado')
+
+    def _l10n_uy_get_cfe_referencia(self):
+        res = {}
+        # If is a debit/credit note cfe then we need to inform el tag referencia
+        if self.journal_document_type_id.document_type_id.internal_type in ['credit_note', 'debit_note']:
+            for k, related_cfe in enumerate(self._l10n_uy_get_related_invoices_data(), 1):
+                res.update({
+                    'NroLinRef': k,
+                })
+        return res
+
     def _l10n_uy_create_cfe(self):
         """ Create the CFE xml estructure and validate it
             :return: A dictionary with one of the following key:
@@ -333,9 +349,11 @@ class AccountInvoice(models.Model):
         cfe = self.env.ref('l10n_uy_edi.cfe_template').render({
             'move': self,
             'FchEmis': now.date().strftime('%Y-%m-%d'),
-            'item_detail': self._l10n_uy_get_invoice_line_item_detail(),
-            'totals_detail': self._l10n_uy_get_totals_detail(),
-            'receptor': self._l10n_uy_get_receptor_detail(),
+            'item_detail': self._l10n_uy_get_cfe_item_detail(),
+            'totals_detail': self._l10n_uy_get_cfe_totals(),
+            'receptor': self._l10n_uy_get_cfe_receptor(),
+            'cfe_tag': self._l10n_uy_get_cfe_tag(),
+            'referencia': self._l10n_uy_get_cfe_referencia(),
         })
         cfe = unescape(cfe.decode('utf-8')).replace(r'&', '&amp;')
 
@@ -374,7 +392,7 @@ class AccountInvoice(models.Model):
 
         return currency_name
 
-    def _l10n_uy_get_totals_detail(self):
+    def _l10n_uy_get_cfe_totals(self):
         self.ensure_one()
         res = {}
         res.update({
@@ -410,6 +428,54 @@ class AccountInvoice(models.Model):
             })
 
         return res
+
+    @api.model
+    def _get_available_journal_document_types(self, journal, invoice_type, partner):
+        """ This function filter the journal documents types taking the type of journal"""
+        res = super()._get_available_journal_document_types(journal, invoice_type, partner)
+        if journal.localization == 'uruguay':
+            domain = [('journal_id', '=', journal.id)]
+
+            if invoice_type in ['out_refund', 'in_refund']:
+                domain += [('document_type_id.internal_type', '=', 'credit_note')]
+            else:
+                domain += [('document_type_id.internal_type', 'not in', ['credit_note'])]
+
+            journal_document_types = self.env['account.journal.document.type'].search(domain)
+
+            if journal.l10n_uy_type == 'preprinted':
+                available_types = [000]
+            elif journal.l10n_uy_type == 'electronic':
+                available_types = [101, 102, 103, 111, 112, 113, 121, 122, 123, 141, 142, 143, 201, 211, 212, 213, 221, 222, 223, 241, 242, 243]
+            else:
+                res['available_journal_document_types'] = False
+                res['journal_document_type'] = False
+
+            if available_types:
+                res['available_journal_document_types'] = journal_document_types.filtered(
+                    lambda x: int(x.document_type_id.code) in available_types)
+                res['journal_document_type'] = res['available_journal_document_types'] and \
+                    res['available_journal_document_types'][0]
+        return res
+
+    @api.multi
+    def _l10n_uy_get_related_invoices_data(self):
+        """ return the related/origin cfe of a given cfe """
+        # similar to get_related_invoices_data from l10n_ar_afipws_fe, we need to remove
+        # TODO when changing to 13.0 need to change this to something like _found_related_invoice() method
+        self.ensure_one()
+        if self.document_type_internal_type in ['debit_note', 'credit_note'] and self.origin:
+            return self.search([
+                ('commercial_partner_id', '=', self.commercial_partner_id.id),
+                ('company_id', '=', self.company_id.id),
+                ('document_number', '=', self.origin),
+                ('id', '!=', self.id),
+                ('document_type_id', '!=', self.document_type_id.id),
+                ('document_type_id.localization', '=', self.localization),
+                ('state', 'not in', ['draft', 'cancel'])],
+                limit=1)
+        else:
+            return self.browse()
 
 
 class AccountInvoiceLine(models.Model):

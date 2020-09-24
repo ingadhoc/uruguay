@@ -14,6 +14,7 @@
     'data': [
         'views/res_config_settings_view.xml',
         'views/account_move_views.xml',
+        'views/account_journal_view.xml',
         'data/cfe_template.xml',
         'data/ir_sequence.xml',
     ],

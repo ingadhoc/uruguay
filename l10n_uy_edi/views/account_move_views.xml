@@ -27,7 +27,7 @@
                             <label for="l10n_uy_cfe_dgi_state"/>
                             <div>
                                 <field name="l10n_uy_cfe_dgi_state"/>
-                                <button name="action_l10n_uy_get_dgi_state" type="object" string="Consult DGI State" class="oe_inline"/>
+                                <button name="action_l10n_uy_get_dgi_state" type="object" string="Consult DGI State" class="oe_inline oe_link" attrs="{'invisible': ['|', ('l10n_uy_cfe_dgi_state', '=', '-2'), ('document_number', '=', False)]}"/>
                             </div>
                             <field name="l10n_uy_dgi_acceptation_status"/>
                             <field name="l10n_uy_dgi_barcode"/>

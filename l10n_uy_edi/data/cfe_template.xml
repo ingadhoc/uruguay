@@ -4,7 +4,7 @@
         <template id="cfe_template">
            <CFE xmlns="http://cfe.dgi.gub.uy" version="1.0">
            <!-- TODO eTck debe ser modificado depende del tipo de documento   -->
-            <eTck>
+            <t t-esc="'&lt;' + cfe_tag + '&gt;'"/>
                 <Encabezado>
                     <IdDoc>
                         <TipoCFE t-esc="int(move.journal_document_type_id.document_type_id.code)"/>
@@ -42,19 +42,19 @@
                     </Totales>
                 </Encabezado>
                 <Detalle>
-                    <t t-foreach="item_detail" t-as="item_line">
-                        <Item>
-                            <NroLinDet t-esc="item_line['NroLinDet']"/>
-                            <IndFact t-esc="item_line['IndFact']"/>
-                            <NomItem t-esc="item_line['NomItem']"/>
-                            <Cantidad t-esc="item_line['Cantidad']"/>
-                            <UniMed t-esc="item_line['UniMed']"/>
-                            <PrecioUnitario t-esc="item_line['PrecioUnitario']"/>
-                            <MontoItem t-esc="item_line['MontoItem']"/>
-                        </Item>
-                    </t>
+                    <Item t-foreach="item_detail" t-as="item_line">
+                        <NroLinDet t-esc="item_line['NroLinDet']"/>
+                        <IndFact t-esc="item_line['IndFact']"/>
+                        <NomItem t-esc="item_line['NomItem']"/>
+                        <Cantidad t-esc="item_line['Cantidad']"/>
+                        <UniMed t-esc="item_line['UniMed']"/>
+                        <PrecioUnitario t-esc="item_line['PrecioUnitario']"/>
+                        <MontoItem t-esc="item_line['MontoItem']"/>
+                    </Item>
                 </Detalle>
-            </eTck>
+                <Referencia t-if="referencia">
+                </Referencia>
+            <t t-esc="'&lt;/' + cfe_tag + '&gt;'"/>
             </CFE>
         </template>
     </data>
