@@ -30,7 +30,7 @@ class AccountInvoice(models.Model):
         ('26', 'observado por DGI pero la consulta QR indica que hay diferencias con el CFE recibido'),
     ], 'CFE DGI State', copy=False, readonly=True, track_visibility='onchange')  # EstadoEnDgiCfeRecibido
 
-    l10n_uy_ufce_state = fields.Selection([
+    l10n_uy_ucfe_state = fields.Selection([
         ('00', 'Petición aceptada y procesada'),
         ('01', 'Petición denegada'),
         ('03', 'Comercio inválido'),
@@ -43,11 +43,11 @@ class AccountInvoice(models.Model):
         ('89', 'Terminal inválida'),
         ('96', 'Error en sistema'),
         ('99', 'Sesión no iniciada'),
-    ], 'UFCE State', copy=False, readonly=True, track_visibility='onchange')  # CodRta
+    ], 'UCFE State', copy=False, readonly=True, track_visibility='onchange')  # CodRta
 
-    l10n_uy_ufce_msg = fields.Char('UFCE Mensaje de Respuesta', copy=False, readonly=True, track_visibility='onchange')  # MensajeRta
+    l10n_uy_ucfe_msg = fields.Char('UCFE Mensaje de Respuesta', copy=False, readonly=True, track_visibility='onchange')  # MensajeRta
 
-    l10n_uy_ufce_notif = fields.Selection([
+    l10n_uy_ucfe_notif = fields.Selection([
         ('5', 'Aviso de CFE emitido rechazado por DGI'),
         ('6', 'Aviso de CFE emitido rechazado por el receptor electrónico'),
         ('7', 'Aviso de CFE recibido'),
@@ -64,7 +64,7 @@ class AccountInvoice(models.Model):
         ('18', 'Aviso que a un CFE emitido se le removió una etiqueta'),
         ('19', 'Aviso que a un CFE recibido se lo ha etiquetado'),
         ('20', 'Aviso que a un CFE recibido se le removió una etiqueta'),
-        ], 'UFCE Tipo de Notificacion', copy=False, readonly=True, track_visibility='onchange')  # TipoNotificacion
+        ], 'UCFE Tipo de Notificacion', copy=False, readonly=True, track_visibility='onchange')  # TipoNotificacion
 
     l10n_uy_cfe_uuid = fields.Char(
         'Clave o UUID del CFE', help="Unique identification per CFE in UCFE. Currently is formed by the concatenation"
@@ -105,8 +105,8 @@ class AccountInvoice(models.Model):
     def action_invoice_cancel(self):
         for record in self.filtered(lambda x: x.company_id.country_id == self.env.ref('base.uy')):
             # The move cannot be modified once has been sent to UCFE
-            if record.l10n_uy_ufce_state in ['00', '05', '06', '11']:
-                raise UserError(_('This %s has been already sent to UFCE. It cannot be cancelled. '
+            if record.l10n_uy_ucfe_state in ['00', '05', '06', '11']:
+                raise UserError(_('This %s has been already sent to UCFE. It cannot be cancelled. '
                                   'You can only click Consult DGI State to update.') % record.journal_document_type_id.document_type_id.name)
             # The move cannot be modified once the CFE has been accepted by the DGI
             elif record.l10n_uy_cfe_dgi_state == '00':
@@ -123,7 +123,7 @@ class AccountInvoice(models.Model):
             lambda x: x.company_id.country_id == self.env.ref('base.uy') and
             # 13.0 account.move: x.is_invoice()
             x.type in ['out_invoice', 'out_refund'] and
-            x.l10n_uy_ufce_state not in ['00', '05', '06', '11'] and # Already sent and waiting status from UFCE
+            x.l10n_uy_ucfe_state not in ['00', '05', '06', '11'] and # Already sent and waiting status from UCFE
             # TODO possible we are missing electronic documents here, review the
             int(x.journal_document_type_id.document_type_id.code) > 100)
 
@@ -141,7 +141,7 @@ class AccountInvoice(models.Model):
             # TODO maybe this can be moved to outside the for loop
             client, auth, transport = inv.company_id._get_client(return_transport=True)
             inv._l10n_uy_dgi_post(client, auth, transport)
-            if inv.l10n_uy_ufce_state not in ['00', '05', '06', '11']:
+            if inv.l10n_uy_ucfe_state not in ['00', '05', '06', '11']:
                 no_validated += inv
 
         super(AccountInvoice, self - no_validated).action_invoice_open()
@@ -157,12 +157,12 @@ class AccountInvoice(models.Model):
         response = client.service.Invoke(data)
 
         ui_indexada = self._l10n_uy_get_unidad_indexada()
-        self.l10n_uy_ufce_state = response.Resp.CodRta or self.l10n_uy_ufce_state
-        self.l10n_uy_ufce_msg = response.Resp.MensajeRta or self.l10n_uy_ufce_msg
-        self.l10n_uy_ufce_notif = response.Resp.TipoNotificacion or self.l10n_uy_ufce_notif
+        self.l10n_uy_ucfe_state = response.Resp.CodRta or self.l10n_uy_ucfe_state
+        self.l10n_uy_ucfe_msg = response.Resp.MensajeRta or self.l10n_uy_ucfe_msg
+        self.l10n_uy_ucfe_notif = response.Resp.TipoNotificacion or self.l10n_uy_ucfe_notif
         self.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido or \
                 ('-2' if self.amount_total < ui_indexada else False) or \
-                ('-1' if self.l10n_uy_ufce_state == '11' else False) or self.l10n_uy_cfe_dgi_state
+                ('-1' if self.l10n_uy_ucfe_state == '11' else False) or self.l10n_uy_cfe_dgi_state
 
     # Main methods
 
@@ -205,14 +205,14 @@ class AccountInvoice(models.Model):
             # etree.tostring(etree.fromstring(response.Resp.XmlCfeFirmado), pretty_print=True).decode('utf-8')
             self.l10n_uy_dgi_xml_response = transport.xml_response
             self.l10n_uy_cfe_uuid = response.Resp.Uuid
-            self.l10n_uy_ufce_state = response.Resp.CodRta
+            self.l10n_uy_ucfe_state = response.Resp.CodRta
 
             self.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido or \
                 ('-2' if self.amount_total < ui_indexada else False) or \
-                ('-1' if self.l10n_uy_ufce_state == '11' else False)
+                ('-1' if self.l10n_uy_ucfe_state == '11' else False)
 
-            self.l10n_uy_ufce_msg = response.Resp.MensajeRta
-            self.l10n_uy_ufce_notif = response.Resp.TipoNotificacion
+            self.l10n_uy_ucfe_msg = response.Resp.MensajeRta
+            self.l10n_uy_ucfe_notif = response.Resp.TipoNotificacion
 
             self.l10n_ar_currency_rate = getattr(response.Resp, 'TpoCambio', 0)
 
@@ -240,7 +240,7 @@ class AccountInvoice(models.Model):
             # 'IdReq': '1',
             # 'RutEmisor': None,
 
-            # ??? – Recepcion de CFE en UFCE
+            # ??? – Recepcion de CFE en UCFE
             # ??? – Conversion y validation
             # TODO comprobar. este devolvera un campo clave llamado UUID que permite identificar el comprobante, si es enviando dos vence sno genera otro CFE firmado
 

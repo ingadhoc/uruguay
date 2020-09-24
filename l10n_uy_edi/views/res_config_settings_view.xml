@@ -13,7 +13,7 @@
                     <div class="col-xs-12 col-md-6 o_setting_box" groups="base.group_no_one">
                         <div class="o_setting_left_pane"/>
                         <div class="o_setting_right_pane">
-                            <span class="o_form_label">UFCE Web Services</span>
+                            <span class="o_form_label">UCFE Web Services</span>
                             <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                             <div class="content-group">
                                 <div class="row">

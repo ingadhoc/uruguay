@@ -15,9 +15,9 @@
                 <page name="uy_dgi" string="DGI">
                     <group>
                         <group string="UCFE">
-                            <field name="l10n_uy_ufce_state"/>
-                            <field name="l10n_uy_ufce_msg"/>
-                            <field name="l10n_uy_ufce_notif"/>
+                            <field name="l10n_uy_ucfe_state"/>
+                            <field name="l10n_uy_ucfe_msg"/>
+                            <field name="l10n_uy_ucfe_notif"/>
                             <field name="l10n_uy_cfe_partner_status"/>
                             <field name="l10n_uy_cfe_uuid"/>
                             <field name="l10n_uy_cfe_file" widget="binary"/>
