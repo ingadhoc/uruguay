@@ -52,7 +52,14 @@
                         <MontoItem t-esc="item_line['MontoItem']"/>
                     </Item>
                 </Detalle>
-                <Referencia t-if="referencia">
+                <Referencia t-if="referencia_lines">
+                    <Referencia t-foreach="referencia_lines" t-as="referencia">
+                        <NroLinRef t-esc="referencia['NroLinRef']"/>
+                        <TpoDocRef t-esc="referencia['TpoDocRef']"/>
+                        <Serie t-esc="referencia['Serie']"/>
+                        <NroCFERef t-esc="referencia['NroCFERef']"/>
+                        <!-- <FechaCFEref t-esc="referencia['FechaCFEref']"/> -->
+                    </Referencia>
                 </Referencia>
             <t t-esc="'&lt;/' + cfe_tag + '&gt;'"/>
             </CFE>

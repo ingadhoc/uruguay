@@ -20,7 +20,8 @@
                             <field name="l10n_uy_ucfe_notif"/>
                             <field name="l10n_uy_cfe_partner_status"/>
                             <field name="l10n_uy_cfe_uuid"/>
-                            <field name="l10n_uy_cfe_file" widget="binary"/>
+                            <field name="l10n_uy_cfe_file"/>
+                            <button name="action_l10n_uy_get_pdf" type="object" string="Print Legal PDF" class="oe_inline oe_link"/>
                         </group>
                         <group string="DGI">
                             <field name="document_number"/>

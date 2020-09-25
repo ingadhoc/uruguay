@@ -25,14 +25,10 @@ class ResConfigSettings(models.TransientModel):
     def l10n_uy_connection_test(self):
         """ Make a ECO test to UCFE """
         self.ensure_one()
-        client, _auth = self.company_id._get_client()
-
-        # TODO review if odoo already save utc, if true then use fields.Datetime.now() directly
         now = datetime.utcnow()
-        req_data = {'FechaReq': now.date().strftime('%Y%m%d'),
-                    'HoraReq': now.strftime('%H%M%S')}
-        data = self.company_id._l10n_uy_get_data('820', req_data)
-        response = client.service.Invoke(data)
+        response = self.company_id._l10n_uy_ucfe_inbox_operation('820', {
+            'FechaReq': now.date().strftime('%Y%m%d'),
+            'HoraReq': now.strftime('%H%M%S')})
         if response.ErrorCode == 0 and response.ErrorMessage is None and response.Resp.TipoMensaje == 821:
             raise UserError(_('Everything is ok!'))
 

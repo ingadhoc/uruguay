@@ -83,6 +83,7 @@ class ResCompany(models.Model):
         """ Get zeep client to connect to the webservice """
         self.ensure_one()
         self._is_connection_info_complete()
+        # TODO esto no se usa para nada?
         auth = {'Username': self.l10n_uy_ucfe_user, 'Password': self.l10n_uy_ucfe_password}
 
         wsdl = self.l10n_uy_ucfe_inbox_url
@@ -113,15 +114,16 @@ class ResCompany(models.Model):
             raise UserError(_('Connection is not working. This is what we get %s' % repr(error)))
 
         if return_transport:
-            return client, auth, transport
-        return client, auth
+            return client, transport
+        return client
 
-    def _l10n_uy_get_data(self, msg_type, extra_req={}):
+    def _l10n_uy_ucfe_inbox_operation(self, msg_type, extra_req={}, return_transport=False):
+        """ Call Operation get in msg_type for UCFE inbox webservice """
         self.ensure_one()
         # TODO I think this should be unique? see how we can generated it,  int, need to be assing using a
-        # sequence in odoo? consumir secuencia creada en Odoo
+        # sequence in odoo?
+        # TODO consumir secuencia creada en Odoo
         id_req = 1
-
         now = datetime.utcnow()
         data = {'Req': {'TipoMensaje': msg_type, 'CodComercio': self.l10n_uy_ucfe_commerce_code,
                         'CodTerminal': self.l10n_uy_ucfe_terminal_code, 'IdReq': id_req},
@@ -131,4 +133,32 @@ class ResCompany(models.Model):
                 'Tout': '30000'}
         if extra_req:
             data.get('Req').update(extra_req)
-        return data
+
+        res = self._get_client(return_transport=return_transport)
+        client = res[0] if isinstance(res, tuple) else res
+        transport = res[1] if isinstance(res, tuple) else False
+        response = client.service.Invoke(data)
+        return (response, transport) if return_transport else response
+
+    # TODO
+    # Servicio para listados con autenticación en los cabezales SOAP
+    # Url de publicación del servicio/ WebServicesListadosFE.svc
+
+    # Servicio para obtener el Informe de cierre parcial de operaciones con autenticación en los cabezales SOAP:
+    # Url de publicación del servicio/ WebServicesReportesFE.svc
+
+    # 7.1.1 Consulta de CFE rechazados por DGI
+    # Esta operación permitirá consultar los CFE rechazados de una empresa en determinada fecha.
+    # Operación a invocar: ComprobantesPorEmpresaDenegadosPorDgi
+    # Parámetros:
+    # • rut, indicando el RUT de la empresa que emitió los CFE.
+    # • fechaComprobante, indicando la fecha en la que se rechazaron los comprobantes.
+    # Respuesta:
+    # Arreglo de Comprobantes, conteniendo todos los comprobantes rechazados para la empresa indicada en la fecha informada.
+    # La entidad Comprobante contiene los siguientes campos:
+    # ▪ CodigoComercio, conteniendo el código de la sucursal que emitió el comprobante.
+    # ▪ CodigoTerminal, conteniendo el código del punto de emisión que emitió el comprobante.
+    # ▪ Numero, conteniendo el número del comprobante.
+    # ▪ Serie, conteniendo la serie del comprobante.
+    # ▪ TipoCfe, conteniendo el tipo del CFE según su número indicado en DGI
+    # ▪ Uuid, conteniendo el identificador externo asignado al CFE

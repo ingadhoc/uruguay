@@ -1,8 +1,24 @@
 <?xml version='1.0' encoding='utf-8'?>
 <odoo>
 
-    <record model='res.partner' id='partner_test'>
+    <record model='res.partner' id='demo_partner_1'>
         <field name='name'>3 Empresa Prueba</field>
+        <field name='main_id_category_id' ref='it_rut'/>
+        <field name='main_id_number'>219000090011</field>
+        <field name="customer" eval="True"/>
+        <field name="supplier" eval="True"/>
+    </record>
+
+    <record model='res.partner' id='demo_partner_2'>
+        <field name='name'>4 Empresa Prueba</field>
+        <field name='main_id_category_id' ref='it_rut'/>
+        <field name='main_id_number'>219999820013</field>
+        <field name="customer" eval="True"/>
+        <field name="supplier" eval="True"/>
+    </record>
+
+    <record model='res.partner' id='demo_partner_3'>
+        <field name='name'>5 Empresa Prueba</field>
         <field name='main_id_category_id' ref='it_rut'/>
         <field name='main_id_number'>219999830019</field>
         <field name="customer" eval="True"/>

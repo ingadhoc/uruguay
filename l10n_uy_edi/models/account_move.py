@@ -4,6 +4,7 @@ from odoo.exceptions import UserError
 from . import ucfe_errors
 from datetime import datetime
 from html import unescape
+import re
 import base64
 import logging
 
@@ -139,8 +140,7 @@ class AccountInvoice(models.Model):
                 continue
 
             # TODO maybe this can be moved to outside the for loop
-            client, auth, transport = inv.company_id._get_client(return_transport=True)
-            inv._l10n_uy_dgi_post(client, auth, transport)
+            inv._l10n_uy_dgi_post()
             if inv.l10n_uy_ucfe_state not in ['00', '05', '06', '11']:
                 no_validated += inv
 
@@ -149,12 +149,7 @@ class AccountInvoice(models.Model):
     def action_l10n_uy_get_dgi_state(self):
         """ 360: Consulta de estado de CFE: estado del comprobante en DGI, """
         self.ensure_one()
-        client, auth = self.company_id._get_client()
-        req_data = {
-            'Uuid': self.l10n_uy_cfe_uuid,
-        }
-        data = self._l10n_uy_get_data('360', req_data)
-        response = client.service.Invoke(data)
+        response = self.company_id._l10n_uy_ucfe_inbox_operation('360', {'Uuid': self.l10n_uy_cfe_uuid})
 
         ui_indexada = self._l10n_uy_get_unidad_indexada()
         self.l10n_uy_ucfe_state = response.Resp.CodRta or self.l10n_uy_ucfe_state
@@ -166,38 +161,17 @@ class AccountInvoice(models.Model):
 
     # Main methods
 
-    def _l10n_uy_get_data(self, msg_type, extra_req={}):
-        self.ensure_one()
-        id_req = 1
-        # TODO I think this should be unique? see how we can generated it,  int, need to be assing using a
-        # sequence in odoo?
-        now = datetime.utcnow()
-        data = {
-            'Req': {'TipoMensaje': msg_type, 'CodComercio': self.company_id.l10n_uy_ucfe_commerce_code,
-                    'CodTerminal': self.company_id.l10n_uy_ucfe_terminal_code, 'IdReq': id_req},
-            'CodComercio': self.company_id.l10n_uy_ucfe_commerce_code,
-            'CodTerminal': self.company_id.l10n_uy_ucfe_terminal_code,
-            'RequestDate': now.replace(microsecond=0).isoformat(),
-            'Tout': '30000',
-        }
-        if extra_req:
-            data.get('Req').update(extra_req)
-        return data
-
-    def _l10n_uy_dgi_post(self, client, auth, transport):
+    def _l10n_uy_dgi_post(self):
         """ Implementation via web service of service 310 – Firma y envío de CFE (individual) """
         for inv in self:
             now = datetime.utcnow()
             CfeXmlOTexto = self._l10n_uy_create_cfe().get('cfe_str')
-            req_data = {
+            response, transport = self.company_id._l10n_uy_ucfe_inbox_operation('310', {
                 'Uuid': 'account.invoice-' + str(self.id),  # TODO we need to set this unique how?
                 'TipoCfe': int(inv.journal_document_type_id.document_type_id.code),
                 'HoraReq': now.strftime('%H%M%S'),
                 'FechaReq': now.date().strftime('%Y%m%d'),
-                'CfeXmlOTexto': CfeXmlOTexto,
-            }
-            data = inv._l10n_uy_get_data('310', req_data)
-            response = client.service.Invoke(data)
+                'CfeXmlOTexto': CfeXmlOTexto}, return_transport=1)
 
             ui_indexada = self._l10n_uy_get_unidad_indexada()
             self.l10n_uy_dgi_xml_request = CfeXmlOTexto
@@ -329,12 +303,20 @@ class AccountInvoice(models.Model):
             raise UserError('Este Comprobante aun no ha sido implementado')
 
     def _l10n_uy_get_cfe_referencia(self):
-        res = {}
+        res = []
         # If is a debit/credit note cfe then we need to inform el tag referencia
         if self.journal_document_type_id.document_type_id.internal_type in ['credit_note', 'debit_note']:
+            related_cfe = self._l10n_uy_get_related_invoices_data()
+            if not related_cfe:
+                raise UserError(_('Para validar una ND/NC debe informar el Documento de Origen'))
             for k, related_cfe in enumerate(self._l10n_uy_get_related_invoices_data(), 1):
-                res.update({
+                document_number = re.search(r"([A-Z]*)([0-9]*)", related_cfe.document_number).groups()
+                res.append({
                     'NroLinRef': k,
+                    'TpoDocRef': int(related_cfe.journal_document_type_id.document_type_id.code),
+                    'Serie': document_number[0],
+                    'NroCFERef': document_number[1],
+                    # 'FechaCFEref': 2015-01-31, TODO inform?
                 })
         return res
 
@@ -353,17 +335,12 @@ class AccountInvoice(models.Model):
             'totals_detail': self._l10n_uy_get_cfe_totals(),
             'receptor': self._l10n_uy_get_cfe_receptor(),
             'cfe_tag': self._l10n_uy_get_cfe_tag(),
-            'referencia': self._l10n_uy_get_cfe_referencia(),
+            'referencia_lines': self._l10n_uy_get_cfe_referencia(),
         })
         cfe = unescape(cfe.decode('utf-8')).replace(r'&', '&amp;')
 
-        # Check CFE XML valid files
-        # 350: Validación de estructura de CFE
-        client, _auth = self.company_id._get_client()
-        data = self._l10n_uy_get_data('350', {'CfeXmlOTexto': cfe})
-        response = client.service.Invoke(data)
-        # import pdb; pdb.set_trace()
-
+        # Check CFE XML valid files: 350: Validación de estructura de CFE
+        response = self.company_id._l10n_uy_ucfe_inbox_operation('350', {'CfeXmlOTexto': cfe})
         if response.Resp.CodRta != '00':
             # response.Resp.CodRta  30 o 31,   01, 12, 96, 99, ? ?
             # response.Resp.MensajeRta
@@ -477,6 +454,195 @@ class AccountInvoice(models.Model):
         else:
             return self.browse()
 
+    def action_cfe_inform_commercial_status(self, rejection=False):
+        # TODO only applies for vendor bills
+        # Código Motivos de rechazo de un CFE DGI Receptor
+        rejection_reasons = [
+            # DGI Codes
+            ('E01', 'Tipo y Nº de CFE ya fue reportado como anulado'),
+            ('E02', 'Tipo y Nº de CFE ya existe en los registros'),  # Also Receptor Codes
+            ('E03', 'Tipo y Nº de CFE no se corresponden con el CAE'),  # Also Receptor Codes
+            ('E04', 'Firma electrónica no es válida'),  # Also Receptor Codes
+            ('E05', 'No cumple validaciones (*) de Formato comprobantes'),  # Also Receptor Codes
+            ('E07', 'Fecha Firma de CFE no se corresponde con fecha CAE'),  # Also Receptor Codes
+            ('E08', 'No coincide RUC de CFE y Complemento Fiscal'),
+            ('E09', 'RUC emisor y/o tipo de CFE no se corresponden con el CAE'),
+
+            # Receptor
+            ('E20', 'Orden de compra vencida'),
+            ('E21', 'Mercadería en mal estado'),
+            ('E22', 'Proveedor inhabilitado por organismo de contralor'),
+            ('E23', 'Contraprestación no recibida'),
+            ('E24', 'Diferencia precios y/o descuentos'),
+            ('E25', 'Factura con error cálculos'),
+            ('E26', 'Diferencia con plazos'),
+            ('E27', ''),
+            ('E28', ''),
+            ('E29', ''),
+            ('E30', ''),
+            ('E60', ''),
+        ]
+
+        # 410 - Informar aceptación/rechazo comercial de un CFE recibido.
+        req_data = {
+            'Uuid': self.l10n_uy_cfe_uuid,
+            'TipoCfe': int(inv.journal_document_type_id.document_type_id.code),
+            'CodRta': '01' if rejection else '00',
+        }
+        if rejection:
+            # TODO let the user to select a rejection reason and code
+            req_data['RechCom'] = [(rejection_reasons[1][0], rejection_reasons[1][1])]
+            # TODO
+            # Es una lista de hasta 30 registros con dos campos:
+            # • Código de rechazo de 3 posiciones. Los códigos posibles son E01 a E60 según define DGI.
+            # • Descripción del código de rechazo (glosa) de 50 posiciones.
+            # Cada registro tiene 53 posiciones fijas, pueden llegar hasta 30 registros por lo que el largo total del campo es de 1590 posiciones.
+
+        response = self.company_id._l10n_uy_ucfe_inbox_operation('410', req_data)
+        if response.Resp.CodRta != '411':
+            raise UserError(_('No se pudo procesar la aceptación/rechazo comerncial'))
+        # import pdb; pdb.set_trace()
+
+    @api.model
+    def l10n_uy_get_ucfe_notif(self):
+        # TODO test it
+
+        # 600 - Consulta de Notificacion Disponible
+        response = self.company_id._l10n_uy_ucfe_inbox_operation('600')
+        # import pdb; pdb.set_trace()
+
+        # If there is notifications
+        if response.Resp.CodRta == '00':
+            # response.Resp.TipoNotificacion
+
+            # 610 - Solicitud de datos de Notificacion
+            response2 = self.company_id._l10n_uy_ucfe_inbox_operation('610', {'idReq': response.Resp.idReq})
+
+            # ('5', 'Aviso de CFE emitido rechazado por DGI'), or
+            # ('6', 'Aviso de CFE emitido rechazado por el receptor electrónico'),
+                # Uuid
+                # TipoCfe
+                # Serie
+                # NumeroCfe
+                # MensajeRta
+
+            # ('7', 'Aviso de CFE recibido'),
+                # Uuid
+                # TipoCfe
+                # Serie
+                # NumeroCfe
+                # XmlCfeFirmado
+                # Adenda
+                # RutEmisor
+                # Etiquetas
+                # EstadoEnDgiCfeRecibido
+
+            # ('8', 'Aviso de anulación de CFE recibido'),
+            # ('9', 'Aviso de aceptación comercial de un CFE recibido'),
+            # ('10', 'Aviso de aceptación comercial de un CFE recibido en la gestión UCFE'),
+                # Uuid
+                # TipoCfe
+                # Serie
+                # NumeroCfe
+                # RutEmisor
+
+            # ('11', 'Aviso de que se ha emitido un CFE'),
+            # ('12', 'Aviso de que se ha emitido un CFE en la gestión UCFE'),
+                # Uuid
+                # TipoCfe
+                # Serie
+                # NumeroCfe
+                # XmlCfeFirmado
+                # Adenda
+                # Etiquetas
+
+            # ('13', 'Aviso de rechazo comercial de un CFE recibido'),
+                # Uuid
+                # TipoCfe
+                # Serie
+                # NumeroCfe
+                # MensajeRta
+                # RutEmisor
+
+            # ('14', 'Aviso de rechazo comercial de un CFE recibido en la gestión UCFE'),
+                # Uuid
+                # TipoCfe
+                # Serie
+                # NumeroCfe
+                # RutEmisor
+
+            # ('15', 'Aviso de CFE emitido aceptado por DGI'),
+            # ('16', 'Aviso de CFE emitido aceptado por el receptor electrónico'),
+                # Uuid
+                # TipoCfe
+                # Serie
+                # NumeroCfe
+
+            # ('17', 'Aviso que a un CFE emitido se lo ha etiquetado'),
+            # ('18', 'Aviso que a un CFE emitido se le removió una etiqueta'),
+                # Uuid
+                # TipoCfe
+                # Serie
+                # NumeroCfe
+                # RutEmisor
+
+            # ('19', 'Aviso que a un CFE recibido se lo ha etiquetado'),
+            # ('20', 'Aviso que a un CFE recibido se le removió una etiqueta'),
+                # Uuid
+                # TipoCfe
+                # Serie
+                # NumeroCfe
+                # RutEmisor
+                # Etiquetas
+
+        elif response.Resp.CodRta == '01':
+            raise UserError(_('No hay notificaciones disponibles en el UCFE'))
+        else:
+            raise UserError(_('ERROR: esto es lo que recibimos %s') % response)
+
+        # TODO 620 - Descartar Notificacion
+        # response3 = self.company_id._l10n_uy_ucfe_inbox_operation('620', {
+        #     'idReq': response.Resp.idReq, 'TipoNotificacion': response.Resp.TipoNotificacion})
+        # if response3.Resp.CodRta != '00':
+        #     raise UserError(_('ERROR: la notificacion no pudo descartarse %s') % response)
+
+    def action_l10n_uy_get_pdf(self):
+        # TODO  7.1.9 Representación impresa estándar de un CFE emitido en formato PDF
+        # Esta operación permitirá obtener la representación impresa estándar de un CFE emitido por la empresa en formato PDF.
+        # Operación a invocar: ObtenerPdf
+        # Respuesta:
+        # • Arreglo de bytes, conteniendo el PDF de la representación impresa estándar del CFE consultado.
+
+        self.ensure_one()
+        self.company_id._is_connection_info_complete()
+        auth = {'Username': self.company_id.l10n_uy_ucfe_user, 'Password': self.company_id.l10n_uy_ucfe_password}
+        wsdl = self.company_id.l10n_uy_ucfe_query_url
+        if not wsdl.endswith('?wsdl'):
+            wsdl += '?wsdl'
+
+        # try:
+        # transport = UYTransport(operation_timeout=60, timeout=60)
+        # TODO delete once pass it to company
+        from zeep.wsse.username import UsernameToken
+        from zeep import Client
+
+        user_name_token = UsernameToken(self.company_id.l10n_uy_ucfe_user, self.company_id.l10n_uy_ucfe_password)
+        client = Client(wsdl, wsse=user_name_token)
+        # client = Client(wsdl, transport=transport, wsse=user_name_token)
+        document_number = re.search(r"([A-Z]*)([0-9]*)", self.document_number).groups()
+        # ws_method = 'ObtenerPdf'
+        req_data = {
+            'rut': self.company_id.partner_id.main_id_number,
+            # TODO rutRecibido, indicando el RUT de la empresa que emitió el CFE.
+            'tipoCfe': int(self.journal_document_type_id.document_type_id.code),
+            'serieCfe': document_number[0],
+            'numeroCfe': document_number[1],
+        }
+        response = client.service['ObtenerPdf'](**req_data)
+        self.env['ir.attachment'].create({
+            'name': 'ultima.pdf', 'res_model': self._name, 'res_id': self.id, 'type': 'binary',
+            'datas': base64.b64encode(response)
+        })
 
 class AccountInvoiceLine(models.Model):
 
@@ -496,20 +662,21 @@ class AccountInvoiceLine(models.Model):
             tax_vat_22.id: 3,       # 3: Gravado a Tasa Básica
 
             # TODO implement this cases
+            # 10: Exportación y asimiladas
+
+            # Another cases for future
             # 4: Gravado a Otra Tasa/IVA sobre fictos
             # 5: Entrega Gratuita. Por ejemplo docenas de trece
             # 6: Producto o servicio no facturable. No existe validación, excepto si A-C20= 1, B-C4=6 o 7.
             # 7: Producto o servicio no facturable negativo. . No existe validación, excepto si A-C20= 1, B-C4=6 o 7.
             # 8: Sólo para remitos: Ítem a rebajar en e-remitos y en e- remitos de exportación. En área de referencia se debe indicar el N° de remito que ajusta
             # 9: Sólo para resguardos: Ítem a anular en resguardos. En área de referencia se debe indicar el N° de resguardo que anular
-            # 10: Exportación y asimiladas
             # 11: Impuesto percibido
             # 12: IVA en suspenso
             # 13: Sólo para e-Boleta de entrada y sus notas de corrección: Ítem vendido por un no contribuyente (valida que A-C60≠2)
             # 14: Sólo para e-Boleta de entrada y sus notas de corrección: Ítem vendido por un contribuyente IVA mínimo, Monotributo o Monotributo MIDES (valida que A-C60=2)
             # 15: Sólo para e-Boleta de entrada y sus notas de corrección: Ítem vendido por un contribuyente IMEBA (valida A-C60 = 2)
             # 16: Sólo para ítems vendidos por contribuyentes con obligación IVA mínimo, Monotributo o Monotributo MIDES. Si A-C10=3, no puede utilizar indicadores 1, 2, 3, 4, 11 ni 12
-
-            # TODO parece que tenemos estos tipos de contribuyente: IVA mínimo, Monotributo o Monotributo MIDES
+            # TODO parece que tenemos estos tipos de contribuyente: IVA mínimo, Monotributo o Monotributo MIDES ver si crarlos en el patner asi como la afip responsibility
         }
         return value.get(self.invoice_line_tax_ids.id)
