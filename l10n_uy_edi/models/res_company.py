@@ -79,14 +79,11 @@ class ResCompany(models.Model):
             return False
         return True
 
-    def _get_client(self, return_transport=False):
+    def _get_client(self, url, return_transport=False):
         """ Get zeep client to connect to the webservice """
         self.ensure_one()
         self._is_connection_info_complete()
-        # TODO esto no se usa para nada?
-        auth = {'Username': self.l10n_uy_ucfe_user, 'Password': self.l10n_uy_ucfe_password}
-
-        wsdl = self.l10n_uy_ucfe_inbox_url
+        wsdl = url
         if not wsdl.endswith('?wsdl'):
             wsdl += '?wsdl'
 
@@ -94,22 +91,6 @@ class ResCompany(models.Model):
             transport = UYTransport(operation_timeout=60, timeout=60)
             user_name_token = UsernameToken(self.l10n_uy_ucfe_user, self.l10n_uy_ucfe_password)
             client = Client(wsdl, transport=transport, wsse=user_name_token)
-
-            # TESTING 1
-            # from requests import Session
-            # from odoo.modules.module import get_module_resource
-            # session = Session()
-            # session.verify = get_module_resource('l10n_uy_edi', 'demo', 'CorreoUruguayoCA.crt')
-            # transport = UYTransport(session=session, operation_timeout=60, timeout=60)
-            # client = Client(wsdl, transport=transport, wsse=UsernameToken(self.l10n_uy_ucfe_user, self.l10n_uy_ucfe_password))
-            # # RESULT
-            # # Connection is not working. This is what we get SSLError(MaxRetryError('HTTPSConnectionPool(host=\'test.ucfe.com.uy\', port=443): Max retries exceeded with url: /Inbox115/CfeService.svc?wsdl (Caused by SSLError(SSLError("bad handshake: Error([(\'SSL routines\', \'tls_process_server_certificate\', \'certificate verify failed\')],)",),))',),)
-
-            # TESTING 2
-            # from zeep.wsse.signature import Signature
-            # signature = Signature(private_key_filename, public_key_filename, optional_password)
-            # client = Client(wsdl, transport=transport, wsse=[user_name_token, signature])
-
         except Exception as error:
             raise UserError(_('Connection is not working. This is what we get %s' % repr(error)))
 
@@ -134,10 +115,18 @@ class ResCompany(models.Model):
         if extra_req:
             data.get('Req').update(extra_req)
 
-        res = self._get_client(return_transport=return_transport)
+        res = self._get_client(self.l10n_uy_ucfe_inbox_url, return_transport=return_transport)
         client = res[0] if isinstance(res, tuple) else res
         transport = res[1] if isinstance(res, tuple) else False
         response = client.service.Invoke(data)
+        return (response, transport) if return_transport else response
+
+    def _l10n_uy_ucfe_query(self, method, req_data={}, return_transport=False):
+        """ Call UCFE query webservices """
+        res = self._get_client(self.l10n_uy_ucfe_query_url, return_transport=return_transport)
+        client = res[0] if isinstance(res, tuple) else res
+        transport = res[1] if isinstance(res, tuple) else False
+        response = client.service[method](**req_data)
         return (response, transport) if return_transport else response
 
     # TODO

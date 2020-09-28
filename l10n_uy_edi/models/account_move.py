@@ -72,6 +72,22 @@ class AccountInvoice(models.Model):
         " of model name + record id", copy=False)
     # TODO este numero debe ser maximo 36 caracteres máximo. esto debemos mejorarlo
 
+    l10n_uy_cfe_sale_mod = fields.Selection([
+        (1, 'Régimen General'),
+        (2, 'Consignación'),
+        (3, 'Precio Revisable'),
+        (4, 'Bienes propios a exclaves aduaneros'),
+        (90, 'Régimen general- exportación de servicios'),
+        (99, 'Otras transacciones'),
+    ], 'Modalidad de Venta', help="Este campo debe enviarse cuando se reporta un CFE de tipo e-Facutra de Exportación")
+    l10n_uy_cfe_transport_route = fields.Selection([
+        (1, 'Marítimo'),
+        (2, 'Aéreo'),
+        (3, 'Terrestre'),
+        (8, 'N/A'),
+        (9, 'Otro'),
+    ], 'Vía de Transporte', help="Este campo debe enviarse cuando se reporta un CFE de tipo e-Facutra de Exportación")
+
     l10n_uy_dgi_xml_request = fields.Text('DGI XML Request', copy=False, readonly=True, groups="base.group_system")
     l10n_uy_dgi_xml_response = fields.Text('DGI XML Response', copy=False, readonly=True, groups="base.group_system")
     l10n_uy_dgi_barcode = fields.Text('DGI Barcode', copy=False, readonly=True, groups="base.group_system")
@@ -100,6 +116,7 @@ class AccountInvoice(models.Model):
     - Not sent: the CFE has not been sent to the partner but it has sent to DGI.
     - Sent: The CFE has been sent to the partner.""")
     l10n_uy_cfe_file = fields.Many2one('ir.attachment', string='CFE XML file', copy=False)
+    l10n_uy_cfe_pdf = fields.Many2one('ir.attachment', string='CFE PDF Representation', copy=False)
 
     # Buttons
 
@@ -166,12 +183,14 @@ class AccountInvoice(models.Model):
         for inv in self:
             now = datetime.utcnow()
             CfeXmlOTexto = self._l10n_uy_create_cfe().get('cfe_str')
-            response, transport = self.company_id._l10n_uy_ucfe_inbox_operation('310', {
+            req_data = {
                 'Uuid': 'account.invoice-' + str(self.id),  # TODO we need to set this unique how?
                 'TipoCfe': int(inv.journal_document_type_id.document_type_id.code),
                 'HoraReq': now.strftime('%H%M%S'),
                 'FechaReq': now.date().strftime('%Y%m%d'),
-                'CfeXmlOTexto': CfeXmlOTexto}, return_transport=1)
+                'CfeXmlOTexto': CfeXmlOTexto}
+            req_data.update(self._l10n_uy_get_cfe_serie())
+            response, transport = self.company_id._l10n_uy_ucfe_inbox_operation('310', req_data, return_transport=1)
 
             ui_indexada = self._l10n_uy_get_unidad_indexada()
             self.l10n_uy_dgi_xml_request = CfeXmlOTexto
@@ -191,6 +210,20 @@ class AccountInvoice(models.Model):
             self.l10n_ar_currency_rate = getattr(response.Resp, 'TpoCambio', 0)
 
             if response.Resp.CodRta not in ['00', '05', '06', '11']:
+                # * 00 y 11, el CFE ha sido aceptado (con el 11 aún falta la confirmación definitiva de DGI).
+                # El punto de emisión no debe volver a enviar el documento.
+                # Se puede consultar el estado actual de un CFE para el que se recibió 11 con los mensajes de consulta
+                # disponibles.
+                # • 01 y 05 son rechazos. Cuando rechaza DGI se recibe 05 e implica que quedó anulado el documento.
+                # El punto de emisión no debe volver a enviar el comprobante ni tampoco enviar una nota de crédito
+                # para comenzar.
+                # * 03 y 89, indican un problema de configuración en UCFE.
+                # El punto de emisión debe enviar de nuevo el CFE luego de que el administrador configure correctamente
+                # los parámetros
+                # • 12, 94 y 99 no se van a recibir.
+                # • 30, falta algún campo requerido para el mensaje que se está enviando. Requiere estudio técnico, el punto de emisión no debe volver a enviar el documento hasta que no se solucione el problema.
+                # • 31, error de formato en el CFE pues se encuentra mal armado el XML. Requiere estudio técnico, el punto de emisión no debe volver a enviar el documento hasta que no se solucione el problema.
+                # • 96, error interno en UCFE (por ejemplo bug, motor de base de datos caído, disco lleno, etc.). Requiere soporte técnico, el punto de emisión debe enviar de nuevo el CFE cuando se solucione el problema
                 return
 
             # If everything is ok we save the return information
@@ -274,8 +307,9 @@ class AccountInvoice(models.Model):
         cond_e_fact = document_type in [111, 112, 113, 141, 142, 143]
         cond_e_ticket = document_type in [101, 102, 103, 131, 132, 133] and self.amount_total > ui_indexada
         cond_e_boleta = document_type in [151, 152, 153]
+        cond_e_contg = document_type in [201, 202, 203]
 
-        if cond_e_fact or cond_e_ticket or cond_e_boleta:
+        if cond_e_fact or cond_e_ticket or cond_e_boleta or cond_e_contg:
             # cond_e_fact: obligatorio RUC (C60= 2).
             # cond_e_ticket: si monto neto ∑ (C112 a C118) > a tope establecido (ver tabla E), debe identificarse con NIE, RUC, CI, Otro, Pasaporte DNI o NIFE (C 60= 2, 3, 4, 5, 6 o 7).
 
@@ -287,7 +321,7 @@ class AccountInvoice(models.Model):
                 'TipoDocRecep': tipo_doc,  # C60
                 'CodPaisRecep': self.partner_id.country_id.code or cod_pais,   # C61
                 'DocRecep' if tipo_doc in [1, 2, 3] else 'DocRecepExt': self.partner_id.main_id_number,  # C62 / C62.1
-        })
+            })
         return res
 
     def _l10n_uy_get_cfe_tag(self):
@@ -301,6 +335,17 @@ class AccountInvoice(models.Model):
             return 'eFact_Exp'
         else:
             raise UserError('Este Comprobante aun no ha sido implementado')
+
+    def _l10n_uy_get_cfe_serie(self):
+        """ Si soy ticket de contingencia usar los valores que estan definidos en el Odoo """
+        res = {}
+        cfe_code = int(self.journal_document_type_id.document_type_id.code)
+        if cfe_code > 200:
+            res.update({
+                'Serie': self.journal_id.code,
+                'NumeroCfe': self.journal_id.sequence_number_next,
+            })
+        return res
 
     def _l10n_uy_get_cfe_referencia(self):
         res = []
@@ -320,6 +365,40 @@ class AccountInvoice(models.Model):
                 })
         return res
 
+    # TODO I think this 3 methods can be merged in one?
+
+    def _l10n_uy_get_cfe_caluventa(self):
+        if not self.incoterm_id:
+            raise UserError(_('Para reportar factura de exportación debe indicar el incoterm correspondiente'))
+        return self.incoterm_id.code
+
+    def _l10n_uy_get_cfe_modventa(self):
+        if not self.l10n_uy_cfe_sale_mod:
+            raise UserError(_('Para reportar facturas de exportación debe indicar la modalidad de venta correspondiente'))
+        return self.l10n_uy_cfe_sale_mod
+
+    def _l10n_uy_get_cfe_viatransp(self):
+        if not self.l10n_uy_cfe_transport_route:
+            raise UserError(_('Para reportar facturas de exportación debe indicar la via de transporte correspondiente'))
+        return self.l10n_uy_cfe_transport_route
+
+    def _l10n_uy_get_cfe_iddoc(self):
+        self.ensure_one()
+        cfe_code = int(self.journal_document_type_id.document_type_id.code)
+        now = datetime.utcnow()  # TODO this need to be the same as the tipo de mensaje?
+        res = {
+            'FmaPago': 1 if self.l10n_uy_invoice_type == 'cash' else 2,
+            'FchEmis': now.date().strftime('%Y-%m-%d'),
+        }
+        if cfe_code in [121, 122, 123]:  # Factura de Exportación
+            res.update({
+                'ModVenta': self._l10n_uy_get_cfe_modventa(),
+                'ClauVenta': self._l10n_uy_get_cfe_caluventa(),
+                'ViaTransp':  self._l10n_uy_get_cfe_viatransp(),
+            })
+        res.update(self._l10n_uy_get_cfe_serie())
+        return res
+
     def _l10n_uy_create_cfe(self):
         """ Create the CFE xml estructure and validate it
             :return: A dictionary with one of the following key:
@@ -327,17 +406,18 @@ class AccountInvoice(models.Model):
             * error: An error if the cfe was not successfully generated. """
 
         self.ensure_one()
-        now = datetime.utcnow()  # TODO this need to be the same as the tipo de mensaje?
-        cfe = self.env.ref('l10n_uy_edi.cfe_template').render({
+        values = {
             'move': self,
-            'FchEmis': now.date().strftime('%Y-%m-%d'),
+            'IdDoc': self._l10n_uy_get_cfe_iddoc(),
             'item_detail': self._l10n_uy_get_cfe_item_detail(),
             'totals_detail': self._l10n_uy_get_cfe_totals(),
             'receptor': self._l10n_uy_get_cfe_receptor(),
             'cfe_tag': self._l10n_uy_get_cfe_tag(),
             'referencia_lines': self._l10n_uy_get_cfe_referencia(),
-        })
+        }
+        cfe = self.env.ref('l10n_uy_edi.cfe_template').render(values)
         cfe = unescape(cfe.decode('utf-8')).replace(r'&', '&amp;')
+        cfe = '\n'.join([item for item in cfe.split('\n') if item.strip()])
 
         # Check CFE XML valid files: 350: Validación de estructura de CFE
         response = self.company_id._l10n_uy_ucfe_inbox_operation('350', {'CfeXmlOTexto': cfe})
@@ -374,8 +454,6 @@ class AccountInvoice(models.Model):
         res = {}
         res.update({
             'TpoMoneda': self._l10n_uy_get_currency(),  # A-C110 Tipo moneda transacción
-            'IVATasaMin': 10,  # A119 Tasa Mínima IVA TODO
-            'IVATasaBasica': 22,  # A120 Tasa Mínima IVA TODO
             'MntTotal': self.amount_total,  # TODO A-C124? Total Monto Total SUM(A121:A123)
             'CantLinDet': len(self.invoice_line_ids),  # A-C126 Lineas
             'MntPagar': self.amount_total,  # A-C130 Monto Total a Pagar
@@ -387,19 +465,33 @@ class AccountInvoice(models.Model):
                 1.0, self.company_id.currency_id, self.company_id, self.date_invoice or fields.Date.today(),
                 round=False))
 
+        cfe_code = int(self.journal_document_type_id.document_type_id.code)
+        if cfe_code in [121, 122, 123]:  # Factura de Exportación
+            res.update({
+                'MntExpoyAsim': '{:.2f}'.format(self.amount_total),  # C113
+            })
+
         # TODO this need to be improved, using a different way to print the tax information
         tax_vat_22, tax_vat_10, tax_vat_exempt = self.env['account.tax']._l10n_uy_get_taxes()
+
+        tax_line_exempt = self.tax_line_ids.filtered(lambda x: x.tax_id == tax_vat_exempt)
+        if tax_line_exempt:
+            res.update({
+                'MntNoGrv': '{:.2f}'.format(tax_line_exempt.base),  # A-C112 Total Monto - No Gravado
+            })
 
         tax_line_basica = self.tax_line_ids.filtered(lambda x: x.tax_id == tax_vat_22)
         if tax_line_basica:
             res.update({
+                'IVATasaBasica': 22,  # A120 Tasa Mínima IVA TODO
                 'MntNetoIVATasaBasica': '{:.2f}'.format(tax_line_basica.base),  # A-C117 Total Monto Neto - IVA Tasa Basica
                 'MntIVATasaBasica': '{:.2f}'.format(tax_line_basica.amount_total),  # A-C122 Total IVA Tasa Básica? Monto del IVA Tasa Basica
             })
 
         tax_line_minima = self.tax_line_ids.filtered(lambda x: x.tax_id == tax_vat_10)
-        if tax_line_basica:
+        if tax_line_minima:
             res.update({
+                'IVATasaMin': 10,  # A119 Tasa Mínima IVA TODO
                 'MntNetoIVATasaMin': '{:.2f}'.format(tax_line_minima.base),  # A-C116 Total Monto Neto - IVA Tasa Minima
                 'MntIVATasaMin': '{:.2f}'.format(tax_line_minima.amount_total),  # A-C121 Total IVA Tasa Básica? Monto del IVA Tasa Minima
             })
@@ -423,7 +515,9 @@ class AccountInvoice(models.Model):
             if journal.l10n_uy_type == 'preprinted':
                 available_types = [000]
             elif journal.l10n_uy_type == 'electronic':
-                available_types = [101, 102, 103, 111, 112, 113, 121, 122, 123, 141, 142, 143, 201, 211, 212, 213, 221, 222, 223, 241, 242, 243]
+                available_types = [101, 102, 103, 111, 112, 113, 121, 122, 123, 141, 142, 143]
+            elif journal.l10n_uy_type == 'contingency':
+                available_types = [201, 211, 212, 213, 221, 222, 223, 241, 242, 243]
             else:
                 res['available_journal_document_types'] = False
                 res['journal_document_type'] = False
@@ -486,7 +580,7 @@ class AccountInvoice(models.Model):
         # 410 - Informar aceptación/rechazo comercial de un CFE recibido.
         req_data = {
             'Uuid': self.l10n_uy_cfe_uuid,
-            'TipoCfe': int(inv.journal_document_type_id.document_type_id.code),
+            'TipoCfe': int(self.journal_document_type_id.document_type_id.code),
             'CodRta': '01' if rejection else '00',
         }
         if rejection:
@@ -508,7 +602,7 @@ class AccountInvoice(models.Model):
         # TODO test it
 
         # 600 - Consulta de Notificacion Disponible
-        response = self.company_id._l10n_uy_ucfe_inbox_operation('600')
+        response = self.env.user.company_id._l10n_uy_ucfe_inbox_operation('600')
         # import pdb; pdb.set_trace()
 
         # If there is notifications
@@ -607,42 +701,40 @@ class AccountInvoice(models.Model):
         #     raise UserError(_('ERROR: la notificacion no pudo descartarse %s') % response)
 
     def action_l10n_uy_get_pdf(self):
-        # TODO  7.1.9 Representación impresa estándar de un CFE emitido en formato PDF
-        # Esta operación permitirá obtener la representación impresa estándar de un CFE emitido por la empresa en formato PDF.
-        # Operación a invocar: ObtenerPdf
-        # Respuesta:
-        # • Arreglo de bytes, conteniendo el PDF de la representación impresa estándar del CFE consultado.
+        """ call query webservice to print pdf format of the invoice
+        7.1.9 Representación impresa estándar de un CFE emitido en formato PDF
 
-        self.ensure_one()
-        self.company_id._is_connection_info_complete()
-        auth = {'Username': self.company_id.l10n_uy_ucfe_user, 'Password': self.company_id.l10n_uy_ucfe_password}
-        wsdl = self.company_id.l10n_uy_ucfe_query_url
-        if not wsdl.endswith('?wsdl'):
-            wsdl += '?wsdl'
-
-        # try:
-        # transport = UYTransport(operation_timeout=60, timeout=60)
-        # TODO delete once pass it to company
-        from zeep.wsse.username import UsernameToken
-        from zeep import Client
-
-        user_name_token = UsernameToken(self.company_id.l10n_uy_ucfe_user, self.company_id.l10n_uy_ucfe_password)
-        client = Client(wsdl, wsse=user_name_token)
-        # client = Client(wsdl, transport=transport, wsse=user_name_token)
-        document_number = re.search(r"([A-Z]*)([0-9]*)", self.document_number).groups()
-        # ws_method = 'ObtenerPdf'
-        req_data = {
-            'rut': self.company_id.partner_id.main_id_number,
-            # TODO rutRecibido, indicando el RUT de la empresa que emitió el CFE.
-            'tipoCfe': int(self.journal_document_type_id.document_type_id.code),
-            'serieCfe': document_number[0],
-            'numeroCfe': document_number[1],
+        return: create attachment in the move and automatica download """
+        # TODO cada vez que corremos intenta imprimir el existente, borrar el attachment para volver a generar
+        if not self.l10n_uy_cfe_pdf:
+            if 'out' in self.type:
+                rut_field = 'rut'
+                rut_value = self.company_id.partner_id.main_id_number
+            elif 'in' in self.type:
+                # TODO esto no se ha probado aun
+                rut_field = 'rutRecibido'
+                rut_value = self.partner_id.main_id_number
+            else:
+                raise UserError(_('No se puede imprimir la representación Legal de este documento'))
+            document_number = re.search(r"([A-Z]*)([0-9]*)", self.document_number).groups()
+            req_data = {
+                rut_field: rut_value,
+                'tipoCfe': int(self.journal_document_type_id.document_type_id.code),
+                'serieCfe': document_number[0],
+                'numeroCfe': document_number[1],
+            }
+            response = self.company_id._l10n_uy_ucfe_query('ObtenerPdf', req_data)
+            self.l10n_uy_cfe_pdf = self.env['ir.attachment'].create({
+                'name': 'CFE_{}.pdf'.format(self.document_number), 'res_model': self._name, 'res_id': self.id,
+                'type': 'binary', 'datas': base64.b64encode(response)
+            })
+        return {
+            'type': 'ir.actions.act_url',
+            'url': "web/content/?model=ir.attachment&id=" + str(self.l10n_uy_cfe_pdf.id) +
+            "&filename_field=name&field=datas&download=true&name=" + self.l10n_uy_cfe_pdf.name,
+            'target': 'self'
         }
-        response = client.service['ObtenerPdf'](**req_data)
-        self.env['ir.attachment'].create({
-            'name': 'ultima.pdf', 'res_model': self._name, 'res_id': self.id, 'type': 'binary',
-            'datas': base64.b64encode(response)
-        })
+
 
 class AccountInvoiceLine(models.Model):
 
@@ -661,9 +753,6 @@ class AccountInvoiceLine(models.Model):
             tax_vat_10.id: 2,       # 2: Gravado a Tasa Mínima
             tax_vat_22.id: 3,       # 3: Gravado a Tasa Básica
 
-            # TODO implement this cases
-            # 10: Exportación y asimiladas
-
             # Another cases for future
             # 4: Gravado a Otra Tasa/IVA sobre fictos
             # 5: Entrega Gratuita. Por ejemplo docenas de trece
@@ -677,6 +766,10 @@ class AccountInvoiceLine(models.Model):
             # 14: Sólo para e-Boleta de entrada y sus notas de corrección: Ítem vendido por un contribuyente IVA mínimo, Monotributo o Monotributo MIDES (valida que A-C60=2)
             # 15: Sólo para e-Boleta de entrada y sus notas de corrección: Ítem vendido por un contribuyente IMEBA (valida A-C60 = 2)
             # 16: Sólo para ítems vendidos por contribuyentes con obligación IVA mínimo, Monotributo o Monotributo MIDES. Si A-C10=3, no puede utilizar indicadores 1, 2, 3, 4, 11 ni 12
-            # TODO parece que tenemos estos tipos de contribuyente: IVA mínimo, Monotributo o Monotributo MIDES ver si crarlos en el patner asi como la afip responsibility
+            # TODO parece que tenemos estos tipos de contribuyente: IVA mínimo, Monotributo o Monotributo MIDES ver si cargarlos en el patner asi como la afip responsibility
         }
+
+        cfe_code = int(self.invoice_id.journal_document_type_id.document_type_id.code)
+        if cfe_code in [121, 122, 123]:  # Factura de Exportación
+            return 10  # Exportación y asimiladas
         return value.get(self.invoice_line_tax_ids.id)

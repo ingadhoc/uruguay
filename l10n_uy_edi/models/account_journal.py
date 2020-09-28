@@ -8,7 +8,8 @@ class AccountJournal(models.Model):
 
     l10n_uy_type = fields.Selection(
         [('preprinted', 'Preprinted (Traditional)'),
-         ('electronic', 'Electronic')],
+         ('electronic', 'Electronic'),
+         ('contingency', 'Contingency')],
         string='Invoicing Type', copy=False)
 
     # TODO Tenemos algo que se llama puntos de emision, ver si esto lo podemos configurar aca,
@@ -29,9 +30,17 @@ class AccountJournal(models.Model):
         if self.type == 'sale' and self.l10n_uy_type == 'preprinted':
             document_types = document_types.filtered(lambda x: int(x.code) == 0)
         elif self.type == 'sale' and self.l10n_uy_type == 'electronic':
-            document_types = document_types.filtered(lambda x: int(x.code) in [101, 102, 103, 111, 112, 113, 121, 122, 123, 201, 202, 203, 211, 212, 213, 221, 222, 223])
+            document_types = document_types.filtered(lambda x: int(x.code) in [101, 102, 103, 111, 112, 113, 121, 122, 123])
+        elif self.type == 'sale' and self.l10n_uy_type == 'contingency':
+            document_types = document_types.filtered(lambda x: int(x.code) in [201, 202, 203, 211, 212, 213, 221, 222, 223])
         elif self.type == 'purchase' and self.l10n_uy_type == 'preprinted':
             document_types = document_types.filtered(lambda x: int(x.code) == 0)
         elif self.type == 'purchase' and self.l10n_uy_type == 'electronic':
             document_types = document_types.filtered(lambda x: int(x.code) in [101, 102, 103, 111, 112, 113, 201, 211, 212, 213])
         self._create_document_sequences(document_types)
+
+    @api.onchange('l10n_uy_type')
+    def onchange_journal_uy_type(self):
+        """ Si el tipo de diario es de contigencia entonces se usara el mismo numero para todos los documentos de ese tipo """
+        if self.localization == 'uruguay' and self.use_documents:
+            self.document_sequence_type = 'same_sequence'

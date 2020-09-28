@@ -20,6 +20,7 @@
         'data/cfe_template.xml',
         'data/ir_sequence.xml',
         'demo/res_partner_demo.xml',
+        'data/ir_actions_server.xml',
     ],
     'demo': [
         # TODO delete from above and uncomment here once is ready

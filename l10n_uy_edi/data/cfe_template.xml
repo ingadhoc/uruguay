@@ -8,9 +8,15 @@
                 <Encabezado>
                     <IdDoc>
                         <TipoCFE t-esc="int(move.journal_document_type_id.document_type_id.code)"/>
-                        <FchEmis t-esc="FchEmis"/>
+                        <Serie t-if="IdDoc.get('Serie')" t-esc="IdDoc['Serie']"/>
+                        <Nro t-if="IdDoc.get('NumeroCfe')" t-esc="IdDoc['NumeroCfe']"/>
+                        <FchEmis t-esc="IdDoc['FchEmis']"/>
+                        <!-- TODO lo dejamos fijo por el momento, ver para implementar cuando tengamos un monotributo o iva minimo -->
                         <MntBruto>1</MntBruto>
-                        <FmaPago>1</FmaPago>
+                        <FmaPago t-esc="IdDoc['FmaPago']"/>
+                        <ClauVenta t-if="IdDoc.get('ClauVenta')" t-esc="IdDoc['ClauVenta']"/>
+                        <ModVenta t-if="IdDoc.get('ModVenta')" t-esc="IdDoc['ModVenta']"/>
+                        <ViaTransp t-if="IdDoc.get('ViaTransp')" t-esc="IdDoc['ViaTransp']"/>
                     </IdDoc>
                     <Emisor>
                         <RUCEmisor t-esc="int(move.company_id.main_id_number)"/>
@@ -32,11 +38,20 @@
                     <Totales>
                         <TpoMoneda t-esc="totals_detail['TpoMoneda']"/>
                         <TpoCambio t-if="totals_detail.get('TpoCambio')" t-esc="totals_detail['TpoCambio']"/>
-                        <MntNetoIVATasaBasica t-esc="totals_detail['MntNetoIVATasaBasica']"/>
-                        <IVATasaMin t-esc="totals_detail['IVATasaMin']"/>
-                        <IVATasaBasica t-esc="totals_detail['IVATasaBasica']"/>
-                        <MntIVATasaBasica t-esc="totals_detail['MntIVATasaBasica']"/>
+                        <MntExpoyAsim t-if="totals_detail.get('MntExpoyAsim')" t-esc="totals_detail['MntExpoyAsim']"/>
+                        <MntNoGrv t-if="totals_detail.get('MntNoGrv')" t-esc="totals_detail['MntNoGrv']"/>
+
+                        <MntNetoIVATasaMin t-if="totals_detail.get('MntNetoIVATasaMin')" t-esc="totals_detail['MntNetoIVATasaMin']"/>
+                        <MntNetoIVATasaBasica t-if="totals_detail.get('MntNetoIVATasaBasica')" t-esc="totals_detail['MntNetoIVATasaBasica']"/>
+
+                        <IVATasaMin t-if="totals_detail.get('IVATasaMin')" t-esc="totals_detail['IVATasaMin']"/>
+                        <IVATasaBasica t-if="totals_detail.get('IVATasaBasica')"  t-esc="totals_detail['IVATasaBasica']"/>
+
                         <MntTotal t-esc="totals_detail['MntTotal']"/>
+
+                        <MntIVATasaMin t-if="totals_detail.get('MntIVATasaMin')" t-esc="totals_detail['MntIVATasaMin']"/>
+                        <MntIVATasaBasica t-if="totals_detail.get('MntIVATasaBasica')" t-esc="totals_detail['MntIVATasaBasica']"/>
+
                         <CantLinDet t-esc="totals_detail['CantLinDet']"/>
                         <MntPagar t-esc="totals_detail['MntPagar']"/>
                     </Totales>

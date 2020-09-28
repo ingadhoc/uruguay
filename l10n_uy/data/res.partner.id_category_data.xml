@@ -8,15 +8,9 @@
         <field name="l10n_uy_dgi_code">1</field>
     </record>
 
-    <!-- <record id="it_ruc" model="res.partner.id_category">
-        <field name="code">RUC</field>
-        <field name="name">Registro Único de Contribuyente</field>
-        <field name="sequence">20</field>
-    </record> -->
-
     <record id="it_rut" model="res.partner.id_category">
-        <field name="code">RUT</field>
-        <field name="name">Registro Único Tributario</field>
+        <field name="code">RUT / RUC</field>
+        <field name="name">Registro Único Tributario / de Contribuyente</field>
         <field name="sequence">30</field>
         <field name="l10n_uy_dgi_code">2</field>
     </record>

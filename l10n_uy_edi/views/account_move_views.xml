@@ -11,6 +11,11 @@
                 <field name="l10n_uy_currency_rate"/>
             </field>
 
+            <field name="incoterm_id" position="after">
+                <field name="l10n_uy_cfe_sale_mod"/>
+                <field name="l10n_uy_cfe_transport_route"/>
+            </field>
+
             <notebook position="inside">
                 <page name="uy_dgi" string="DGI">
                     <group>
@@ -21,7 +26,7 @@
                             <field name="l10n_uy_cfe_partner_status"/>
                             <field name="l10n_uy_cfe_uuid"/>
                             <field name="l10n_uy_cfe_file"/>
-                            <button name="action_l10n_uy_get_pdf" type="object" string="Print Legal PDF" class="oe_inline oe_link"/>
+                            <button name="action_l10n_uy_get_pdf" type="object" string="Print Legal PDF" class="oe_inline oe_link" attrs="{'invisible': [('document_number', '=', False)]}"/>
                         </group>
                         <group string="DGI">
                             <field name="document_number"/>

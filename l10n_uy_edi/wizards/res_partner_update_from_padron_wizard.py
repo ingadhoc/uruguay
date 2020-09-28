@@ -4,6 +4,7 @@ from odoo.exceptions import UserError
 import logging
 _logger = logging.getLogger(__name__)
 
+
 # TODO this code used also for 13.0 new generic module
 class ResPartnerUpdate(models.TransientModel):
 

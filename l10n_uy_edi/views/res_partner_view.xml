@@ -7,7 +7,8 @@
         <field name="model">res.partner</field>
         <field type="xml" name="arch">
             <field name="main_id_number" position="after">
-                <button name="%(action_partner_update)d" string="Update From DGI" class="oe_link oe_inline" type="action" />
+                <button name="action_l10n_uy_is_electronic_issuer" string="Electronic Issuer?" class="oe_link oe_inline" type="object"/>
+                <button name="action_l10n_uy_get_data_from_dgi" string="Update From DGI" class="oe_link oe_inline" type="object"/>
                 <!-- attrs="{'invisible': [('main_id_category_id.code', '!=', 2)]}" -->
             </field>
         </field>
