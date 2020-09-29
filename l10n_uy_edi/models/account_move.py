@@ -87,7 +87,7 @@ class AccountInvoice(models.Model):
         (8, 'N/A'),
         (9, 'Otro'),
     ], 'Vía de Transporte', help="Este campo debe enviarse cuando se reporta un CFE de tipo e-Facutra de Exportación")
-
+    l10n_uy_cfe_xml = fields.Text('XML CFE', copy=False, groups="base.group_system")
     l10n_uy_dgi_xml_request = fields.Text('DGI XML Request', copy=False, readonly=True, groups="base.group_system")
     l10n_uy_dgi_xml_response = fields.Text('DGI XML Response', copy=False, readonly=True, groups="base.group_system")
     l10n_uy_dgi_barcode = fields.Text('DGI Barcode', copy=False, readonly=True, groups="base.group_system")
@@ -176,6 +176,10 @@ class AccountInvoice(models.Model):
                 ('-2' if self.amount_total < ui_indexada else False) or \
                 ('-1' if self.l10n_uy_ucfe_state == '11' else False) or self.l10n_uy_cfe_dgi_state
 
+    def action_l10n_uy_validate_cfe(self):
+        """ Be able to validate a cfe """
+        self._l10n_uy_vaidate_cfe(self.l10n_uy_cfe_xml, raise_exception=True)
+
     # Main methods
 
     def _l10n_uy_dgi_post(self):
@@ -193,10 +197,11 @@ class AccountInvoice(models.Model):
             response, transport = self.company_id._l10n_uy_ucfe_inbox_operation('310', req_data, return_transport=1)
 
             ui_indexada = self._l10n_uy_get_unidad_indexada()
-            self.l10n_uy_dgi_xml_request = CfeXmlOTexto
+            self.l10n_uy_cfe_xml = CfeXmlOTexto
             # from lxml import etree
             # etree.tostring(etree.fromstring(response.Resp.XmlCfeFirmado), pretty_print=True).decode('utf-8')
             self.l10n_uy_dgi_xml_response = transport.xml_response
+            self.l10n_uy_dgi_xml_request = transport.xml_request
             self.l10n_uy_cfe_uuid = response.Resp.Uuid
             self.l10n_uy_ucfe_state = response.Resp.CodRta
 
@@ -308,8 +313,9 @@ class AccountInvoice(models.Model):
         cond_e_ticket = document_type in [101, 102, 103, 131, 132, 133] and self.amount_total > ui_indexada
         cond_e_boleta = document_type in [151, 152, 153]
         cond_e_contg = document_type in [201, 202, 203]
+        cond_e_fact_expo = document_type in [121, 122, 123]
 
-        if cond_e_fact or cond_e_ticket or cond_e_boleta or cond_e_contg:
+        if cond_e_fact or cond_e_ticket or cond_e_boleta or cond_e_contg or cond_e_fact_expo:
             # cond_e_fact: obligatorio RUC (C60= 2).
             # cond_e_ticket: si monto neto ∑ (C112 a C118) > a tope establecido (ver tabla E), debe identificarse con NIE, RUC, CI, Otro, Pasaporte DNI o NIFE (C 60= 2, 3, 4, 5, 6 o 7).
 
@@ -322,6 +328,18 @@ class AccountInvoice(models.Model):
                 'CodPaisRecep': self.partner_id.country_id.code or cod_pais,   # C61
                 'DocRecep' if tipo_doc in [1, 2, 3] else 'DocRecepExt': self.partner_id.main_id_number,  # C62 / C62.1
             })
+
+            if cond_e_fact_expo or cond_e_fact:
+                if not self.partner_id.street:
+                    raise UserError(_('Debe configurar la dirección, ciudad, provincia y pais del receptor'))
+                res.update({
+                    'RznSocRecep': self.partner_id.name,  # C63
+                    'DirRecep': (self.partner_id.street + (' ' + self.partner_id.street2 or ''))[:70],
+                    'CiudadRecep': self.partner_id.city,
+                    'DeptoRecep': self.partner_id.state_id.name,
+                    'PaisRecep': self.partner_id.country_id.name,
+                })
+
         return res
 
     def _l10n_uy_get_cfe_tag(self):
@@ -419,14 +437,18 @@ class AccountInvoice(models.Model):
         cfe = unescape(cfe.decode('utf-8')).replace(r'&', '&amp;')
         cfe = '\n'.join([item for item in cfe.split('\n') if item.strip()])
 
+        self._l10n_uy_vaidate_cfe(cfe)
+        return {'cfe_str': cfe}
+
+    def _l10n_uy_vaidate_cfe(self, cfe, raise_exception=False):
         # Check CFE XML valid files: 350: Validación de estructura de CFE
         response = self.company_id._l10n_uy_ucfe_inbox_operation('350', {'CfeXmlOTexto': cfe})
         if response.Resp.CodRta != '00':
             # response.Resp.CodRta  30 o 31,   01, 12, 96, 99, ? ?
             # response.Resp.MensajeRta
-            raise UserError('Error al crear el XML del CFẸ\n\n' + cfe + '\n\n' + ucfe_errors._hint_msg(response))
-            # return {'errors': str(e).split('\\n')}s
-        return {'cfe_str': cfe}
+            if raise_exception:
+                raise UserError('Error al crear el XML del CFẸ\n\n' + ucfe_errors._hint_msg(response))
+            # return {'errors': str(e).split('\\n')}
 
     def _l10n_uy_get_currency(self):
         """ Devuelve el codigo de la moneda del comprobante:
@@ -492,7 +514,7 @@ class AccountInvoice(models.Model):
         if tax_line_minima:
             res.update({
                 'IVATasaMin': 10,  # A119 Tasa Mínima IVA TODO
-                'MntNetoIVATasaMin': '{:.2f}'.format(tax_line_minima.base),  # A-C116 Total Monto Neto - IVA Tasa Minima
+                'MntNetoIvaTasaMin': '{:.2f}'.format(tax_line_minima.base),  # A-C116 Total Monto Neto - IVA Tasa Minima
                 'MntIVATasaMin': '{:.2f}'.format(tax_line_minima.amount_total),  # A-C121 Total IVA Tasa Básica? Monto del IVA Tasa Minima
             })
 

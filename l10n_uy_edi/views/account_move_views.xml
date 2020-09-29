@@ -39,10 +39,12 @@
                             <field name="l10n_uy_dgi_barcode"/>
                         </group>
                         <group colspan="2">
-                            <label for="l10n_uy_dgi_xml_request"/>
+                            <button name="action_l10n_uy_validate_cfe" type="object" string="Validate CFE XML" class="oe_inline oe_link" attrs="{'invisible': [('l10n_uy_cfe_xml', '=', False)]}"/>
+                            <field name="l10n_uy_cfe_xml" colspan="2" nolabel="1" widget="ace"/>
+                            <!-- <label for="l10n_uy_dgi_xml_request"/>
                             <field name="l10n_uy_dgi_xml_request" colspan="2" nolabel="1" widget="ace"/>
                             <label for="l10n_uy_dgi_xml_response"/>
-                            <field name="l10n_uy_dgi_xml_response" colspan="2" nolabel="1" widget="ace"/>
+                            <field name="l10n_uy_dgi_xml_response" colspan="2" nolabel="1" widget="ace"/> -->
                         </group>
                     </group>
                 </page>

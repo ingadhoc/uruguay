@@ -25,6 +25,7 @@
                         <!-- <EmiSucursal>Central</EmiSucursal> es opcional para todos asi que mejor no lo pasamos -->
                         <CdgDGISucur t-esc="move.company_id.l10n_uy_dgi_house_code"/>
                         <!-- A48 -->
+                        <!-- TODO fix street2 -->
                         <DomFiscal t-esc="(move.company_id.street + (' ' + move.company_id.street or ''))[:70]"/>
                         <Ciudad t-esc="move.company_id.city"/>
                         <Departamento t-esc="move.company_id.state_id.name"/>
@@ -32,6 +33,11 @@
                     <Receptor t-if="receptor">
                         <TipoDocRecep t-esc="receptor['TipoDocRecep']"/>
                         <CodPaisRecep t-esc="receptor['CodPaisRecep']"/>
+                        <RznSocRecep t-if="receptor.get('RznSocRecep')" t-esc="receptor['RznSocRecep']"/>
+                        <DirRecep t-if="receptor.get('DirRecep')" t-esc="receptor['DirRecep']"/>
+                        <CiudadRecep t-if="receptor.get('CiudadRecep')" t-esc="receptor['CiudadRecep']"/>
+                        <DeptoRecep t-if="receptor.get('DeptoRecep')" t-esc="receptor['DeptoRecep']"/>
+                        <PaisRecep t-if="receptor.get('PaisRecep')" t-esc="receptor['PaisRecep']"/>
                         <DocRecep t-if="receptor.get('DocRecep')" t-esc="receptor['DocRecep']"/>
                         <DocRecepExt t-if="receptor.get('DocRecepExt')" t-esc="receptor['DocRecepExt']"/>
                     </Receptor>
@@ -41,17 +47,16 @@
                         <MntExpoyAsim t-if="totals_detail.get('MntExpoyAsim')" t-esc="totals_detail['MntExpoyAsim']"/>
                         <MntNoGrv t-if="totals_detail.get('MntNoGrv')" t-esc="totals_detail['MntNoGrv']"/>
 
-                        <MntNetoIVATasaMin t-if="totals_detail.get('MntNetoIVATasaMin')" t-esc="totals_detail['MntNetoIVATasaMin']"/>
+                        <MntNetoIvaTasaMin t-if="totals_detail.get('MntNetoIvaTasaMin')" t-esc="totals_detail['MntNetoIvaTasaMin']"/>
                         <MntNetoIVATasaBasica t-if="totals_detail.get('MntNetoIVATasaBasica')" t-esc="totals_detail['MntNetoIVATasaBasica']"/>
 
                         <IVATasaMin t-if="totals_detail.get('IVATasaMin')" t-esc="totals_detail['IVATasaMin']"/>
                         <IVATasaBasica t-if="totals_detail.get('IVATasaBasica')"  t-esc="totals_detail['IVATasaBasica']"/>
 
-                        <MntTotal t-esc="totals_detail['MntTotal']"/>
-
                         <MntIVATasaMin t-if="totals_detail.get('MntIVATasaMin')" t-esc="totals_detail['MntIVATasaMin']"/>
                         <MntIVATasaBasica t-if="totals_detail.get('MntIVATasaBasica')" t-esc="totals_detail['MntIVATasaBasica']"/>
 
+                        <MntTotal t-esc="totals_detail['MntTotal']"/>
                         <CantLinDet t-esc="totals_detail['CantLinDet']"/>
                         <MntPagar t-esc="totals_detail['MntPagar']"/>
                     </Totales>
