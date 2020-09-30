@@ -153,7 +153,7 @@ class AccountInvoice(models.Model):
 
             # If we are on testing environment and we don't have ucfe configuration we validate only locally.
             # This is useful when duplicating the production database for training purpose or others
-            if not inv.company_id._is_connection_info_complete(raise_exception=False):
+            if not inv.company_id.sudo()._is_connection_info_complete(raise_exception=False):
                 inv._dummy_dgi_validation()
                 continue
 
@@ -180,7 +180,7 @@ class AccountInvoice(models.Model):
 
     def action_l10n_uy_validate_cfe(self):
         """ Be able to validate a cfe """
-        self._l10n_uy_vaidate_cfe(self.l10n_uy_cfe_xml, raise_exception=True)
+        self._l10n_uy_vaidate_cfe(self.sudo().l10n_uy_cfe_xml, raise_exception=True)
 
     # Main methods
 
@@ -199,11 +199,12 @@ class AccountInvoice(models.Model):
             response, transport = self.company_id._l10n_uy_ucfe_inbox_operation('310', req_data, return_transport=1)
 
             ui_indexada = self._l10n_uy_get_unidad_indexada()
-            self.l10n_uy_cfe_xml = CfeXmlOTexto
+            inv = self.sudo()
+            inv.l10n_uy_cfe_xml = CfeXmlOTexto
             # from lxml import etree
             # etree.tostring(etree.fromstring(response.Resp.XmlCfeFirmado), pretty_print=True).decode('utf-8')
-            self.l10n_uy_dgi_xml_response = transport.xml_response
-            self.l10n_uy_dgi_xml_request = transport.xml_request
+            inv.l10n_uy_dgi_xml_response = transport.xml_response
+            inv.l10n_uy_dgi_xml_request = transport.xml_request
             self.l10n_uy_cfe_uuid = response.Resp.Uuid
             self.l10n_uy_ucfe_state = response.Resp.CodRta
 

@@ -106,16 +106,17 @@ class ResCompany(models.Model):
         # TODO consumir secuencia creada en Odoo
         id_req = 1
         now = datetime.utcnow()
-        data = {'Req': {'TipoMensaje': msg_type, 'CodComercio': self.l10n_uy_ucfe_commerce_code,
-                        'CodTerminal': self.l10n_uy_ucfe_terminal_code, 'IdReq': id_req},
-                'CodComercio': self.l10n_uy_ucfe_commerce_code,
-                'CodTerminal': self.l10n_uy_ucfe_terminal_code,
+        company = self.sudo()
+        data = {'Req': {'TipoMensaje': msg_type, 'CodComercio': company.l10n_uy_ucfe_commerce_code,
+                        'CodTerminal': company.l10n_uy_ucfe_terminal_code, 'IdReq': id_req},
+                'CodComercio': company.l10n_uy_ucfe_commerce_code,
+                'CodTerminal': company.l10n_uy_ucfe_terminal_code,
                 'RequestDate': now.replace(microsecond=0).isoformat(),
                 'Tout': '30000'}
         if extra_req:
             data.get('Req').update(extra_req)
 
-        res = self._get_client(self.l10n_uy_ucfe_inbox_url, return_transport=return_transport)
+        res = company._get_client(company.l10n_uy_ucfe_inbox_url, return_transport=return_transport)
         client = res[0] if isinstance(res, tuple) else res
         transport = res[1] if isinstance(res, tuple) else False
         response = client.service.Invoke(data)
@@ -123,7 +124,8 @@ class ResCompany(models.Model):
 
     def _l10n_uy_ucfe_query(self, method, req_data={}, return_transport=False):
         """ Call UCFE query webservices """
-        res = self._get_client(self.l10n_uy_ucfe_query_url, return_transport=return_transport)
+        company = self.sudo()
+        res = company._get_client(company.l10n_uy_ucfe_query_url, return_transport=return_transport)
         client = res[0] if isinstance(res, tuple) else res
         transport = res[1] if isinstance(res, tuple) else False
         response = client.service[method](**req_data)
