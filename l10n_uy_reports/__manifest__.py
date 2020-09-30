@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Uruguayan Accounting Reports',
-    'version': '1.0',
+    'name': 'Uruguay - Accounting Reports',
+    'version': '13.0.1.0.0',
     'author': 'ADHOC SA',
     'category': 'Localization',
     'summary': 'Reporting for Uruguayan Localization',

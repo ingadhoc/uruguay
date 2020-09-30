@@ -3,7 +3,7 @@ from odoo import _, api, models
 from odoo.tools.misc import format_date
 
 
-class L10nARVatBook(models.AbstractModel):
+class L10nUYVatBook(models.AbstractModel):
 
     _name = "l10n_uy.vat.book"
     _inherit = "account.report"
@@ -15,10 +15,10 @@ class L10nARVatBook(models.AbstractModel):
     def _get_columns_name(self, options):
         return [
             {'name': _("Date"), 'class': 'date'},
-            {'name': _("Type")},
-            {'name': _("Document")},
-            {'name': _("Name")},
-            {'name': _("RUT")},
+            {'name': _("Type"), 'class': 'text-left'},
+            {'name': _("Document"), 'class': 'text-left'},
+            {'name': _("Name"), 'class': 'text-left'},
+            {'name': _("RUT"), 'class': 'text-left'},
             {'name': _('Taxed'), 'class': 'number'},
             {'name': _('Not Taxed'), 'class': 'number'},
             {'name': _('VAT 10%'), 'class': 'number'},
@@ -31,13 +31,13 @@ class L10nARVatBook(models.AbstractModel):
         options.update({
             'journal_type': self.env.context.get('journal_type')
         })
-        return super(L10nARVatBook, self).print_pdf(options)
+        return super(L10nUYVatBook, self).print_pdf(options)
 
     def print_xlsx(self, options):
         options.update({
             'journal_type': self.env.context.get('journal_type')
         })
-        return super(L10nARVatBook, self).print_xlsx(options)
+        return super(L10nUYVatBook, self).print_xlsx(options)
 
     @api.model
     def _get_report_name(self):

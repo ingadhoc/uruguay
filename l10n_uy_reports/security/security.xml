@@ -5,7 +5,7 @@
         <field name="name">VAT line for Analysis in Uruguayan Localization</field>
         <field name="model_id" ref="model_account_uy_vat_line"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">[('company_id', 'in', user.company_ids.ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
 </odoo>

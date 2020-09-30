@@ -14,7 +14,7 @@ class AccountArVatLine(models.Model):
     _description = "VAT line for Analysis in Uruguayan Localization"
     _auto = False
 
-    document_type_id = fields.Many2one('account.document.type', 'Document Type', readonly=True)
+    document_type_id = fields.Many2one('l10n_latam.document.type', 'Document Type', readonly=True)
     date = fields.Date(readonly=True)
     invoice_date = fields.Date(readonly=True)
     rut = fields.Char(readonly=True)
@@ -45,11 +45,10 @@ class AccountArVatLine(models.Model):
     company_id = fields.Many2one('res.company', 'Company', readonly=True, auto_join=True)
     company_currency_id = fields.Many2one(related='company_id.currency_id', readonly=True)
     move_id = fields.Many2one('account.move', string='Entry', auto_join=True)
-    invoice_id = fields.Many2one('account.invoice', string='Entry', auto_join=True)
 
     def open_journal_entry(self):
         self.ensure_one()
-        return self.invoice_id.get_formview_action()
+        return self.move_id.get_formview_action()
 
     def init(self):
         cr = self._cr
@@ -60,18 +59,17 @@ class AccountArVatLine(models.Model):
         query = """
 SELECT
     am.id,
-    (CASE WHEN lit.l10n_uy_dgi_code = '2' THEN rp.main_id_number ELSE null END) as rut,
-    am.document_number as move_name,
+    (CASE WHEN lit.l10n_uy_dgi_code = '2' THEN rp.vat ELSE null END) as rut,
+    am.name as move_name,
     rp.name as partner_name,
     am.id as move_id,
-    ai.type,
+    am.type,
     am.date,
-    ai.date_invoice AS invoice_date,
-    ai.id AS invoice_id,
+    am.invoice_date,
     am.partner_id,
     am.journal_id,
     am.name,
-    am.document_type_id as document_type_id,
+    am.l10n_latam_document_type_id as document_type_id,
     am.state,
     am.company_id,
     sum(CASE WHEN btg.name = 'VAT 22%' THEN aml.balance ELSE Null END) as base_22,
@@ -86,9 +84,6 @@ FROM
 LEFT JOIN
     account_move as am
     ON aml.move_id = am.id
-LEFT JOIN
-    account_invoice AS ai
-    ON aml.invoice_id = ai.id
 LEFT JOIN
     -- nt = net tax
     account_tax AS nt
@@ -110,13 +105,13 @@ LEFT JOIN
     res_partner AS rp
     ON rp.id = am.partner_id
 LEFT JOIN
-    res_partner_id_category AS lit
-    ON rp.main_id_category_id = lit.id
+    l10n_latam_identification_type AS lit
+    ON rp.l10n_latam_identification_type_id = lit.id
 WHERE
     (aml.tax_line_id is not null or btg.name in ('VAT 22%', 'VAT 10%', 'VAT Exempt')) and
-    ai.type in ('out_invoice', 'in_invoice', 'out_refund', 'in_refund')
+    am.type in ('out_invoice', 'in_invoice', 'out_refund', 'in_refund')
 GROUP BY
-    am.id, rp.id, lit.id, ai.id
+    am.id, rp.id, lit.id
 ORDER BY
     am.date, am.name
         """
