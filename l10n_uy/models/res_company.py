@@ -1,19 +1,17 @@
-##############################################################################
-# For copyright and license notices, see __manifest__.py file in module root
-# directory
-##############################################################################
-from odoo import fields, models, api
+from odoo import models, fields
 
 
 class ResCompany(models.Model):
 
-    _inherit = "res.company"
+    _inherit = 'res.company'
 
-    # TODO delete this all this fields and methods when came to 13.0
+    l10n_uy_dgi_house_code = fields.Integer(
+        "DGI House Code", default=1, help="This value is used when the CFE xml is sent (Field 47: Emisor/CdgDGISucur)")
 
-    localization = fields.Selection(selection_add=[('uruguay', 'Uruguay')])
+    # TODO delete version 14.0 use directly country_code related field
+    l10n_uy_country_code = fields.Char(related='country_id.code', string='Country Code')
 
-    @api.onchange('localization')
-    def change_localization(self):
-        if self.localization == 'uruguay' and not self.country_id:
-            self.country_id = self.env.ref('base.uy')
+    def _localization_use_documents(self):
+        """ Uruguayan localization use documents """
+        self.ensure_one()
+        return True if self.country_id.code == 'UY' else super()._localization_use_documents()

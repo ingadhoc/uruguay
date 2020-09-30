@@ -60,7 +60,7 @@ class L10nARVatBook(models.AbstractModel):
             sign = -1.0
 
         totals = {}.fromkeys(['taxed', 'not_taxed', 'vat_10', 'vat_22', 'other_taxes', 'total'], 0)
-        domain = [('journal_id.type', '=', journal_type), ('journal_id.use_documents', '=', True),
+        domain = [('journal_id.type', '=', journal_type), ('journal_id.l10n_latam_use_documents', '=', True),
                   ('company_id', 'in', company_ids)]
         state = context.get('state')
         if state and state.lower() != 'all':

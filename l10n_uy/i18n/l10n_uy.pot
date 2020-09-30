@@ -1,14 +1,14 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* l10n_uy
+# 	* l10n_uy
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0+e\n"
+"Project-Id-Version: Odoo Server 13.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-21 15:52+0000\n"
-"PO-Revision-Date: 2020-02-21 15:52+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2020-10-02 23:11+0000\n"
+"PO-Revision-Date: 2020-10-02 23:11+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,18 +16,18 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_uy
-#: model:ir.model.fields,field_description:l10n_uy.field_res_partner_id_category__afip_code
-msgid "AFIP Code"
+#: model:ir.model,name:l10n_uy.model_account_chart_template
+msgid "Account Chart Template"
 msgstr ""
 
 #. module: l10n_uy
-#: selection:account.invoice,l10n_uy_invoice_type:0
+#: model:l10n_latam.identification.type,name:l10n_uy.it_ci
+msgid "CI"
+msgstr ""
+
+#. module: l10n_uy
+#: model:ir.model.fields.selection,name:l10n_uy.selection__account_move__l10n_uy_payment_type__cash
 msgid "Cash"
-msgstr ""
-
-#. module: l10n_uy
-#: model:res.partner.id_category,name:l10n_uy.it_ci
-msgid "Cedula de Identidad"
 msgstr ""
 
 #. module: l10n_uy
@@ -36,8 +36,23 @@ msgid "Companies"
 msgstr ""
 
 #. module: l10n_uy
-#: selection:account.invoice,l10n_uy_invoice_type:0
+#: model:ir.model.fields.selection,name:l10n_uy.selection__account_journal__l10n_uy_type__contingency
+msgid "Contingency"
+msgstr ""
+
+#. module: l10n_uy
+#: model:ir.model.fields,field_description:l10n_uy.field_res_company__l10n_uy_country_code
+msgid "Country Code"
+msgstr ""
+
+#. module: l10n_uy
+#: model:ir.model.fields.selection,name:l10n_uy.selection__account_move__l10n_uy_payment_type__credit
 msgid "Credit"
+msgstr ""
+
+#. module: l10n_uy
+#: model:ir.model.fields,field_description:l10n_uy.field_account_move__l10n_uy_currency_rate
+msgid "Currency Rate"
 msgstr ""
 
 #. module: l10n_uy
@@ -46,8 +61,18 @@ msgid "DGI"
 msgstr ""
 
 #. module: l10n_uy
-#: model:ir.model.fields,field_description:l10n_uy.field_res_partner_id_category__l10n_uy_dgi_code
+#: model:ir.model.fields,field_description:l10n_uy.field_l10n_latam_identification_type__l10n_uy_dgi_code
 msgid "DGI Code"
+msgstr ""
+
+#. module: l10n_uy
+#: model:ir.model.fields,field_description:l10n_uy.field_res_company__l10n_uy_dgi_house_code
+msgid "DGI House Code"
+msgstr ""
+
+#. module: l10n_uy
+#: model:l10n_latam.identification.type,name:l10n_uy.it_dni
+msgid "DNI"
 msgstr ""
 
 #. module: l10n_uy
@@ -57,23 +82,19 @@ msgid "Document Types"
 msgstr ""
 
 #. module: l10n_uy
-#: model:res.partner.id_category,name:l10n_uy.it_dni
-msgid "Documento Nacional de identidad de Argentina, Brasil, Chile o Paraguay"
+#: model:ir.model.fields.selection,name:l10n_uy.selection__account_journal__l10n_uy_type__electronic
+msgid "Electronic"
 msgstr ""
 
 #. module: l10n_uy
-#: selection:res.company,localization:0
-msgid "Generic"
+#: model:ir.model,name:l10n_uy.model_l10n_latam_identification_type
+msgid "Identification Types"
 msgstr ""
 
 #. module: l10n_uy
-#: model:ir.model,name:l10n_uy.model_account_invoice
-msgid "Invoice"
-msgstr ""
-
-#. module: l10n_uy
-#: model:ir.model.fields,field_description:l10n_uy.field_account_invoice__l10n_uy_invoice_type
-msgid "Invoice Type"
+#: model:ir.model.fields,field_description:l10n_uy.field_account_bank_statement_import_journal_creation__l10n_uy_type
+#: model:ir.model.fields,field_description:l10n_uy.field_account_journal__l10n_uy_type
+msgid "Invoicing Type"
 msgstr ""
 
 #. module: l10n_uy
@@ -82,61 +103,105 @@ msgid "Journal"
 msgstr ""
 
 #. module: l10n_uy
-#: model:ir.model.fields,field_description:l10n_uy.field_res_company__localization
-msgid "Localization"
+#: model:ir.model,name:l10n_uy.model_account_move
+msgid "Journal Entries"
 msgstr ""
 
 #. module: l10n_uy
-#: code:addons/l10n_uy/models/account_invoice.py:56
+#: model:ir.model,name:l10n_uy.model_l10n_latam_document_type
+msgid "Latam Document Type"
+msgstr ""
+
+#. module: l10n_uy
+#: model:l10n_latam.identification.type,name:l10n_uy.it_nie
+msgid "NIE"
+msgstr ""
+
+#. module: l10n_uy
+#: model:l10n_latam.identification.type,name:l10n_uy.it_nife
+msgid "NIFE"
+msgstr ""
+
+#. module: l10n_uy
+#: model_terms:ir.ui.view,arch_db:l10n_uy.view_account_journal_form
+msgid "Next Number"
+msgstr ""
+
+#. module: l10n_uy
+#: model:l10n_latam.identification.type,name:l10n_uy.it_other
+msgid "OTR"
+msgstr ""
+
+#. module: l10n_uy
+#: model:l10n_latam.identification.type,name:l10n_uy.it_pass
+msgid "PAS"
+msgstr ""
+
+#. module: l10n_uy
+#: model:ir.model.fields,field_description:l10n_uy.field_account_move__l10n_uy_payment_type
+msgid "Payment Type"
+msgstr ""
+
+#. module: l10n_uy
+#: model:ir.model.fields.selection,name:l10n_uy.selection__account_journal__l10n_uy_type__preprinted
+msgid "Preprinted (Traditional)"
+msgstr ""
+
+#. module: l10n_uy
+#: model:l10n_latam.identification.type,name:l10n_uy.it_rut
+msgid "RUT / RUC"
+msgstr ""
+
+#. module: l10n_uy
+#: model_terms:ir.ui.view,arch_db:l10n_uy.view_account_journal_form
+msgid "Sequence"
+msgstr ""
+
+#. module: l10n_uy
+#: model:ir.model.fields,field_description:l10n_uy.field_account_bank_statement_import_journal_creation__l10n_uy_sequence_ids
+#: model:ir.model.fields,field_description:l10n_uy.field_account_journal__l10n_uy_sequence_ids
+msgid "Sequences"
+msgstr ""
+
+#. module: l10n_uy
+#: code:addons/l10n_uy/models/account_move.py:0
 #, python-format
-msgid "Not Been able to filter the document types"
+msgid ""
+"Should be one and only one VAT tax per line. Verify lines with product "
+"\"%s\" (Id Invoice: %s)"
 msgstr ""
 
 #. module: l10n_uy
-#: model:res.partner.id_category,name:l10n_uy.it_nie
-msgid "Número de Identidad de Extranjero"
+#: model:ir.model.fields,help:l10n_uy.field_res_company__l10n_uy_country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
 msgstr ""
 
 #. module: l10n_uy
-#: model:res.partner.id_category,name:l10n_uy.it_nife
-msgid "Número de identificación fiscal extranjero"
-msgstr ""
-
-#. module: l10n_uy
-#: model:res.partner.id_category,name:l10n_uy.it_other
-msgid "Otros"
-msgstr ""
-
-#. module: l10n_uy
-#: model:ir.model,name:l10n_uy.model_res_partner_id_category
-msgid "Partner ID Category"
-msgstr ""
-
-#. module: l10n_uy
-#: model:res.partner.id_category,name:l10n_uy.it_pass
-msgid "Pasaporte (todos los paises)"
-msgstr ""
-
-#. module: l10n_uy
-#: code:addons/l10n_uy/models/account_invoice.py:57
+#: code:addons/l10n_uy/models/account_move.py:0
 #, python-format
-msgid "Please set the partner ID type in order to proper filter the document types"
+msgid ""
+"The selected Journal can't be used in this transaction, please select one "
+"that doesn't use documents as these are just for Invoices."
 msgstr ""
 
 #. module: l10n_uy
-#: model:res.partner.id_category,name:l10n_uy.it_rut
-msgid "Registro Único Tributario"
+#: model:ir.model.fields,help:l10n_uy.field_res_company__l10n_uy_dgi_house_code
+msgid ""
+"This value is used when the CFE xml is sent (Field 47: Emisor/CdgDGISucur)"
 msgstr ""
 
 #. module: l10n_uy
-#: code:addons/l10n_uy/models/account_invoice.py:80
-#, python-format
-msgid "Should be one and only one VAT tax per line. Verify lines with product \"%s\" (Id Invoice: %s)"
+#: model:ir.model.fields,field_description:l10n_uy.field_account_bank_statement_import_journal_creation__l10n_uy_share_sequences
+#: model:ir.model.fields,field_description:l10n_uy.field_account_journal__l10n_uy_share_sequences
+msgid "Unified Book"
 msgstr ""
 
 #. module: l10n_uy
-#: selection:res.company,localization:0
-msgid "Uruguay"
+#: model:ir.model.fields,help:l10n_uy.field_account_bank_statement_import_journal_creation__l10n_uy_share_sequences
+#: model:ir.model.fields,help:l10n_uy.field_account_journal__l10n_uy_share_sequences
+msgid "Use same sequence for all the documents in this journal"
 msgstr ""
 
 #. module: l10n_uy
@@ -153,4 +218,3 @@ msgstr ""
 #: model:account.tax.group,name:l10n_uy.tax_group_vat_exempt
 msgid "VAT Exempt"
 msgstr ""
-

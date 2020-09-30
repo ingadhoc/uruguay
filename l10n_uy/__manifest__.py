@@ -3,32 +3,34 @@
 # directory
 ##############################################################################
 {
-    'name': 'Uruguay',
+    'name': 'Uruguay - Accounting',
     'author': 'ADHOC SA',
     'category': 'Localization',
     'license': 'AGPL-3',
-    'version': '11.0.1.2.0',
+    'version': '13.0.1.0.0',
     'depends': [
-        'account_document',
+        'l10n_latam_invoice_document',
+        'l10n_latam_base',
+
+        # TODO move it to l10n_uy_ux once we have it?
         'account_check',
         'account_withholding',
-        'l10n_ar_partner',
     ],
     'data': [
-        'data/account.document.type.csv',
-        'data/res.partner.id_category_data.xml',
+        'data/l10n_latam.document.type.csv',
+        'data/l10n_latam_identification_type_data.xml',
         'data/account.group.csv',
         'data/account_tax_group_data.xml',
         'data/account_chart_template_data.xml',
         'data/account.account.template.csv',
         'data/account_tax_template_data.xml',
-        'data/account_chart_template_data2.xml',
         'data/res_partner_data.xml',
         'data/account_fiscal_position_template_data.xml',
         'views/account_document_type_views.xml',
-        'views/res_partner_id_category_view.xml',
-        'views/account_invoice_views.xml',
-        'security/ir.model.access.csv',
+        'views/account_move_views.xml',
+        'views/account_journal_view.xml',
+        'views/res_company_view.xml',
+        'data/account_chart_template_data2.xml',
     ],
     'demo': [
         'demo/res_company_demo.xml',
@@ -36,5 +38,4 @@
         'demo/res_partner_demo.xml',
     ],
     'installable': True,
-    'pre_init_hook': 'pre_init_hook',  # remove when moving to 13.0
 }

@@ -3,7 +3,7 @@
 
     <record id="partner_uy" model="res.partner">
         <field name='name'>(UY) Company</field>
-        <field name='main_id_category_id' ref="it_rut"/>
+        <field name='l10n_latam_identification_type_id' ref='it_rut'/>
         <field name='vat'>30111111118</field>
         <field name="street">Calle Falsa 123</field>
         <field name="city">Montevideo</field>
@@ -17,7 +17,6 @@
     <record id="company_uy" model="res.company">
         <field name='currency_id' ref='base.UYU'/>
         <field name='partner_id' ref='partner_uy'/>
-        <field name="localization">uruguay</field>
         <field name='name'>(UY) Company</field>
     </record>
 

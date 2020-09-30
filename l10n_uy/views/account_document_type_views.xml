@@ -3,7 +3,7 @@
 
     <record model="ir.actions.act_window" id="action_document_type_uruguay">
         <field name="name">Document Types</field>
-        <field name="res_model">account.document.type</field>
+        <field name="res_model">l10n_latam.document.type</field>
         <field name="context">{'search_default_localization': 'uruguay'}</field>
     </record>
 
