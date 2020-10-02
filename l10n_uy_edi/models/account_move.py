@@ -182,6 +182,41 @@ class AccountInvoice(models.Model):
         """ Be able to validate a cfe """
         self._l10n_uy_vaidate_cfe(self.sudo().l10n_uy_cfe_xml, raise_exception=True)
 
+    def action_l10n_uy_get_pdf(self):
+        """ call query webservice to print pdf format of the invoice
+        7.1.9 Representación impresa estándar de un CFE emitido en formato PDF
+
+        return: create attachment in the move and automatica download """
+        # TODO cada vez que corremos intenta imprimir el existente, borrar el attachment para volver a generar
+        if not self.l10n_uy_cfe_pdf:
+            if 'out' in self.type:
+                rut_field = 'rut'
+                rut_value = self.company_id.partner_id.main_id_number
+            elif 'in' in self.type:
+                # TODO esto no se ha probado aun
+                rut_field = 'rutRecibido'
+                rut_value = self.partner_id.main_id_number
+            else:
+                raise UserError(_('No se puede imprimir la representación Legal de este documento'))
+            document_number = re.search(r"([A-Z]*)([0-9]*)", self.document_number).groups()
+            req_data = {
+                rut_field: rut_value,
+                'tipoCfe': int(self.journal_document_type_id.document_type_id.code),
+                'serieCfe': document_number[0],
+                'numeroCfe': document_number[1],
+            }
+            response = self.company_id._l10n_uy_ucfe_query('ObtenerPdf', req_data)
+            self.l10n_uy_cfe_pdf = self.env['ir.attachment'].create({
+                'name': 'CFE_{}.pdf'.format(self.document_number), 'res_model': self._name, 'res_id': self.id,
+                'type': 'binary', 'datas': base64.b64encode(response)
+            })
+        return {
+            'type': 'ir.actions.act_url',
+            'url': "web/content/?model=ir.attachment&id=" + str(self.l10n_uy_cfe_pdf.id) +
+            "&filename_field=name&field=datas&download=true&name=" + self.l10n_uy_cfe_pdf.name,
+            'target': 'self'
+        }
+
     # Main methods
 
     def _l10n_uy_dgi_post(self):
@@ -725,41 +760,6 @@ class AccountInvoice(models.Model):
         #     'idReq': response.Resp.idReq, 'TipoNotificacion': response.Resp.TipoNotificacion})
         # if response3.Resp.CodRta != '00':
         #     raise UserError(_('ERROR: la notificacion no pudo descartarse %s') % response)
-
-    def action_l10n_uy_get_pdf(self):
-        """ call query webservice to print pdf format of the invoice
-        7.1.9 Representación impresa estándar de un CFE emitido en formato PDF
-
-        return: create attachment in the move and automatica download """
-        # TODO cada vez que corremos intenta imprimir el existente, borrar el attachment para volver a generar
-        if not self.l10n_uy_cfe_pdf:
-            if 'out' in self.type:
-                rut_field = 'rut'
-                rut_value = self.company_id.partner_id.main_id_number
-            elif 'in' in self.type:
-                # TODO esto no se ha probado aun
-                rut_field = 'rutRecibido'
-                rut_value = self.partner_id.main_id_number
-            else:
-                raise UserError(_('No se puede imprimir la representación Legal de este documento'))
-            document_number = re.search(r"([A-Z]*)([0-9]*)", self.document_number).groups()
-            req_data = {
-                rut_field: rut_value,
-                'tipoCfe': int(self.journal_document_type_id.document_type_id.code),
-                'serieCfe': document_number[0],
-                'numeroCfe': document_number[1],
-            }
-            response = self.company_id._l10n_uy_ucfe_query('ObtenerPdf', req_data)
-            self.l10n_uy_cfe_pdf = self.env['ir.attachment'].create({
-                'name': 'CFE_{}.pdf'.format(self.document_number), 'res_model': self._name, 'res_id': self.id,
-                'type': 'binary', 'datas': base64.b64encode(response)
-            })
-        return {
-            'type': 'ir.actions.act_url',
-            'url': "web/content/?model=ir.attachment&id=" + str(self.l10n_uy_cfe_pdf.id) +
-            "&filename_field=name&field=datas&download=true&name=" + self.l10n_uy_cfe_pdf.name,
-            'target': 'self'
-        }
 
 
 class AccountInvoiceLine(models.Model):
