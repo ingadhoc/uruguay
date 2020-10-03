@@ -74,7 +74,7 @@ class AccountJournal(models.Model):
         self.ensure_one()
         if self.company_id.country_id.code != 'UY':
             return True
-        if self.type not in ['sale', 'purchase'] or not self.l10n_latam_use_documents:
+        if not self.type == 'sale' or not self.l10n_latam_use_documents:
             return False
 
         sequences = self.l10n_uy_sequence_ids
