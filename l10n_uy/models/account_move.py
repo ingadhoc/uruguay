@@ -22,7 +22,7 @@ class AccountMove(models.Model):
         if not_invoices:
             raise ValidationError(_("The selected Journal can't be used in this transaction, please select one that doesn't use documents as these are just for Invoices."))
 
-    def check_uruguayan_invoices(self):
+    def _check_uruguayan_invoices(self):
         uruguayan_invoices = self.filtered(lambda x: (x.company_id.country_id.code == 'UY' and x.l10n_latam_use_documents))
         if not uruguayan_invoices:
             return True
@@ -36,7 +36,7 @@ class AccountMove(models.Model):
             if len(vat_taxes) != 1:
                 raise ValidationError(_(
                     'Should be one and only one VAT tax per line. Verify lines with product "%s" (Id Invoice: %s)' % (
-                        line.product_id.name, line.move_ids.id)))
+                        line.product_id.name, line.move_id.id)))
 
     def _get_document_type_sequence(self):
         """ Return the match sequences for the given journal and invoice """
@@ -68,7 +68,7 @@ class AccountMove(models.Model):
         uy_invoices = self.filtered(lambda x: x.company_id.country_id.code == 'UY' and x.l10n_latam_use_documents)
         # We make validations here and not with a constraint because we want validation before sending electronic
         # data on l10n_uy_edi
-        uy_invoices.check_uruguayan_invoices()
+        uy_invoices._check_uruguayan_invoices()
         res = super().post()
         return res
 
