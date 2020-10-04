@@ -4,6 +4,9 @@ dc_boleta_venta_contado,0,BOLETA,invoice,BO,base.uy
 dc_cn_inv,0,NOTA DE CREDITO,credit_note,NC,base.uy
 dc_dn_inv,0,NOTA DE DEBITO,debit_note,ND,base.uy
 dc_recibo_cobranza,0,RECIBO COBRANZA,invoice,RC,base.uy
+dc_inv_expo,0,FACTURA EXPORTACION,invoice,FAE,base.uy
+dc_nc_expo,0,NOTA DE CREDITO DE EXPORTACION,credit_note,NCE,base.uy
+dc_nd_expo,0,NOTA DE DEBITO DE EXPORTACION,debit_note,NDE,base.uy
 dc_e_ticket,101,E-TICKET,invoice,E-Ticket,base.uy
 dc_cn_e_ticket,102,NOTA DE CREDITO DE E-TICKET,credit_note,NC e-Ticket,base.uy
 dc_dn_e_ticket,103,NOTA DE DEBITO DE E-TICKET,debit_note,ND e-Ticket,base.uy
