@@ -43,10 +43,10 @@ class AccountJournal(models.Model):
             document_types = document_types.filtered(lambda x: int(x.code) in [101, 102, 103, 111, 112, 113, 121, 122, 123])
         elif self.type == 'sale' and self.l10n_uy_type == 'contingency':
             document_types = document_types.filtered(lambda x: int(x.code) in [201, 202, 203, 211, 212, 213, 221, 222, 223])
-        elif self.type == 'purchase' and self.l10n_uy_type == 'preprinted':
-            document_types = document_types.filtered(lambda x: int(x.code) == 0)
-        elif self.type == 'purchase' and self.l10n_uy_type == 'electronic':
-            document_types = document_types.filtered(lambda x: int(x.code) in [101, 102, 103, 111, 112, 113, 201, 211, 212, 213])
+        # elif self.type == 'purchase' and self.l10n_uy_type == 'preprinted':
+        #     document_types = document_types.filtered(lambda x: int(x.code) == 0)
+        # elif self.type == 'purchase' and self.l10n_uy_type == 'electronic':
+        #     document_types = document_types.filtered(lambda x: int(x.code) in [101, 102, 103, 111, 112, 113, 201, 211, 212, 213])
 
         return document_types.mapped('code')
 
