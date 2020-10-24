@@ -1,6 +1,7 @@
 id,chart_template_id/id,code,user_type_id/id,name,reconcile,group_id/id
 l10n_uy.base_deudores_por_ventas,l10n_uy.l10n_uy_chart_template,1.2.1.1,account.data_account_type_receivable,Deudores por ventas,True,l10n_uy.account_group_deudores_varios
 l10n_uy.base_adelanto_a_proveedores,l10n_uy.l10n_uy_chart_template,1.2.1.2,account.data_account_type_current_assets,Adelanto a Proveedores,False,l10n_uy.account_group_deudores_varios
+l10n_uy.base_deudores_por_ventas_pos,l10n_uy.l10n_uy_chart_template,1.2.1.3,account.data_account_type_receivable,Deudores por ventas (PoS),True,l10n_uy.account_group_deudores_varios
 l10n_uy.base_cuenta_de_socios,l10n_uy.l10n_uy_chart_template,1.2.2.1,account.data_account_type_current_assets,Cuenta de socios,False,l10n_uy.account_group_creditos_diversos
 l10n_uy.base_iva_pagos,l10n_uy.l10n_uy_chart_template,1.2.2.4,account.data_account_type_current_assets,IVA PAGOS,True,l10n_uy.account_group_creditos_diversos
 l10n_uy.base_irae_anticipo,l10n_uy.l10n_uy_chart_template,1.2.2.5,account.data_account_type_current_assets,IRAE ANTICIPO,False,l10n_uy.account_group_creditos_diversos
