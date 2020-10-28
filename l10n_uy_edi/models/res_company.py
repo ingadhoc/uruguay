@@ -2,12 +2,14 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from zeep import Client, transports
+from requests import Session
 from zeep.wsse.username import UsernameToken
 from lxml import etree
 import logging
 import base64
 from OpenSSL import crypto
 from datetime import datetime
+import os
 
 
 _logger = logging.getLogger(__name__)
@@ -88,7 +90,9 @@ class ResCompany(models.Model):
             wsdl += '?wsdl'
 
         try:
-            transport = UYTransport(operation_timeout=60, timeout=60)
+            session = Session()
+            session.verify = os.path.join(os.path.dirname(__file__), '../static/ssl/uy.crt')
+            transport = UYTransport(session=session, operation_timeout=60, timeout=60)
             user_name_token = UsernameToken(self.l10n_uy_ucfe_user, self.l10n_uy_ucfe_password)
             client = Client(wsdl, transport=transport, wsse=user_name_token)
         except Exception as error:
