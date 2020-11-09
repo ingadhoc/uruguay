@@ -532,7 +532,7 @@ class AccountInvoice(models.Model):
             })
 
         # TODO this need to be improved, using a different way to print the tax information
-        tax_vat_22, tax_vat_10, tax_vat_exempt = self.env['account.tax']._l10n_uy_get_taxes()
+        tax_vat_22, tax_vat_10, tax_vat_exempt = self.env['account.tax']._l10n_uy_get_taxes(self.company_id)
         self.check_uruguayan_invoices()
 
         tax_line_exempt = self.tax_line_ids.filtered(lambda x: x.tax_id == tax_vat_exempt)
@@ -773,7 +773,7 @@ class AccountInvoiceLine(models.Model):
         # TODO por ahora, esto esta solo funcionando para un impuesto de tipo iva por cada linea de factura, debemos
         # implementar el resto de los casos
         self.ensure_one()
-        tax_vat_22, tax_vat_10, tax_vat_exempt = self.env['account.tax']._l10n_uy_get_taxes()
+        tax_vat_22, tax_vat_10, tax_vat_exempt = self.env['account.tax']._l10n_uy_get_taxes(self.invoice_id.company_id)
         value = {
             tax_vat_exempt.id: 1,   # 1: Exento de IVA
             tax_vat_10.id: 2,       # 2: Gravado a Tasa Mínima
