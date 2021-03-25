@@ -16,6 +16,14 @@
                 <field name="l10n_uy_cfe_transport_route"/>
             </field>
 
+            <sheet position="before">
+                <div class="alert alert-warning" attrs="{'invisible': [('l10n_uy_ucfe_msg', '=', ''), ('l10n_uy_ucfe_state', 'in', ['00', '05', '06', '11'])]}" >
+                    <field name="l10n_uy_ucfe_state"/>
+                        <!-- x.l10n_uy_ucfe_state not in  and # Already sent and waiting status from UCFE -->
+                    <field name="l10n_uy_ucfe_msg"/>
+                </div>
+            </sheet>
+
             <notebook position="inside">
                 <page name="uy_dgi" string="DGI">
                     <group>
