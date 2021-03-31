@@ -1,5 +1,8 @@
 from odoo import models, _
 from odoo.exceptions import UserError
+import pprint
+import logging
+_logger = logging.getLogger(__name__)
 
 
 class ResPartner(models.Model):
@@ -39,6 +42,7 @@ class ResPartner(models.Model):
                 # TODO delete this one once integrated
                 self.message_post(body=response)
             else:
+                _logger.info('response %s' % pprint.pformat(response))
                 raise UserError(_('No se pudo conectar a DGI para extraer los datos'))
         else:
             raise UserError(_('Solo puede consultar si el partner tiene tipo de identificación RUT'))

@@ -501,18 +501,22 @@ class AccountMove(models.Model):
     # TODO I think this 3 methods can be merged in one?
 
     def _l10n_uy_get_cfe_caluventa(self):
-        if not self.incoterm_id:
-            raise UserError(_('Para reportar factura de exportación debe indicar el incoterm correspondiente'))
-        return self.incoterm_id.code
+        if not self.invoice_incoterm_id:
+            raise UserError(_('Para reportar factura de exportación debe indicar el incoterm correspondiente.'
+                ' Puede indicar este valor en el tab Otra Información'))
+        return self.invoice_incoterm_id.code
 
     def _l10n_uy_get_cfe_modventa(self):
         if not self.l10n_uy_cfe_sale_mod:
-            raise UserError(_('Para reportar facturas de exportación debe indicar la modalidad de venta correspondiente'))
+            raise UserError(_(
+                'Para reportar facturas de exportación debe indicar la Modalidad de Venta correspondiente.'
+                ' Puede indicar este valor en el tab Otra Información'))
         return int(self.l10n_uy_cfe_sale_mod)
 
     def _l10n_uy_get_cfe_viatransp(self):
         if not self.l10n_uy_cfe_transport_route:
-            raise UserError(_('Para reportar facturas de exportación debe indicar la via de transporte correspondiente'))
+            raise UserError(_('Para reportar facturas de exportación debe indicar la Via de Transporte correspondiente.'
+                ' Puede indicar este valor en el tab Otra Información'))
         return int(self.l10n_uy_cfe_transport_route)
 
     def _l10n_uy_get_cfe_iddoc(self):
