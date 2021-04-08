@@ -3,7 +3,6 @@
     <data>
         <template id="cfe_template">
            <CFE xmlns="http://cfe.dgi.gub.uy" version="1.0">
-           <!-- TODO KZ eTck debe ser modificado depende del tipo de documento   -->
             <t t-esc="'&lt;' + cfe_tag + '&gt;'"/>
                 <Encabezado>
                     <IdDoc>
