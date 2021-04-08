@@ -3,7 +3,7 @@
 
     <record id="UYI" model="res.currency">
         <field name="name">UYI</field>
-        <field name="symbol">$</field>
+        <field name="symbol">UYI</field>
         <field name="rounding">0.01</field>
         <field name="active" eval="True"/>
         <field name="currency_unit_label">Unidad Indexada Uruguaya</field>
