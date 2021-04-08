@@ -23,12 +23,11 @@
         'views/res_partner_view.xml',
         'data/cfe_template.xml',
         'data/ir_sequence.xml',
-        'demo/res_partner_demo.xml',
         'data/ir_actions_server.xml',
     ],
     'demo': [
-        # TODO KZ delete from above and uncomment here once is ready
-        # 'demo/res_partner_demo.xml',
+        'demo/res_partner_demo.xml',
+        'demo/res_company_demo.xml',
     ],
     'installable': True,
 }
