@@ -189,11 +189,13 @@ class AccountMove(models.Model):
         respuesta acerca del comprobante """
         for rec in self.filtered(lambda x: x.l10n_uy_cfe_state == 'received'):
             response = rec.company_id._l10n_uy_ucfe_inbox_operation('360', {'Uuid': rec.l10n_uy_cfe_uuid})
-
-            rec.l10n_uy_ucfe_state = response.Resp.CodRta or rec.l10n_uy_ucfe_state
-            rec.l10n_uy_ucfe_msg = response.Resp.MensajeRta or rec.l10n_uy_ucfe_msg
-            rec.l10n_uy_ucfe_notif = response.Resp.TipoNotificacion or rec.l10n_uy_ucfe_notif
-            rec.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido or rec.l10n_uy_cfe_dgi_state
+            values = {
+                'l10n_uy_ucfe_state': response.Resp.CodRta or rec.l10n_uy_ucfe_state,
+                'l10n_uy_ucfe_msg': response.Resp.MensajeRta or rec.l10n_uy_ucfe_msg,
+                'l10n_uy_ucfe_notif': response.Resp.TipoNotificacion or rec.l10n_uy_ucfe_notif,
+                'l10n_uy_cfe_dgi_state': response.Resp.EstadoEnDgiCfeRecibido or rec.l10n_uy_cfe_dgi_state,
+            }
+            rec.write(values)
             rec._update_l10n_uy_cfe_state()
 
     # TODO not working review why
@@ -678,11 +680,11 @@ class AccountMove(models.Model):
         # similar to get_related_invoices_data from l10n_ar_afipws_fe, we need to remove
         # TODO when changing to 13.0 need to change this to something like _found_related_invoice() method
         self.ensure_one()
-        if self.document_type_internal_type in ['debit_note', 'credit_note'] and self.origin:
+        if self.l10n_latam_document_type_id.internal_type in ['debit_note', 'credit_note'] and self.invoice_origin:
             return self.search([
                 ('commercial_partner_id', '=', self.commercial_partner_id.id),
                 ('company_id', '=', self.company_id.id),
-                ('l10n_latam_document_number', '=', self.origin),
+                ('l10n_latam_document_number', '=', self.invoice_origin),
                 ('id', '!=', self.id),
                 ('l10n_latam_document_type_id', '!=', self.l10n_latam_document_type_id.id),
                 ('l10n_latam_document_type_id.country_id.code', '=', 'UY'),

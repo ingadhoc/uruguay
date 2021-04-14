@@ -10,7 +10,9 @@
             <field name="journal_id" position="after">
                 <field name="l10n_uy_journal_type" invisible="1"/>
                 <field name="l10n_uy_cfe_state" attrs="{'invisible': [('l10n_uy_journal_type', 'not in', ['electronic', 'contingency'])]}"/>
-                <button name="action_l10n_uy_get_dgi_state" type="object" string="Consult DGI State" class="oe_inline oe_link" attrs="{'invisible': [('l10n_uy_cfe_state', '!=', 'received')]}"/>
+                <button name="action_l10n_uy_get_dgi_state" type="object" string="Consult DGI State" class="oe_inline oe_link" attrs="{'invisible': [('l10n_uy_cfe_state', '!=', 'received')]}" icon="fa-refresh"/>
+                <button name="action_l10n_uy_get_pdf" type="object" string="Print Legal PDF" class="oe_inline oe_link" attrs="{
+                    'invisible': [('l10n_uy_cfe_state', 'not in', ['received', 'ui_indexada'])]}" icon="fa-print"/>
             </field>
 
             <field name="currency_id" position="after">
@@ -35,7 +37,6 @@
                                         <field name="l10n_uy_cfe_partner_status"/>
                                         <field name="l10n_uy_cfe_uuid"/>
                                         <field name="l10n_uy_cfe_file"/>
-                                        <button name="action_l10n_uy_get_pdf" type="object" string="Print Legal PDF" class="oe_inline oe_link" attrs="{'invisible': [('l10n_latam_document_number', '=', False)]}"/>
                                     </group>
                                     <group string="DGI">
                                         <field name="l10n_latam_document_number"/>
