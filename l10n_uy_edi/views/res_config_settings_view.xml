@@ -29,7 +29,7 @@
                                     <field name="l10n_uy_ucfe_commerce_code"/>
                                     <label for="l10n_uy_ucfe_terminal_code"  string="Terminal Code" class="col-lg-3 o_light_label"/>
                                     <field name="l10n_uy_ucfe_terminal_code"/>
-                                    <button name="l10n_uy_connection_test" type="object" class="oe_link oe_inline" string="⇒ Test Connections"/>
+                                    <button name="l10n_uy_connection_test" type="object" class="oe_link oe_inline" string="⇒ Test Connection"/>
                                 </div>
                             </div>
                         </div>

@@ -54,7 +54,7 @@ class ResCompany(models.Model):
         "\n4. Se abre un PDF. El dato aparece en Domicilio Fiscal -> Número de Local")
     l10n_uy_dgi_crt = fields.Binary(
         'DGI Certificate', groups="base.group_system", help="This certificate lets us"
-        " connect to DGI to validate electronic invoice. Please upload here the AFIP certificate in PEM format.")
+        " connect to DGI to validate electronic invoice. Please upload here the DGI certificate in PEM format.")
     l10n_uy_dgi_crt_fname = fields.Char('DGI Certificate name')
 
     # @api.depends('l10n_uy_dgi_crt')
