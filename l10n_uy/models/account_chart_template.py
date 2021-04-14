@@ -17,12 +17,8 @@ class AccountChartTemplate(models.Model):
         return journal_data
 
     def _load(self, sale_tax_rate, purchase_tax_rate, company):
-        """ Set companies AFIP Responsibility and Country if AR CoA is installed, also set tax calculation rounding
-        method required in order to properly validate match AFIP invoices.
-
-        Also, raise a warning if the user is trying to install a CoA that does not match with the defined AFIP
-        Responsibility defined in the company
-        """
+        """ Set companies country by default after install the chrar of account, also set the rut as the company
+        identification type because this one is the uruguayan vat """
         self.ensure_one()
         res = super()._load(sale_tax_rate, purchase_tax_rate, company)
 
