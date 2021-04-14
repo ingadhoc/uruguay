@@ -10,6 +10,7 @@
             <field name="journal_id" position="after">
                 <field name="l10n_uy_journal_type" invisible="1"/>
                 <field name="l10n_uy_cfe_state" attrs="{'invisible': [('l10n_uy_journal_type', 'not in', ['electronic', 'contingency'])]}"/>
+                <button name="action_l10n_uy_get_dgi_state" type="object" string="Consult DGI State" class="oe_inline oe_link" attrs="{'invisible': [('l10n_uy_cfe_state', '!=', 'received')]}"/>
             </field>
 
             <field name="currency_id" position="after">
@@ -41,7 +42,6 @@
                                         <label for="l10n_uy_cfe_dgi_state"/>
                                         <div>
                                             <field name="l10n_uy_cfe_dgi_state"/>
-                                            <button name="action_l10n_uy_get_dgi_state" type="object" string="Consult DGI State" class="oe_inline oe_link" attrs="{'invisible': ['|', ('l10n_uy_cfe_dgi_state', '=', '-2'), ('l10n_latam_document_number', '=', False)]}"/>
                                         </div>
                                         <field name="l10n_uy_dgi_acceptation_status"/>
                                         <field name="l10n_uy_dgi_barcode"/>

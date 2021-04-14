@@ -184,14 +184,17 @@ class AccountMove(models.Model):
         return res
 
     def action_l10n_uy_get_dgi_state(self):
-        """ 360: Consulta de estado de CFE: estado del comprobante en DGI, """
-        self.ensure_one()
-        response = self.company_id._l10n_uy_ucfe_inbox_operation('360', {'Uuid': self.l10n_uy_cfe_uuid})
+        """ 360: Consulta de estado de CFE: estado del comprobante en DGI,
+        Toma solo aquellos comprobantes que estan en esperado respuesta de DGI y consulta en el UFCE si DGI devolvio
+        respuesta acerca del comprobante """
+        for rec in self.filtered(lambda x: x.l10n_uy_cfe_state == 'received'):
+            response = rec.company_id._l10n_uy_ucfe_inbox_operation('360', {'Uuid': rec.l10n_uy_cfe_uuid})
 
-        self.l10n_uy_ucfe_state = response.Resp.CodRta or self.l10n_uy_ucfe_state
-        self.l10n_uy_ucfe_msg = response.Resp.MensajeRta or self.l10n_uy_ucfe_msg
-        self.l10n_uy_ucfe_notif = response.Resp.TipoNotificacion or self.l10n_uy_ucfe_notif
-        self.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido or self.l10n_uy_cfe_dgi_state
+            rec.l10n_uy_ucfe_state = response.Resp.CodRta or rec.l10n_uy_ucfe_state
+            rec.l10n_uy_ucfe_msg = response.Resp.MensajeRta or rec.l10n_uy_ucfe_msg
+            rec.l10n_uy_ucfe_notif = response.Resp.TipoNotificacion or rec.l10n_uy_ucfe_notif
+            rec.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido or rec.l10n_uy_cfe_dgi_state
+            rec._update_l10n_uy_cfe_state()
 
     # TODO not working review why
     # @api.onchange('journal_id', 'state')
@@ -203,6 +206,8 @@ class AccountMove(models.Model):
     #     return False
 
     def _update_l10n_uy_cfe_state(self):
+        """ Update the CFE State show to the user depending of the information of the UFCE and DGI State return from
+        third party service """
         if self.l10n_uy_cfe_dgi_state:
             if self.l10n_uy_cfe_dgi_state == '00':
                 self.l10n_uy_cfe_state = 'accepted'
