@@ -1,9 +1,9 @@
 from odoo import models, _
 from odoo.exceptions import UserError
+from xml.etree.ElementTree import fromstring, ElementTree
 import pprint
 import logging
 _logger = logging.getLogger(__name__)
-
 
 class ResPartner(models.Model):
 
@@ -35,12 +35,36 @@ class ResPartner(models.Model):
             response = company._l10n_uy_ucfe_inbox_operation('640', {'RutEmisor': self.vat})
             if response.Resp.CodRta == '00':
                 # TODO ver detalle de los demas campos que podemos integrar en pagin 83 Manual de integración
+                tree = ElementTree(fromstring(response.Resp.XmlCfeFirmado))
+
+                street = tree.find('.//{DGI_Modernizacion_Consolidado}Calle_Nom').text
+                street_number = tree.find('.//{DGI_Modernizacion_Consolidado}Dom_Pta_Nro').text
+                city = tree.find('.//{DGI_Modernizacion_Consolidado}Loc_Nom').text
+                state = tree.find('.//{DGI_Modernizacion_Consolidado}Dpto_Nom').text
+                zip_code = tree.find('.//{DGI_Modernizacion_Consolidado}Dom_Pst_Cod').text
+                state_id = state and self.env['res.country.state'].search([('name', '=ilike', state)], limit=1).name or False
+                phone = tree.find(
+                    ".//{DGI_Modernizacion_Consolidado}WS_Domicilio.WS_DomicilioItem.Contacto"
+                    "[{DGI_Modernizacion_Consolidado}TipoCtt_Des='TELEFONO FIJO']/"
+                    "{DGI_Modernizacion_Consolidado}DomCtt_Val").text
+                email = tree.find(
+                    ".//{DGI_Modernizacion_Consolidado}WS_Domicilio.WS_DomicilioItem.Contacto["
+                    "{DGI_Modernizacion_Consolidado}TipoCtt_Des='CORREO ELECTRONICO']/"
+                    "{DGI_Modernizacion_Consolidado}DomCtt_Val").text
                 values = {
-                    'name': response.Resp.XmlCfeFirmado.Denominacion,
-                    'ref': response.Resp.XmlCfeFirmado.NombreFantasia,
+                    'name': tree.find('{DGI_Modernizacion_Consolidado}Denominacion').text,
+                    'ref': tree.find('{DGI_Modernizacion_Consolidado}NombreFantasia').text,
+                    'street': street + ' ' + street_number,
+                    'street2':  tree.find('{DGI_Modernizacion_Consolidado}Dom_Coment').text,
+                    'city': city,
+                    'state_id': state_id,
+                    'zip': zip_code,
+                    'phone': phone,
+                    'email': email,
                 }
                 # TODO delete this one once integrated
                 self.message_post(body=response)
+                self.message_post(body=values)
             else:
                 _logger.info('response %s' % pprint.pformat(response))
                 raise UserError(_('No se pudo conectar a DGI para extraer los datos'))
