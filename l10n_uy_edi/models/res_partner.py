@@ -33,6 +33,9 @@ class ResPartner(models.Model):
         values = {}
         if self.l10n_latam_identification_type_id.l10n_uy_dgi_code == '2':
             response = company._l10n_uy_ucfe_inbox_operation('640', {'RutEmisor': self.vat})
+
+            # TODO delete after finish the tests
+            _logger.info("action_l10n_uy_get_data_from_dgi %s" % response)
             if response.Resp.CodRta == '00':
                 # TODO ver detalle de los demas campos que podemos integrar en pagin 83 Manual de integración
                 tree = ElementTree(fromstring(response.Resp.XmlCfeFirmado))
