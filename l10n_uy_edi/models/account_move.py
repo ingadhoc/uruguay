@@ -438,6 +438,10 @@ class AccountMove(models.Model):
             # cond_e_fact: obligatorio RUC (C60= 2).
             # cond_e_ticket: si monto neto ∑ (C112 a C118) > a tope establecido (ver tabla E), debe identificarse con NIE, RUC, CI, Otro, Pasaporte DNI o NIFE (C 60= 2, 3, 4, 5, 6 o 7).
 
+
+            if not self.partner_id.l10n_latam_identification_type_id and not self.partner_id.l10n_latam_identification_type_id.l10n_uy_dgi_code:
+                raise UserError(_('The partner of the invoice need to have a Uruguayan Identification Type'))
+
             tipo_doc = int(self.partner_id.l10n_latam_identification_type_id.l10n_uy_dgi_code)
             cod_pais = 'UY' if tipo_doc in [2, 3] else '99'
 
