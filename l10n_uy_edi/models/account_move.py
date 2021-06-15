@@ -413,7 +413,7 @@ class AccountMove(models.Model):
                 # TODO Valor numerico 14 enteros y 3 decimales. debemos convertir el formato a representarlo
 
                 'UniMed': line.product_uom_id.name[:4] if line.product_uom_id else 'N/A',  # B10 Unidad de medida
-                'PrecioUnitario': float_repr(line.price_total, 6),  # B11 Precio unitario
+                'PrecioUnitario': float_repr(line.price_unit, 6),  # B11 Precio unitario
                 'MontoItem': float_repr(line.price_total, 2),  # B24 Monto Item,
             })
 
