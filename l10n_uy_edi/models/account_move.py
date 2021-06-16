@@ -616,7 +616,7 @@ class AccountMove(models.Model):
         # C111 Tipo de Cambio
         if self._l10n_uy_get_currency() != 'UYU':
             res['TpoCambio'] = float_repr(self.currency_id._convert(
-                1.0, self.company_id.currency_id, self.company_id, self.date_invoice or fields.Date.today(),
+                1.0, self.company_id.currency_id, self.company_id, self.invoice_date or fields.Date.today(),
                 round=False), 3)
 
         cfe_code = int(self.l10n_latam_document_type_id.code)
