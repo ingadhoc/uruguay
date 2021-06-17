@@ -77,8 +77,7 @@
         </field>
     </record>
 
-    <!-- TODO KZ not working review why -->
-    <!-- <act_window id="action_partner_update" res_model="res.partner.update.from.padron.wizard"    src_model="res.partner"
-        target="new" multi="True" key2="client_action_multi" view_mode="form" name="Automatic Update from DGI"/> -->
+    <act_window id="action_partner_update" res_model="res.partner.update.from.padron.wizard" binding_model="res.partner"
+        target="new" view_mode="form" name="Automatic Update from DGI"/>
 
 </odoo>

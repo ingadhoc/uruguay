@@ -8,7 +8,7 @@
         <field type="xml" name="arch">
             <field name="vat" position="after">
                 <button name="action_l10n_uy_is_electronic_issuer" string="Electronic Issuer?" class="oe_link oe_inline" type="object"/>
-                <button name="action_l10n_uy_get_data_from_dgi" string="Update From DGI" class="oe_link oe_inline" type="object"/>
+                <button name="%(action_partner_update)d" string="Update From DGI" class="oe_link oe_inline" type="action"/>
                 <!-- attrs="{'invisible': [('l10n_latam_identification_type_id.code', '!=', 2)]}" -->
             </field>
         </field>

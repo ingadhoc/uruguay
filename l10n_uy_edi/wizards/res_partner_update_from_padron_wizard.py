@@ -50,21 +50,16 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
         # TODO add our fields
         fields_names = [
             'name',
-            'estado_padron',
             'street',
+            'street2',
             'city',
             'zip',
-            'actividades_padron',
-            'impuestos_padron',
-            'imp_iva_padron',
             'state_id',
-            'imp_ganancias_padron',
-            'monotributo_padron',
-            'actividad_monotributo_padron',
-            'empleador_padron',
-            'integrante_soc_padron',
-            'last_update_padron',
-            'afip_responsability_type_id',
+            'comment',
+            'phone',
+            'mobile',
+            'email',
+            'ref',
         ]
         return [('model', '=', 'res.partner'), ('name', 'in', fields_names)]
 
@@ -117,7 +112,7 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
         partner = self.partner_id
         fields_names = self.field_to_update_ids.mapped('name')
         if partner:
-            partner_vals = partner._l10n_uy_get_data_from_dgi()
+            partner_vals = partner.action_l10n_uy_get_data_from_dgi()
             lines = []
             # partner_vals.pop('constancia')
             for key, new_value in partner_vals.items():

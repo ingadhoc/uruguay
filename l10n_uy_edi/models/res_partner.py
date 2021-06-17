@@ -31,48 +31,59 @@ class ResPartner(models.Model):
         self.ensure_one()
         company = self.company_id or self.env.company
         values = {}
+
+        data_mapping = {
+            'street': './/{DGI_Modernizacion_Consolidado}Calle_Nom',
+
+            'city': './/{DGI_Modernizacion_Consolidado}Loc_Nom',
+            'zip': './/{DGI_Modernizacion_Consolidado}Dom_Pst_Cod',
+            'phone':
+                ".//{DGI_Modernizacion_Consolidado}WS_Domicilio.WS_DomicilioItem.Contacto"
+                "[{DGI_Modernizacion_Consolidado}TipoCtt_Des='TELEFONO FIJO']/"
+                "{DGI_Modernizacion_Consolidado}DomCtt_Val",
+            'mobile':
+                ".//{DGI_Modernizacion_Consolidado}WS_Domicilio.WS_DomicilioItem.Contacto"
+                "[{DGI_Modernizacion_Consolidado}TipoCtt_Des='TELEFONO MOVIL']/"
+                "{DGI_Modernizacion_Consolidado}DomCtt_Val",
+            'email':
+                ".//{DGI_Modernizacion_Consolidado}WS_Domicilio.WS_DomicilioItem.Contacto["
+                "{DGI_Modernizacion_Consolidado}TipoCtt_Des='CORREO ELECTRONICO']/"
+                "{DGI_Modernizacion_Consolidado}DomCtt_Val",
+
+            'name': './/{DGI_Modernizacion_Consolidado}Denominacion',
+            'ref': './/{DGI_Modernizacion_Consolidado}NombreFantasia',
+            'street2':  './/{DGI_Modernizacion_Consolidado}Dom_Coment',
+
+            # TODO remove
+            'street_number': './/{DGI_Modernizacion_Consolidado}Calle_id',
+            'state': './/{DGI_Modernizacion_Consolidado}Dpto_Nom',
+        }
+
+        # If partner has RUC
         if self.l10n_latam_identification_type_id.l10n_uy_dgi_code == '2':
             response = company._l10n_uy_ucfe_inbox_operation('640', {'RutEmisor': self.vat})
-
             # TODO delete after finish the tests
-            _logger.info("action_l10n_uy_get_data_from_dgi %s" % response)
+            _logger.info('response %s' % pprint.pformat(response))
+
             if response.Resp.CodRta == '00':
                 # TODO ver detalle de los demas campos que podemos integrar en pagin 83 Manual de integración
                 tree = ElementTree(fromstring(response.Resp.XmlCfeFirmado))
 
-                street = tree.find('.//{DGI_Modernizacion_Consolidado}Calle_Nom').text
-                street_number = tree.find('.//{DGI_Modernizacion_Consolidado}Dom_Pta_Nro').text
-                city = tree.find('.//{DGI_Modernizacion_Consolidado}Loc_Nom').text
-                state = tree.find('.//{DGI_Modernizacion_Consolidado}Dpto_Nom').text
-                zip_code = tree.find('.//{DGI_Modernizacion_Consolidado}Dom_Pst_Cod').text
-                state_id = state and self.env['res.country.state'].search([('name', '=ilike', state)], limit=1).name or False
-                phone = tree.find(
-                    ".//{DGI_Modernizacion_Consolidado}WS_Domicilio.WS_DomicilioItem.Contacto"
-                    "[{DGI_Modernizacion_Consolidado}TipoCtt_Des='TELEFONO FIJO']/"
-                    "{DGI_Modernizacion_Consolidado}DomCtt_Val").text
-                email = tree.find(
-                    ".//{DGI_Modernizacion_Consolidado}WS_Domicilio.WS_DomicilioItem.Contacto["
-                    "{DGI_Modernizacion_Consolidado}TipoCtt_Des='CORREO ELECTRONICO']/"
-                    "{DGI_Modernizacion_Consolidado}DomCtt_Val").text
-                values = {
-                    'name': tree.find('{DGI_Modernizacion_Consolidado}Denominacion').text,
-                    'ref': tree.find('{DGI_Modernizacion_Consolidado}NombreFantasia').text,
-                    'street': street + ' ' + street_number,
-                    'street2':  tree.find('{DGI_Modernizacion_Consolidado}Dom_Coment').text,
-                    'city': city,
-                    'state_id': state_id,
-                    'zip': zip_code,
-                    'phone': phone,
-                    'email': email,
-                }
-                # TODO delete this one once integrated
-                self.message_post(body=response)
-                self.message_post(body=values)
+                values = {}
+                for odoo_field, mapping_value in data_mapping.items():
+                    val = tree.findtext(mapping_value)
+                    if val:
+                        values.update({odoo_field: val})
+
+                state_name = values.pop('state')
+                state_id = state_name and self.env['res.country.state'].search(
+                    [('name', '=ilike', state_name)], limit=1).id or False
+
+                values['state_id'] = state_id
+                values['street'] += ' ' + values.pop('street_number')
             else:
-                _logger.info('response %s' % pprint.pformat(response))
                 raise UserError(_('No se pudo conectar a DGI para extraer los datos'))
         else:
             raise UserError(_('Solo puede consultar si el partner tiene tipo de identificación RUT'))
-        if values:
-            action = self.env.ref("l10n_uy_edi.action_partner_update")
-            return action.read([])[0]
+
+        return values
