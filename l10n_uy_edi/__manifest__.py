@@ -24,6 +24,7 @@
         'data/cfe_template.xml',
         'data/ir_sequence.xml',
         'data/ir_actions_server.xml',
+        'data/ir_cron.xml',
     ],
     'demo': [
         'demo/res_partner_demo.xml',
