@@ -858,7 +858,7 @@ class AccountMove(models.Model):
         #     raise UserError(_('ERROR: la notificacion no pudo descartarse %s') % response)
 
 
-class AccountMove(models.Model):
+class AccountMoveLine(models.Model):
 
     _inherit = "account.move.line"
 
