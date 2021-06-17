@@ -433,6 +433,11 @@ class AccountMove(models.Model):
     def _l10n_uy_get_unidad_indexada(self):
         return self.env.ref('l10n_uy.UYI').rate * 10000
 
+    def is_expo_cfe(self):
+        """ True of False in the current invoice is an exporation invoice type """
+        self.ensure_one()
+        return int(self.l10n_latam_document_type_id.code) in [121, 122, 123]
+
     def _l10n_uy_get_cfe_receptor(self):
         self.ensure_one()
         res = {}
@@ -442,7 +447,7 @@ class AccountMove(models.Model):
         cond_e_ticket = document_type in [101, 102, 103, 131, 132, 133] and self.amount_total > (ui_indexada * 10000)
         cond_e_boleta = document_type in [151, 152, 153]
         cond_e_contg = document_type in [201, 202, 203]
-        cond_e_fact_expo = document_type in [121, 122, 123]
+        cond_e_fact_expo = self.is_expo_cfe()
 
         if cond_e_fact or cond_e_ticket or cond_e_boleta or cond_e_contg or cond_e_fact_expo:
             # cond_e_fact: obligatorio RUC (C60= 2).
@@ -542,13 +547,12 @@ class AccountMove(models.Model):
 
     def _l10n_uy_get_cfe_iddoc(self):
         self.ensure_one()
-        cfe_code = int(self.l10n_latam_document_type_id.code)
         now = datetime.utcnow()  # TODO this need to be the same as the tipo de mensaje?
         res = {
             'FmaPago': 1 if self.l10n_uy_payment_type == 'cash' else 2,
             'FchEmis': now.date().strftime('%Y-%m-%d'),
         }
-        if cfe_code in [121, 122, 123]:  # Factura de Exportación
+        if self.is_expo_cfe():
             res.update({
                 'ModVenta': self._l10n_uy_get_cfe_modventa(),
                 'ClauVenta': self._l10n_uy_get_cfe_caluventa(),
@@ -629,8 +633,7 @@ class AccountMove(models.Model):
                 1.0, self.company_id.currency_id, self.company_id, self.invoice_date or fields.Date.today(),
                 round=False), 3)
 
-        cfe_code = int(self.l10n_latam_document_type_id.code)
-        if cfe_code in [121, 122, 123]:  # Factura de Exportación
+        if self.is_expo_cfe():
             res.update({
                 'MntExpoyAsim': float_repr(self.amount_total, 2),  # C113
             })
@@ -656,26 +659,28 @@ class AccountMove(models.Model):
         tax_line_basica = self.line_ids.filtered(lambda x: tax_vat_22 in x.tax_line_id)
         if tax_line_basica:
             base_imp = sum(self.invoice_line_ids.filtered(lambda x: tax_vat_22 in x.tax_ids).mapped(amount_field))
-            res.update({
-                # A120 Tasa Mínima IVA TODO
-                'IVATasaBasica': 22,
-                # A-C117 Total Monto Neto - IVA Tasa Basica
-                'MntNetoIVATasaBasica': float_repr(abs(base_imp), 2),
-                # A-C122 Total IVA Tasa Básica? Monto del IVA Tasa Basica
-                'MntIVATasaBasica': float_repr(abs(tax_line_basica[amount_field]), 2),
-            })
+            if not self.is_expo_cfe():  # Solo sino es Factuta de Exportacion
+                res.update({
+                    # A-C117 Total Monto Neto - IVA Tasa Basica
+                    'MntNetoIVATasaBasica': float_repr(abs(base_imp), 2),
+                    # A120 Tasa Mínima IVA TODO
+                    'IVATasaBasica': 22,
+                    # A-C122 Total IVA Tasa Básica? Monto del IVA Tasa Basica
+                    'MntIVATasaBasica': float_repr(abs(tax_line_basica[amount_field]), 2),
+                })
 
         tax_line_minima = self.line_ids.filtered(lambda x: tax_vat_10 in x.tax_line_id)
         if tax_line_minima:
             base_imp = sum(self.invoice_line_ids.filtered(lambda x: tax_vat_10 in x.tax_ids).mapped(amount_field))
-            res.update({
-                # A119 Tasa Mínima IVA TODO
-                'IVATasaMin': 10,
-                # A-C116 Total Monto Neto - IVA Tasa Minima
-                'MntNetoIvaTasaMin': float_repr(abs(base_imp), 2),
-                # A-C121 Total IVA Tasa Básica? Monto del IVA Tasa Minima
-                'MntIVATasaMin': float_repr(abs(tax_line_basica[amount_field]), 2),
-            })
+            if not self.is_expo_cfe():  # Solo sino es Factuta de Exportacion
+                res.update({
+                    # A-C116 Total Monto Neto - IVA Tasa Minima
+                    'MntNetoIvaTasaMin': float_repr(abs(base_imp), 2),
+                    # A119 Tasa Mínima IVA TODO
+                    'IVATasaMin': 10,
+                    # A-C121 Total IVA Tasa Básica? Monto del IVA Tasa Minima
+                    'MntIVATasaMin': float_repr(abs(tax_line_basica[amount_field]), 2),
+                })
 
         return res
 
@@ -893,8 +898,7 @@ class AccountMoveLine(models.Model):
             # TODO parece que tenemos estos tipos de contribuyente: IVA mínimo, Monotributo o Monotributo MIDES ver si cargarlos en el patner asi como la afip responsibility
         }
 
-        cfe_code = int(self.move_id.l10n_latam_document_type_id.code)
-        if cfe_code in [121, 122, 123]:  # Factura de Exportación
+        if self.move_id.is_expo_cfe():
             return 10  # Exportación y asimiladas
 
         return value.get(self.tax_ids.id)
