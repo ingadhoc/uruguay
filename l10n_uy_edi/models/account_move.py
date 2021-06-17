@@ -321,6 +321,7 @@ class AccountMove(models.Model):
                 'TipoCfe': int(inv.l10n_latam_document_type_id.code),
                 'HoraReq': now.strftime('%H%M%S'),
                 'FechaReq': now.date().strftime('%Y%m%d'),
+                # TODO 'Adenda': 'Datoe enviado por Gaby, este es para facturas exportacion, si es zona franca tiene una adenda extra'
                 'CfeXmlOTexto': CfeXmlOTexto}
             req_data.update(self._l10n_uy_get_cfe_serie())
             response, transport = self.company_id._l10n_uy_ucfe_inbox_operation('310', req_data, return_transport=1)
