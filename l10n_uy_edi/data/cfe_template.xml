@@ -44,8 +44,8 @@
                     <Totales>
                         <TpoMoneda t-esc="totals_detail['TpoMoneda']"/>
                         <TpoCambio t-if="totals_detail.get('TpoCambio')" t-esc="totals_detail['TpoCambio']"/>
-                        <MntExpoyAsim t-if="totals_detail.get('MntExpoyAsim')" t-esc="totals_detail['MntExpoyAsim']"/>
                         <MntNoGrv t-if="totals_detail.get('MntNoGrv')" t-esc="totals_detail['MntNoGrv']"/>
+                        <MntExpoyAsim t-if="totals_detail.get('MntExpoyAsim')" t-esc="totals_detail['MntExpoyAsim']"/>
 
                         <MntNetoIvaTasaMin t-if="totals_detail.get('MntNetoIvaTasaMin')" t-esc="totals_detail['MntNetoIvaTasaMin']"/>
                         <MntNetoIVATasaBasica t-if="totals_detail.get('MntNetoIVATasaBasica')" t-esc="totals_detail['MntNetoIVATasaBasica']"/>
