@@ -227,7 +227,7 @@ class AccountMove(models.Model):
             if self.l10n_uy_ucfe_state:
                 if self.l10n_uy_ucfe_state == '00':
                     ui_indexada = self._l10n_uy_get_unidad_indexada()
-                    if self.amount_total < ui_indexada:
+                    if self.amount_total < (ui_indexada * 10000):
                         self.l10n_uy_cfe_state = 'ui_indexada'
                 if self.l10n_uy_ucfe_state == '11':
                     self.l10n_uy_cfe_state = 'received'
@@ -439,7 +439,7 @@ class AccountMove(models.Model):
         ui_indexada = self._l10n_uy_get_unidad_indexada()
         document_type = int(self.l10n_latam_document_type_id.code)
         cond_e_fact = document_type in [111, 112, 113, 141, 142, 143]
-        cond_e_ticket = document_type in [101, 102, 103, 131, 132, 133] and self.amount_total > ui_indexada
+        cond_e_ticket = document_type in [101, 102, 103, 131, 132, 133] and self.amount_total > (ui_indexada * 10000)
         cond_e_boleta = document_type in [151, 152, 153]
         cond_e_contg = document_type in [201, 202, 203]
         cond_e_fact_expo = document_type in [121, 122, 123]
