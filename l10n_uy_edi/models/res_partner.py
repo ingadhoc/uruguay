@@ -77,9 +77,12 @@ class ResPartner(models.Model):
 
                 state_name = values.pop('state')
                 state_id = state_name and self.env['res.country.state'].search(
-                    [('name', '=ilike', state_name)], limit=1).id or False
+                    [('name', '=ilike', state_name)], limit=1)
 
-                values['state_id'] = state_id
+                values['state_id'] = state_id.id or False
+                if state_id:
+                    values['country_id'] = state_id.country_id.id
+
                 values['street'] += ' ' + values.pop('street_number')
             else:
                 raise UserError(_('No se pudo conectar a DGI para extraer los datos'))

@@ -55,6 +55,7 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
             'city',
             'zip',
             'state_id',
+            'country_id',
             'comment',
             'phone',
             'mobile',
