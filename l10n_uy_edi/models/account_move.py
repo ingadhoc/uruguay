@@ -82,7 +82,7 @@ class AccountMove(models.Model):
 
     l10n_uy_cfe_uuid = fields.Char(
         'Clave o UUID del CFE', help="Unique identification per CFE in UCFE. Currently is formed by the concatenation"
-        " of model name + record id", copy=False)
+        " of model name + record id + date", copy=False)
     # TODO este numero debe ser maximo 36 caracteres máximo. esto debemos mejorarlo
 
     l10n_uy_cfe_sale_mod = fields.Selection([
@@ -317,7 +317,7 @@ class AccountMove(models.Model):
             now = datetime.utcnow()
             CfeXmlOTexto = self._l10n_uy_create_cfe().get('cfe_str')
             req_data = {
-                'Uuid': 'account.move-' + str(self.id),  # TODO we need to set this unique how?
+                'Uuid': 'account.move-' + str(self.id) + '_' + str(fields.Datetime.now()),  # TODO this need to be improve
                 'TipoCfe': int(inv.l10n_latam_document_type_id.code),
                 'HoraReq': now.strftime('%H%M%S'),
                 'FechaReq': now.date().strftime('%Y%m%d'),
