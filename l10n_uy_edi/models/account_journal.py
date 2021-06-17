@@ -50,3 +50,23 @@ class AccountJournal(models.Model):
         elif self.l10n_uy_type == 'contingency':
             available_types = [201, 211, 212, 213, 221, 222, 223, 241, 242, 243]
         return available_types
+
+    # def _l10n_uy_create_document_sequences(self):
+    #     """ IF DGI Configuration change try to review if this can be done and then create / update the document
+    #     sequences """
+    #     """ After creating the document sequences we try to sync document next numbers with the last numbers in Uruware
+    #     """
+    #     # TODO KZ WIP I think this should be done before
+    #     if self.type == 'sale' and self.l10n_uy_type == 'electronic':
+    #         try:
+    #             self.l10n_ar_sync_next_number_with_afip()
+    #             # TODO implementar get Sequence numbers
+    #             # 4.3 Solicitud de rango de numeración. consulta 220
+    #             # 4.13 Consulta de CAE Este consulta 230
+    #             # 4.16 Solicitar anulación de un número de CFE no utilizado. consulta 380
+    #
+    #         except Exception as error:
+    #             _logger.info(_('Could not synchronize next number with the Uruware last numbers %s'), repr(error))
+    #     else:
+    #         res = super()._l10n_ar_create_document_sequences()
+    #     return res
