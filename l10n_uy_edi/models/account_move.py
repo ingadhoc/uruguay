@@ -181,6 +181,14 @@ class AccountMove(models.Model):
             # TODO KZ I think we can avoid this loop. review
             inv._l10n_uy_dgi_post()
 
+            # This is necesary for fixing problems directly from odoo when we do not sent the proper information to
+            # uruware.
+            if inv.l10n_uy_cfe_state in ['xml_error', 'connection_error']:
+                # TODO need to do this in a better way.
+                inv.button_cancel()
+                inv.delete_number()
+                inv.button_draft()
+
         return res
 
     def action_l10n_uy_get_dgi_state(self):
