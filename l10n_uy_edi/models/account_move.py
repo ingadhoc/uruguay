@@ -321,8 +321,9 @@ class AccountMove(models.Model):
                 'TipoCfe': int(inv.l10n_latam_document_type_id.code),
                 'HoraReq': now.strftime('%H%M%S'),
                 'FechaReq': now.date().strftime('%Y%m%d'),
-                # TODO 'Adenda': 'Datoe enviado por Gaby, este es para facturas exportacion, si es zona franca tiene una adenda extra'
                 'CfeXmlOTexto': CfeXmlOTexto}
+
+            req_data.update(inv._l10n_uy_get_cfe_adenda())
             req_data.update(self._l10n_uy_get_cfe_serie())
             response, transport = self.company_id._l10n_uy_ucfe_inbox_operation('310', req_data, return_transport=1)
 
@@ -494,6 +495,23 @@ class AccountMove(models.Model):
             return 'eFact_Exp'
         else:
             raise UserError('Este Comprobante aun no ha sido implementado')
+
+    def _l10n_uy_get_cfe_adenda(self):
+        # TODO KZ 'Adenda': 'Datoe enviado por Gaby
+        # TODO KZ crear parametros de sistema o campos en la comapania para definir las adendas
+        self.ensure_one()
+        adenda = ''
+        if self.is_expo_cfe():
+            adenda += 'Esto es una prueba de ADENDA de factura de exportacion'
+
+        # TODO KZ mejorar no podemos buscar por nombre
+        # TODO KZ toca tambien ver cual es la zona franca uruguaya y configurarla en la data, que se auto detecte
+        if self.fiscal_position_id.name == 'Exportaciones a la Zona Franca':
+            adenda += '\nEsto es la leyenda de zona franca'
+
+        if adenda:
+            return {'Adenda': adenda}
+        return {}
 
     def _l10n_uy_get_cfe_serie(self):
         """ Si soy ticket de contingencia usar los valores que estan definidos en el Odoo """
