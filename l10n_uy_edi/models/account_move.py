@@ -422,7 +422,7 @@ class AccountMove(models.Model):
 
                 'UniMed': line.product_uom_id.name[:4] if line.product_uom_id else 'N/A',  # B10 Unidad de medida
                 'PrecioUnitario': float_repr(line.price_unit, 6),  # B11 Precio unitario
-                'MontoItem': float_repr(line.price_total, 2),  # B24 Monto Item,
+                'MontoItem': float_repr(line.price_subtotal, 2),  # B24 Monto Item,
             })
 
         return res
