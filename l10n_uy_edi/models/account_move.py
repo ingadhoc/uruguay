@@ -650,6 +650,8 @@ class AccountMove(models.Model):
             res['TpoCambio'] = float_repr(self.currency_id._convert(
                 1.0, self.company_id.currency_id, self.company_id, self.invoice_date or fields.Date.today(),
                 round=False), 3)
+            if res['TpoCambio'] <= 0.0:
+                raise UserError(_('Not valid Currency Rate, need to be greather that 0 in order to be accepted by DGI'))
 
         if self.is_expo_cfe():
             res.update({
