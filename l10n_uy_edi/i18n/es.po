@@ -393,7 +393,7 @@ msgid "Contact"
 msgstr "Contacto"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,help:l10n_uy_edi.field_res_partner_update_from_padron_wizard__title_case
+#: model:ir.model.fields,help:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__title_case
 msgid "Converts retreived text fields to Title Case."
 msgstr ""
 
@@ -403,14 +403,14 @@ msgid "Country Code"
 msgstr "Código País"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_field__create_uid
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_wizard__create_uid
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field__create_uid
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_field__create_date
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_wizard__create_date
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field__create_date
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__create_date
 msgid "Created on"
 msgstr ""
 
@@ -485,8 +485,8 @@ msgid "Digital Certificate"
 msgstr "Certificado Digital"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_field__display_name
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_wizard__display_name
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field__display_name
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -570,22 +570,22 @@ msgid "Everything is ok!"
 msgstr "Todo esta bien!"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_field__field
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field__field
 msgid "Field"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_wizard__field_ids
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__field_ids
 msgid "Fields"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_wizard__field_to_update_ids
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__field_to_update_ids
 msgid "Fields To Update"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__res_partner_update_from_padron_wizard__state__finished
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__res.partner.update.from.padron.uy.wizard__state__finished
 msgid "Finished"
 msgstr ""
 
@@ -597,8 +597,8 @@ msgstr ""
 "Acá necesita subir el archivo con el Certificado Digital para operar en la DGI"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_field__id
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_wizard__id
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field__id
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__id
 msgid "ID"
 msgstr ""
 
@@ -638,20 +638,20 @@ msgid "Journal Item"
 msgstr "Apunte contable"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_field____last_update
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_wizard____last_update
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field____last_update
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard____last_update
 msgid "Last Modified on"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_field__write_uid
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_wizard__write_uid
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field__write_uid
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_field__write_date
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_wizard__write_date
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field__write_date
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -694,7 +694,7 @@ msgid "NO es un emisor electrónico"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_field__new_value
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field__new_value
 msgid "New Value"
 msgstr ""
 
@@ -705,7 +705,7 @@ msgid "No hay notificaciones disponibles en el UCFE"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/wizards/res_partner_update_from_padron_wizard.py:0
+#: code:addons/l10n_uy_edi/wizards/res.partner.update.from.padron.uy.wizard.py:0
 #, python-format
 msgid "No se encontró ningún partner con RUT para actualizar"
 msgstr ""
@@ -752,7 +752,7 @@ msgid "Not apply - Not a CFE"
 msgstr "No Aplica - No es un CFE"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_field__old_value
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field__old_value
 msgid "Old Value"
 msgstr ""
 
@@ -764,12 +764,12 @@ msgid ""
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,help:l10n_uy_edi.field_res_partner_update_from_padron_wizard__field_to_update_ids
+#: model:ir.model.fields,help:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__field_to_update_ids
 msgid "Only this fields are going to be retrived and updated"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__res_partner_update_from_padron_wizard__state__option
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__res.partner.update.from.padron.uy.wizard__state__option
 msgid "Option"
 msgstr ""
 
@@ -814,12 +814,12 @@ msgid "Para validar una ND/NC debe informar el Documento de Origen"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_wizard__partner_id
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__partner_id
 msgid "Partner"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_wizard__partner_ids
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__partner_ids
 msgid "Partners"
 msgstr ""
 
@@ -865,7 +865,7 @@ msgid "Régimen general- exportación de servicios"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__res_partner_update_from_padron_wizard__state__selection
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__res.partner.update.from.padron.uy.wizard__state__selection
 msgid "Selection"
 msgstr ""
 
@@ -917,7 +917,7 @@ msgid "Solo puede consultar si el partner tiene tipo de identificación RUT"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_wizard__state
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__state
 msgid "State"
 msgstr ""
 
@@ -1013,7 +1013,7 @@ msgid "Tipo Notificacion"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_wizard__title_case
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__title_case
 msgid "Title Case"
 msgstr ""
 
@@ -1145,7 +1145,7 @@ msgid "Waiting response from DGI"
 msgstr "Esperando respuesta de la DGI"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_field__wizard_id
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field__wizard_id
 msgid "Wizard"
 msgstr ""
 
@@ -1171,13 +1171,13 @@ msgid "or"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model,name:l10n_uy_edi.model_res_partner_update_from_padron_field
-msgid "res.partner.update.from.padron.field"
+#: model:ir.model,name:l10n_uy_edi.model_res.partner.update.from.padron.uy.field
+msgid "res.partner.update.from.padron.uy.field"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model,name:l10n_uy_edi.model_res_partner_update_from_padron_wizard
-msgid "res.partner.update.from.padron.wizard"
+#: model:ir.model,name:l10n_uy_edi.model_res.partner.update.from.padron.uy.wizard
+msgid "res.partner.update.from.padron.uy.wizard"
 msgstr ""
 
 #. module: l10n_uy_edi
