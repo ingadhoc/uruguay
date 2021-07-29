@@ -9,10 +9,10 @@ _logger = logging.getLogger(__name__)
 class ResPartnerUpdate(models.TransientModel):
 
     # TODO rename model
-    _name = 'res.partner.update.from.padron.field'
-    _description = 'res.partner.update.from.padron.field'
+    _name = 'res.partner.update.from.padron.uy.field'
+    _description = 'res.partner.update.from.padron.uy.field'
 
-    wizard_id = fields.Many2one('res.partner.update.from.padron.wizard')
+    wizard_id = fields.Many2one('res.partner.update.from.padron.uy.wizard')
     field = fields.Char()
     old_value = fields.Char()
     new_value = fields.Char()
@@ -20,8 +20,8 @@ class ResPartnerUpdate(models.TransientModel):
 
 class ResPartnerUpdateFromPadronWizard(models.TransientModel):
 
-    _name = 'res.partner.update.from.padron.wizard'
-    _description = 'res.partner.update.from.padron.wizard'
+    _name = 'res.partner.update.from.padron.uy.wizard'
+    _description = 'res.partner.update.from.padron.uy.wizard'
 
     @api.model
     def get_partners(self):
@@ -82,7 +82,7 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
         readonly=True, required=True, default='option',
     )
     field_ids = fields.One2many(
-        'res.partner.update.from.padron.field',
+        'res.partner.update.from.padron.uy.field',
         'wizard_id',
         string='Fields',
     )
