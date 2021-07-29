@@ -88,7 +88,7 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
     )
     partner_ids = fields.Many2many(
         'res.partner',
-        'partner_update_from_padron_rel',
+        'partner_update_from_padron_uy_rel',
         'update_id', 'partner_id',
         string='Partners',
         default=get_partners,
@@ -97,7 +97,7 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
     title_case = fields.Boolean(help='Converts retreived text fields to Title Case.', default=_get_default_title_case)
     field_to_update_ids = fields.Many2many(
         'ir.model.fields',
-        'res_partner_update_fields',
+        'res_partner_update_fields_uy',
         'update_id', 'field_id',
         string='Fields To Update',
         help='Only this fields are going to be retrived and updated',

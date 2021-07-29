@@ -184,7 +184,7 @@ msgid "Acknowledge Sent"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_form
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
 msgid "Are you sure to execute the automatic update of your partners ?"
 msgstr "Estas seguro que quiere ejecutar la actualización automática del contacto ?"
 
@@ -319,7 +319,7 @@ msgid "CFE XML file"
 msgstr "CFE archivo xml"
 
 #. module: l10n_uy_edi
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_form
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -334,7 +334,7 @@ msgid "Clave o UUID del CFE"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_form
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
 msgid "Close"
 msgstr ""
 
@@ -757,7 +757,7 @@ msgid "Old Value"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_form
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
 msgid ""
 "Only Partners with cuit are going to be updated.<br/>\n"
 "                        Select the list of fields you want to update."
@@ -905,7 +905,7 @@ msgid "Set your company state"
 msgstr "Agregue Estado/Provincia a su compañía"
 
 #. module: l10n_uy_edi
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_form
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
 msgid "Skip these partner"
 msgstr ""
 
@@ -960,7 +960,7 @@ msgid ""
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_form
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
 msgid "There are no more partners to update for this request..."
 msgstr ""
 
@@ -1047,29 +1047,29 @@ msgstr ""
 "contanación de el nombre del mdelo y el id del registro"
 
 #. module: l10n_uy_edi
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_form
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
 msgid "Update Automatically"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_form
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_partner_form
 msgid "Update From DGI"
 msgstr "Actualizar desde DGI"
 
 #. module: l10n_uy_edi
-#: model:ir.actions.act_window,name:l10n_uy_edi.action_base_partner_update_from_padron
-#: model:ir.ui.menu,name:l10n_uy_edi.menu_base_partner_update_from_padron
+#: model:ir.actions.act_window,name:l10n_uy_edi.action_base_partner_update_from_padron_uy
+#: model:ir.ui.menu,name:l10n_uy_edi.menu_base_partner_update_from_padron_uy
 msgid "Update Partners From DGI"
 msgstr "Actualizar contactos desde DGI"
 
 #. module: l10n_uy_edi
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_form
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
 msgid "Update Selection"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_form
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
 msgid "Update with Manual Check"
 msgstr ""
 
@@ -1166,7 +1166,7 @@ msgid "XML Response"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_form
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
 msgid "or"
 msgstr ""
 

@@ -3,7 +3,7 @@
     <!-- the sequence of the configuration sub menu is 30 -->
     <!-- <menuitem id='root_menu' name='Tools' parent='base.menu_base_partner' sequence="25"/> -->
 
-    <record model="ir.actions.act_window" id="action_base_partner_update_from_padron">
+    <record model="ir.actions.act_window" id="action_base_partner_update_from_padron_uy">
         <field name="name">Update Partners From DGI</field>
         <field name="res_model">res.partner.update.from.padron.uy.wizard</field>
         <field name="view_mode">form</field>
@@ -12,12 +12,12 @@
 
         <!-- <field name="context">{'active_test': False}</field> -->
 
-    <menuitem id='menu_base_partner_update_from_padron'
-        action='action_base_partner_update_from_padron'
+    <menuitem id='menu_base_partner_update_from_padron_uy'
+        action='action_base_partner_update_from_padron_uy'
         groups='base.group_system'
         parent='contacts.res_partner_menu_config'/>
 
-    <record model='ir.ui.view' id='view_base_partner_update_from_padron_form'>
+    <record model='ir.ui.view' id='view_base_partner_update_from_padron_uy_form'>
         <field name='name'>res.partner.update.from.padron.uy.wizard.form</field>
         <field name='model'>res.partner.update.from.padron.uy.wizard</field>
         <field name='arch' type='xml'>
@@ -51,7 +51,7 @@
                 <sheet>
                     <group attrs="{'invisible': [('state', '!=', 'finished')]}" col="1">
                         <h2>There are no more partners to update for this request...</h2>
-                        <!-- <button name="%(action_base_partner_update_from_padron)d" string="Update the other partners" class="oe_highlight"
+                        <!-- <button name="%(action_base_partner_update_from_padron_uy)d" string="Update the other partners" class="oe_highlight"
                         type="action"/> -->
                     </group>
                     <p class="oe_grey" attrs="{'invisible': [('state', '!=', ('option'))]}">
