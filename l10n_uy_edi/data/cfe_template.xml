@@ -11,7 +11,8 @@
                         <Nro t-if="IdDoc.get('NumeroCfe')" t-esc="IdDoc['NumeroCfe']"/>
                         <FchEmis t-esc="IdDoc['FchEmis']"/>
                         <!-- TODO KZ lo dejamos fijo por el momento, ver para implementar cuando tengamos un monotributo o iva minimo -->
-                        <MntBruto>1</MntBruto>
+                        <!-- <MntBruto>1</MntBruto> -->
+
                         <FmaPago t-esc="IdDoc['FmaPago']"/>
                         <ClauVenta t-if="IdDoc.get('ClauVenta')" t-esc="IdDoc['ClauVenta']"/>
                         <ModVenta t-if="IdDoc.get('ModVenta')" t-esc="IdDoc['ModVenta']"/>
