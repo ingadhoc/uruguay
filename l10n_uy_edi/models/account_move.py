@@ -146,22 +146,6 @@ class AccountMove(models.Model):
             # record.l10n_cl_dte_status = 'cancelled'
         return super().action_invoice_cancel()
 
-    @api.constrains('currency_id')
-    @api.onchange('currency_id')
-    def _onchange_currency_rate(self):
-        """ When change it the currency will auto update the constrains value with the given rate.
-        This rate can be later change it by the user and this will be the rate that will be sent to DGI when
-        reporting the XML file to validate the invoice. """
-        # TODO review this with jjs I think we already have something similtar to this fucntionality that we can reuse
-        uy_invoices = self.filtered(lambda x: x.company_id.country_id == self.env.ref('base.uy') and x.l10n_latam_use_documents)
-        for rec in uy_invoices:
-            if rec.company_id.currency_id == rec.currency_id:
-                l10n_uy_currency_rate = 1.0
-            else:
-                l10n_uy_currency_rate = rec.currency_id._convert(
-                    1.0, rec.company_id.currency_id, rec.company_id, rec.invoice_date or fields.Date.today(), round=False)
-            rec.l10n_uy_currency_rate = l10n_uy_currency_rate
-
     @api.model
     def _uy_invoice_already_sent(self):
         """ Invoices that have any of this ufce_status can not be sent again to ucfe because they can not be changed
@@ -187,6 +171,14 @@ class AccountMove(models.Model):
 
         # Send invoices to DGI and get the return info
         for inv in uy_invoices:
+
+            # Set the invoice rate
+            if inv.company_id.currency_id == inv.currency_id:
+                currency_rate = 1.0
+            else:
+                currency_rate = inv.currency_id._convert(
+                    1.0, inv.company_id.currency_id, inv.company_id, inv.invoice_date or fields.Date.today(), round=False)
+            inv.l10n_uy_currency_rate = currency_rate
 
             # If we are on testing environment and we don't have ucfe configuration we validate only locally.
             # This is useful when duplicating the production database for training purpose or others
@@ -356,8 +348,6 @@ class AccountMove(models.Model):
 
             self.l10n_uy_ucfe_msg = response.Resp.MensajeRta
             self.l10n_uy_ucfe_notif = response.Resp.TipoNotificacion
-
-            # self.l10n_uy_currency_rate = getattr(response.Resp, 'TpoCambio', 0)
 
             if response.Resp.CodRta not in self._uy_invoice_already_sent():
                 # * 00 y 11, el CFE ha sido aceptado (con el 11 aún falta la confirmación definitiva de DGI).
