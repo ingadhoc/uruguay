@@ -500,7 +500,7 @@ class AccountMove(models.Model):
             return 'eTck'
         elif cfe_code in [111, 112]:
             return 'eFact'
-        elif cfe_code in [121, 122]:
+        elif cfe_code in [121, 122, 123]:
             return 'eFact_Exp'
         else:
             raise UserError('Este Comprobante aun no ha sido implementado')
