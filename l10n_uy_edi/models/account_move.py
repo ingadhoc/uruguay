@@ -511,14 +511,11 @@ class AccountMove(models.Model):
         # TODO KZ 'Adenda': 'Datoe enviado por Gaby
         # TODO KZ crear parametros de sistema o campos en la comapania para definir las adendas
         self.ensure_one()
-        adenda = ''
-        if self.is_expo_cfe():
-            adenda += 'Esto es una prueba de ADENDA de factura de exportacion'
+        adenda = "Honorarios por servicios de diseño, desarrollo e implementación de soportes lógicos, exonerados de impuesto a la renta según lo dispuesto en el apartado ii del primer inciso del artículo 161 bis del Decreto 150/007 del 26 de abril de 2007."
 
-        # TODO KZ mejorar no podemos buscar por nombre
         # TODO KZ toca tambien ver cual es la zona franca uruguaya y configurarla en la data, que se auto detecte
         if self.fiscal_position_id.name == 'Exportaciones a la Zona Franca':
-            adenda += '\nEsto es la leyenda de zona franca'
+            adenda += "\n\nVenta considerada Exportación de Servicios amparada en el Artículo 34 ° Numeral 11 del Decreto N° 220/998"
 
         if adenda:
             return {'Adenda': adenda}
