@@ -470,6 +470,8 @@ class AccountMove(models.Model):
             tipo_doc = int(self.partner_id.l10n_latam_identification_type_id.l10n_uy_dgi_code)
             cod_pais = 'UY' if tipo_doc in [2, 3] else '99'
 
+            if tipo_doc == 0:
+                raise UserError(_('Debe indicar un tipo de documento Uruguayo para poder facturar a este cliente'))
             res.update({
                 # TODO -Free Shop: siempre se debe identificar al receptor.
                 'TipoDocRecep': tipo_doc,  # C60

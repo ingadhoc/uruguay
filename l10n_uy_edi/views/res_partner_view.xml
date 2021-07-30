@@ -10,6 +10,11 @@
                 <button name="action_l10n_uy_is_electronic_issuer" string="(UY) Is Electronic Issuer?" class="oe_link oe_inline" type="object"/>
                 <button name="%(action_partner_update)d" string="(UY) Update From DGI" class="oe_link oe_inline" type="action" attrs="{'invisible': ['|', ('l10n_latam_identification_type_id', '!=',  %(l10n_uy.it_rut)d), ('vat', '=', False)]}"/>
             </xpath>
+
+            <!-- TODO move this logic to latam module, we should set this from the onchange or with an extra field company_domain -->
+            <field name="l10n_latam_identification_type_id" position="attributes">
+                <attribute name="domain"/>
+            </field>
         </field>
     </record>
 </odoo>
