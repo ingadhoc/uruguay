@@ -534,14 +534,19 @@ class AccountMove(models.Model):
         res = []
         # If is a debit/credit note cfe then we need to inform el tag referencia
         if self.l10n_latam_document_type_id.internal_type in ['credit_note', 'debit_note']:
-            related_cfe = self._l10n_uy_get_related_invoices_data()
+            related_cfe = self._uy_found_related_invoice()
             if not related_cfe:
                 raise UserError(_('Para validar una ND/NC debe informar el Documento de Origen'))
-            for k, related_cfe in enumerate(self._l10n_uy_get_related_invoices_data(), 1):
+            for k, related_cfe in enumerate(self._uy_found_related_invoice(), 1):
                 document_number = re.search(r"([A-Z]*)([0-9]*)", related_cfe.l10n_latam_document_number).groups()
+
+                tpo_doc_ref = int(related_cfe.l10n_latam_document_type_id.code)
+                if not tpo_doc_ref:
+                    raise UserError(_('Para validar una ND/NC debe informar el Documento de Origen y este debe ser'
+                                      ' también electrónico'))
                 res.append({
                     'NroLinRef': k,
-                    'TpoDocRef': int(related_cfe.l10n_latam_document_type_id.code),
+                    'TpoDocRef': tpo_doc_ref,
                     'Serie': document_number[0],
                     'NroCFERef': document_number[1],
                     # 'FechaCFEref': 2015-01-31, TODO inform?
@@ -718,21 +723,14 @@ class AccountMove(models.Model):
                 domain.append(('code', 'in', codes))
         return domain
 
-    def _l10n_uy_get_related_invoices_data(self):
+    def _uy_found_related_invoice(self):
         """ return the related/origin cfe of a given cfe """
-        # similar to get_related_invoices_data from l10n_ar_afipws_fe, we need to remove
-        # TODO when changing to 13.0 need to change this to something like _found_related_invoice() method
+        # next version review to merge this with l10n_ar_edi _found_related_invoice method
         self.ensure_one()
-        if self.l10n_latam_document_type_id.internal_type in ['debit_note', 'credit_note'] and self.invoice_origin:
-            return self.search([
-                ('commercial_partner_id', '=', self.commercial_partner_id.id),
-                ('company_id', '=', self.company_id.id),
-                ('l10n_latam_document_number', '=', self.invoice_origin),
-                ('id', '!=', self.id),
-                ('l10n_latam_document_type_id', '!=', self.l10n_latam_document_type_id.id),
-                ('l10n_latam_document_type_id.country_id.code', '=', 'UY'),
-                ('state', 'not in', ['draft', 'cancel'])],
-                limit=1)
+        if self.l10n_latam_document_type_id.internal_type == 'credit_note':
+            return self.reversed_entry_id
+        elif self.l10n_latam_document_type_id.internal_type == 'debit_note':
+            return self.debit_origin_id
         else:
             return self.browse()
 
