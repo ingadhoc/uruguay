@@ -418,6 +418,8 @@ class AccountMove(models.Model):
         elif len(self.invoice_line_ids) > 200:
             raise UserError('Para este tipo de CFE solo puede reportar hasta 200 lineas')
 
+        # NOTA: todos los montos a informar deben ir en la moneda del comprobante no en pesos uruguayos, es por eso que
+        # usamos price_subtotal en lugar de otro campo
         for k, line in enumerate(self.invoice_line_ids, 1):
             res.append({
                 'NroLinDet': k,  # B1 No de línea o No Secuencial. a partir de 1
@@ -429,8 +431,9 @@ class AccountMove(models.Model):
                 # TODO Valor numerico 14 enteros y 3 decimales. debemos convertir el formato a representarlo
 
                 'UniMed': line.product_uom_id.name[:4] if line.product_uom_id else 'N/A',  # B10 Unidad de medida
-                'PrecioUnitario': float_repr(line._get_price_total_and_subtotal(quantity=1)['price_total'], 6),  # B11 Precio unitario
-                'MontoItem': float_repr(line.price_total, 2),  # B24 Monto Item,
+
+                'PrecioUnitario': float_repr(line._get_price_total_and_subtotal(quantity=1)['price_subtotal'], 6),  # B11 Precio unitario
+                'MontoItem': float_repr(line.price_subtotal, 2),  # B24 Monto Item
                 # TODO en futuro para incluir descuentos B24=(B9*B11)–B13+B17
             })
 
@@ -684,7 +687,9 @@ class AccountMove(models.Model):
                 'MntNoGrv': float_repr(tax_line_exempt.tax_base_amount, 2),
             })
 
-        amount_field = 'balance'
+        # NOTA: todos los montos a informar deben ir en la moneda del comprobante no en pesos uruguayos, es por eso que
+        # usamos price_subtotal en lugar de otro campo
+        amount_field = 'price_subtotal'
         tax_line_basica = self.line_ids.filtered(lambda x: tax_vat_22 in x.tax_line_id)
         if tax_line_basica:
             base_imp = sum(self.invoice_line_ids.filtered(lambda x: tax_vat_22 in x.tax_ids).mapped(amount_field))
