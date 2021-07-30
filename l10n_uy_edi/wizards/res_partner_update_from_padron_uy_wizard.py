@@ -124,7 +124,7 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
                     new_value = new_value and new_value.title()
                 if key in ('impuestos_padron', 'actividades_padron'):
                     old_value = old_value.ids
-                elif key in ('state_id', 'afip_responsability_type_id'):
+                elif key in ('state_id', 'country_id'):
                     old_value = old_value.id
                 if new_value and key in fields_names and \
                         old_value != new_value:
@@ -143,8 +143,8 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
         self.ensure_one()
         vals = {}
         for field in self.field_ids:
-            if field.field in ('impuestos_padron', 'actividades_padron'):
-                vals[field.field] = [(6, False, literal_eval(field.new_value))]
+            if field.field in ('state_id', 'country_id'):
+                vals[field.field] = literal_eval(field.new_value)
             else:
                 vals[field.field] = field.new_value
         self.partner_id.write(vals)
