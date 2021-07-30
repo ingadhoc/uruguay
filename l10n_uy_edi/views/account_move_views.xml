@@ -72,7 +72,7 @@
         <field name="inherit_id" ref="account.view_invoice_tree"/>
         <field name="arch" type="xml">
             <tree>
-                <field name="l10n_uy_cfe_state"/>
+                <field name="l10n_uy_cfe_state" optional="hide"/>
             </tree>
         </field>
     </record>
