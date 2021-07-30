@@ -21,6 +21,8 @@
                         <RUCEmisor t-esc="RUCEmisor"/>
                         <!-- TODO KZ company register name? -->
                         <RznSoc t-esc="move.company_id.name"/>
+
+                        <!-- NOTA nosotros estamos reportando NomComercial pero Uruware no, ver si realmente es necesario o no si debemos quitarlo, revisar en DGI -->
                         <NomComercial t-esc="move.company_id.name"/>
                         <!-- <EmiSucursal>Central</EmiSucursal> es opcional para todos asi que mejor no lo pasamos -->
                         <CdgDGISucur t-esc="move.company_id.l10n_uy_dgi_house_code"/>
