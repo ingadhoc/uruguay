@@ -500,7 +500,7 @@ class AccountMove(models.Model):
         cfe_code = int(self.l10n_latam_document_type_id.code)
         if cfe_code in [101, 102, 103, 201]:
             return 'eTck'
-        elif cfe_code in [111, 112]:
+        elif cfe_code in [111, 112, 113]:
             return 'eFact'
         elif cfe_code in [121, 122, 123]:
             return 'eFact_Exp'
