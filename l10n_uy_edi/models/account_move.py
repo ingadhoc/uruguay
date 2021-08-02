@@ -723,7 +723,7 @@ class AccountMove(models.Model):
         if self.journal_id.company_id.country_id.code == 'UY':
             codes = self.journal_id._get_journal_codes()
             if codes:
-                domain.append(('code', 'in', codes))
+                domain.extend([('code', 'in', codes), ('active', '=', True)])
         return domain
 
     def _uy_found_related_invoice(self):
