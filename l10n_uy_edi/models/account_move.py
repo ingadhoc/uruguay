@@ -683,7 +683,7 @@ class AccountMove(models.Model):
         if tax_line_exempt and not self.is_expo_cfe():
             res.update({
                 # A-C112 Total Monto - No Gravado
-                'MntNoGrv': float_repr(tax_line_exempt.tax_base_amount, 2),
+                'MntNoGrv': float_repr(sum(tax_line_exempt.mapped('tax_base_amount')), 2),
             })
 
         # NOTA: todos los montos a informar deben ir en la moneda del comprobante no en pesos uruguayos, es por eso que
