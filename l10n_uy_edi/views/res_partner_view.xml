@@ -17,4 +17,18 @@
             </field>
         </field>
     </record>
+
+
+    <!-- TODO Not suse if this going to the last commit. By the moment this let us to filter easier the kind of partner we are looking for Uruguay. Maybe it is usefull we can move it to latam module -->
+    <record id="view_res_partner_filter" model="ir.ui.view">
+        <field name="name">base.view_res_partner_filter</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="model">res.partner</field>
+        <field type="xml" name="arch">
+            <search>
+                <field name="l10n_latam_identification_type_id"/>
+            </search>
+        </field>
+    </record>
+
 </odoo>
