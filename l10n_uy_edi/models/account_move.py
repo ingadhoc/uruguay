@@ -680,7 +680,7 @@ class AccountMove(models.Model):
         self._check_uruguayan_invoices()
 
         tax_line_exempt = self.line_ids.filtered(lambda x: tax_vat_exempt in x.tax_ids)
-        if tax_line_exempt:
+        if tax_line_exempt and not self.is_expo_cfe():
             res.update({
                 # A-C112 Total Monto - No Gravado
                 'MntNoGrv': float_repr(tax_line_exempt.tax_base_amount, 2),
