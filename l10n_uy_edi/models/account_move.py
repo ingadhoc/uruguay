@@ -679,16 +679,15 @@ class AccountMove(models.Model):
         tax_vat_22, tax_vat_10, tax_vat_exempt = self.env['account.tax']._l10n_uy_get_taxes(self.company_id)
         self._check_uruguayan_invoices()
 
+        amount_field = 'price_subtotal'
         tax_line_exempt = self.line_ids.filtered(lambda x: tax_vat_exempt in x.tax_ids)
         if tax_line_exempt and not self.is_expo_cfe():
             res.update({
-                # A-C112 Total Monto - No Gravado
-                'MntNoGrv': float_repr(sum(tax_line_exempt.mapped('tax_base_amount')), 2),
+                'MntNoGrv': float_repr(sum(tax_line_exempt.mapped(amount_field)), 2),  # A112 Total Monto - No Gravado
             })
 
         # NOTA: todos los montos a informar deben ir en la moneda del comprobante no en pesos uruguayos, es por eso que
         # usamos price_subtotal en lugar de otro campo
-        amount_field = 'price_subtotal'
         tax_line_basica = self.line_ids.filtered(lambda x: tax_vat_22 in x.tax_line_id)
         if tax_line_basica:
             base_imp = sum(self.invoice_line_ids.filtered(lambda x: tax_vat_22 in x.tax_ids).mapped(amount_field))
