@@ -488,8 +488,8 @@ class AccountMove(models.Model):
                 res.update({
                     'RznSocRecep': self.partner_id.name,  # C63
                     'DirRecep': (self.partner_id.street + (' ' + self.partner_id.street2 if self.partner_id.street2 else ''))[:70],
-                    'CiudadRecep': self.partner_id.city,
-                    'DeptoRecep': self.partner_id.state_id.name,
+                    'CiudadRecep': self.partner_id.city[:30],
+                    'DeptoRecep': self.partner_id.state_id.name[:30],
                     'PaisRecep': self.partner_id.country_id.name,
                 })
 
