@@ -32,7 +32,7 @@ class AccountMove(models.Model):
 
         # Check that we do not send any tax in exportation invoices
         expo_cfes = uruguayan_invoices.filtered(
-            lambda x: int(x.journal_document_type_id.document_type_id.code) in [121, 122, 123])
+            lambda x: int(x.l10n_latam_document_type_id.code) in [121, 122, 123])
         for inv_line in expo_cfes.mapped('invoice_line_ids'):
             vat_taxes = inv_line.invoice_line_tax_ids.filtered(lambda x: x.tax_group_id in uruguayan_vat_taxes)
             if len(vat_taxes) != 0:
@@ -109,7 +109,7 @@ class AccountMove(models.Model):
     #             res['journal_document_type'] = False
     #         if available_types:
     #             res['available_journal_document_types'] = res['available_journal_document_types'].filtered(
-    #                 lambda x: int(x.document_type_id.code) in available_types)
+    #                 lambda x: int(x.l10n_latam_document_type_id.code) in available_types)
     #             res['journal_document_type'] = res['available_journal_document_types'] and \
     #                 res['available_journal_document_types'][0]
     #     return res
