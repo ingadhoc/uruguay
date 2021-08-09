@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import models, _
 from odoo.exceptions import UserError
 
 
@@ -13,8 +13,9 @@ class ResPartner(models.Model):
         """ Return True/False if the partner is an electronic issuer or not
         630 - Consulta si un RUT es emisor electronico """
         self.ensure_one()
-        if self.l10n_latam_identification_type_id.l10n_uy_dgi_code == 2:
-            response = self.company_id._l10n_uy_ucfe_inbox_operation('630', {'RutEmisor': self.vat})
+        company = self.company_id or self.env.company
+        if self.l10n_latam_identification_type_id.l10n_uy_dgi_code == '2':
+            response = company._l10n_uy_ucfe_inbox_operation('630', {'RutEmisor': self.vat})
             if response.Resp.CodRta == '00':
                 raise UserError(_('Es un emisor electrónico'))
             elif response.Resp.CodRta == '01':
@@ -24,9 +25,11 @@ class ResPartner(models.Model):
 
     def action_l10n_uy_get_data_from_dgi(self):
         """ 640 - Consulta a DGI por datos de RUT """
+        self.ensure_one()
+        company = self.company_id or self.env.company
         values = {}
-        if self.l10n_latam_identification_type_id.l10n_uy_dgi_code == 2:
-            response = self.company_id._l10n_uy_ucfe_inbox_operation('640', {'RutEmisor': self.vat})
+        if self.l10n_latam_identification_type_id.l10n_uy_dgi_code == '2':
+            response = company._l10n_uy_ucfe_inbox_operation('640', {'RutEmisor': self.vat})
             if response.Resp.CodRta == '00':
                 # TODO ver detalle de los demas campos que podemos integrar en pagin 83 Manual de integración
                 values = {
@@ -36,7 +39,7 @@ class ResPartner(models.Model):
                 # TODO delete this one once integrated
                 self.message_post(body=response)
             else:
-                raise UserError(_('No se pude conectar a DGI para extraer los datos'))
+                raise UserError(_('No se pudo conectar a DGI para extraer los datos'))
         else:
             raise UserError(_('Solo puede consultar si el partner tiene tipo de identificación RUT'))
         if values:

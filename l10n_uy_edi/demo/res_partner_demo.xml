@@ -13,10 +13,4 @@
         <field name='vat'>219999820013</field>
     </record>
 
-    <record model='res.partner' id='demo_partner_3'>
-        <field name='name'>5 Empresa Prueba</field>
-        <field name='l10n_latam_identification_type_id' ref='l10n_uy.it_rut'/>
-        <field name='vat'>219999830019</field>
-    </record>
-
 </odoo>

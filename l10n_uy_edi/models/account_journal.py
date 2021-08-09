@@ -6,12 +6,6 @@ class AccountJournal(models.Model):
 
     _inherit = 'account.journal'
 
-    l10n_uy_type = fields.Selection(
-        [('preprinted', 'Preprinted (Traditional)'),
-         ('electronic', 'Electronic'),
-         ('contingency', 'Contingency')],
-        string='Invoicing Type', copy=False)
-
     # TODO Tenemos algo que se llama puntos de emision, ver si esto lo podemos configurar aca,
     # seria como el AFIP Pos Number?
 
@@ -43,4 +37,16 @@ class AccountJournal(models.Model):
     def onchange_journal_uy_type(self):
         """ Si el tipo de diario es de contigencia entonces se usara el mismo numero para todos los documentos de ese tipo """
         if self.company_id.country_id.code == 'UY' and self.l10n_latam_use_documents:
-            self.l10n_ar_share_sequences = True
+            self.l10n_uy_share_sequences = True
+
+    def _get_journal_codes(self):
+        self.ensure_one()
+        if self.type != 'sale':
+            return []
+        if self.l10n_uy_type == 'preprinted':
+            available_types = [000]
+        elif self.l10n_uy_type == 'electronic':
+            available_types = [101, 102, 103, 111, 112, 113, 121, 122, 123, 141, 142, 143]
+        elif self.l10n_uy_type == 'contingency':
+            available_types = [201, 211, 212, 213, 221, 222, 223, 241, 242, 243]
+        return available_types

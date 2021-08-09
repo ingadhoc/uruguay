@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models, _
+from odoo import fields, models, _
 from odoo.exceptions import UserError
 from zeep import Client, transports
 from requests import Session
@@ -21,7 +21,8 @@ class UYTransport(transports.Transport):
         This will only affect to the connections that are made n this field and it do not extend the original
         Transport class of zeep package.
 
-        NOTE: we try using the HistoryPlugin to save the xml request/response but seems this one could have problems when using with multi thread/workers"""
+        NOTE: we try using the HistoryPlugin to save the xml request/response but seems this one could have problems
+        when using with multi thread/workers"""
         response = super().post(address, message, headers)
         self.xml_request = etree.tostring(
             etree.fromstring(message), pretty_print=True).decode('utf-8')
@@ -58,7 +59,8 @@ class ResCompany(models.Model):
 
     # @api.depends('l10n_uy_dgi_crt')
     # def _compute_l10n_uy_dgi_crt_fname(self):
-    #     """ Set the certificate name in the company. Needed in unit tests, solved by a similar onchange method in res.config.settings while setting the certificate via web interface """
+    #     """ Set the certificate name in the company. Needed in unit tests, solved by a similar onchange method in
+    #     res.config.settings while setting the certificate via web interface """
     #     with_crt = self.filtered(lambda x: x.l10n_uy_dgi_crt)
     #     remaining = self - with_crt
     #     for rec in with_crt:
@@ -123,7 +125,11 @@ class ResCompany(models.Model):
         res = company._get_client(company.l10n_uy_ucfe_inbox_url, return_transport=return_transport)
         client = res[0] if isinstance(res, tuple) else res
         transport = res[1] if isinstance(res, tuple) else False
-        response = client.service.Invoke(data)
+        try:
+            response = client.service.Invoke(data)
+        except Exception as exp:
+            raise UserError(_('There was a problem with the connection, this is what we get: ') + repr(exp))
+
         return (response, transport) if return_transport else response
 
     def _l10n_uy_ucfe_query(self, method, req_data={}, return_transport=False):
@@ -149,7 +155,7 @@ class ResCompany(models.Model):
     # • rut, indicando el RUT de la empresa que emitió los CFE.
     # • fechaComprobante, indicando la fecha en la que se rechazaron los comprobantes.
     # Respuesta:
-    # Arreglo de Comprobantes, conteniendo todos los comprobantes rechazados para la empresa indicada en la fecha informada.
+    # Arreglo de Comprobantes, conteniendo todos los comprobantes rechazados para la empresa indicada en la fch inform.
     # La entidad Comprobante contiene los siguientes campos:
     # ▪ CodigoComercio, conteniendo el código de la sucursal que emitió el comprobante.
     # ▪ CodigoTerminal, conteniendo el código del punto de emisión que emitió el comprobante.

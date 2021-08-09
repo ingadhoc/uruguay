@@ -1,11 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models, _, api
 from odoo.exceptions import UserError
+from odoo.tools.float_utils import float_repr
 from . import ucfe_errors
 from datetime import datetime
 from html import unescape
 import re
 import base64
+import stdnum.uy
 import logging
 
 
@@ -16,37 +18,48 @@ class AccountMove(models.Model):
 
     _inherit = "account.move"
 
+    l10n_uy_cfe_state = fields.Selection([
+        ('not_apply', 'Not apply - Not a CFE'),
+        ('draft_cfe', 'Draft CFE'),
+        ('received', 'Waiting response from DGI'),
+        ('ui_indexada', 'CFE Not sent, amount bellow 10.000 UI'),
+        ('xml_error', 'ERROR: CFE XML not valid'),
+        ('connection_error', 'ERROR: Connection to UCFE'),
+        ('accepted', 'CFE Accepted by DGI'),
+        ('rejected', 'ERROR: CFE Rejected by DGI')],
+        string='CFE Status', copy=False, readonly=True, track_visibility='onchange')
+
+    l10n_uy_journal_type = fields.Selection(related='journal_id.l10n_uy_type')
+
     l10n_uy_cfe_dgi_state = fields.Selection([
-        ('-2', 'No enviado, monto menor a 10.000 UI'),
-        ('-1', 'Esperando Respuesta DGI'),
-        ('00', 'aceptado por DGI'),
-        ('05', 'rechazado por DGI'),
-        ('06', 'observado por DGI'),
-        ('11', 'UCFE no pudo consultar a DGI (puede intentar volver a ejecutar la consulta con la función 650 – Consulta a DGI por CFE recibido)'),
-        ('10', 'aceptado por DGI pero no se pudo ejecutar la consulta QR'),
-        ('15', 'rechazado por DGI pero no se pudo ejecutar la consulta QR'),
-        ('16', 'observado por DGI pero no se pudo ejecutar la consulta QR'),
-        ('20', 'aceptado por DGI pero la consulta QR indica que hay diferencias con el CFE recibido'),
-        ('25', 'rechazado por DGI pero la consulta QR indica que hay diferencias con el CFE recibido'),
-        ('26', 'observado por DGI pero la consulta QR indica que hay diferencias con el CFE recibido'),
-    ], 'CFE DGI State', copy=False, readonly=True, track_visibility='onchange')  # EstadoEnDgiCfeRecibido
+        ('00', '00 - aceptado por DGI'),
+        ('05', '05 - rechazado por DGI'),
+        ('06', '06 - observado por DGI'),
+        ('11', '11 - UCFE no pudo consultar a DGI (puede intentar volver a ejecutar la consulta con la función 650 – Consulta a DGI por CFE recibido)'),
+        ('10', '10 - aceptado por DGI pero no se pudo ejecutar la consulta QR'),
+        ('15', '15 - rechazado por DGI pero no se pudo ejecutar la consulta QR'),
+        ('16', '16 - observado por DGI pero no se pudo ejecutar la consulta QR'),
+        ('20', '20 - aceptado por DGI pero la consulta QR indica que hay diferencias con el CFE recibido'),
+        ('25', '25 - rechazado por DGI pero la consulta QR indica que hay diferencias con el CFE recibido'),
+        ('26', '26 - observado por DGI pero la consulta QR indica que hay diferencias con el CFE recibido'),
+    ], 'Technical Field: CFE DGI State from UFCE', copy=False, readonly=True, track_visibility='onchange')  # EstadoEnDgiCfeRecibido
 
     l10n_uy_ucfe_state = fields.Selection([
-        ('00', 'Petición aceptada y procesada'),
-        ('01', 'Petición denegada'),
-        ('03', 'Comercio inválido'),
-        ('05', 'CFE rechazado por DGI'),
-        ('06', 'CFE observado por DGI'),
-        ('11', 'CFE aceptado por UCFE, en espera de respuesta de DGI'),
-        ('12', 'Requerimiento inválido'),
-        ('30', 'Error en formato'),
-        ('31', 'Error en formato de CFE'),
-        ('89', 'Terminal inválida'),
-        ('96', 'Error en sistema'),
-        ('99', 'Sesión no iniciada'),
+        ('00', '00 - Petición aceptada y procesada'),
+        ('01', '01 - Petición denegada'),
+        ('03', '03 - Comercio inválido'),
+        ('05', '05 - CFE rechazado por DGI'),
+        ('06', '06 - CFE observado por DGI'),
+        ('11', '11 - CFE aceptado por UCFE, en espera de respuesta de DGI'),
+        ('12', '12 - Requerimiento inválido'),
+        ('30', '30 - Error en formato'),
+        ('31', '31 - Error en formato de CFE'),
+        ('89', '89 - Terminal inválida'),
+        ('96', '96 - Error en sistema'),
+        ('99', '99 - Sesión no iniciada'),
     ], 'UCFE State', copy=False, readonly=True, track_visibility='onchange')  # CodRta
 
-    l10n_uy_ucfe_msg = fields.Char('UCFE Mensaje de Respuesta', copy=False, readonly=True, track_visibility='onchange')  # MensajeRta
+    l10n_uy_ucfe_msg = fields.Text('UCFE Mensaje de Respuesta', copy=False, readonly=True, track_visibility='onchange')  # MensajeRta
 
     l10n_uy_ucfe_notif = fields.Selection([
         ('5', 'Aviso de CFE emitido rechazado por DGI'),
@@ -123,7 +136,7 @@ class AccountMove(models.Model):
     def action_invoice_cancel(self):
         for record in self.filtered(lambda x: x.company_id.country_id.code == 'UY'):
             # The move cannot be modified once has been sent to UCFE
-            if record.l10n_uy_ucfe_state in ['00', '05', '06', '11']:
+            if record.l10n_uy_ucfe_state in record._uy_invoice_already_sent():
                 raise UserError(_('This %s has been already sent to UCFE. It cannot be cancelled. '
                                   'You can only click Consult DGI State to update.') % record.l10n_latam_document_type_id.name)
             # The move cannot be modified once the CFE has been accepted by the DGI
@@ -133,20 +146,28 @@ class AccountMove(models.Model):
             # record.l10n_cl_dte_status = 'cancelled'
         return super().action_invoice_cancel()
 
-    # TODO 14.0 _post or action_post
+    @api.model
+    def _uy_invoice_already_sent(self):
+        """ Invoices that have any of this ufce_status can not be sent again to ucfe because they can not be changed
+
+        - 00: Petición aceptada y procesada
+        - 05: CFE rechazado por DGI
+        - 06: CFE observado por DGI
+        - 11: CFE aceptado por UCFE, en espera de respuesta de DGI """
+        return ['00', '05', '06', '11']
+
+    # TODO 14.0 change to _post or action_post
     def post(self):
         """ After validate the invoices in odoo we send it to dgi via ucfe """
+        res = super().post()
 
         uy_invoices = self.filtered(
             lambda x: x.company_id.country_id.code == 'UY' and
-            # 13.0 account.move: x.is_invoice()
-            x.type in ['out_invoice', 'out_refund'] and
+            x.is_invoice() and
             x.journal_id.l10n_uy_type in ['electronic', 'contingency'] and
-            x.l10n_uy_ucfe_state not in ['00', '05', '06', '11'] and # Already sent and waiting status from UCFE
+            x.l10n_uy_ucfe_state not in x._uy_invoice_already_sent() and
             # TODO possible we are missing electronic documents here, review the
             int(x.l10n_latam_document_type_id.code) > 100)
-
-        no_validated = self.env['account.move']
 
         # Send invoices to DGI and get the return info
         for inv in uy_invoices:
@@ -157,26 +178,55 @@ class AccountMove(models.Model):
                 inv._dummy_dgi_validation()
                 continue
 
-            # TODO maybe this can be moved to outside the for loop
-            # super(AccountMove, inv).post()
+            # TODO KZ I think we can avoid this loop. review
             inv._l10n_uy_dgi_post()
-            if inv.l10n_uy_ucfe_state not in ['00', '05', '06', '11']:
-                no_validated += inv
 
-        super(AccountMove, self - no_validated).post()
+        return res
 
     def action_l10n_uy_get_dgi_state(self):
         """ 360: Consulta de estado de CFE: estado del comprobante en DGI, """
         self.ensure_one()
         response = self.company_id._l10n_uy_ucfe_inbox_operation('360', {'Uuid': self.l10n_uy_cfe_uuid})
 
-        ui_indexada = self._l10n_uy_get_unidad_indexada()
         self.l10n_uy_ucfe_state = response.Resp.CodRta or self.l10n_uy_ucfe_state
         self.l10n_uy_ucfe_msg = response.Resp.MensajeRta or self.l10n_uy_ucfe_msg
         self.l10n_uy_ucfe_notif = response.Resp.TipoNotificacion or self.l10n_uy_ucfe_notif
-        self.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido or \
-                ('-2' if self.amount_total < ui_indexada else False) or \
-                ('-1' if self.l10n_uy_ucfe_state == '11' else False) or self.l10n_uy_cfe_dgi_state
+        self.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido or self.l10n_uy_cfe_dgi_state
+
+    # TODO not working review why
+    # @api.onchange('journal_id', 'state')
+    # def _onchange_l10n_uy_cfe_state(self):
+    #     if self.state == 'draft' and not self.l10n_uy_ucfe_state:
+    #         if self.l10n_uy_journal_type not in ['electronic', 'contingency']:
+    #             return 'not_apply'
+    #         return 'draft_cfe'
+    #     return False
+
+    def _update_l10n_uy_cfe_state(self):
+        if self.l10n_uy_cfe_dgi_state:
+            if self.l10n_uy_cfe_dgi_state == '00':
+                self.l10n_uy_cfe_state = 'accepted'
+            elif self.l10n_uy_cfe_dgi_state ==  '05':
+                self.l10n_uy_cfe_state = 'rejected'
+        else:
+            if self.l10n_uy_ucfe_state:
+                if self.l10n_uy_ucfe_state == '00':
+                    ui_indexada = self._l10n_uy_get_unidad_indexada()
+                    if self.amount_total < ui_indexada:
+                        self.l10n_uy_cfe_state = 'ui_indexada'
+                if self.l10n_uy_ucfe_state == '11':
+                    self.l10n_uy_cfe_state = 'received'
+                elif self.l10n_uy_ucfe_state == '31':
+                    self.l10n_uy_cfe_state = 'xml_error'
+                elif self.l10n_uy_ucfe_state in ['01', '03', '12', '30', '89', '96', '99']:
+                    # TODO KZ not sure about 30, review, 01 should be apart?
+                    self.l10n_uy_cfe_state = 'connection_error'
+
+        # TODO KZ implement this cases
+        # l10n_uy_cfe_dgi_state = ('06', 'observado por DGI'),
+        # l10n_uy_cfe_dgi_state = ('11', 'UCFE no pudo consultar a DGI (puede intentar volver a ejecutar la consulta con la función 650 – Consulta a DGI por CFE recibido)'),
+        # l10n_uy_ucfe_state = ('01', 'Petición denegada'),
+        # what happen when has been cancel?
 
     def action_l10n_uy_validate_cfe(self):
         """ Be able to validate a cfe """
@@ -217,10 +267,37 @@ class AccountMove(models.Model):
             'target': 'self'
         }
 
+    def _l10n_uy_validate_company_data(self):
+        for company in self.mapped('company_id'):
+            errors = []
+
+            if not company.vat:
+                errors.append(_('Set your company RUT'))
+            else:
+                # Validate if the VAT is a valid RUT
+                # TODO move this to check_vat?
+                try:
+                    stdnum.uy.rut.validate(company.vat)
+                except Exception as exp:
+                    errors.append(_('Set a valid RUT in your company') + ': ' + str(exp))
+
+            if not company.l10n_uy_dgi_house_code:
+                errors.append(_('Set your company House Code'))
+            if not company.state_id:
+                errors.append(_('Set your company state'))
+            if not company.city:
+                errors.append(_('Set your company city'))
+
+            if errors:
+                raise UserError(_('In order to create the CFE document first need to complete your company data:\n- ')
+                                + '\n- '.join(errors))
+
     # Main methods
 
     def _l10n_uy_dgi_post(self):
         """ Implementation via web service of service 310 – Firma y envío de CFE (individual) """
+
+        self._l10n_uy_validate_company_data()
         for inv in self:
             now = datetime.utcnow()
             CfeXmlOTexto = self._l10n_uy_create_cfe().get('cfe_str')
@@ -233,7 +310,6 @@ class AccountMove(models.Model):
             req_data.update(self._l10n_uy_get_cfe_serie())
             response, transport = self.company_id._l10n_uy_ucfe_inbox_operation('310', req_data, return_transport=1)
 
-            ui_indexada = self._l10n_uy_get_unidad_indexada()
             inv = self.sudo()
             inv.l10n_uy_cfe_xml = CfeXmlOTexto
             # from lxml import etree
@@ -242,17 +318,15 @@ class AccountMove(models.Model):
             inv.l10n_uy_dgi_xml_request = transport.xml_request
             self.l10n_uy_cfe_uuid = response.Resp.Uuid
             self.l10n_uy_ucfe_state = response.Resp.CodRta
-
-            self.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido or \
-                ('-2' if self.amount_total < ui_indexada else False) or \
-                ('-1' if self.l10n_uy_ucfe_state == '11' else False)
+            self.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido
+            self._update_l10n_uy_cfe_state()
 
             self.l10n_uy_ucfe_msg = response.Resp.MensajeRta
             self.l10n_uy_ucfe_notif = response.Resp.TipoNotificacion
 
             self.l10n_ar_currency_rate = getattr(response.Resp, 'TpoCambio', 0)
 
-            if response.Resp.CodRta not in ['00', '05', '06', '11']:
+            if response.Resp.CodRta not in self._uy_invoice_already_sent():
                 # * 00 y 11, el CFE ha sido aceptado (con el 11 aún falta la confirmación definitiva de DGI).
                 # El punto de emisión no debe volver a enviar el documento.
                 # Se puede consultar el estado actual de un CFE para el que se recibió 11 con los mensajes de consulta
@@ -301,7 +375,7 @@ class AccountMove(models.Model):
     def _dummy_dgi_validation(self):
         """ Only when we want to skip DGI validation in testing environment. Fill the DGI result  fields with dummy
         values in order to continue with the invoice validation without passing to DGI validations s"""
-        # TODO need to update to the result we need, all the fields we need to add are not defined yet 
+        # TODO need to update to the result we need, all the fields we need to add are not defined yet
         self.write({
             'l10n_uy_cfe_uuid': '123456',
         })
@@ -314,7 +388,7 @@ class AccountMove(models.Model):
         """ Devuelve una lista con los datos que debemos informar por linea de factura en el CFE """
         res = []
         # e-Ticket, e-Ticket cta. Ajena y sus respectivas notas de corrección: Hasta 700
-        if self.document_type_id.code in [101, 102, 103, 131, 132, 133] and len(self.invoice_line_ids) > 700:
+        if self.l10n_latam_document_type_id.code in [101, 102, 103, 131, 132, 133] and len(self.invoice_line_ids) > 700:
             raise UserError('Para e-Ticket, e-Ticket cta. Ajena y sus respectivas notas de corrección solo puede'
                             ' reportar Hasta 700')
         # Otros CFE: Hasta 200
@@ -331,16 +405,16 @@ class AccountMove(models.Model):
                 # TODO OJO se admite negativo? desglozar
                 # TODO Valor numerico 14 enteros y 3 decimales. debemos convertir el formato a representarlo
 
-                'UniMed': line.uom_id.name[:4] if line.uom_id else 'N/A',  # B10 Unidad de medida
-                'PrecioUnitario': line.price_total,  # B11 Precio unitario
-                'MontoItem': line.price_total,  # B24 Monto Item,
+                'UniMed': line.product_uom_id.name[:4] if line.product_uom_id else 'N/A',  # B10 Unidad de medida
+                'PrecioUnitario': float_repr(line.price_total, 6),  # B11 Precio unitario
+                'MontoItem': float_repr(line.price_total, 2),  # B24 Monto Item,
             })
+
         return res
 
     @api.model
     def _l10n_uy_get_unidad_indexada(self):
-        # TODO averiguar si realmente esta es la unidad indexada
-        return 4.6988 * 10000
+        return self.env.ref('l10n_uy.UYI').rate * 10000
 
     def _l10n_uy_get_cfe_receptor(self):
         self.ensure_one()
@@ -357,7 +431,7 @@ class AccountMove(models.Model):
             # cond_e_fact: obligatorio RUC (C60= 2).
             # cond_e_ticket: si monto neto ∑ (C112 a C118) > a tope establecido (ver tabla E), debe identificarse con NIE, RUC, CI, Otro, Pasaporte DNI o NIFE (C 60= 2, 3, 4, 5, 6 o 7).
 
-            tipo_doc = self.partner_id.l10n_latam_identification_type_id.l10n_uy_dgi_code
+            tipo_doc = int(self.partner_id.l10n_latam_identification_type_id.l10n_uy_dgi_code)
             cod_pais = 'UY' if tipo_doc in [2, 3] else '99'
 
             res.update({
@@ -367,9 +441,12 @@ class AccountMove(models.Model):
                 'DocRecep' if tipo_doc in [1, 2, 3] else 'DocRecepExt': self.partner_id.vat,  # C62 / C62.1
             })
 
-            if cond_e_fact_expo or cond_e_fact:
+            if cond_e_fact_expo or cond_e_fact or cond_e_ticket:
                 if not all([self.partner_id.street, self.partner_id.city, self.partner_id.state_id, self.partner_id.country_id]):
-                    raise UserError(_('Debe configurar la dirección, ciudad, provincia y pais del receptor'))
+                    msg = _('Debe configurar la dirección, ciudad, provincia y pais del receptor')
+                    if cond_e_ticket:
+                        msg += '\n' + _('E-ticket needs these values because that total amount > 10.000 * Unidad Indexada Uruguaya')
+                    raise UserError(msg)
                 res.update({
                     'RznSocRecep': self.partner_id.name,  # C63
                     'DirRecep': (self.partner_id.street + (' ' + self.partner_id.street2 if self.partner_id.street2 else ''))[:70],
@@ -443,7 +520,7 @@ class AccountMove(models.Model):
         cfe_code = int(self.l10n_latam_document_type_id.code)
         now = datetime.utcnow()  # TODO this need to be the same as the tipo de mensaje?
         res = {
-            'FmaPago': 1 if self.l10n_uy_invoice_type == 'cash' else 2,
+            'FmaPago': 1 if self.l10n_uy_payment_type == 'cash' else 2,
             'FchEmis': now.date().strftime('%Y-%m-%d'),
         }
         if cfe_code in [121, 122, 123]:  # Factura de Exportación
@@ -464,6 +541,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         values = {
             'move': self,
+            'RUCEmisor': stdnum.uy.rut.compact(self.company_id.vat),
             'IdDoc': self._l10n_uy_get_cfe_iddoc(),
             'item_detail': self._l10n_uy_get_cfe_item_detail(),
             'totals_detail': self._l10n_uy_get_cfe_totals(),
@@ -514,81 +592,77 @@ class AccountMove(models.Model):
         res = {}
         res.update({
             'TpoMoneda': self._l10n_uy_get_currency(),  # A-C110 Tipo moneda transacción
-            'MntTotal': self.amount_total,  # TODO A-C124? Total Monto Total SUM(A121:A123)
+            # TODO A-C124? Total Monto Total SUM(A121:A123)
+            'MntTotal': float_repr(self.amount_total, 2),
             'CantLinDet': len(self.invoice_line_ids),  # A-C126 Lineas
-            'MntPagar': self.amount_total,  # A-C130 Monto Total a Pagar
+            'MntPagar': float_repr(self.amount_total, 2),  # A-C130 Monto Total a Pagar
         })
 
         # C111 Tipo de Cambio
         if self._l10n_uy_get_currency() != 'UYU':
-            res['TpoCambio'] = '{:.3f}'.format(self.currency_id._convert(
+            res['TpoCambio'] = float_repr(self.currency_id._convert(
                 1.0, self.company_id.currency_id, self.company_id, self.date_invoice or fields.Date.today(),
-                round=False))
+                round=False), 3)
 
         cfe_code = int(self.l10n_latam_document_type_id.code)
         if cfe_code in [121, 122, 123]:  # Factura de Exportación
             res.update({
-                'MntExpoyAsim': '{:.2f}'.format(self.amount_total),  # C113
+                'MntExpoyAsim': float_repr(self.amount_total, 2),  # C113
             })
+
+        # TODO esto se puse feo..revisar que este bien balance y amount_total
+        #     if any(tax.tax_group_id.l10n_ar_vat_afip_code and tax.tax_group_id.l10n_ar_vat_afip_code not in ['0', '1', '2'] for tax in line.tax_line_id) and line[amount_field]:
+        #         vat_taxable |= line
+        # for vat in vat_taxable:
+        #     base_imp = sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == vat.tax_line_id.tax_group_id.l10n_ar_vat_afip_code)).mapped(amount_field))
 
         # TODO this need to be improved, using a different way to print the tax information
         tax_vat_22, tax_vat_10, tax_vat_exempt = self.env['account.tax']._l10n_uy_get_taxes(self.company_id)
-        self.check_uruguayan_invoices()
+        self._check_uruguayan_invoices()
 
-        tax_line_exempt = self.tax_line_ids.filtered(lambda x: x.tax_id == tax_vat_exempt)
+        tax_line_exempt = self.line_ids.filtered(lambda x: tax_vat_exempt in x.tax_ids)
         if tax_line_exempt:
             res.update({
-                'MntNoGrv': '{:.2f}'.format(tax_line_exempt.base),  # A-C112 Total Monto - No Gravado
+                # A-C112 Total Monto - No Gravado
+                'MntNoGrv': float_repr(tax_line_exempt.tax_base_amount, 2),
             })
 
-        tax_line_basica = self.tax_line_ids.filtered(lambda x: x.tax_id == tax_vat_22)
+        amount_field = 'balance'
+        tax_line_basica = self.line_ids.filtered(lambda x: tax_vat_22 in x.tax_line_id)
         if tax_line_basica:
+            base_imp = sum(self.invoice_line_ids.filtered(lambda x: tax_vat_22 in x.tax_ids).mapped(amount_field))
             res.update({
-                'IVATasaBasica': 22,  # A120 Tasa Mínima IVA TODO
-                'MntNetoIVATasaBasica': '{:.2f}'.format(tax_line_basica.base),  # A-C117 Total Monto Neto - IVA Tasa Basica
-                'MntIVATasaBasica': '{:.2f}'.format(tax_line_basica.amount_total),  # A-C122 Total IVA Tasa Básica? Monto del IVA Tasa Basica
+                # A120 Tasa Mínima IVA TODO
+                'IVATasaBasica': 22,
+                # A-C117 Total Monto Neto - IVA Tasa Basica
+                'MntNetoIVATasaBasica': float_repr(abs(base_imp), 2),
+                # A-C122 Total IVA Tasa Básica? Monto del IVA Tasa Basica
+                'MntIVATasaBasica': float_repr(abs(tax_line_basica[amount_field]), 2),
             })
 
-        tax_line_minima = self.tax_line_ids.filtered(lambda x: x.tax_id == tax_vat_10)
+        tax_line_minima = self.line_ids.filtered(lambda x: tax_vat_10 in x.tax_line_id)
         if tax_line_minima:
+            base_imp = sum(self.invoice_line_ids.filtered(lambda x: tax_vat_10 in x.tax_ids).mapped(amount_field))
             res.update({
-                'IVATasaMin': 10,  # A119 Tasa Mínima IVA TODO
-                'MntNetoIvaTasaMin': '{:.2f}'.format(tax_line_minima.base),  # A-C116 Total Monto Neto - IVA Tasa Minima
-                'MntIVATasaMin': '{:.2f}'.format(tax_line_minima.amount_total),  # A-C121 Total IVA Tasa Básica? Monto del IVA Tasa Minima
+                # A119 Tasa Mínima IVA TODO
+                'IVATasaMin': 10,
+                # A-C116 Total Monto Neto - IVA Tasa Minima
+                'MntNetoIvaTasaMin': float_repr(abs(base_imp), 2),
+                # A-C121 Total IVA Tasa Básica? Monto del IVA Tasa Minima
+                'MntIVATasaMin': float_repr(abs(tax_line_basica[amount_field]), 2),
             })
 
         return res
 
-    @api.model
-    def _get_available_journal_document_types(self, journal, invoice_type, partner):
-        """ This function filter the journal documents types taking the type of journal"""
-        res = super()._get_available_journal_document_types(journal, invoice_type, partner)
-        if journal.company_id.country_id.code == 'UY':
-            domain = [('journal_id', '=', journal.id)]
-
-            if invoice_type in ['out_refund', 'in_refund']:
-                domain += [('document_type_id.internal_type', '=', 'credit_note')]
-            else:
-                domain += [('document_type_id.internal_type', 'not in', ['credit_note'])]
-
-            journal_document_types = self.env['account.journal.document.type'].search(domain)
-
-            if journal.l10n_uy_type == 'preprinted':
-                available_types = [000]
-            elif journal.l10n_uy_type == 'electronic':
-                available_types = [101, 102, 103, 111, 112, 113, 121, 122, 123, 141, 142, 143]
-            elif journal.l10n_uy_type == 'contingency':
-                available_types = [201, 211, 212, 213, 221, 222, 223, 241, 242, 243]
-            else:
-                res['available_journal_document_types'] = False
-                res['journal_document_type'] = False
-
-            if available_types:
-                res['available_journal_document_types'] = journal_document_types.filtered(
-                    lambda x: int(x.document_type_id.code) in available_types)
-                res['journal_document_type'] = res['available_journal_document_types'] and \
-                    res['available_journal_document_types'][0]
-        return res
+    def _get_l10n_latam_documents_domain(self):
+        """ This function filter the document types taking the type of journal"""
+        self.ensure_one()
+        domain = super()._get_l10n_latam_documents_domain()
+        if self.journal_id.company_id.country_id.code == 'UY':
+            codes = self.journal_id._get_journal_codes()
+            if codes:
+                domain.append(('code', 'in', codes))
+        return domain
 
     def _l10n_uy_get_related_invoices_data(self):
         """ return the related/origin cfe of a given cfe """
@@ -601,8 +675,8 @@ class AccountMove(models.Model):
                 ('company_id', '=', self.company_id.id),
                 ('l10n_latam_document_number', '=', self.origin),
                 ('id', '!=', self.id),
-                ('document_type_id', '!=', self.document_type_id.id),
-                ('document_type_id.country_id.code', '=', 'UY'),
+                ('l10n_latam_document_type_id', '!=', self.l10n_latam_document_type_id.id),
+                ('l10n_latam_document_type_id.country_id.code', '=', 'UY'),
                 ('state', 'not in', ['draft', 'cancel'])],
                 limit=1)
         else:
@@ -662,7 +736,7 @@ class AccountMove(models.Model):
         # TODO test it
 
         # 600 - Consulta de Notificacion Disponible
-        response = self.env.user.company_id._l10n_uy_ucfe_inbox_operation('600')
+        response = self.env.company._l10n_uy_ucfe_inbox_operation('600')
         # import pdb; pdb.set_trace()
 
         # If there is notifications
@@ -772,7 +846,7 @@ class AccountMove(models.Model):
         # TODO por ahora, esto esta solo funcionando para un impuesto de tipo iva por cada linea de factura, debemos
         # implementar el resto de los casos
         self.ensure_one()
-        tax_vat_22, tax_vat_10, tax_vat_exempt = self.env['account.tax']._l10n_uy_get_taxes(self.invoice_id.company_id)
+        tax_vat_22, tax_vat_10, tax_vat_exempt = self.env['account.tax']._l10n_uy_get_taxes(self.move_id.company_id)
         value = {
             tax_vat_exempt.id: 1,   # 1: Exento de IVA
             tax_vat_10.id: 2,       # 2: Gravado a Tasa Mínima
@@ -794,7 +868,8 @@ class AccountMove(models.Model):
             # TODO parece que tenemos estos tipos de contribuyente: IVA mínimo, Monotributo o Monotributo MIDES ver si cargarlos en el patner asi como la afip responsibility
         }
 
-        cfe_code = int(self.invoice_id.l10n_latam_document_type_id.code)
+        cfe_code = int(self.move_id.l10n_latam_document_type_id.code)
         if cfe_code in [121, 122, 123]:  # Factura de Exportación
             return 10  # Exportación y asimiladas
-        return value.get(self.invoice_line_tax_ids.id)
+
+        return value.get(self.tax_ids.id)

@@ -7,6 +7,11 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
 
+            <field name="journal_id" position="after">
+                <field name="l10n_uy_journal_type" invisible="1"/>
+                <field name="l10n_uy_cfe_state" attrs="{'invisible': [('l10n_uy_journal_type', 'not in', ['electronic', 'contingency'])]}"/>
+            </field>
+
             <field name="currency_id" position="after">
                 <field name="l10n_uy_currency_rate"/>
             </field>
@@ -16,48 +21,74 @@
                 <field name="l10n_uy_cfe_transport_route"/>
             </field>
 
-            <sheet position="before">
-                <div class="alert alert-warning" role="alert" attrs="{'invisible': [('l10n_uy_ucfe_msg', '=', ''), ('l10n_uy_ucfe_state', 'in', ['00', '05', '06', '11'])]}" >
-                    <field name="l10n_uy_ucfe_state"/>
-                        <!-- x.l10n_uy_ucfe_state not in  and # Already sent and waiting status from UCFE -->
-                    <field name="l10n_uy_ucfe_msg"/>
-                </div>
-            </sheet>
-
             <notebook position="inside">
-                <page name="uy_dgi" string="DGI">
+                <page name="uy_dgi" string="DGI" attrs="{'invisible': [('l10n_uy_journal_type', 'not in', ['electronic', 'contingency'])]}">
                     <group>
-                        <group string="UCFE">
-                            <field name="l10n_uy_ucfe_state"/>
-                            <field name="l10n_uy_ucfe_msg"/>
-                            <field name="l10n_uy_ucfe_notif"/>
-                            <field name="l10n_uy_cfe_partner_status"/>
-                            <field name="l10n_uy_cfe_uuid"/>
-                            <field name="l10n_uy_cfe_file"/>
-                            <button name="action_l10n_uy_get_pdf" type="object" string="Print Legal PDF" class="oe_inline oe_link" attrs="{'invisible': [('l10n_latam_document_number', '=', False)]}"/>
-                        </group>
-                        <group string="DGI">
-                            <field name="l10n_latam_document_number"/>
-                            <label for="l10n_uy_cfe_dgi_state"/>
-                            <div>
-                                <field name="l10n_uy_cfe_dgi_state"/>
-                                <button name="action_l10n_uy_get_dgi_state" type="object" string="Consult DGI State" class="oe_inline oe_link" attrs="{'invisible': ['|', ('l10n_uy_cfe_dgi_state', '=', '-2'), ('l10n_latam_document_number', '=', False)]}"/>
-                            </div>
-                            <field name="l10n_uy_dgi_acceptation_status"/>
-                            <field name="l10n_uy_dgi_barcode"/>
-                        </group>
                         <group colspan="2">
-                            <button name="action_l10n_uy_validate_cfe" type="object" string="Validate CFE XML" class="oe_inline oe_link"/>
-                             <!-- attrs="{'invisible': [('l10n_uy_cfe_xml', '=', False)]}" -->
-                            <field name="l10n_uy_cfe_xml" colspan="2" nolabel="1" widget="ace"/>
-                            <!-- <label for="l10n_uy_dgi_xml_request"/>
-                            <field name="l10n_uy_dgi_xml_request" colspan="2" nolabel="1" widget="ace"/>
-                            <label for="l10n_uy_dgi_xml_response"/>
-                            <field name="l10n_uy_dgi_xml_response" colspan="2" nolabel="1" widget="ace"/> -->
+                            <notebook>
+                                <page string="Detail">
+                                    <group string="UCFE">
+                                        <field name="l10n_uy_ucfe_state"/>
+                                        <field name="l10n_uy_ucfe_msg"/>
+                                        <field name="l10n_uy_ucfe_notif"/>
+                                        <field name="l10n_uy_cfe_partner_status"/>
+                                        <field name="l10n_uy_cfe_uuid"/>
+                                        <field name="l10n_uy_cfe_file"/>
+                                        <button name="action_l10n_uy_get_pdf" type="object" string="Print Legal PDF" class="oe_inline oe_link" attrs="{'invisible': [('l10n_latam_document_number', '=', False)]}"/>
+                                    </group>
+                                    <group string="DGI">
+                                        <field name="l10n_latam_document_number"/>
+                                        <label for="l10n_uy_cfe_dgi_state"/>
+                                        <div>
+                                            <field name="l10n_uy_cfe_dgi_state"/>
+                                            <button name="action_l10n_uy_get_dgi_state" type="object" string="Consult DGI State" class="oe_inline oe_link" attrs="{'invisible': ['|', ('l10n_uy_cfe_dgi_state', '=', '-2'), ('l10n_latam_document_number', '=', False)]}"/>
+                                        </div>
+                                        <field name="l10n_uy_dgi_acceptation_status"/>
+                                        <field name="l10n_uy_dgi_barcode"/>
+                                    </group>
+                                </page>
+                                <page string="XML CFE">
+                                    <button name="action_l10n_uy_validate_cfe" type="object" string="Validate CFE XML" class="oe_inline oe_link"/>
+                                    <field name="l10n_uy_cfe_xml" nolabel="1" widget="ace"/>
+                                </page>
+                                <page string="XML Request">
+                                    <field name="l10n_uy_dgi_xml_request" nolabel="1" widget="ace"/>
+                                </page>
+                                <page string="XML Response">
+                                    <field name="l10n_uy_dgi_xml_response" nolabel="1" widget="ace"/>
+                                </page>
+                            </notebook>
                         </group>
                     </group>
                 </page>
             </notebook>
         </field>
     </record>
+
+    <record id="view_invoice_tree" model="ir.ui.view">
+        <field name="name">account.move.view.tree</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="l10n_uy_cfe_state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">account.move.view.search</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <search>
+                <field name="l10n_uy_cfe_state"/>
+            </search>
+            <group>
+                <filter string="CFE State" name="cfe_state" context="{'group_by':'l10n_uy_cfe_state'}"/>
+            </group>
+
+        </field>
+    </record>
+
 </odoo>
