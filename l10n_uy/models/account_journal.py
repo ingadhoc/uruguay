@@ -25,7 +25,8 @@ class AccountJournal(models.Model):
     @api.onchange('l10n_uy_type')
     def onchange_journal_uy_type(self):
         """ If the uy type is contingency or preprintedthen use the unified sequence for all the documents """
-        self.l10n_uy_share_sequences = bool(self.company_id.country_id.code == 'UY' and self.l10n_uy_type in ['preprinted', 'contingency'])
+        self.l10n_uy_share_sequences = bool(
+            self.company_id.country_id.code == 'UY' and self.l10n_uy_type in ['preprinted', 'contingency'])
 
     def _l10n_uy_get_journal_codes(self):
         # TODO simil to l10n_ar method _get_journal_codes(). review if we can merge it somehow
@@ -34,21 +35,22 @@ class AccountJournal(models.Model):
             return []
 
         internal_types = ['invoice', 'debit_note', 'credit_note']
-        document_types = self.env['l10n_latam.document.type'].search([
+        doc_types = self.env['l10n_latam.document.type'].search([
             ('internal_type', 'in', internal_types), ('country_id', '=', self.env.ref('base.uy').id)])
 
         if self.type == 'sale' and self.l10n_uy_type == 'preprinted':
-            document_types = document_types.filtered(lambda x: int(x.code) == 0)
+            doc_types = doc_types.filtered(lambda x: int(x.code) == 0)
         elif self.type == 'sale' and self.l10n_uy_type == 'electronic':
-            document_types = document_types.filtered(lambda x: int(x.code) in [101, 102, 103, 111, 112, 113, 121, 122, 123])
+            doc_types = doc_types.filtered(lambda x: int(x.code) in [101, 102, 103, 111, 112, 113, 121, 122, 123])
         elif self.type == 'sale' and self.l10n_uy_type == 'contingency':
-            document_types = document_types.filtered(lambda x: int(x.code) in [201, 202, 203, 211, 212, 213, 221, 222, 223])
+            doc_types = doc_types.filtered(lambda x: int(x.code) in [201, 202, 203, 211, 212, 213, 221, 222, 223])
         # elif self.type == 'purchase' and self.l10n_uy_type == 'preprinted':
-        #     document_types = document_types.filtered(lambda x: int(x.code) == 0)
+        #     doc_types = doc_types.filtered(lambda x: int(x.code) == 0)
         # elif self.type == 'purchase' and self.l10n_uy_type == 'electronic':
-        #     document_types = document_types.filtered(lambda x: int(x.code) in [101, 102, 103, 111, 112, 113, 201, 211, 212, 213])
+        #     doc_types = doc_types.filtered(lambda x: int(x.code) in [
+        #       101, 102, 103, 111, 112, 113, 201, 211, 212, 213])
 
-        return document_types.mapped('code')
+        return doc_types.mapped('code')
 
     @api.model
     def create(self, values):
