@@ -26,7 +26,7 @@
         'data/account_tax_template_data.xml',
         'data/res_partner_data.xml',
         'data/account_fiscal_position_template_data.xml',
-        'views/account_document_type_views.xml',
+        'views/l10n_latam_document_type_views.xml',
         'views/account_move_views.xml',
         'views/account_journal_view.xml',
         'views/res_company_view.xml',
