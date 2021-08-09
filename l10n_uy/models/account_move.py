@@ -30,8 +30,18 @@ class AccountMove(models.Model):
         uruguayan_vat_taxes = self.env.ref('l10n_uy.tax_group_vat_22') + self.env.ref('l10n_uy.tax_group_vat_10') \
             + self.env.ref('l10n_uy.tax_group_vat_exempt')
 
+        # Check that we do not send any tax in exportation invoices
+        expo_cfes = uruguayan_invoices.filtered(
+            lambda x: int(x.journal_document_type_id.document_type_id.code) in [121, 122, 123])
+        for inv_line in expo_cfes.mapped('invoice_line_ids'):
+            vat_taxes = inv_line.invoice_line_tax_ids.filtered(lambda x: x.tax_group_id in uruguayan_vat_taxes)
+            if len(vat_taxes) != 0:
+                raise ValidationError(_(
+                    'Should not be any VAT tax in the exportation cfe line "%s" (Id Invoice: %s)' % (
+                        inv_line.product_id.name, inv_line.invoice_id.id)))
+
         # We check that there is one and only one vat tax per line
-        for line in uruguayan_invoices.mapped('invoice_line_ids').filtered(lambda x: x.display_type not in ('line_section', 'line_note')):
+        for line in (uruguayan_invoices - expo_cfes).mapped('invoice_line_ids').filtered(lambda x: x.display_type not in ('line_section', 'line_note')):
             vat_taxes = line.tax_ids.filtered(lambda x: x.tax_group_id in uruguayan_vat_taxes)
             if len(vat_taxes) != 1:
                 raise ValidationError(_(
