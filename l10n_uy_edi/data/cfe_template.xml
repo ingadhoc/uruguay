@@ -7,7 +7,7 @@
             <t t-esc="'&lt;' + cfe_tag + '&gt;'"/>
                 <Encabezado>
                     <IdDoc>
-                        <TipoCFE t-esc="int(move.journal_document_type_id.document_type_id.code)"/>
+                        <TipoCFE t-esc="int(move.l10n_latam_document_type_id.code)"/>
                         <Serie t-if="IdDoc.get('Serie')" t-esc="IdDoc['Serie']"/>
                         <Nro t-if="IdDoc.get('NumeroCfe')" t-esc="IdDoc['NumeroCfe']"/>
                         <FchEmis t-esc="IdDoc['FchEmis']"/>
@@ -19,7 +19,7 @@
                         <ViaTransp t-if="IdDoc.get('ViaTransp')" t-esc="IdDoc['ViaTransp']"/>
                     </IdDoc>
                     <Emisor>
-                        <RUCEmisor t-esc="int(move.company_id.main_id_number)"/>
+                        <RUCEmisor t-esc="int(move.company_id.vat)"/>
                         <RznSoc t-esc="move.company_id.name"/>
                         <NomComercial t-esc="move.company_id.short_name or move.company_id.name"/>
                         <!-- <EmiSucursal>Central</EmiSucursal> es opcional para todos asi que mejor no lo pasamos -->

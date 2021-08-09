@@ -11,6 +11,11 @@
     'depends': [
         'l10n_uy',
     ],
+    'external_dependencies': {
+        'python': [
+            'zeep',
+        ],
+    },
     'data': [
         'views/res_config_settings_view.xml',
         'views/account_move_views.xml',

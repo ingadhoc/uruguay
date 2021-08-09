@@ -15,15 +15,15 @@ class AccountJournal(models.Model):
     # TODO Tenemos algo que se llama puntos de emision, ver si esto lo podemos configurar aca,
     # seria como el AFIP Pos Number?
 
-    @api.multi
     def _update_journal_document_types(self):
         self.ensure_one()
-        if self.localization != 'uruguay':
+        if self.company_id.country_id.code != 'UY':
             return super()._update_journal_document_types()
 
         internal_types = ['invoice', 'debit_note', 'credit_note']
-        document_types = self.env['account.document.type'].search([('internal_type', 'in', internal_types), ('localization', '=', self.localization)])
-        document_types = document_types - self.mapped('journal_document_type_ids.document_type_id')
+        document_types = self.env['l10n_latam.document.type'].search(
+            [('internal_type', 'in', internal_types), ('country_id.code', '=', 'UY')])
+        document_types = document_types - self.mapped('l10n_ar_sequence_ids.l10n_latam_document_type_id')
 
         # TODO We are forcing the available documents to the ones we supported by the moment, this part of the code
         # should be removed in future when we add the other documents.
@@ -42,5 +42,5 @@ class AccountJournal(models.Model):
     @api.onchange('l10n_uy_type')
     def onchange_journal_uy_type(self):
         """ Si el tipo de diario es de contigencia entonces se usara el mismo numero para todos los documentos de ese tipo """
-        if self.localization == 'uruguay' and self.use_documents:
-            self.document_sequence_type = 'same_sequence'
+        if self.company_id.country_id.code == 'UY' and self.l10n_latam_use_documents:
+            self.l10n_ar_share_sequences = True

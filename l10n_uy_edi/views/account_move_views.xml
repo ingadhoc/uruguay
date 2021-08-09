@@ -1,23 +1,23 @@
 <?xml version='1.0' encoding='utf-8'?>
 <odoo>
 
-    <record id="invoice_form" model="ir.ui.view">
-        <field name="name">account.invoice.form</field>
-        <field name="model">account.invoice</field>
-        <field name="inherit_id" ref="account.invoice_form"/>
+    <record id="view_move_form" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
 
             <field name="currency_id" position="after">
                 <field name="l10n_uy_currency_rate"/>
             </field>
 
-            <field name="incoterm_id" position="after">
+            <field name="invoice_incoterm_id" position="after">
                 <field name="l10n_uy_cfe_sale_mod"/>
                 <field name="l10n_uy_cfe_transport_route"/>
             </field>
 
             <sheet position="before">
-                <div class="alert alert-warning" attrs="{'invisible': [('l10n_uy_ucfe_msg', '=', ''), ('l10n_uy_ucfe_state', 'in', ['00', '05', '06', '11'])]}" >
+                <div class="alert alert-warning" role="alert" attrs="{'invisible': [('l10n_uy_ucfe_msg', '=', ''), ('l10n_uy_ucfe_state', 'in', ['00', '05', '06', '11'])]}" >
                     <field name="l10n_uy_ucfe_state"/>
                         <!-- x.l10n_uy_ucfe_state not in  and # Already sent and waiting status from UCFE -->
                     <field name="l10n_uy_ucfe_msg"/>
@@ -34,14 +34,14 @@
                             <field name="l10n_uy_cfe_partner_status"/>
                             <field name="l10n_uy_cfe_uuid"/>
                             <field name="l10n_uy_cfe_file"/>
-                            <button name="action_l10n_uy_get_pdf" type="object" string="Print Legal PDF" class="oe_inline oe_link" attrs="{'invisible': [('document_number', '=', False)]}"/>
+                            <button name="action_l10n_uy_get_pdf" type="object" string="Print Legal PDF" class="oe_inline oe_link" attrs="{'invisible': [('l10n_latam_document_number', '=', False)]}"/>
                         </group>
                         <group string="DGI">
-                            <field name="document_number"/>
+                            <field name="l10n_latam_document_number"/>
                             <label for="l10n_uy_cfe_dgi_state"/>
                             <div>
                                 <field name="l10n_uy_cfe_dgi_state"/>
-                                <button name="action_l10n_uy_get_dgi_state" type="object" string="Consult DGI State" class="oe_inline oe_link" attrs="{'invisible': ['|', ('l10n_uy_cfe_dgi_state', '=', '-2'), ('document_number', '=', False)]}"/>
+                                <button name="action_l10n_uy_get_dgi_state" type="object" string="Consult DGI State" class="oe_inline oe_link" attrs="{'invisible': ['|', ('l10n_uy_cfe_dgi_state', '=', '-2'), ('l10n_latam_document_number', '=', False)]}"/>
                             </div>
                             <field name="l10n_uy_dgi_acceptation_status"/>
                             <field name="l10n_uy_dgi_barcode"/>

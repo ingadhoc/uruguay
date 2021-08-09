@@ -1,13 +1,13 @@
 from odoo import models
 
 
-class AccountDocmentType(models.Model):
+class L10nAccountDocumentType(models.Model):
 
-    _inherit = 'account.document.type'
+    _inherit = 'l10n_latam.document.type'
 
     def get_document_sequence_vals(self, journal):
         res = super().get_document_sequence_vals(journal)
-        if self.localization == 'uruguay':
+        if self.country_id.code == 'UY':
             if self.code != '000' and int(self.code) < 200:
                 # 660 Consulta Siguiente número de CFE
                 response = journal.company_id._l10n_uy_ucfe_inbox_operation('660', {'TipoCfe': self.code})

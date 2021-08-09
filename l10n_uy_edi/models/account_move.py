@@ -12,9 +12,9 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class AccountInvoice(models.Model):
+class AccountMove(models.Model):
 
-    _inherit = "account.invoice"
+    _inherit = "account.move"
 
     l10n_uy_cfe_dgi_state = fields.Selection([
         ('-2', 'No enviado, monto menor a 10.000 UI'),
@@ -73,19 +73,19 @@ class AccountInvoice(models.Model):
     # TODO este numero debe ser maximo 36 caracteres máximo. esto debemos mejorarlo
 
     l10n_uy_cfe_sale_mod = fields.Selection([
-        (1, 'Régimen General'),
-        (2, 'Consignación'),
-        (3, 'Precio Revisable'),
-        (4, 'Bienes propios a exclaves aduaneros'),
-        (90, 'Régimen general- exportación de servicios'),
-        (99, 'Otras transacciones'),
+        ('1', 'Régimen General'),
+        ('2', 'Consignación'),
+        ('3', 'Precio Revisable'),
+        ('4', 'Bienes propios a exclaves aduaneros'),
+        ('90', 'Régimen general- exportación de servicios'),
+        ('99', 'Otras transacciones'),
     ], 'Modalidad de Venta', help="Este campo debe enviarse cuando se reporta un CFE de tipo e-Facutra de Exportación")
     l10n_uy_cfe_transport_route = fields.Selection([
-        (1, 'Marítimo'),
-        (2, 'Aéreo'),
-        (3, 'Terrestre'),
-        (8, 'N/A'),
-        (9, 'Otro'),
+        ('1', 'Marítimo'),
+        ('2', 'Aéreo'),
+        ('3', 'Terrestre'),
+        ('8', 'N/A'),
+        ('9', 'Otro'),
     ], 'Vía de Transporte', help="Este campo debe enviarse cuando se reporta un CFE de tipo e-Facutra de Exportación")
     l10n_uy_cfe_xml = fields.Text('XML CFE', copy=False, groups="base.group_system")
     l10n_uy_dgi_xml_request = fields.Text('DGI XML Request', copy=False, readonly=True, groups="base.group_system")
@@ -121,32 +121,32 @@ class AccountInvoice(models.Model):
     # Buttons
 
     def action_invoice_cancel(self):
-        for record in self.filtered(lambda x: x.company_id.country_id == self.env.ref('base.uy')):
+        for record in self.filtered(lambda x: x.company_id.country_id.code == 'UY'):
             # The move cannot be modified once has been sent to UCFE
             if record.l10n_uy_ucfe_state in ['00', '05', '06', '11']:
                 raise UserError(_('This %s has been already sent to UCFE. It cannot be cancelled. '
-                                  'You can only click Consult DGI State to update.') % record.journal_document_type_id.document_type_id.name)
+                                  'You can only click Consult DGI State to update.') % record.l10n_latam_document_type_id.name)
             # The move cannot be modified once the CFE has been accepted by the DGI
             elif record.l10n_uy_cfe_dgi_state == '00':
                 raise UserError(_('This %s is accepted by DGI. It cannot be cancelled. '
-                                  'Instead you should revert it.') % record.journal_document_type_id.document_type_id.name)
+                                  'Instead you should revert it.') % record.l10n_latam_document_type_id.name)
             # record.l10n_cl_dte_status = 'cancelled'
         return super().action_invoice_cancel()
 
-    # TODO 13.0 change method to post / 14.0 _post or action_post
-    def action_invoice_open(self):
+    # TODO 14.0 _post or action_post
+    def post(self):
         """ After validate the invoices in odoo we send it to dgi via ucfe """
 
         uy_invoices = self.filtered(
-            lambda x: x.company_id.country_id == self.env.ref('base.uy') and
+            lambda x: x.company_id.country_id.code == 'UY' and
             # 13.0 account.move: x.is_invoice()
             x.type in ['out_invoice', 'out_refund'] and
             x.journal_id.l10n_uy_type in ['electronic', 'contingency'] and
             x.l10n_uy_ucfe_state not in ['00', '05', '06', '11'] and # Already sent and waiting status from UCFE
             # TODO possible we are missing electronic documents here, review the
-            int(x.journal_document_type_id.document_type_id.code) > 100)
+            int(x.l10n_latam_document_type_id.code) > 100)
 
-        no_validated = self.env['account.invoice']
+        no_validated = self.env['account.move']
 
         # Send invoices to DGI and get the return info
         for inv in uy_invoices:
@@ -158,12 +158,12 @@ class AccountInvoice(models.Model):
                 continue
 
             # TODO maybe this can be moved to outside the for loop
-            # super(AccountInvoice, inv).action_invoice_open()
+            # super(AccountMove, inv).post()
             inv._l10n_uy_dgi_post()
             if inv.l10n_uy_ucfe_state not in ['00', '05', '06', '11']:
                 no_validated += inv
 
-        super(AccountInvoice, self - no_validated).action_invoice_open()
+        super(AccountMove, self - no_validated).post()
 
     def action_l10n_uy_get_dgi_state(self):
         """ 360: Consulta de estado de CFE: estado del comprobante en DGI, """
@@ -191,23 +191,23 @@ class AccountInvoice(models.Model):
         if not self.l10n_uy_cfe_pdf:
             if 'out' in self.type:
                 rut_field = 'rut'
-                rut_value = self.company_id.partner_id.main_id_number
+                rut_value = self.company_id.partner_id.vat
             elif 'in' in self.type:
                 # TODO esto no se ha probado aun
                 rut_field = 'rutRecibido'
-                rut_value = self.partner_id.main_id_number
+                rut_value = self.partner_id.vat
             else:
                 raise UserError(_('No se puede imprimir la representación Legal de este documento'))
-            document_number = re.search(r"([A-Z]*)([0-9]*)", self.document_number).groups()
+            document_number = re.search(r"([A-Z]*)([0-9]*)", self.l10n_latam_document_number).groups()
             req_data = {
                 rut_field: rut_value,
-                'tipoCfe': int(self.journal_document_type_id.document_type_id.code),
+                'tipoCfe': int(self.l10n_latam_document_type_id.code),
                 'serieCfe': document_number[0],
                 'numeroCfe': document_number[1],
             }
             response = self.company_id._l10n_uy_ucfe_query('ObtenerPdf', req_data)
             self.l10n_uy_cfe_pdf = self.env['ir.attachment'].create({
-                'name': 'CFE_{}.pdf'.format(self.document_number), 'res_model': self._name, 'res_id': self.id,
+                'name': 'CFE_{}.pdf'.format(self.l10n_latam_document_number), 'res_model': self._name, 'res_id': self.id,
                 'type': 'binary', 'datas': base64.b64encode(response)
             })
         return {
@@ -225,8 +225,8 @@ class AccountInvoice(models.Model):
             now = datetime.utcnow()
             CfeXmlOTexto = self._l10n_uy_create_cfe().get('cfe_str')
             req_data = {
-                'Uuid': 'account.invoice-' + str(self.id),  # TODO we need to set this unique how?
-                'TipoCfe': int(inv.journal_document_type_id.document_type_id.code),
+                'Uuid': 'account.move-' + str(self.id),  # TODO we need to set this unique how?
+                'TipoCfe': int(inv.l10n_latam_document_type_id.code),
                 'HoraReq': now.strftime('%H%M%S'),
                 'FechaReq': now.date().strftime('%Y%m%d'),
                 'CfeXmlOTexto': CfeXmlOTexto}
@@ -270,11 +270,11 @@ class AccountInvoice(models.Model):
                 return
 
             # If everything is ok we save the return information
-            self.document_number = response.Resp.Serie + '%07d' % int(response.Resp.NumeroCfe)
+            self.l10n_latam_document_number = response.Resp.Serie + '%07d' % int(response.Resp.NumeroCfe)
 
             # TODO this one is failing, review why
             self.l10n_uy_cfe_file = self.env['ir.attachment'].create({
-                'name': 'CFE_{}.xml'.format(self.document_number), 'res_model': self._name, 'res_id': self.id,
+                'name': 'CFE_{}.xml'.format(self.l10n_latam_document_number), 'res_model': self._name, 'res_id': self.id,
                 'type': 'binary', 'datas': base64.b64encode(CfeXmlOTexto.encode('ISO-8859-1'))}).id
 
             # TODO este viene vacio, ver cuando realmente es seteado para asi setearlo en este momento
@@ -346,7 +346,7 @@ class AccountInvoice(models.Model):
         self.ensure_one()
         res = {}
         ui_indexada = self._l10n_uy_get_unidad_indexada()
-        document_type = int(self.journal_document_type_id.document_type_id.code)
+        document_type = int(self.l10n_latam_document_type_id.code)
         cond_e_fact = document_type in [111, 112, 113, 141, 142, 143]
         cond_e_ticket = document_type in [101, 102, 103, 131, 132, 133] and self.amount_total > ui_indexada
         cond_e_boleta = document_type in [151, 152, 153]
@@ -357,14 +357,14 @@ class AccountInvoice(models.Model):
             # cond_e_fact: obligatorio RUC (C60= 2).
             # cond_e_ticket: si monto neto ∑ (C112 a C118) > a tope establecido (ver tabla E), debe identificarse con NIE, RUC, CI, Otro, Pasaporte DNI o NIFE (C 60= 2, 3, 4, 5, 6 o 7).
 
-            tipo_doc = self.partner_id.main_id_category_id.l10n_uy_dgi_code
+            tipo_doc = self.partner_id.l10n_latam_identification_type_id.l10n_uy_dgi_code
             cod_pais = 'UY' if tipo_doc in [2, 3] else '99'
 
             res.update({
                 # TODO -Free Shop: siempre se debe identificar al receptor.
                 'TipoDocRecep': tipo_doc,  # C60
                 'CodPaisRecep': self.partner_id.country_id.code or cod_pais,   # C61
-                'DocRecep' if tipo_doc in [1, 2, 3] else 'DocRecepExt': self.partner_id.main_id_number,  # C62 / C62.1
+                'DocRecep' if tipo_doc in [1, 2, 3] else 'DocRecepExt': self.partner_id.vat,  # C62 / C62.1
             })
 
             if cond_e_fact_expo or cond_e_fact:
@@ -382,7 +382,7 @@ class AccountInvoice(models.Model):
 
     def _l10n_uy_get_cfe_tag(self):
         self.ensure_one()
-        cfe_code = int(self.journal_document_type_id.document_type_id.code)
+        cfe_code = int(self.l10n_latam_document_type_id.code)
         if cfe_code in [101, 102, 103, 201]:
             return 'eTck'
         elif cfe_code in [111, 112]:
@@ -395,7 +395,7 @@ class AccountInvoice(models.Model):
     def _l10n_uy_get_cfe_serie(self):
         """ Si soy ticket de contingencia usar los valores que estan definidos en el Odoo """
         res = {}
-        cfe_code = int(self.journal_document_type_id.document_type_id.code)
+        cfe_code = int(self.l10n_latam_document_type_id.code)
         if cfe_code > 200:
             res.update({
                 'Serie': self.journal_id.code,
@@ -406,15 +406,15 @@ class AccountInvoice(models.Model):
     def _l10n_uy_get_cfe_referencia(self):
         res = []
         # If is a debit/credit note cfe then we need to inform el tag referencia
-        if self.journal_document_type_id.document_type_id.internal_type in ['credit_note', 'debit_note']:
+        if self.l10n_latam_document_type_id.internal_type in ['credit_note', 'debit_note']:
             related_cfe = self._l10n_uy_get_related_invoices_data()
             if not related_cfe:
                 raise UserError(_('Para validar una ND/NC debe informar el Documento de Origen'))
             for k, related_cfe in enumerate(self._l10n_uy_get_related_invoices_data(), 1):
-                document_number = re.search(r"([A-Z]*)([0-9]*)", related_cfe.document_number).groups()
+                document_number = re.search(r"([A-Z]*)([0-9]*)", related_cfe.l10n_latam_document_number).groups()
                 res.append({
                     'NroLinRef': k,
-                    'TpoDocRef': int(related_cfe.journal_document_type_id.document_type_id.code),
+                    'TpoDocRef': int(related_cfe.l10n_latam_document_type_id.code),
                     'Serie': document_number[0],
                     'NroCFERef': document_number[1],
                     # 'FechaCFEref': 2015-01-31, TODO inform?
@@ -431,16 +431,16 @@ class AccountInvoice(models.Model):
     def _l10n_uy_get_cfe_modventa(self):
         if not self.l10n_uy_cfe_sale_mod:
             raise UserError(_('Para reportar facturas de exportación debe indicar la modalidad de venta correspondiente'))
-        return self.l10n_uy_cfe_sale_mod
+        return int(self.l10n_uy_cfe_sale_mod)
 
     def _l10n_uy_get_cfe_viatransp(self):
         if not self.l10n_uy_cfe_transport_route:
             raise UserError(_('Para reportar facturas de exportación debe indicar la via de transporte correspondiente'))
-        return self.l10n_uy_cfe_transport_route
+        return int(self.l10n_uy_cfe_transport_route)
 
     def _l10n_uy_get_cfe_iddoc(self):
         self.ensure_one()
-        cfe_code = int(self.journal_document_type_id.document_type_id.code)
+        cfe_code = int(self.l10n_latam_document_type_id.code)
         now = datetime.utcnow()  # TODO this need to be the same as the tipo de mensaje?
         res = {
             'FmaPago': 1 if self.l10n_uy_invoice_type == 'cash' else 2,
@@ -525,7 +525,7 @@ class AccountInvoice(models.Model):
                 1.0, self.company_id.currency_id, self.company_id, self.date_invoice or fields.Date.today(),
                 round=False))
 
-        cfe_code = int(self.journal_document_type_id.document_type_id.code)
+        cfe_code = int(self.l10n_latam_document_type_id.code)
         if cfe_code in [121, 122, 123]:  # Factura de Exportación
             res.update({
                 'MntExpoyAsim': '{:.2f}'.format(self.amount_total),  # C113
@@ -563,7 +563,7 @@ class AccountInvoice(models.Model):
     def _get_available_journal_document_types(self, journal, invoice_type, partner):
         """ This function filter the journal documents types taking the type of journal"""
         res = super()._get_available_journal_document_types(journal, invoice_type, partner)
-        if journal.localization == 'uruguay':
+        if journal.company_id.country_id.code == 'UY':
             domain = [('journal_id', '=', journal.id)]
 
             if invoice_type in ['out_refund', 'in_refund']:
@@ -590,7 +590,6 @@ class AccountInvoice(models.Model):
                     res['available_journal_document_types'][0]
         return res
 
-    @api.multi
     def _l10n_uy_get_related_invoices_data(self):
         """ return the related/origin cfe of a given cfe """
         # similar to get_related_invoices_data from l10n_ar_afipws_fe, we need to remove
@@ -600,10 +599,10 @@ class AccountInvoice(models.Model):
             return self.search([
                 ('commercial_partner_id', '=', self.commercial_partner_id.id),
                 ('company_id', '=', self.company_id.id),
-                ('document_number', '=', self.origin),
+                ('l10n_latam_document_number', '=', self.origin),
                 ('id', '!=', self.id),
                 ('document_type_id', '!=', self.document_type_id.id),
-                ('document_type_id.localization', '=', self.localization),
+                ('document_type_id.country_id.code', '=', 'UY'),
                 ('state', 'not in', ['draft', 'cancel'])],
                 limit=1)
         else:
@@ -641,7 +640,7 @@ class AccountInvoice(models.Model):
         # 410 - Informar aceptación/rechazo comercial de un CFE recibido.
         req_data = {
             'Uuid': self.l10n_uy_cfe_uuid,
-            'TipoCfe': int(self.journal_document_type_id.document_type_id.code),
+            'TipoCfe': int(self.l10n_latam_document_type_id.code),
             'CodRta': '01' if rejection else '00',
         }
         if rejection:
@@ -762,9 +761,9 @@ class AccountInvoice(models.Model):
         #     raise UserError(_('ERROR: la notificacion no pudo descartarse %s') % response)
 
 
-class AccountInvoiceLine(models.Model):
+class AccountMove(models.Model):
 
-    _inherit = "account.invoice.line"
+    _inherit = "account.move.line"
 
     def _l10n_uy_get_cfe_indfact(self):
         """ B4: Indicador de facturación (IndFact)', Dato enviado en CFE.
@@ -795,7 +794,7 @@ class AccountInvoiceLine(models.Model):
             # TODO parece que tenemos estos tipos de contribuyente: IVA mínimo, Monotributo o Monotributo MIDES ver si cargarlos en el patner asi como la afip responsibility
         }
 
-        cfe_code = int(self.invoice_id.journal_document_type_id.document_type_id.code)
+        cfe_code = int(self.invoice_id.l10n_latam_document_type_id.code)
         if cfe_code in [121, 122, 123]:  # Factura de Exportación
             return 10  # Exportación y asimiladas
         return value.get(self.invoice_line_tax_ids.id)

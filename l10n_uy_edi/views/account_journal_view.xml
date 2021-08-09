@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
 
             <field name="type" position="after">
-                <field name="l10n_uy_type" attrs="{'invisible':['|', '|', ('localization', '!=', 'uruguay'), ('use_documents', '=', False), ('type', 'not in', ['sale', 'purchase'])], 'required':[('localization', '=', 'uruguay'), ('use_documents', '=', True), ('type', 'in', ['sale', 'purchase'])]}"/>
+                <field name="l10n_uy_type" attrs="{'invisible':['|', '|', ('company_id.country_id.code', '!=', 'UY'), ('l10n_latam_use_documents', '=', False), ('type', 'not in', ['sale', 'purchase'])], 'required':[('company_id.country_id.code', '=', 'UY'), ('l10n_latam_use_documents', '=', True), ('type', 'in', ['sale', 'purchase'])]}"/>
             </field>
         </field>
     </record>

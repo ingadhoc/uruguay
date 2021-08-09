@@ -6,11 +6,11 @@
     <record model="ir.actions.act_window" id="action_base_partner_update_from_padron">
         <field name="name">Update Partners From DGI</field>
         <field name="res_model">res.partner.update.from.padron.wizard</field>
-        <field name="view_type">form</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
-        <!-- <field name="context">{'active_test': False}</field> -->
     </record>
+
+        <!-- <field name="context">{'active_test': False}</field> -->
 
     <menuitem id='menu_base_partner_update_from_padron'
         action='action_base_partner_update_from_padron'
@@ -77,7 +77,8 @@
         </field>
     </record>
 
-    <act_window id="action_partner_update" res_model="res.partner.update.from.padron.wizard" src_model="res.partner"
-        target="new" multi="True" key2="client_action_multi" view_mode="form" name="Automatic Update from DGI"/>
+    <!-- TODO KZ not working review why -->
+    <!-- <act_window id="action_partner_update" res_model="res.partner.update.from.padron.wizard"    src_model="res.partner"
+        target="new" multi="True" key2="client_action_multi" view_mode="form" name="Automatic Update from DGI"/> -->
 
 </odoo>

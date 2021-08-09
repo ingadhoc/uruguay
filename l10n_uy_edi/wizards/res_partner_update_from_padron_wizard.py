@@ -26,7 +26,7 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
     @api.model
     def get_partners(self):
         # TODO deberiamos buscar de otro manera estos partners
-        domain = [('main_id_number', '!=', False), ('main_id_category_id.l10n_uy_dgi_code', '=', 2)]
+        domain = [('vat', '!=', False), ('l10n_latam_identification_type_id.l10n_uy_dgi_code', '=', 2)]
         active_ids = self._context.get('active_ids', [])
         if active_ids:
             domain.append(('id', 'in', active_ids))
@@ -153,7 +153,6 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
                 vals[field.field] = field.new_value
         self.partner_id.write(vals)
 
-    @api.multi
     def automatic_process_cb(self):
         for partner in self.partner_ids:
             self.partner_id = partner.id
@@ -169,7 +168,6 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
             'target': 'new',
         }
 
-    @api.multi
     def update_selection(self):
         self.ensure_one()
         if not self.field_ids:
@@ -184,14 +182,12 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
         self._update()
         return self.next_cb()
 
-    @api.multi
     def next_cb(self):
         self.ensure_one()
         if self.partner_id:
             self.write({'partner_ids': [(3, self.partner_id.id, False)]})
         return self._next_screen()
 
-    @api.multi
     def _next_screen(self):
         self.ensure_one()
         self.refresh()
@@ -215,7 +211,6 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
             'target': 'new',
         }
 
-    @api.multi
     def start_process_cb(self):
         """ Start the process. """
         self.ensure_one()
