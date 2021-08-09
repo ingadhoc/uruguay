@@ -33,13 +33,13 @@
                     <Receptor t-if="receptor">
                         <TipoDocRecep t-esc="receptor['TipoDocRecep']"/>
                         <CodPaisRecep t-esc="receptor['CodPaisRecep']"/>
+                        <DocRecep t-if="receptor.get('DocRecep')" t-esc="receptor['DocRecep']"/>
+                        <DocRecepExt t-if="receptor.get('DocRecepExt')" t-esc="receptor['DocRecepExt']"/>
                         <RznSocRecep t-if="receptor.get('RznSocRecep')" t-esc="receptor['RznSocRecep']"/>
                         <DirRecep t-if="receptor.get('DirRecep')" t-esc="receptor['DirRecep']"/>
                         <CiudadRecep t-if="receptor.get('CiudadRecep')" t-esc="receptor['CiudadRecep']"/>
                         <DeptoRecep t-if="receptor.get('DeptoRecep')" t-esc="receptor['DeptoRecep']"/>
                         <PaisRecep t-if="receptor.get('PaisRecep')" t-esc="receptor['PaisRecep']"/>
-                        <DocRecep t-if="receptor.get('DocRecep')" t-esc="receptor['DocRecep']"/>
-                        <DocRecepExt t-if="receptor.get('DocRecepExt')" t-esc="receptor['DocRecepExt']"/>
                     </Receptor>
                     <Totales>
                         <TpoMoneda t-esc="totals_detail['TpoMoneda']"/>

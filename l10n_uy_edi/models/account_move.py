@@ -141,6 +141,7 @@ class AccountInvoice(models.Model):
             lambda x: x.company_id.country_id == self.env.ref('base.uy') and
             # 13.0 account.move: x.is_invoice()
             x.type in ['out_invoice', 'out_refund'] and
+            x.journal_id.l10n_uy_type in ['electronic', 'contingency'] and
             x.l10n_uy_ucfe_state not in ['00', '05', '06', '11'] and # Already sent and waiting status from UCFE
             # TODO possible we are missing electronic documents here, review the
             int(x.journal_document_type_id.document_type_id.code) > 100)
@@ -157,6 +158,7 @@ class AccountInvoice(models.Model):
                 continue
 
             # TODO maybe this can be moved to outside the for loop
+            # super(AccountInvoice, inv).action_invoice_open()
             inv._l10n_uy_dgi_post()
             if inv.l10n_uy_ucfe_state not in ['00', '05', '06', '11']:
                 no_validated += inv
@@ -330,7 +332,7 @@ class AccountInvoice(models.Model):
             })
 
             if cond_e_fact_expo or cond_e_fact:
-                if not self.partner_id.street:
+                if not all([self.partner_id.street, self.partner_id.city, self.partner_id.state_id, self.partner_id.country_id]):
                     raise UserError(_('Debe configurar la dirección, ciudad, provincia y pais del receptor'))
                 res.update({
                     'RznSocRecep': self.partner_id.name,  # C63
@@ -495,6 +497,7 @@ class AccountInvoice(models.Model):
 
         # TODO this need to be improved, using a different way to print the tax information
         tax_vat_22, tax_vat_10, tax_vat_exempt = self.env['account.tax']._l10n_uy_get_taxes()
+        self.check_uruguayan_invoices()
 
         tax_line_exempt = self.tax_line_ids.filtered(lambda x: x.tax_id == tax_vat_exempt)
         if tax_line_exempt:
