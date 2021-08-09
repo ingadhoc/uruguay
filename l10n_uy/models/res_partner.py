@@ -29,7 +29,7 @@ class ResPartner(models.Model):
             import stdnum.uy
             module = stdnum.uy.rut
         except ImportError:
-            _logger.warning("Uruguayan VAT was not validated because stdnum.uy module is not available")
+            _logger.info("Uruguayan VAT was not validated because stdnum.uy module is not available")
             return True
         try:
             module.validate(vat)
