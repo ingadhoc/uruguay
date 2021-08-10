@@ -40,7 +40,11 @@ class AccountJournal(models.Model):
             self.l10n_uy_share_sequences = True
 
     def _get_journal_codes(self):
+        """ Set the avaible types for every type of uruguayan journals """
         self.ensure_one()
+        if self.company_id.country_id.code != 'UY':
+            return super()._get_journal_codes()
+
         if self.type != 'sale':
             return []
         if self.l10n_uy_type == 'preprinted':
