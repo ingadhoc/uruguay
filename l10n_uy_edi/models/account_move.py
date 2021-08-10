@@ -131,6 +131,9 @@ class AccountMove(models.Model):
     l10n_uy_cfe_file = fields.Many2one('ir.attachment', string='CFE XML file', copy=False)
     l10n_uy_cfe_pdf = fields.Many2one('ir.attachment', string='CFE PDF Representation', copy=False)
 
+    # This is required to be able to save defaults taking into account the document type selected
+    l10n_latam_document_type_id = fields.Many2one(change_default=True)
+
     # Buttons
 
     def action_invoice_cancel(self):
