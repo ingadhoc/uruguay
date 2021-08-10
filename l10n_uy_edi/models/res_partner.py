@@ -56,7 +56,7 @@ class ResPartner(models.Model):
             'street2':  './/{DGI_Modernizacion_Consolidado}Dom_Coment',
 
             # TODO remove
-            'street_number': './/{DGI_Modernizacion_Consolidado}Calle_id',
+            'street_number': './/{DGI_Modernizacion_Consolidado}Dom_Pta_Nro',
             'state': './/{DGI_Modernizacion_Consolidado}Dpto_Nom',
         }
 
