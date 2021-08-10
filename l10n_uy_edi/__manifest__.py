@@ -25,6 +25,7 @@
         'data/ir_sequence.xml',
         'data/ir_actions_server.xml',
         'data/ir_cron.xml',
+        'data/account_incoterms_data.xml',
     ],
     'demo': [
         'demo/res_partner_demo.xml',
