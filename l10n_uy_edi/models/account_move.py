@@ -511,13 +511,12 @@ class AccountMove(models.Model):
             raise UserError('Este Comprobante aun no ha sido implementado')
 
     def _l10n_uy_get_cfe_adenda(self):
-        # TODO KZ 'Adenda': 'Datoe enviado por Gaby
-        # TODO KZ crear parametros de sistema o campos en la comapania para definir las adendas
+        # TODO KZ crear parametros de sistema o campos en la compañi para definir las adendas
         self.ensure_one()
         adenda = "Honorarios por servicios de diseño, desarrollo e implementación de soportes lógicos, exonerados de impuesto a la renta según lo dispuesto en el apartado ii del primer inciso del artículo 161 bis del Decreto 150/007 del 26 de abril de 2007."
 
         # TODO KZ toca tambien ver cual es la zona franca uruguaya y configurarla en la data, que se auto detecte
-        if self.fiscal_position_id.name == 'Exportaciones a la Zona Franca':
+        if self.fiscal_position_id and 'zona franca' in self.fiscal_position_id.name.lower():
             adenda += "\n\nVenta considerada Exportación de Servicios amparada en el Artículo 34 ° Numeral 11 del Decreto N° 220/998"
 
         if adenda:
