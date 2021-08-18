@@ -93,7 +93,7 @@ class L10nUYVatBook(models.AbstractModel):
                 'model': 'account.uy.vat.line',
                 'caret_options': caret_type,
                 'columns': [
-                    {'name': rec['l10n_latam_document_type_id'][-1]},
+                    {'name': rec['document_type_id'][-1]},
                     {'name': rec['move_name']},
                     {'name': rec['partner_name']},
                     {'name': rec['rut']},
