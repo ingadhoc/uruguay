@@ -303,7 +303,8 @@ class AccountMove(models.Model):
             }
             response = self.company_id._l10n_uy_ucfe_query('ObtenerPdf', req_data)
             self.l10n_uy_cfe_pdf = self.env['ir.attachment'].create({
-                'name': 'CFE_{}.pdf'.format(self.l10n_latam_document_number), 'res_model': self._name, 'res_id': self.id,
+                'name': (self.name or 'INV').replace('/', '_') + '.pdf',
+                'res_model': self._name, 'res_id': self.id,
                 'type': 'binary', 'datas': base64.b64encode(response)
             })
         return {
@@ -397,6 +398,10 @@ class AccountMove(models.Model):
                 'name': 'CFE_{}.xml'.format(inv.l10n_latam_document_number),
                 'res_model': self._name, 'res_id': inv.id,
                 'type': 'binary', 'datas': base64.b64encode(CfeXmlOTexto.encode('ISO-8859-1'))}).id
+
+            # If the invoice has been posted automatically print and attach the legal invoice reporte to the record.
+            if inv.state == 'posted':
+                inv.action_l10n_uy_get_pdf()
 
             # TODO este viene vacio, ver cuando realmente es seteado para asi setearlo en este momento
             # Tambien tenemos ver para que sirve 'DatosQr': 'https://www.efactura.dgi.gub.uy/consultaQRPrueba/cfe?218435730016,101,A,1,18.00,17/09/2020,gKSy8dDHR0YsTy0P4cx%2bcSu4Zvo%3d',
