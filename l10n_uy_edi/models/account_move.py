@@ -605,10 +605,9 @@ class AccountMove(models.Model):
 
     def _l10n_uy_get_cfe_iddoc(self):
         self.ensure_one()
-        now = datetime.utcnow()  # TODO this need to be the same as the tipo de mensaje?
         res = {
             'FmaPago': 1 if self.l10n_uy_payment_type == 'cash' else 2,
-            'FchEmis': now.date().strftime('%Y-%m-%d'),
+            'FchEmis': self.invoice_date.strftime('%Y-%m-%d'),
         }
         if self.is_expo_cfe():
             res.update({
