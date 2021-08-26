@@ -223,11 +223,12 @@ class AccountMove(models.Model):
         for rec in self.filtered(lambda x: x.l10n_uy_cfe_state == 'received'):
             response = rec.company_id._l10n_uy_ucfe_inbox_operation('360', {'Uuid': rec.l10n_uy_cfe_uuid})
             values = {
-                'l10n_uy_ucfe_state': response.Resp.CodRta or rec.l10n_uy_ucfe_state,
-                'l10n_uy_ucfe_msg': response.Resp.MensajeRta or rec.l10n_uy_ucfe_msg,
-                'l10n_uy_ucfe_notif': response.Resp.TipoNotificacion or rec.l10n_uy_ucfe_notif,
-                'l10n_uy_cfe_dgi_state': response.Resp.EstadoEnDgiCfeRecibido or rec.l10n_uy_cfe_dgi_state,
+                'l10n_uy_ucfe_state': response.Resp.CodRta,
+                'l10n_uy_ucfe_msg': response.Resp.MensajeRta,
+                'l10n_uy_ucfe_notif': response.Resp.TipoNotificacion,
+                'l10n_uy_cfe_dgi_state': response.Resp.EstadoEnDgiCfeRecibido,
             }
+            values = dict([(key, val) for key, val in values.items() if val])
             rec.write(values)
             rec._update_l10n_uy_cfe_state()
 
