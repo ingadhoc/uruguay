@@ -173,8 +173,18 @@ class AccountMove(models.Model):
             # TODO possible we are missing electronic documents here, review the
             int(x.l10n_latam_document_type_id.code) > 100)
 
-        if uy_invoices and get_mode():
-            raise UserError(_('You an only validate electronic invoices in production environment'))
+        if not uy_invoices:
+            return res
+
+        for company in uy_invoices.mapped('company_id'):
+            # If we are in a testing/demo/backup database do not let to validate invoices in production ucfe env
+            if get_mode() and company.l10n_uy_ucfe_env == 'production':
+                raise UserError(_('You need to change the ucfe environment to testing in %s company if you want'
+                                  ' to continue') % (company.name))
+            # If we are in a production database only let to validate invoices using production ucfe env
+            elif not get_mode() and company.l10n_uy_ucfe_env != 'production':
+                raise UserError(_('You are in production but not using ucfe production environment for %s compamy'
+                                  ' please change it') % (company.name))
 
         # Send invoices to DGI and get the return info
         for inv in uy_invoices:

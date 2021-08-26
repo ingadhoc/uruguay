@@ -43,6 +43,10 @@ class ResCompany(models.Model):
     l10n_uy_ucfe_inbox_url = fields.Char('Uruware Inbox URL', groups="base.group_system")
     l10n_uy_ucfe_query_url = fields.Char('Uruware Query URL', groups="base.group_system")
 
+    l10n_uy_ucfe_env = fields.Selection([('production', 'Production'), ('testing', 'Testing')], string='Environment', groups="base.group_system")
+    l10n_uy_ucfe_prod_env = fields.Text('Uruware Production Data', groups="base.group_system", default="{}")
+    l10n_uy_ucfe_test_env = fields.Text('Uruware Testing Data', groups="base.group_system", default="{}")
+
     # DGI
     l10n_uy_dgi_house_code = fields.Integer(
         "Código Casa Principal/Sucursal", default=1, help="Este valor es parte del XML cuando se envia el CFE."
