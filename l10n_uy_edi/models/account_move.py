@@ -346,33 +346,33 @@ class AccountMove(models.Model):
         self._l10n_uy_validate_company_data()
         for inv in self:
             now = datetime.utcnow()
-            CfeXmlOTexto = self._l10n_uy_create_cfe().get('cfe_str')
+            CfeXmlOTexto = inv._l10n_uy_create_cfe().get('cfe_str')
             req_data = {
-                'Uuid': 'account.move-' + str(self.id) + '_' + str(fields.Datetime.now()),  # TODO this need to be improve
+                'Uuid': 'account.move-' + str(inv.id) + '_' + str(fields.Datetime.now()),  # TODO this need to be improve
                 'TipoCfe': int(inv.l10n_latam_document_type_id.code),
                 'HoraReq': now.strftime('%H%M%S'),
                 'FechaReq': now.date().strftime('%Y%m%d'),
                 'CfeXmlOTexto': CfeXmlOTexto}
 
             req_data.update(inv._l10n_uy_get_cfe_adenda())
-            req_data.update(self._l10n_uy_get_cfe_serie())
-            response, transport = self.company_id._l10n_uy_ucfe_inbox_operation('310', req_data, return_transport=1)
+            req_data.update(inv._l10n_uy_get_cfe_serie())
+            response, transport = inv.company_id._l10n_uy_ucfe_inbox_operation('310', req_data, return_transport=1)
 
-            inv = self.sudo()
+            inv = inv.sudo()
             inv.l10n_uy_cfe_xml = CfeXmlOTexto
             # from lxml import etree
             # etree.tostring(etree.fromstring(response.Resp.XmlCfeFirmado), pretty_print=True).decode('utf-8')
             inv.l10n_uy_dgi_xml_response = transport.xml_response
             inv.l10n_uy_dgi_xml_request = transport.xml_request
-            self.l10n_uy_cfe_uuid = response.Resp.Uuid
-            self.l10n_uy_ucfe_state = response.Resp.CodRta
-            self.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido
-            self._update_l10n_uy_cfe_state()
+            inv.l10n_uy_cfe_uuid = response.Resp.Uuid
+            inv.l10n_uy_ucfe_state = response.Resp.CodRta
+            inv.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido
+            inv._update_l10n_uy_cfe_state()
 
-            self.l10n_uy_ucfe_msg = response.Resp.MensajeRta
-            self.l10n_uy_ucfe_notif = response.Resp.TipoNotificacion
+            inv.l10n_uy_ucfe_msg = response.Resp.MensajeRta
+            inv.l10n_uy_ucfe_notif = response.Resp.TipoNotificacion
 
-            if response.Resp.CodRta not in self._uy_invoice_already_sent():
+            if response.Resp.CodRta not in inv._uy_invoice_already_sent():
                 # * 00 y 11, el CFE ha sido aceptado (con el 11 aún falta la confirmación definitiva de DGI).
                 # El punto de emisión no debe volver a enviar el documento.
                 # Se puede consultar el estado actual de un CFE para el que se recibió 11 con los mensajes de consulta
@@ -390,11 +390,12 @@ class AccountMove(models.Model):
                 return
 
             # If everything is ok we save the return information
-            self.l10n_latam_document_number = response.Resp.Serie + '%07d' % int(response.Resp.NumeroCfe)
+            inv.l10n_latam_document_number = response.Resp.Serie + '%07d' % int(response.Resp.NumeroCfe)
 
             # TODO this one is failing, review why
-            self.l10n_uy_cfe_file = self.env['ir.attachment'].create({
-                'name': 'CFE_{}.xml'.format(self.l10n_latam_document_number), 'res_model': self._name, 'res_id': self.id,
+            inv.l10n_uy_cfe_file = self.env['ir.attachment'].create({
+                'name': 'CFE_{}.xml'.format(inv.l10n_latam_document_number),
+                'res_model': self._name, 'res_id': inv.id,
                 'type': 'binary', 'datas': base64.b64encode(CfeXmlOTexto.encode('ISO-8859-1'))}).id
 
             # TODO este viene vacio, ver cuando realmente es seteado para asi setearlo en este momento
