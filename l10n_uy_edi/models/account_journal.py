@@ -39,22 +39,6 @@ class AccountJournal(models.Model):
         if self.company_id.country_id.code == 'UY' and self.l10n_latam_use_documents:
             self.l10n_uy_share_sequences = True
 
-    def _get_journal_codes(self):
-        """ Set the avaible types for every type of uruguayan journals """
-        self.ensure_one()
-        if self.company_id.country_id.code != 'UY':
-            return super()._get_journal_codes()
-
-        if self.type != 'sale':
-            return []
-        if self.l10n_uy_type == 'preprinted':
-            available_types = [000]
-        elif self.l10n_uy_type == 'electronic':
-            available_types = [101, 102, 103, 111, 112, 113, 121, 122, 123, 141, 142, 143]
-        elif self.l10n_uy_type == 'contingency':
-            available_types = [201, 211, 212, 213, 221, 222, 223, 241, 242, 243]
-        return available_types
-
     # def _l10n_uy_create_document_sequences(self):
     #     """ IF DGI Configuration change try to review if this can be done and then create / update the document
     #     sequences """

@@ -742,16 +742,6 @@ class AccountMove(models.Model):
 
         return res
 
-    def _get_l10n_latam_documents_domain(self):
-        """ This function filter the document types taking the type of journal"""
-        self.ensure_one()
-        domain = super()._get_l10n_latam_documents_domain()
-        if self.journal_id.company_id.country_id.code == 'UY':
-            codes = self.journal_id._get_journal_codes()
-            if codes:
-                domain.extend([('code', 'in', codes), ('active', '=', True)])
-        return domain
-
     def _uy_found_related_invoice(self):
         """ return the related/origin cfe of a given cfe """
         # next version review to merge this with l10n_ar_edi _found_related_invoice method
