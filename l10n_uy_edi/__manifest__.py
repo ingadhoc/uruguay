@@ -10,6 +10,7 @@
     'version': '13.0.1.0.0',
     'depends': [
         'l10n_uy',
+        'server_mode',  # TODO this need to be removed maybe when we have saas_client_l10n_uy?
     ],
     'external_dependencies': {
         'python': [

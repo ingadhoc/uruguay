@@ -2,6 +2,7 @@
 from odoo import fields, models, _, api
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_repr
+from odoo.addons.server_mode.mode import get_mode
 from . import ucfe_errors
 from datetime import datetime
 from html import unescape
@@ -171,6 +172,9 @@ class AccountMove(models.Model):
             x.l10n_uy_ucfe_state not in x._uy_invoice_already_sent() and
             # TODO possible we are missing electronic documents here, review the
             int(x.l10n_latam_document_type_id.code) > 100)
+
+        if uy_invoices and get_mode():
+            raise UserError(_('You an only validate electronic invoices in production environment'))
 
         # Send invoices to DGI and get the return info
         for inv in uy_invoices:
