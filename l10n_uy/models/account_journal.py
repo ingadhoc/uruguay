@@ -28,29 +28,22 @@ class AccountJournal(models.Model):
         self.l10n_uy_share_sequences = bool(
             self.company_id.country_id.code == 'UY' and self.l10n_uy_type in ['preprinted', 'contingency'])
 
-    def _l10n_uy_get_journal_codes(self):
-        # TODO simil to l10n_ar method _get_journal_codes(). review if we can merge it somehow
+    def _get_journal_codes(self):
+        """ return list of the available document type codes for uruguayan sales journals"""
         self.ensure_one()
-        if self.type not in ['sale', 'purchase']:
+        if self.company_id.country_id.code != 'UY':
+            return super()._get_journal_codes()
+
+        if self.type != 'sale':
             return []
 
-        internal_types = ['invoice', 'debit_note', 'credit_note']
-        doc_types = self.env['l10n_latam.document.type'].search([
-            ('internal_type', 'in', internal_types), ('country_id', '=', self.env.ref('base.uy').id)])
-
-        if self.type == 'sale' and self.l10n_uy_type == 'preprinted':
-            doc_types = doc_types.filtered(lambda x: int(x.code) == 0)
-        elif self.type == 'sale' and self.l10n_uy_type == 'electronic':
-            doc_types = doc_types.filtered(lambda x: int(x.code) in [101, 102, 103, 111, 112, 113, 121, 122, 123])
-        elif self.type == 'sale' and self.l10n_uy_type == 'contingency':
-            doc_types = doc_types.filtered(lambda x: int(x.code) in [201, 202, 203, 211, 212, 213, 221, 222, 223])
-        # elif self.type == 'purchase' and self.l10n_uy_type == 'preprinted':
-        #     doc_types = doc_types.filtered(lambda x: int(x.code) == 0)
-        # elif self.type == 'purchase' and self.l10n_uy_type == 'electronic':
-        #     doc_types = doc_types.filtered(lambda x: int(x.code) in [
-        #       101, 102, 103, 111, 112, 113, 201, 211, 212, 213])
-
-        return doc_types.mapped('code')
+        if self.l10n_uy_type == 'preprinted':
+            available_types = [000]
+        elif self.l10n_uy_type == 'electronic':
+            available_types = [101, 102, 103, 111, 112, 113, 121, 122, 123]
+        elif self.l10n_uy_type == 'contingency':
+            available_types = [201, 211, 212, 213, 221, 222, 223]
+        return available_types
 
     @api.model
     def create(self, values):
@@ -70,22 +63,26 @@ class AccountJournal(models.Model):
                 rec._l10n_uy_create_document_sequences()
         return res
 
+    # TODO KZ simil to _l10n_ar_create_document_sequences, since to merge this two methods in the future
     def _l10n_uy_create_document_sequences(self):
-        """ IF DGI Configuration change try to review if this can be done and then create / update the document
+        """ IF DGI configuration change try to review if this can be done and then create / update the document
         sequences """
         self.ensure_one()
         if self.company_id.country_id.code != 'UY':
             return True
-        if not self.type == 'sale' or not self.l10n_latam_use_documents:
+        # Si no soy de tipo venta, uso documentos o soy de tipo electronico no genero secuencias. en el ultmo uso las
+        # secuencias directas dadas por Uruware.
+        if not self.type == 'sale' or not self.l10n_latam_use_documents or self.l10n_uy_type == 'electronic':
             return False
 
         sequences = self.l10n_uy_sequence_ids
         sequences.unlink()
 
         # Create Sequences
+        # TODO KZ improve maybe skip this and use _get_l10n_latam_documents_domain direclty?
         internal_types = ['invoice', 'debit_note', 'credit_note']
         domain = [('country_id.code', '=', 'UY'), ('internal_type', 'in', internal_types)]
-        codes = self._l10n_uy_get_journal_codes()
+        codes = self._get_journal_codes()
         if codes:
             domain.append(('code', 'in', codes))
         documents = self.env['l10n_latam.document.type'].search(domain)
