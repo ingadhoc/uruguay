@@ -241,6 +241,12 @@ class AccountMove(models.Model):
     #         return 'draft_cfe'
     #     return False
 
+    def _amount_total_company_currency(self):
+        """ TODO search if Odoo already have something to do exactly the same as here """
+        self.ensure_one()
+        return self.amount_total if self.currency_id == self.company_currency_id else self.currency_id._convert(
+            self.amount_total, self.company_id.currency_id, self.company_id, self.invoice_date or fields.Date.today(), round=False)
+
     def _update_l10n_uy_cfe_state(self):
         """ Update the CFE State show to the user depending of the information of the UFCE and DGI State return from
         third party service """
@@ -252,8 +258,7 @@ class AccountMove(models.Model):
         else:
             if self.l10n_uy_ucfe_state:
                 if self.l10n_uy_ucfe_state == '00':
-                    ui_indexada = self._l10n_uy_get_unidad_indexada()
-                    if self.amount_total < (ui_indexada * 10000):
+                    if self._amount_total_company_currency() < self._l10n_uy_get_min_by_unidad_indexada():
                         self.l10n_uy_cfe_state = 'ui_indexada'
                 if self.l10n_uy_ucfe_state == '11':
                     self.l10n_uy_cfe_state = 'received'
@@ -458,7 +463,7 @@ class AccountMove(models.Model):
         return res
 
     @api.model
-    def _l10n_uy_get_unidad_indexada(self):
+    def _l10n_uy_get_min_by_unidad_indexada(self):
         return self.env.ref('l10n_uy.UYI').rate * 10000
 
     def is_expo_cfe(self):
@@ -469,10 +474,9 @@ class AccountMove(models.Model):
     def _l10n_uy_get_cfe_receptor(self):
         self.ensure_one()
         res = {}
-        ui_indexada = self._l10n_uy_get_unidad_indexada()
         document_type = int(self.l10n_latam_document_type_id.code)
         cond_e_fact = document_type in [111, 112, 113, 141, 142, 143]
-        cond_e_ticket = document_type in [101, 102, 103, 131, 132, 133] and self.amount_total > (ui_indexada * 10000)
+        cond_e_ticket = document_type in [101, 102, 103, 131, 132, 133] and self._amount_total_company_currency() > self._l10n_uy_get_min_by_unidad_indexada()
         cond_e_boleta = document_type in [151, 152, 153]
         cond_e_contg = document_type in [201, 202, 203]
         cond_e_fact_expo = self.is_expo_cfe()
