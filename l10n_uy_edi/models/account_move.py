@@ -221,7 +221,19 @@ class AccountMove(models.Model):
         Toma solo aquellos comprobantes que estan en esperado respuesta de DGI y consulta en el UFCE si DGI devolvio
         respuesta acerca del comprobante """
         for rec in self.filtered(lambda x: x.l10n_uy_cfe_state == 'received'):
-            response = rec.company_id._l10n_uy_ucfe_inbox_operation('360', {'Uuid': rec.l10n_uy_cfe_uuid})
+
+            # TODO esto es solo para probar esta consulta, al hacer que todo
+            # vaya bien podemos borrar el transport
+            response, _transport = rec.company_id._l10n_uy_ucfe_inbox_operation(
+                '360', {'Uuid': rec.l10n_uy_cfe_uuid,}, return_transport=True)
+
+            # TODO delete
+            import pprint
+            print('----  360 request')
+            pprint.pprint(_transport.xml_request)
+            print('----  360 response')
+            pprint.pprint(_transport.xml_response)
+
             values = {
                 'l10n_uy_ucfe_state': response.Resp.CodRta,
                 'l10n_uy_ucfe_msg': response.Resp.MensajeRta,
