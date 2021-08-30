@@ -22,13 +22,22 @@ class AccountMove(models.Model):
     l10n_uy_cfe_state = fields.Selection([
         ('not_apply', 'Not apply - Not a CFE'),
         ('draft_cfe', 'Draft CFE'),
+
+        # DGI states
         ('received', 'Waiting response from DGI'),
+        ('accepted', 'CFE Accepted by DGI'),
+        ('rejected', 'CFE Rejected by DGI'),
+
+        # TODO not sure I think we will remove this
         ('ui_indexada', 'CFE Not sent, amount bellow 10.000 UI'),
+
+        # UCFE error states
         ('xml_error', 'ERROR: CFE XML not valid'),
         ('connection_error', 'ERROR: Connection to UCFE'),
-        ('accepted', 'CFE Accepted by DGI'),
-        ('rejected', 'ERROR: CFE Rejected by DGI')],
-        string='CFE Status', copy=False, readonly=True, track_visibility='onchange')
+        ('ucfe_error', 'ERROR: Related to UCFE'),
+        ],
+        string='CFE Status', copy=False, readonly=True, track_visibility='onchange',
+        help="If 'ERROR: Related to UCFE' please check details of 'UCFE State'")
 
     l10n_uy_journal_type = fields.Selection(related='journal_id.l10n_uy_type')
 
@@ -138,13 +147,15 @@ class AccountMove(models.Model):
     # Buttons
 
     def action_invoice_cancel(self):
-        for record in self.filtered(lambda x: x.company_id.country_id.code == 'UY'):
+        # TODO funcionando para facturas de clientes, ver para facturas de proveedor
+        uy_sale_docs = self.filtered(lambda x: x.company_id.country_id.code == 'UY' and x.is_sale_document(include_receipts=True))
+        for record in uy_sale_docs:
             # The move cannot be modified once has been sent to UCFE
             if record.l10n_uy_ucfe_state in record._uy_invoice_already_sent():
                 raise UserError(_('This %s has been already sent to UCFE. It cannot be cancelled. '
                                   'You can only click Consult DGI State to update.') % record.l10n_latam_document_type_id.name)
             # The move cannot be modified once the CFE has been accepted by the DGI
-            elif record.l10n_uy_cfe_dgi_state == '00':
+            elif record.l10n_uy_ucfe_state == '00':
                 raise UserError(_('This %s is accepted by DGI. It cannot be cancelled. '
                                   'Instead you should revert it.') % record.l10n_latam_document_type_id.name)
             # record.l10n_cl_dte_status = 'cancelled'
@@ -218,27 +229,18 @@ class AccountMove(models.Model):
 
     def action_l10n_uy_get_dgi_state(self):
         """ 360: Consulta de estado de CFE: estado del comprobante en DGI,
-        Toma solo aquellos comprobantes que estan en esperado respuesta de DGI y consulta en el UFCE si DGI devolvio
-        respuesta acerca del comprobante """
+        Toma solo aquellos comprobantes que están en esperado respuesta de DGI y consulta en el UFCE si DGI devolvio
+        respuesta acerca del comprobante
+
+        TODO esto solo aplica a facturas de clientes
+
+        NOTA: Esto aplica solo para comprobantes emitidos, es distinta la consulta para comprobantes recibidos"""
         for rec in self.filtered(lambda x: x.l10n_uy_cfe_state == 'received'):
-
-            # TODO esto es solo para probar esta consulta, al hacer que todo
-            # vaya bien podemos borrar el transport
-            response, _transport = rec.company_id._l10n_uy_ucfe_inbox_operation(
-                '360', {'Uuid': rec.l10n_uy_cfe_uuid,}, return_transport=True)
-
-            # TODO delete
-            import pprint
-            print('----  360 request')
-            pprint.pprint(_transport.xml_request)
-            print('----  360 response')
-            pprint.pprint(_transport.xml_response)
-
+            response = rec.company_id._l10n_uy_ucfe_inbox_operation('360', {'Uuid': rec.l10n_uy_cfe_uuid})
             values = {
                 'l10n_uy_ucfe_state': response.Resp.CodRta,
                 'l10n_uy_ucfe_msg': response.Resp.MensajeRta,
                 'l10n_uy_ucfe_notif': response.Resp.TipoNotificacion,
-                'l10n_uy_cfe_dgi_state': response.Resp.EstadoEnDgiCfeRecibido,
             }
             values = dict([(key, val) for key, val in values.items() if val])
             rec.write(values)
@@ -261,30 +263,38 @@ class AccountMove(models.Model):
 
     def _update_l10n_uy_cfe_state(self):
         """ Update the CFE State show to the user depending of the information of the UFCE and DGI State return from
-        third party service """
-        if self.l10n_uy_cfe_dgi_state:
-            if self.l10n_uy_cfe_dgi_state == '00':
-                self.l10n_uy_cfe_state = 'accepted'
-            elif self.l10n_uy_cfe_dgi_state ==  '05':
-                self.l10n_uy_cfe_state = 'rejected'
-        else:
-            if self.l10n_uy_ucfe_state:
-                if self.l10n_uy_ucfe_state == '00':
-                    if self._amount_total_company_currency() < self._l10n_uy_get_min_by_unidad_indexada():
-                        self.l10n_uy_cfe_state = 'ui_indexada'
-                if self.l10n_uy_ucfe_state == '11':
-                    self.l10n_uy_cfe_state = 'received'
-                elif self.l10n_uy_ucfe_state == '31':
-                    self.l10n_uy_cfe_state = 'xml_error'
-                elif self.l10n_uy_ucfe_state in ['01', '03', '12', '30', '89', '96', '99']:
-                    # TODO KZ not sure about 30, review, 01 should be apart?
-                    self.l10n_uy_cfe_state = 'connection_error'
+        third party service.
 
-        # TODO KZ implement this cases
-        # l10n_uy_cfe_dgi_state = ('06', 'observado por DGI'),
-        # l10n_uy_cfe_dgi_state = ('11', 'UCFE no pudo consultar a DGI (puede intentar volver a ejecutar la consulta con la función 650 – Consulta a DGI por CFE recibido)'),
-        # l10n_uy_ucfe_state = ('01', 'Petición denegada'),
-        # what happen when has been cancel?
+        * Customer Invoice (l10n_uy_ucfe_state = CodRta)
+        * Bill (l10n_uy_cfe_dgi_state = EstadoEnDgiCfeRecibido) this last one not implemented yet
+
+        More important:
+            00 es que el comprobante fue aceptado,
+            11 es "Esperando respuesta de DGI",
+            01 es rechazado por UCFE
+            05 rechazado por DGI."""
+        self.ensure_one()
+        ucfe_state = self.l10n_uy_ucfe_state
+        if not ucfe_state:
+            return
+
+        match = {
+            '00': 'accepted',
+            '11': 'received',
+            '01': 'ucfe_error',
+            '05': 'rejected',
+            '03': 'ucfe_error',
+            '89': 'ucfe_error',
+
+            '12': 'ucfe_error',
+            '94': 'ucfe_error',
+            '99': 'ucfe_error',
+
+            '30': 'ucfe_error',
+            '31': 'xml_error',
+            '96': 'ucfe_error',
+        }
+        self.l10n_uy_cfe_state = match.get(ucfe_state)
 
     def action_l10n_uy_validate_cfe(self):
         """ Be able to validate a cfe """
@@ -379,7 +389,7 @@ class AccountMove(models.Model):
             inv.l10n_uy_dgi_xml_request = transport.xml_request
             inv.l10n_uy_cfe_uuid = response.Resp.Uuid
             inv.l10n_uy_ucfe_state = response.Resp.CodRta
-            inv.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido
+            # inv.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido
             inv._update_l10n_uy_cfe_state()
 
             inv.l10n_uy_ucfe_msg = response.Resp.MensajeRta
