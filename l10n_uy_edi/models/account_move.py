@@ -52,7 +52,7 @@ class AccountMove(models.Model):
         ('20', '20 - aceptado por DGI pero la consulta QR indica que hay diferencias con el CFE recibido'),
         ('25', '25 - rechazado por DGI pero la consulta QR indica que hay diferencias con el CFE recibido'),
         ('26', '26 - observado por DGI pero la consulta QR indica que hay diferencias con el CFE recibido'),
-    ], 'Technical Field: CFE DGI State from UFCE', copy=False, readonly=True, track_visibility='onchange')  # EstadoEnDgiCfeRecibido
+    ], 'Vendor Bill DGI State', copy=False, readonly=True, track_visibility='onchange')  # EstadoEnDgiCfeRecibido
 
     l10n_uy_ucfe_state = fields.Selection([
         ('00', '00 - Petición aceptada y procesada'),
@@ -184,6 +184,13 @@ class AccountMove(models.Model):
             # TODO possible we are missing electronic documents here, review the
             int(x.l10n_latam_document_type_id.code) > 100)
 
+        # If the invoice was previosly validated in Uruware and need to be link to Odoo we check that the
+        # l10n_uy_cfe_uuid has been manually set and we consult to get the invoice information from Uruware
+        pre_validated_in_uruware = uy_invoices.filtered(lambda x: x.l10n_uy_cfe_uuid and not x.l10n_uy_cfe_file)
+        if pre_validated_in_uruware:
+            pre_validated_in_uruware.action_l10n_uy_get_uruware_inv()
+            uy_invoices = uy_invoices - pre_validated_in_uruware
+
         if not uy_invoices:
             return res
 
@@ -227,12 +234,33 @@ class AccountMove(models.Model):
 
         return res
 
+    def action_l10n_uy_get_uruware_inv(self):
+        """ 360: Consulta de estado de CFE: estado del comprobante en DGI,
+        Nos permite extraer la info del comprobante que fue emitido desde uruware y que no esta en Odoo para asi
+        quede la info de numero de documento tipo de documento estado del comprobante"""
+        uy_docs = self.env['l10n_latam.document.type'].search([('country_id.code', '=', 'UY')])
+        for inv in self:
+            # TODO en este momento estamos usando este 360 porque es el que tenemos pero estamos esperando respuesta de
+            # soporte uruware a ver como podemos extraer mas información y poder validarla.
+            response = inv.company_id._l10n_uy_ucfe_inbox_operation('360', {'Uuid': inv.l10n_uy_cfe_uuid})
+            inv.write({
+                'l10n_latam_document_number': response.Resp.Serie + '%07d' % int(response.Resp.NumeroCfe),
+                'l10n_latam_document_type_id': uy_docs.filtered(lambda x: x.code == response.Resp.TipoCfe).id,
+                'l10n_uy_ucfe_state': response.Resp.CodRta,
+                'l10n_uy_ucfe_msg': response.Resp.MensajeRta,
+            })
+            inv._update_l10n_uy_cfe_state()
+            # TODO Improve add logic:
+            # 1. add information to the cfe xml
+            # 2. cfe another data
+            # 3. validation that is the same invoice
+
     def action_l10n_uy_get_dgi_state(self):
         """ 360: Consulta de estado de CFE: estado del comprobante en DGI,
         Toma solo aquellos comprobantes que están en esperado respuesta de DGI y consulta en el UFCE si DGI devolvio
         respuesta acerca del comprobante
 
-        TODO esto solo aplica a facturas de clientes
+        TODO esto solo aplica a facturas de clientes, implementar facturas de proveedor 650
 
         NOTA: Esto aplica solo para comprobantes emitidos, es distinta la consulta para comprobantes recibidos"""
         for rec in self.filtered(lambda x: x.l10n_uy_cfe_state == 'received'):

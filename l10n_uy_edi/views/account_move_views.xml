@@ -39,6 +39,7 @@
                                         <field name="l10n_uy_ucfe_notif"/>
                                         <field name="l10n_uy_cfe_partner_status"/>
                                         <field name="l10n_uy_cfe_uuid"/>
+                                        <button name="action_l10n_uy_get_uruware_inv" type="object" string="Get Uruware Invoice" class="oe_inline oe_link"/>
                                         <field name="l10n_uy_cfe_file"/>
                                     </group>
                                     <group string="DGI">
