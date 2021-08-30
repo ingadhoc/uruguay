@@ -286,7 +286,7 @@ msgstr "Estado Acetado del CFE"
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__accepted
 msgid "CFE Accepted by DGI"
-msgstr "CFE Aceotado por la DGI"
+msgstr "CFE Aceptado por la DGI"
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__ui_indexada
