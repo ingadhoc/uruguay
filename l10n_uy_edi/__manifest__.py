@@ -7,7 +7,7 @@
     'author': 'ADHOC SA',
     'category': 'Localization',
     'license': 'AGPL-3',
-    'version': '13.0.1.2.0',
+    'version': '13.0.1.3.0',
     'depends': [
         'l10n_uy',
         'server_mode',  # TODO this need to be removed maybe when we have saas_client_l10n_uy?
