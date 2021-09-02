@@ -66,7 +66,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         domain = super()._get_l10n_latam_documents_domain()
         if self.journal_id.company_id.country_id.code == 'UY':
-            codes = self.journal_id._get_journal_codes()
+            codes = self.journal_id._l10n_uy_get_journal_codes()
             if codes:
                 domain.extend([('code', 'in', codes), ('active', '=', True)])
         print(" --- l10n_uy domain %s" % domain)

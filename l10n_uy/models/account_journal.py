@@ -28,21 +28,19 @@ class AccountJournal(models.Model):
         self.l10n_uy_share_sequences = bool(
             self.company_id.country_id.code == 'UY' and self.l10n_uy_type in ['preprinted', 'contingency'])
 
-    def _get_journal_codes(self):
+    # TODO similar to _get_journal_codes() in l10n_ar, see if we can merge it in a future
+    def _l10n_uy_get_journal_codes(self):
         """ return list of the available document type codes for uruguayan sales journals"""
         self.ensure_one()
-        if self.company_id.country_id.code != 'UY':
-            return super()._get_journal_codes()
-
         if self.type != 'sale':
             return []
 
         if self.l10n_uy_type == 'preprinted':
-            available_types = [000]
+            available_types = ['0']
         elif self.l10n_uy_type == 'electronic':
-            available_types = [101, 102, 103, 111, 112, 113, 121, 122, 123]
+            available_types = ['101', '102', '103', '111', '112', '113', '121', '122', '123']
         elif self.l10n_uy_type == 'contingency':
-            available_types = [201, 211, 212, 213, 221, 222, 223]
+            available_types = ['201', '211', '212', '213', '221', '222', '223']
         return available_types
 
     @api.model
@@ -82,7 +80,7 @@ class AccountJournal(models.Model):
         # TODO KZ improve maybe skip this and use _get_l10n_latam_documents_domain direclty?
         internal_types = ['invoice', 'debit_note', 'credit_note']
         domain = [('country_id.code', '=', 'UY'), ('internal_type', 'in', internal_types)]
-        codes = self._get_journal_codes()
+        codes = self._l10n_uy_get_journal_codes()
         if codes:
             domain.append(('code', 'in', codes))
         documents = self.env['l10n_latam.document.type'].search(domain)
