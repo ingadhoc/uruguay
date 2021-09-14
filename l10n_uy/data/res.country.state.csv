@@ -1,0 +1,20 @@
+id,country_id:id,name,code
+state_uy_01,base.uy,Artigas,UY-AR
+state_uy_02,base.uy,Canelones,UY-CA
+state_uy_03,base.uy,Cerro Largo,UY-CL
+state_uy_04,base.uy,Colonia,UY-CO
+state_uy_05,base.uy,Durazno,UY-DU
+state_uy_06,base.uy,Flores,UY-FS
+state_uy_07,base.uy,Florida,UY-FD
+state_uy_08,base.uy,Lavalleja,UY-LA
+state_uy_09,base.uy,Maldonado,UY-MA
+state_uy_10,base.uy,Montevideo,UY-MO
+state_uy_11,base.uy,Paysandú,UY-PA
+state_uy_12,base.uy,Río Negro,UY-RN
+state_uy_13,base.uy,Rivera,UY-RV
+state_uy_14,base.uy,Rocha,UY-RO
+state_uy_15,base.uy,Salto,UY-SA
+state_uy_16,base.uy,San José,UY-SJ
+state_uy_17,base.uy,Soriano,UY-SO
+state_uy_18,base.uy,Tacuarembó,UY-TA
+state_uy_19,base.uy,Treinta y Tres,UY-TT
