@@ -1,0 +1,1 @@
+ingadhoc-odoo-saas https://github.com/ingadhoc/odoo-saas.git
