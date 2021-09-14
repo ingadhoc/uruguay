@@ -20,28 +20,31 @@ class AccountMove(models.Model):
             lambda x: x.company_id.country_id.code == 'UY' and x.journal_id.type in ['sale', 'purchase'] and
             x.l10n_latam_use_documents and not x.is_invoice())
         if not_invoices:
-            raise ValidationError(_("The selected Journal can't be used in this transaction, please select one that doesn't use documents as these are just for Invoices."))
+            raise ValidationError(_(
+                "The selected Journal can't be used in this transaction, please select one that doesn't use documents"
+                " as these are just for Invoices."))
 
     def _check_uruguayan_invoices(self):
-        uruguayan_invoices = self.filtered(lambda x: (x.company_id.country_id.code == 'UY' and x.l10n_latam_use_documents))
-        if not uruguayan_invoices:
+        uy_invs = self.filtered(lambda x: (x.company_id.country_id.code == 'UY' and x.l10n_latam_use_documents))
+        if not uy_invs:
             return True
 
         uruguayan_vat_taxes = self.env.ref('l10n_uy.tax_group_vat_22') + self.env.ref('l10n_uy.tax_group_vat_10') \
             + self.env.ref('l10n_uy.tax_group_vat_exempt')
 
         # Check that we do not send any tax in exportation invoices
-        expo_cfes = uruguayan_invoices.filtered(
+        expo_cfes = uy_invs.filtered(
             lambda x: int(x.l10n_latam_document_type_id.code) in [121, 122, 123])
         for inv_line in expo_cfes.mapped('invoice_line_ids'):
             vat_taxes = inv_line.tax_ids.filtered(lambda x: x.tax_group_id in uruguayan_vat_taxes)
             if len(vat_taxes) != 0:
                 raise ValidationError(_(
                     'Should not be any VAT tax in the exportation cfe line "%s" (Id Invoice: %s)' % (
-                        inv_line.product_id.name, inv_line.invoice_id.id)))
+                        inv_line.product_id.name, inv_line.move_id.id)))
 
         # We check that there is one and only one vat tax per line
-        for line in (uruguayan_invoices - expo_cfes).mapped('invoice_line_ids').filtered(lambda x: x.display_type not in ('line_section', 'line_note')):
+        for line in (uy_invs - expo_cfes).mapped('invoice_line_ids').filtered(
+                lambda x: x.display_type not in ('line_section', 'line_note')):
             vat_taxes = line.tax_ids.filtered(lambda x: x.tax_group_id in uruguayan_vat_taxes)
             if len(vat_taxes) != 1:
                 raise ValidationError(_(
@@ -69,9 +72,10 @@ class AccountMove(models.Model):
         return domain
 
     def unlink(self):
-        """ When using documents, on vendor bills the document_number is set manually by the number given from the vendor,
-        the odoo sequence is not used. In this case We allow to delete vendor bills with document_number/move_name """
-        self.filtered(lambda x: x.type in x.get_purchase_types() and x.state in ('draft', 'cancel') and x.l10n_latam_use_documents).write({'name': '/'})
+        """ When using documents on vendor bills the document_number is set manually by the number given from the vendor
+        so the odoo sequence is not used. In this case we allow to delete vendor bills with document_number/name """
+        self.filtered(lambda x: x.type in x.get_purchase_types() and x.state in ('draft', 'cancel') and
+                      x.l10n_latam_use_documents).write({'name': '/'})
         return super().unlink()
 
     def post(self):
@@ -102,8 +106,8 @@ class AccountMove(models.Model):
     #             available_types = [000, 101, 102, 103, 131, 132, 133, 201, 202, 203, 231, 232, 233]
     #         elif commercial_partner.l10n_latam_identification_type_id in partner_type['company']:
     #             # e-invoices docs
-    #             available_types = [
-    #                 000, 111, 112, 113, 121, 122, 123, 141, 142, 143, 201, 211, 212, 213, 221, 222, 223, 241, 242, 243]
+    #             available_types = [000, 111, 112, 113, 121, 122, 123, 141, 142, 143, 201, 211, 212, 213, 221, 222,
+    #                                223, 241, 242, 243]
     #         else:
     #             res['available_journal_document_types'] = False
     #             res['journal_document_type'] = False
