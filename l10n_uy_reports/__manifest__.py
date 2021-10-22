@@ -21,5 +21,5 @@ Also add a VAT summary report that is used to analyze invoicing
     ],
     'demo': [],
     'auto_install': True,
-    'installable': True,
+    'installable': False,
 }

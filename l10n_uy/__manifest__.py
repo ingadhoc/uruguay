@@ -37,5 +37,5 @@
         'demo/account_chart_template_demo.xml',
         'demo/res_partner_demo.xml',
     ],
-    'installable': True,
+    'installable': False,
 }
