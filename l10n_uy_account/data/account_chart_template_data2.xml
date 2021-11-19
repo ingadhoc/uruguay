@@ -16,7 +16,7 @@
 
     <data noupdate="1">
         <function model="account.chart.template" name="try_loading">
-            <value eval="[ref('l10n_uy.l10n_uy_chart_template')]"/>
+            <value eval="[ref('l10n_uy_account.l10n_uy_chart_template')]"/>
         </function>
     </data>
 
