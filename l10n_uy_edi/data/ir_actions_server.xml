@@ -7,5 +7,5 @@
         <field name="state">code</field>
         <field name="code">model.l10n_uy_get_ucfe_notif()</field>
     </record>
-    <menuitem id="menu_get_ucfe_notif" name="Consult UCFE Notifications" parent="l10n_uy.menu_dgi_config" action="action_get_ucfe_notif" sequence="10"/>
+    <menuitem id="menu_get_ucfe_notif" name="Consult UCFE Notifications" parent="l10n_uy_account.menu_dgi_config" action="action_get_ucfe_notif" sequence="10"/>
 </odoo>
