@@ -22,7 +22,7 @@
 
     <function model="res.users" name="write">
         <value eval="[ref('base.user_admin'), ref('base.user_root'), ref('base.user_demo')]"/>
-        <value eval="{'company_ids': [(4, ref('l10n_uy.company_uy'))], 'company_id': ref('l10n_uy.company_uy')}"/>
+        <value eval="{'company_ids': [(4, ref('l10n_uy_account.company_uy'))], 'company_id': ref('l10n_uy_account.company_uy')}"/>
     </function>
 
 </odoo>
