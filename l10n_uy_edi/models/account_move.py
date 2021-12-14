@@ -2,7 +2,6 @@
 from odoo import fields, models, _, api
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_repr
-from odoo.addons.server_mode.mode import get_mode
 from . import ucfe_errors
 from datetime import datetime
 from html import unescape
@@ -194,16 +193,6 @@ class AccountMove(models.Model):
         if not uy_invoices:
             return res
 
-        for company in uy_invoices.mapped('company_id'):
-            # If we are in a testing/demo/backup database do not let to validate invoices in production ucfe env
-            if get_mode() and company.l10n_uy_ucfe_env == 'production':
-                raise UserError(_('You need to change the ucfe environment to testing in %s company if you want'
-                                  ' to continue') % (company.name))
-            # If we are in a production database only let to validate invoices using production ucfe env
-            elif not get_mode() and company.l10n_uy_ucfe_env != 'production':
-                raise UserError(_('You are in production but not using ucfe production environment for %s compamy'
-                                  ' please change it') % (company.name))
-
         # Send invoices to DGI and get the return info
         for inv in uy_invoices:
 
@@ -215,9 +204,7 @@ class AccountMove(models.Model):
                     1.0, inv.company_id.currency_id, inv.company_id, inv.invoice_date or fields.Date.today(), round=False)
             inv.l10n_uy_currency_rate = currency_rate
 
-            # If we are on testing environment and we don't have ucfe configuration we validate only locally.
-            # This is useful when duplicating the production database for training purpose or others
-            if not inv.company_id.sudo()._is_connection_info_complete(raise_exception=False):
+            if inv._is_dummy_dgi_validation():
                 inv._dummy_dgi_validation()
                 continue
 
@@ -233,6 +220,14 @@ class AccountMove(models.Model):
                 inv.button_draft()
 
         return res
+
+    def _is_dummy_dgi_validation(self):
+        # If we are on testing environment and we don't have ucfe configuration we validate only locally.
+        # This is useful when duplicating the production database for training purpose or others
+        self.ensure_one()
+        return self.company_id._uy_get_environment_type() == 'testing' and \
+            not self.company_id.sudo()._is_connection_info_complete(raise_exception=False)
+
 
     def action_l10n_uy_get_uruware_inv(self):
         """ 360: Consulta de estado de CFE: estado del comprobante en DGI,
