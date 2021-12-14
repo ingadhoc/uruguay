@@ -6,7 +6,7 @@
     <record id="action_l10n_uy_sales_vat_book" model="ir.actions.client">
         <field name="name">Sales VAT book</field>
         <field name="tag">account_report</field>
-        <field name="context" eval="{'model': 'l10n_uy.vat.book', 'journal_type': 'sale'}"/>
+        <field name="context" eval="{'model': 'l10n_uy_account.vat.book', 'journal_type': 'sale'}"/>
     </record>
 
     <menuitem
@@ -17,7 +17,7 @@
     <record id="action_l10n_uy_purchases_vat_book" model="ir.actions.client">
         <field name="name">Purchases VAT book</field>
         <field name="tag">account_report</field>
-        <field name="context" eval="{'model': 'l10n_uy.vat.book', 'journal_type': 'purchase'}"/>
+        <field name="context" eval="{'model': 'l10n_uy_account.vat.book', 'journal_type': 'purchase'}"/>
     </record>
 
     <menuitem
