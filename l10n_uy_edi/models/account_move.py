@@ -520,7 +520,7 @@ class AccountMove(models.Model):
 
     @api.model
     def _l10n_uy_get_min_by_unidad_indexada(self):
-        return self.env.ref('l10n_uy.UYI').rate * 10000
+        return self.env.ref('l10n_uy_account.UYI').rate * 10000
 
     def is_expo_cfe(self):
         """ True of False in the current invoice is an exporation invoice type """
