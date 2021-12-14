@@ -8,7 +8,7 @@
         <field name="sequence">2</field>
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
-        <field name="tax_group_id" ref="l10n_uy.tax_group_vat_exempt"/>
+        <field name="tax_group_id" ref="l10n_uy_account.tax_group_vat_exempt"/>
         <field name="type_tax_use">sale</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
@@ -43,7 +43,7 @@
         <field name="sequence">2</field>
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
-        <field name="tax_group_id" ref="l10n_uy.tax_group_vat_exempt"/>
+        <field name="tax_group_id" ref="l10n_uy_account.tax_group_vat_exempt"/>
         <field name="type_tax_use">purchase</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
@@ -78,7 +78,7 @@
         <field name="sequence">2</field>
         <field eval="10" name="amount"/>
         <field name="amount_type">percent</field>
-        <field name="tax_group_id" ref="l10n_uy.tax_group_vat_10"/>
+        <field name="tax_group_id" ref="l10n_uy_account.tax_group_vat_10"/>
         <field name="type_tax_use">sale</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
@@ -113,7 +113,7 @@
         <field name="sequence">2</field>
         <field eval="10" name="amount"/>
         <field name="amount_type">percent</field>
-        <field name="tax_group_id" ref="l10n_uy.tax_group_vat_10"/>
+        <field name="tax_group_id" ref="l10n_uy_account.tax_group_vat_10"/>
         <field name="type_tax_use">purchase</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
@@ -148,7 +148,7 @@
         <field name="sequence">1</field>
         <field eval="22" name="amount"/>
         <field name="amount_type">percent</field>
-        <field name="tax_group_id" ref="l10n_uy.tax_group_vat_22"/>
+        <field name="tax_group_id" ref="l10n_uy_account.tax_group_vat_22"/>
         <field name="type_tax_use">sale</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
@@ -183,7 +183,7 @@
         <field name="sequence">1</field>
         <field eval="22" name="amount"/>
         <field name="amount_type">percent</field>
-        <field name="tax_group_id" ref="l10n_uy.tax_group_vat_22"/>
+        <field name="tax_group_id" ref="l10n_uy_account.tax_group_vat_22"/>
         <field name="type_tax_use">purchase</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {

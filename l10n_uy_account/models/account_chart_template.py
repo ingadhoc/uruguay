@@ -22,11 +22,11 @@ class AccountChartTemplate(models.Model):
         self.ensure_one()
         res = super()._load(sale_tax_rate, purchase_tax_rate, company)
 
-        if self == self.env.ref('l10n_uy.l10n_uy_chart_template'):
+        if self == self.env.ref('l10n_uy_account.l10n_uy_chart_template'):
             company.write({
                 'country_id': self.env.ref('base.uy').id,
             })
             # set RUT as identification type (which is the uruguayan vat) in the created company partner instead of
             # the default VAT type.
-            company.partner_id.l10n_latam_identification_type_id = self.env.ref('l10n_uy.it_rut')
+            company.partner_id.l10n_latam_identification_type_id = self.env.ref('l10n_uy_account.it_rut')
         return res
