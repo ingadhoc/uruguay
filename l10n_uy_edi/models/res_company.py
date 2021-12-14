@@ -87,7 +87,7 @@ class ResCompany(models.Model):
             return False
         return True
 
-    def _get_client(self, url, return_transport=False):
+    def _uy_get_client(self, url, return_transport=False):
         """ Get zeep client to connect to the webservice """
         self.ensure_one()
         self._is_connection_info_complete()
@@ -126,7 +126,7 @@ class ResCompany(models.Model):
         if extra_req:
             data.get('Req').update(extra_req)
 
-        res = company._get_client(company.l10n_uy_ucfe_inbox_url, return_transport=return_transport)
+        res = company._uy_get_client(company.l10n_uy_ucfe_inbox_url, return_transport=return_transport)
         client = res[0] if isinstance(res, tuple) else res
         transport = res[1] if isinstance(res, tuple) else False
         try:
@@ -139,11 +139,19 @@ class ResCompany(models.Model):
     def _l10n_uy_ucfe_query(self, method, req_data={}, return_transport=False):
         """ Call UCFE query webservices """
         company = self.sudo()
-        res = company._get_client(company.l10n_uy_ucfe_query_url, return_transport=return_transport)
+        res = company._uy_get_client(company.l10n_uy_ucfe_query_url, return_transport=return_transport)
         client = res[0] if isinstance(res, tuple) else res
         transport = res[1] if isinstance(res, tuple) else False
         response = client.service[method](**req_data)
         return (response, transport) if return_transport else response
+
+    def _uy_get_environment_type(self):
+        """ This method is used to return the environment type of the company (testing or production) and will raise an
+        exception when it has not been defined yet """
+        self.ensure_one()
+        if not self.l10n_uy_ucfe_env:
+            raise UserError(_('Uruware/DGI environment not configured for company "%s", please check accounting settings') % (self.name))
+        return self.l10n_uy_ucfe_env
 
     # TODO
     # Servicio para listados con autenticación en los cabezales SOAP

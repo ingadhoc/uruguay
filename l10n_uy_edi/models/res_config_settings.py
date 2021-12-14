@@ -38,7 +38,7 @@ class ResConfigSettings(models.TransientModel):
 
         raise UserError(_('Connection problems, this is what we get %s') % response)
 
-    @api.onchange('l10n_uy_ucfe_env')
+    @api.onchange('l10n_uy_ucfe_env', 'l10n_uy_ucfe_prod_env', 'l10n_uy_ucfe_test_env')
     def onchange_ufce_env(self):
         config = self.l10n_uy_ucfe_prod_env if self.l10n_uy_ucfe_env == 'production' \
             else self.l10n_uy_ucfe_test_env
@@ -46,14 +46,19 @@ class ResConfigSettings(models.TransientModel):
 
         # If not environment selected then clean the ucfe parameters
         if not self.l10n_uy_ucfe_env:
-            ucfe_fields = ['l10n_uy_ucfe_user', 'l10n_uy_ucfe_password', 'l10n_uy_ucfe_commerce_code', 'l10n_uy_ucfe_terminal_code', 'l10n_uy_ucfe_inbox_url', 'l10n_uy_ucfe_query_url']
-            for item in ucfe_fields:
-                self[item] = False
+            self.clean_ucfe_config_values()
 
         # If environment set but not defined keys request to configure the ucfe data
-        if self.l10n_uy_ucfe_env and not config:
-            raise UserError(_('There is not available configuration to set. Please contact your Odoo provider'))
+        # clean up the config values
+        if not config:
+            self.clean_ucfe_config_values()
+            return
 
-        # fild the ucfe fields with the date of the selected environment
+        # field the ucfe fields with the date of the selected environment
         for ufce_field, value in config.items():
             self[ufce_field] = value
+
+    def clean_ucfe_config_values(self):
+        ucfe_fields = ['l10n_uy_ucfe_user', 'l10n_uy_ucfe_password', 'l10n_uy_ucfe_commerce_code', 'l10n_uy_ucfe_terminal_code', 'l10n_uy_ucfe_inbox_url', 'l10n_uy_ucfe_query_url']
+        for item in ucfe_fields:
+            self[item] = False
