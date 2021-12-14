@@ -5,7 +5,7 @@ from odoo.tools.misc import format_date
 
 class L10nUYVatBook(models.AbstractModel):
 
-    _name = "l10n_uy.vat.book"
+    _name = "l10n_uy_account.vat.book"
     _inherit = "account.report"
     _description = "Uruguayan VAT Book"
 
