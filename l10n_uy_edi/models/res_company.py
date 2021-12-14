@@ -129,10 +129,19 @@ class ResCompany(models.Model):
         res = company._uy_get_client(company.l10n_uy_ucfe_inbox_url, return_transport=return_transport)
         client = res[0] if isinstance(res, tuple) else res
         transport = res[1] if isinstance(res, tuple) else False
+        error_msg = False
         try:
             response = client.service.Invoke(data)
         except Exception as exp:
-            raise UserError(_('There was a problem with the connection, this is what we get: ') + repr(exp))
+            error_msg = repr(exp)
+
+        # Capture any other errors in the connection
+        if response.ErrorCode:
+            error_msg = 'Codigo: ' + str(response.ErrorCode)
+            if response.ErrorMessage:
+                error_msg += ' - ' + response.ErrorMessage
+        if error_msg:
+            raise UserError(_('There was a problem with the connection, this is what we get: ') + error_msg)
 
         return (response, transport) if return_transport else response
 
