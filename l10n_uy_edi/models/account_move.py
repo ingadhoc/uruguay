@@ -185,7 +185,7 @@ class AccountMove(models.Model):
 
         # If the invoice was previosly validated in Uruware and need to be link to Odoo we check that the
         # l10n_uy_cfe_uuid has been manually set and we consult to get the invoice information from Uruware
-        pre_validated_in_uruware = uy_invoices.filtered(lambda x: x.l10n_uy_cfe_uuid and not x.l10n_uy_cfe_file)
+        pre_validated_in_uruware = uy_invoices.filtered(lambda x: x.l10n_uy_cfe_uuid and not x.l10n_uy_cfe_file and not x.l10n_uy_cfe_state)
         if pre_validated_in_uruware:
             pre_validated_in_uruware.action_l10n_uy_get_uruware_inv()
             uy_invoices = uy_invoices - pre_validated_in_uruware
@@ -213,7 +213,7 @@ class AccountMove(models.Model):
 
             # This is necesary for fixing problems directly from odoo when we do not sent the proper information to
             # uruware.
-            if inv.l10n_uy_cfe_state in ['xml_error', 'connection_error']:
+            if 'error' in inv.l10n_uy_cfe_state:
                 # TODO need to do this in a better way.
                 inv.button_cancel()
                 inv.delete_number()
