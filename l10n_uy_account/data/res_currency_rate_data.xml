@@ -11,7 +11,7 @@
 
     <record id="rateUYI" model="res.currency.rate">
         <field name="rate">4.8836</field>
-        <field name="currency_id" ref="l10n_uy.UYI"/>
+        <field name="currency_id" ref="l10n_uy_account.UYI"/>
         <field eval="time.strftime('2021-03-28')" name="name"/>
     </record>
 

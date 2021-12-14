@@ -29,8 +29,8 @@ class AccountMove(models.Model):
         if not uy_invs:
             return True
 
-        uruguayan_vat_taxes = self.env.ref('l10n_uy.tax_group_vat_22') + self.env.ref('l10n_uy.tax_group_vat_10') \
-            + self.env.ref('l10n_uy.tax_group_vat_exempt')
+        uruguayan_vat_taxes = self.env.ref('l10n_uy_account.tax_group_vat_22') + self.env.ref('l10n_uy_account.tax_group_vat_10') \
+            + self.env.ref('l10n_uy_account.tax_group_vat_exempt')
 
         # Check that we do not send any tax in exportation invoices
         expo_cfes = uy_invs.filtered(
@@ -96,9 +96,9 @@ class AccountMove(models.Model):
     #         available_types = self.env['account.journal.document.type']
     #         commercial_partner = partner.commercial_partner_id
     #         partner_type = dict(
-    #             final_consumer=self.env.ref('l10n_uy.it_dni') + self.env.ref('l10n_uy.it_ci') +
-    #             self.env.ref('l10n_uy.it_pass') + self.env.ref('l10n_uy.it_other') + self.env.ref('l10n_uy.it_nie'),
-    #             company=self.env.ref('l10n_uy.it_rut') + self.env.ref('l10n_uy.it_nife'))
+    #             final_consumer=self.env.ref('l10n_uy_account.it_dni') + self.env.ref('l10n_uy_account.it_ci') +
+    #             self.env.ref('l10n_uy_account.it_pass') + self.env.ref('l10n_uy_account.it_other') + self.env.ref('l10n_uy_account.it_nie'),
+    #             company=self.env.ref('l10n_uy_account.it_rut') + self.env.ref('l10n_uy_account.it_nife'))
     #         # TODO we can improve this if we separete ticket and invoice tye documents, but we have a problem, need to
     #         # add a new seperation for dn and cn
     #         if commercial_partner.l10n_latam_identification_type_id in partner_type['final_consumer']:
