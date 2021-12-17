@@ -594,6 +594,10 @@ class AccountMove(models.Model):
         if self.fiscal_position_id and 'zona franca' in self.fiscal_position_id.name.lower():
             adenda += "\n\nVenta considerada Exportación de Servicios amparada en el Artículo 34 ° Numeral 11 del Decreto N° 220/998"
 
+        # Si el comprobante/factura tiene una referencia entonces agregarla para que se muestre al final de la Adenda
+        if self.ref:
+            adenda += "\n\nReferencia: %s" % self.ref
+
         if adenda:
             return {'Adenda': adenda}
         return {}
