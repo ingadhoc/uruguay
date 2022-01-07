@@ -24,7 +24,7 @@ dc_e_factura_venta_por_cuenta_ajena,141,e-Factura Venta por Cuenta Ajena,invoice
 dc_nota_de_credito_e_factura_venta_por_cuenta_ajena,142,Nota de credito e-Factura Venta por Cuenta Ajena,credit_note,NC e-Fac.Cta.Aj.,base.uy
 dc_nota_de_debito_e_factura_venta_por_cuenta_ajena,143,Nota de debito e-Factura Venta por Cuenta Ajena,debit_note,ND e-Fac.Cta.Aj.,base.uy
 dc_e_remito,181,E-REMITO,,E-Remito,base.uy
-dc_e_resguardo,182,E-RESGUARDO,,E-Resguardo,base.uy
+dc_e_resguardo,182,E-RESGUARDO,invoice,E-Resguardo,base.uy
 dc_e_ticket_cont,201,E-TICKET CONTINGENCIA,invoice,E-Tic.Cotg,base.uy
 dc_cn_e_ticket_cont,202,NOTA DE CREDITO DE E-TICKET CONTINGENCIA,credit_note,NC E-Tic.Cotg,base.uy
 dc_dn_e_ticket_cont,203,NOTA DE DEBITO DE E-TICKET CONTINGENCIA,debit_note,ND E-Tic.Cotg,base.uy
