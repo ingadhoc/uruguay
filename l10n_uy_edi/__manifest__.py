@@ -6,7 +6,7 @@
     'name': 'Uruguay Electronic Invoice',
     'author': 'ADHOC SA',
     'category': 'Localization',
-    'license': 'AGPL-3',
+    'license': 'LGPL-3',
     'version': '13.0.1.4.0',
     'depends': [
         'l10n_uy_account',
@@ -33,5 +33,5 @@
         'demo/res_company_demo.xml',
         'demo/account_journal_demo.xml',
     ],
-    'installable': True,
+    'installable': False,
 }

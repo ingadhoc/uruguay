@@ -3,6 +3,7 @@
     'name': 'Uruguay - Accounting Reports',
     'version': '13.0.1.1.0',
     'author': 'ADHOC SA',
+    'license': 'LGPL-3',
     'category': 'Localization',
     'summary': 'Reporting for Uruguayan Localization',
     'description': """
