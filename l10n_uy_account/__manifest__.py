@@ -6,13 +6,8 @@
     'name': 'Uruguay - Accounting',
     'author': 'ADHOC SA',
     'category': 'Localization',
-<<<<<<< HEAD
     'license': 'LGPL-3',
-    'version': '13.0.1.3.0',
-=======
-    'license': 'AGPL-3',
     'version': '13.0.1.4.0',
->>>>>>> 2beefde... temp
     'depends': [
         'l10n_latam_invoice_document',
         'l10n_latam_base',
