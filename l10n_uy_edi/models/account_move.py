@@ -114,10 +114,6 @@ class AccountMove(models.Model):
     l10n_uy_dgi_xml_response = fields.Text('DGI XML Response', copy=False, readonly=True, groups="base.group_system")
     l10n_uy_dgi_barcode = fields.Text('DGI Barcode', copy=False, readonly=True, groups="base.group_system")
 
-    # TODO integrate with l10n_ar_currency_rate in next versions
-    # solo mostrar en estado draft?
-    l10n_uy_currency_rate = fields.Float(copy=False, digits=(16, 4), string="Currency Rate")
-
     # TODO not sure this fields are going to make it
     l10n_uy_dgi_acceptation_status = fields.Selection([
         ('received', 'Received'),
