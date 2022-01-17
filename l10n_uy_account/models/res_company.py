@@ -9,7 +9,7 @@ class ResCompany(models.Model):
         "DGI House Code", default=1, help="This value is used when the CFE xml is sent (Field 47: Emisor/CdgDGISucur)")
 
     # TODO delete version 14.0 use directly country_code related field
-    l10n_uy_country_code = fields.Char(related='country_id.code', string='Country Code')
+    l10n_uy_country_code = fields.Char(related='country_id.code', string='Country Code (UY)')
 
     def _localization_use_documents(self):
         """ Uruguayan localization use documents """
