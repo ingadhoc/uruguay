@@ -7,7 +7,7 @@
     'author': 'ADHOC SA',
     'category': 'Localization',
     'license': 'AGPL-3',
-    'version': '13.0.1.4.0',
+    'version': '13.0.1.5.0',
     'depends': [
         'l10n_latam_invoice_document',
         'l10n_latam_base',
@@ -39,6 +39,8 @@
         'demo/res_company_demo.xml',
         'demo/account_chart_template_demo.xml',
         'demo/res_partner_demo.xml',
+        # restore
+        'demo/res_users_demo.xml',
     ],
     'installable': True,
 }

@@ -26,11 +26,11 @@ class AccountJournal(models.Model):
         " (when electronic is not working).\n")
 
 
-    l10n_uy_sequence_ids = fields.One2many('ir.sequence', 'l10n_latam_journal_id', string="Sequences")
+    l10n_uy_sequence_ids = fields.One2many('ir.sequence', 'l10n_latam_journal_id', string="Sequences (UY)")
     # TODO unify with l10n_ar_sequence_ids?. This one will not be needed in next version
 
     l10n_uy_share_sequences = fields.Boolean(
-        'Unified Book', help='Use same sequence for all the documents in this journal')
+        'Unified Book (UY)', help='Use same sequence for all the documents in this journal')
     # TODO unify with l10n_ar_share_sequences?
 
     @api.onchange('l10n_uy_type')
