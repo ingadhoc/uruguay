@@ -9,8 +9,9 @@ class AccountMove(models.Model):
     l10n_uy_payment_type = fields.Selection([('cash', 'Cash'), ('credit', 'Credit')], 'Payment Type', default='cash')
     # TODO this can be removed and integrated with the payment methods we already have in odoo
 
-    l10n_uy_currency_rate = fields.Float(copy=False, digits=(16, 4), string="Currency Rate")
+    l10n_uy_currency_rate = fields.Float(copy=False, digits=(16, 4), string="Currency Rate (UY)")
     # TODO integrate with l10n_ar_currency_rate in next versions
+    # solo mostrar en estado draft?
 
     @api.constrains('type', 'journal_id')
     def _l10n_uy_check_moves_use_documents(self):
