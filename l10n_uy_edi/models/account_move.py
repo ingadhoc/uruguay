@@ -2,6 +2,7 @@
 from odoo import fields, models, _, api
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_repr
+from odoo.tools.safe_eval import safe_eval
 from . import ucfe_errors
 from datetime import datetime
 from html import unescape
@@ -577,20 +578,18 @@ class AccountMove(models.Model):
             raise UserError('Este Comprobante aun no ha sido implementado')
 
     def _l10n_uy_get_cfe_adenda(self):
-        # TODO KZ crear parametros de sistema o campos en la compañi para definir las adendas
         self.ensure_one()
-        adenda = "Honorarios por servicios de diseño, desarrollo e implementación de soportes lógicos, exonerados de impuesto a la renta según lo dispuesto en el apartado ii del primer inciso del artículo 161 bis del Decreto 150/007 del 26 de abril de 2007."
-
-        # TODO KZ toca tambien ver cual es la zona franca uruguaya y configurarla en la data, que se auto detecte
-        if self.fiscal_position_id and 'zona franca' in self.fiscal_position_id.name.lower():
-            adenda += "\n\nVenta considerada Exportación de Servicios amparada en el Artículo 34 ° Numeral 11 del Decreto N° 220/998"
+        adenda = ''
+        for rec in self.company_id.l10n_uy_adenda_ids:
+            if safe_eval(rec.condition, {'inv': self}) == True:
+                adenda +=  "\n\n" + rec.content
 
         # Si el comprobante/factura tiene una referencia entonces agregarla para que se muestre al final de la Adenda
         if self.ref:
             adenda += "\n\nReferencia: %s" % self.ref
 
         if adenda:
-            return {'Adenda': adenda}
+            return {'Adenda': adenda.strip()}
         return {}
 
     def _l10n_uy_get_cfe_serie(self):
