@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="l10n_uy_adenda_view_tree" model="ir.ui.view">
+        <field name="name">l10n.uy.adenda.view.tree</field>
+        <field name="model">l10n.uy.adenda</field>
+        <field name="arch" type="xml">
+            <tree string="Adendas" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="content"/>
+                <field name="condition"/>
+                <field name="company_id"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_l10n_uy_adenda">
+        <field name="name">Adendas</field>
+        <field name="res_model">l10n.uy.adenda</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+
+    <menuitem action="action_l10n_uy_adenda" id="menu_l10n_uy_adenda" sequence="5" parent="menu_dgi_config"/>
+
+</odoo>
