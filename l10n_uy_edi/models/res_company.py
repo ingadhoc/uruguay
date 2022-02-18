@@ -135,13 +135,13 @@ class ResCompany(models.Model):
         except Exception as exp:
             error_msg = repr(exp)
 
+        if error_msg:
+            raise UserError(_('There was a problem with the connection, this is what we get: ') + error_msg)
         # Capture any other errors in the connection
         if response.ErrorCode:
             error_msg = 'Codigo: ' + str(response.ErrorCode)
             if response.ErrorMessage:
                 error_msg += ' - ' + response.ErrorMessage
-        if error_msg:
-            raise UserError(_('There was a problem with the connection, this is what we get: ') + error_msg)
 
         return (response, transport) if return_transport else response
 
