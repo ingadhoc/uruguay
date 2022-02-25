@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import _, api, models
 from odoo.tools.misc import format_date
-
+from odoo.exceptions import UserError
+import json
 
 class L10nUYVatBook(models.AbstractModel):
 
@@ -38,6 +39,12 @@ class L10nUYVatBook(models.AbstractModel):
             'journal_type': self.env.context.get('journal_type')
         })
         return super(L10nUYVatBook, self).print_xlsx(options)
+
+    def _get_reports_buttons(self):
+        """ Add buttons to print the txt files """
+        buttons = super()._get_reports_buttons()
+        buttons += [{'name': _('Form 2181 (TXT)'), 'sequence': 3, 'action': 'export_form_2181_txt', 'file_export_type': _('TXT')}]
+        return buttons
 
     @api.model
     def _get_report_name(self):
@@ -126,3 +133,15 @@ class L10nUYVatBook(models.AbstractModel):
             ],
         })
         return lines
+
+    def export_form_2181_txt(self, options):
+        """ Button that lets us export the Form 2181 TXT file """
+        options.update({'journal_type': self.env.context.get('journal_type', 'sale')})
+        return {
+            'type': 'ir_actions_account_report_download',
+            'data': {'model': self.env.context.get('model'),
+                     'options': json.dumps(options),
+                     'output_format': 'txt',
+                     'financial_id': self.env.context.get('id')
+                     }
+        }
