@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record model="ir.actions.act_window" id="action_form_report_wiz">
+        <field name="name">(UY) Form Declarations</field>
+        <field name="res_model">form.report.wiz</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id='form_report_wiz_menu' name='(UY) Form Declarations' action='action_form_report_wiz' parent='account_reports_uy_statements_menu' sequence="25"/>
+
+    <record model='ir.ui.view' id='view_form_report_wiz_form'>
+        <field name='name'>view.form.report.wiz.form</field>
+        <field name='model'>form.report.wiz</field>
+        <field name='arch' type='xml'>
+            <form string='Generate Files'>
+                <group attrs="{'readonly': [('res_file', '!=', False)]}">
+                    <group>
+                        <field name="company_id"/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="date_period"/>
+                        <field name="uy_form_id"/>
+                    </group>
+                </group>
+        		<field name="res_filename" invisible="1"/>
+        		<field name="res_file" readonly="1" filename="res_filename" attrs="{'readonly': [('res_file', '=', False)]}" />
+                <footer>
+                    <button string="Get Files" class="btn-primary" type="object" name="action_get_files"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>
