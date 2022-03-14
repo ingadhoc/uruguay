@@ -558,8 +558,8 @@ class AccountMove(models.Model):
             })
 
             if cond_e_fact_expo or cond_e_fact or cond_e_ticket:
-                if not all([self.partner_id.street, self.partner_id.city, self.partner_id.state_id, self.partner_id.country_id]):
-                    msg = _('Debe configurar la dirección, ciudad, provincia y pais del receptor')
+                if not all([self.partner_id.street, self.partner_id.city, self.partner_id.state_id, self.partner_id.country_id, self.partner_id.vat]):
+                    msg = _('Debe configurar la dirección, ciudad, provincia, pais del receptor y número de identificación')
                     if cond_e_ticket:
                         msg += '\n' + _('E-ticket needs these values because that total amount > 10.000 * Unidad Indexada Uruguaya')
                     raise UserError(msg)
