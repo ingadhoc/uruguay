@@ -29,6 +29,7 @@ class AccountMove(models.Model):
         uy_invs = self.filtered(lambda x: (x.company_id.country_id.code == 'UY' and x.l10n_latam_use_documents))
         if not uy_invs:
             return True
+        uy_invs.mapped('partner_id').check_vat()
 
         uruguayan_vat_taxes = self.env.ref('l10n_uy_account.tax_group_vat_22') + self.env.ref('l10n_uy_account.tax_group_vat_10') \
             + self.env.ref('l10n_uy_account.tax_group_vat_exempt')
