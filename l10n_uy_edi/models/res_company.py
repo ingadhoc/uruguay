@@ -81,7 +81,7 @@ class ResCompany(models.Model):
 
     def _is_connection_info_complete(self, raise_exception=True):
         """ Raise exception if not all the connection info is available """
-        if not all([self.l10n_uy_ucfe_user, self.l10n_uy_ucfe_password, self.l10n_uy_ucfe_commerce_code,
+        if not all([self.l10n_uy_ucfe_env, self.l10n_uy_ucfe_user, self.l10n_uy_ucfe_password, self.l10n_uy_ucfe_commerce_code,
                    self.l10n_uy_ucfe_terminal_code, self.l10n_uy_ucfe_inbox_url, self.l10n_uy_ucfe_query_url]):
             if raise_exception:
                 raise UserError(_('Please complete the ucfe data to test the connection'))
