@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_company_form" model="ir.ui.view">
+        <field name="name">res.company.form.inherit</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="model">res.company</field>
+        <field type="xml" name="arch">
+            <notebook>
+                <page string="DGI / Uruware" name="dgi_uruwuare" groups="base.group_no_one">
+                    <label for="l10n_uy_ucfe_prod_env"/>
+                    <field name="l10n_uy_ucfe_prod_env" widget="ace"/>
+                    <label for="l10n_uy_ucfe_test_env"/>
+                    <field name="l10n_uy_ucfe_test_env" widget="ace"/>
+                    <button name="action_update_from_config" string="Reload params from config" type="object"/>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+</odoo>
