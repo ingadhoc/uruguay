@@ -4,6 +4,7 @@ from odoo.exceptions import UserError
 from zeep import Client, transports
 from requests import Session
 from zeep.wsse.username import UsernameToken
+from odoo.tools.safe_eval import safe_eval
 from lxml import etree
 import logging
 import base64
@@ -161,6 +162,17 @@ class ResCompany(models.Model):
         if not self.l10n_uy_ucfe_env:
             raise UserError(_('Uruware/DGI environment not configured for company "%s", please check accounting settings') % (self.name))
         return self.l10n_uy_ucfe_env
+
+    def action_update_from_config(self):
+        self.ensure_one()
+        config = False
+        if self.l10n_uy_ucfe_env == 'production':
+            config = self.l10n_uy_ucfe_prod_env
+        elif self.l10n_uy_ucfe_env == 'testing':
+            config = self.l10n_uy_ucfe_test_env
+
+        config = safe_eval(config or "{}")
+        self.write(config)
 
     # TODO
     # Servicio para listados con autenticación en los cabezales SOAP
