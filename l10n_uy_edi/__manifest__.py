@@ -7,7 +7,7 @@
     'author': 'ADHOC SA',
     'category': 'Localization',
     'license': 'LGPL-3',
-    'version': '13.0.1.7.0',
+    'version': '13.0.1.8.0',
     'depends': [
         'l10n_uy_account',
         'account_debit_note',
@@ -20,6 +20,7 @@
     'data': [
         'views/res_config_settings_view.xml',
         'views/account_move_views.xml',
+        'views/res_company_views.xml',
         'wizards/res_partner_update_from_padron_uy_wizard_view.xml',
         'views/res_partner_view.xml',
         'data/cfe_template.xml',

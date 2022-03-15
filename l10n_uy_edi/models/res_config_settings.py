@@ -19,8 +19,6 @@ class ResConfigSettings(models.TransientModel):
     l10n_uy_ucfe_inbox_url = fields.Char(related='company_id.l10n_uy_ucfe_inbox_url', readonly=False)
     l10n_uy_ucfe_query_url = fields.Char(related='company_id.l10n_uy_ucfe_query_url', readonly=False)
     l10n_uy_ucfe_env = fields.Selection(related='company_id.l10n_uy_ucfe_env', readonly=False)
-    l10n_uy_ucfe_prod_env = fields.Text(related='company_id.l10n_uy_ucfe_prod_env', readonly=False)
-    l10n_uy_ucfe_test_env = fields.Text(related='company_id.l10n_uy_ucfe_test_env', readonly=False)
 
     l10n_uy_dgi_crt = fields.Binary(related='company_id.l10n_uy_dgi_crt', readonly=False)
     l10n_uy_dgi_crt_fname = fields.Char(related='company_id.l10n_uy_dgi_crt_fname')
@@ -38,27 +36,44 @@ class ResConfigSettings(models.TransientModel):
 
         raise UserError(_('Connection problems, this is what we get %s') % response)
 
-    @api.onchange('l10n_uy_ucfe_env', 'l10n_uy_ucfe_prod_env', 'l10n_uy_ucfe_test_env')
+    @api.onchange('l10n_uy_ucfe_env')
     def onchange_ufce_env(self):
-        config = self.l10n_uy_ucfe_prod_env if self.l10n_uy_ucfe_env == 'production' \
-            else self.l10n_uy_ucfe_test_env
+        """ Update UCFE param with what we have when Environment change."""
+
+        if self.l10n_uy_ucfe_env == 'production':
+            config = self.company_id.l10n_uy_ucfe_prod_env
+        elif self.l10n_uy_ucfe_env == 'testing':
+            config = self.company_id.l10n_uy_ucfe_test_env
+        else:
+            config = False
+
         config = safe_eval(config or "{}")
+        uruware_fields = [
+            'l10n_uy_ucfe_user', 'l10n_uy_ucfe_password', 'l10n_uy_ucfe_commerce_code',
+            'l10n_uy_ucfe_terminal_code', 'l10n_uy_ucfe_inbox_url', 'l10n_uy_ucfe_query_url']
+        for ufce_field in uruware_fields:
+            self[ufce_field] = config.get(ufce_field, '')
 
-        # If not environment selected then clean the ucfe parameters
-        if not self.l10n_uy_ucfe_env:
-            self.clean_ucfe_config_values()
+    def set_values(self):
+        super().set_values()
+        self.update_saved_param_data()
 
-        # If environment set but not defined keys request to configure the ucfe data
-        # clean up the config values
-        if not config:
-            self.clean_ucfe_config_values()
-            return
+    def update_saved_param_data(self):
+        """ If any of the ucfe params change then update the env_data values of the current selected environment"""
+        # Create dictionary with the data
+        import pprint
+        env_data = {
+            'l10n_uy_ucfe_user': self.l10n_uy_ucfe_user or '',
+            'l10n_uy_ucfe_password': self.l10n_uy_ucfe_password or '',
+            'l10n_uy_ucfe_commerce_code': self.l10n_uy_ucfe_commerce_code or '',
+            'l10n_uy_ucfe_terminal_code': self.l10n_uy_ucfe_terminal_code or '',
+            'l10n_uy_ucfe_inbox_url': self.l10n_uy_ucfe_inbox_url or '',
+            'l10n_uy_ucfe_query_url': self.l10n_uy_ucfe_query_url or '',
+        }
 
-        # field the ucfe fields with the date of the selected environment
-        for ufce_field, value in config.items():
-            self[ufce_field] = value
+        if self.l10n_uy_ucfe_env == 'production':
+            env_data.update({'l10n_uy_ucfe_prod_env': pprint.pformat(env_data)})
+        elif self.l10n_uy_ucfe_env == 'testing':
+            env_data.update({'l10n_uy_ucfe_test_env': pprint.pformat(env_data)})
 
-    def clean_ucfe_config_values(self):
-        ucfe_fields = ['l10n_uy_ucfe_user', 'l10n_uy_ucfe_password', 'l10n_uy_ucfe_commerce_code', 'l10n_uy_ucfe_terminal_code', 'l10n_uy_ucfe_inbox_url', 'l10n_uy_ucfe_query_url']
-        for item in ucfe_fields:
-            self[item] = False
+        self.company_id.write(env_data)
