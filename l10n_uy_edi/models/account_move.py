@@ -198,7 +198,7 @@ class AccountMove(models.Model):
                 currency_rate = 1.0
             else:
                 currency_rate = inv.currency_id._convert(
-                    1.0, inv.company_id.currency_id, inv.company_id, inv.invoice_date or fields.Date.today(), round=False)
+                    1.0, inv.company_id.currency_id, inv.company_id, inv.date or fields.Date.today(), round=False)
             inv.l10n_uy_currency_rate = currency_rate
 
             if inv._is_dummy_dgi_validation():
@@ -279,7 +279,7 @@ class AccountMove(models.Model):
         """ TODO search if Odoo already have something to do exactly the same as here """
         self.ensure_one()
         return self.amount_total if self.currency_id == self.company_currency_id else self.currency_id._convert(
-            self.amount_total, self.company_id.currency_id, self.company_id, self.invoice_date or fields.Date.today(), round=False)
+            self.amount_total, self.company_id.currency_id, self.company_id, self.date or fields.Date.today(), round=False)
 
     def _update_l10n_uy_cfe_state(self):
         """ Update the CFE State show to the user depending of the information of the UFCE and DGI State return from
@@ -651,7 +651,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         res = {
             'FmaPago': 1 if self.l10n_uy_payment_type == 'cash' else 2,
-            'FchEmis': self.invoice_date.strftime('%Y-%m-%d'),
+            'FchEmis': self.date.strftime('%Y-%m-%d'),
         }
         if self.is_expo_cfe():
             res.update({
