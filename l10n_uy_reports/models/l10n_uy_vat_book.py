@@ -87,7 +87,7 @@ class L10nUYVatBook(models.AbstractModel):
                 caret_type = 'account.move'
             lines.append({
                 'id': rec['id'],
-                'name': format_date(self.env, rec['invoice_date']),
+                'name': format_date(self.env, rec['date']),
                 'class': 'date',
                 'level': 2,
                 'model': 'account.uy.vat.line',
