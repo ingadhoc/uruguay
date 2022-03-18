@@ -1,0 +1,101 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_uy_currency_update
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-04-15 09:37+0000\n"
+"PO-Revision-Date: 2022-04-15 09:37+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_uy_currency_update
+#: model:ir.model,name:l10n_uy_currency_update.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: l10n_uy_currency_update
+#: model:ir.model,name:l10n_uy_currency_update.model_res_currency
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: l10n_uy_currency_update
+#: model:ir.model.fields,field_description:l10n_uy_currency_update.field_res_currency__l10n_uy_bcu_code
+msgid "Código BCU"
+msgstr ""
+
+#. module: l10n_uy_currency_update
+#: code:addons/l10n_uy_currency_update/models/res_company.py:0
+#, python-format
+msgid "Error encontrado al conectar para a UY BCU para actualizar moneda"
+msgstr ""
+
+#. module: l10n_uy_currency_update
+#: model_terms:ir.ui.view,arch_db:l10n_uy_currency_update.view_currency_form
+msgid ""
+"Este boton permitira traer la última cotinzación de BCU para esta moenda. "
+"Puedes usar esta información para crear manualmente tu propia tasa Odoo"
+msgstr ""
+
+#. module: l10n_uy_currency_update
+#: model:ir.model.fields,help:l10n_uy_currency_update.field_res_currency__l10n_uy_bcu_code
+msgid ""
+"Este codigo idenfica cada moneda y permite extraer el valor de la tasa del "
+"Banco Central Uruguayo"
+msgstr ""
+
+#. module: l10n_uy_currency_update
+#: code:addons/l10n_uy_currency_update/models/res_currency.py:0
+#, python-format
+msgid "Fecha Ultimo Cierre"
+msgstr ""
+
+#. module: l10n_uy_currency_update
+#: code:addons/l10n_uy_currency_update/models/res_currency.py:0
+#, python-format
+msgid ""
+"No BCU code for currency %s. Please configure the BCU code consulting "
+"information in BCU page https://www.bcu.gub.uy/Estadisticas-e-"
+"Indicadores/Paginas/Cotizaciones.aspx"
+msgstr ""
+"No hay código BCU para la moneda %s. Por favor configure el código BCU "
+"consultado la información en la pagina del BCU "
+"https://www.bcu.gub.uy/Estadisticas-e-Indicadores/Paginas/Cotizaciones.aspx"
+
+#. module: l10n_uy_currency_update
+#: code:addons/l10n_uy_currency_update/models/res_currency.py:0
+#, python-format
+msgid "No rate for UYU (is the base currency in Uruguay)"
+msgstr "No hay una tasa para UYU (es la moneda base en Uruguay)"
+
+#. module: l10n_uy_currency_update
+#: code:addons/l10n_uy_currency_update/models/res_currency.py:0
+#, python-format
+msgid "Rate:"
+msgstr "Tasa:"
+
+#. module: l10n_uy_currency_update
+#: model:ir.model.fields,field_description:l10n_uy_currency_update.field_res_company__currency_provider
+msgid "Service Provider"
+msgstr "Proveedor de servicio"
+
+#. module: l10n_uy_currency_update
+#: model:ir.model.fields.selection,name:l10n_uy_currency_update.selection__res_company__currency_provider__bcu
+msgid "Webservices BCU - Banco Central (Uruguay)"
+msgstr ""
+
+#. module: l10n_uy_currency_update
+#: model_terms:ir.ui.view,arch_db:l10n_uy_currency_update.view_currency_form
+msgid "⇒ (UY) Mostrar ultima cotización BCU"
+msgstr ""
+
+#. module: l10n_uy_currency_update
+#: model_terms:ir.ui.view,arch_db:l10n_uy_currency_update.view_currency_form
+msgid "⇒ (UY) Obtener info monedas disponibles"
+msgstr ""

@@ -1,0 +1,8 @@
+<odoo>
+
+    <!-- The scheduled action that will be run to update the currency rates will be run at 3am so this is required since the rates are published by BCU at nigth -->
+    <record id="currency_rate_live.ir_cron_currency_update" model="ir.cron">
+        <field name="nextcall" eval="DateTime.now().strftime('%Y-%m-%d 03:%M:%S')"/>
+    </record>
+
+</odoo>
