@@ -36,11 +36,6 @@ msgid "Companies"
 msgstr ""
 
 #. module: l10n_uy
-#: model:ir.model.fields.selection,name:l10n_uy_account.selection__account_journal__l10n_uy_type__contingency
-msgid "Contingency"
-msgstr ""
-
-#. module: l10n_uy
 #: model:ir.model.fields,field_description:l10n_uy_account.field_res_company__l10n_uy_country_code
 msgid "Country Code"
 msgstr ""
@@ -79,11 +74,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:l10n_uy_account.action_document_type_uruguay
 #: model:ir.ui.menu,name:l10n_uy_account.menu_document_type_uruguay
 msgid "Document Types"
-msgstr ""
-
-#. module: l10n_uy
-#: model:ir.model.fields.selection,name:l10n_uy_account.selection__account_journal__l10n_uy_type__electronic
-msgid "Electronic"
 msgstr ""
 
 #. module: l10n_uy

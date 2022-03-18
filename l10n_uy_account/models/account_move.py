@@ -56,14 +56,6 @@ class AccountMove(models.Model):
         """ Return the match sequences for the given journal and invoice """
         self.ensure_one()
         if self.journal_id.l10n_latam_use_documents and self.l10n_latam_country_code == 'UY':
-
-            # This is needed only in version 13.0, need to remove in version 15.0
-            # We need this in order to avoid Odoo ask the user the document number for the electronic documents
-            # We use the sequence auto generated from Odoo when the journals is created as a dummy sequence
-            # actually the document number is set when invoice is validated getting the info from UCFE Uruware
-            if self.journal_id.l10n_uy_type == 'electronic':
-                return self.journal_id.sequence_id
-
             if self.journal_id.l10n_uy_share_sequences:
                 return self.journal_id.l10n_uy_sequence_ids
             res = self.journal_id.l10n_uy_sequence_ids.filtered(
