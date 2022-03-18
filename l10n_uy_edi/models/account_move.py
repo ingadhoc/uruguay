@@ -180,6 +180,14 @@ class AccountMove(models.Model):
             # TODO possible we are missing electronic documents here, review the
             int(x.l10n_latam_document_type_id.code) > 100)
 
+        # Esto es para evitar que puedan crear facturas de contingencia desde el Odoo, para poder soportarlo tenemos
+        # que integrar la lógica de manejar el CAE desde el lado de Odoo, enviar info de numero de serie, numero a usar
+        # etc en el xml para que sea un XML valido. Una vez que este implementado esta parte se puede ir.
+        if uy_invoices.filtered(lambda x: x.journal_id.l10n_uy_type == 'contingency'):
+            raise UserError(_('Las facturas de Contingencia aun no están implementadas en el Odoo, para crear facturas'
+                              ' de contingencia por favor generarla directamente desde al Uruware y luego cargar en el'
+                              ' Odoo'))
+
         # If the invoice was previosly validated in Uruware and need to be link to Odoo we check that the
         # l10n_uy_cfe_uuid has been manually set and we consult to get the invoice information from Uruware
         pre_validated_in_uruware = uy_invoices.filtered(lambda x: x.l10n_uy_cfe_uuid and not x.l10n_uy_cfe_file and not x.l10n_uy_cfe_state)
