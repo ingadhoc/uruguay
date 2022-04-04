@@ -240,6 +240,10 @@ class AccountMove(models.Model):
         quede la info de numero de documento tipo de documento estado del comprobante"""
         uy_docs = self.env['l10n_latam.document.type'].search([('country_id.code', '=', 'UY')])
         for inv in self:
+            if not inv.l10n_uy_cfe_uuid:
+                raise UserError(_('Necesita definir "Clave o UUID del CFE" para poder continuar'))
+            if 'error' in inv.l10n_uy_cfe_state:
+                raise UserError(_('No se puede obtener la factura de un comprobante con error'))
             # TODO en este momento estamos usando este 360 porque es el que tenemos pero estamos esperando respuesta de
             # soporte uruware a ver como podemos extraer mas información y poder validarla.
             response = inv.company_id._l10n_uy_ucfe_inbox_operation('360', {'Uuid': inv.l10n_uy_cfe_uuid})
@@ -450,7 +454,7 @@ class AccountMove(models.Model):
                 'type': 'binary', 'datas': base64.b64encode(CfeXmlOTexto.encode('ISO-8859-1'))}).id
 
             # If the invoice has been posted automatically print and attach the legal invoice reporte to the record.
-            if inv.state == 'posted':
+            if 'error' not in inv.l10n_uy_cfe_state:
                 inv.action_l10n_uy_get_pdf()
 
             # TODO este viene vacio, ver cuando realmente es seteado para asi setearlo en este momento
