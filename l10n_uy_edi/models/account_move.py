@@ -233,6 +233,15 @@ class AccountMove(models.Model):
         return self.company_id._uy_get_environment_type() == 'testing' and \
             not self.company_id.sudo()._is_connection_info_complete(raise_exception=False)
 
+    def _get_document_type_sequence(self):
+        """ We need this in order to avoid Odoo ask the user the document number for the electronic documents
+        The hack is that we use the sequence auto generated from Odoo when the journals is created as a dummy sequence
+        actually the document number is set when invoice is validated getting the info from UCFE Uruware """
+        # NOTE: This is needed only in version 13.0, need to remove in version 15.0
+        self.ensure_one()
+        if self.journal_id.l10n_uy_type == 'electronic':
+            return self.journal_id.sequence_id
+        return super()._get_document_type_sequence()
 
     def action_l10n_uy_get_uruware_inv(self):
         """ 360: Consulta de estado de CFE: estado del comprobante en DGI,

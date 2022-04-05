@@ -10,20 +10,14 @@ class AccountJournal(models.Model):
     _inherit = "account.journal"
 
     l10n_uy_type = fields.Selection(
-        [('manual', 'Manual'),
-         ('preprinted', 'Preprinted (Traditional)'),
-         ('electronic', 'Electronic'),
-         ('contingency', 'Contingency')],
+        [('manual', 'Manual / External Electronic Software'),
+         ('preprinted', 'Preprinted (Traditional)')],
         string='Invoicing Type', copy=False, default="manual",
         help="Type of journals that can be used for Uruguayan companies:\n"
-        "* Manual: You can generate any document type (electronic or traditional) entering the"
+        "* Manual / External Electronic Software: You can generate any document type (electronic or traditional) entering the"
         " document number manually. This is usefull if you have electronic documents created using"
-        " external systems and then you want to upload the documents to Odoo. Similar to Argentinean"
-        " Online Invoice type.\n"
-        "* Preprinted: For traditional invoicing using a pre printed tradicional documents (the ones with code 0).\n"
-        "* Electronic: To generate electronic documents via web service to DGI using UCFE Uruware provider service.\n"
-        "* Contingency: To generate documents to be send post morten via web service"
-        " (when electronic is not working).\n")
+        " external systems and then you want to upload the documents to Odoo. Similar to Argentinean Online Invoice type.\n"
+        "* Preprinted: For traditional invoicing using a pre printed tradicional documents (the ones with code 0).")
 
 
     l10n_uy_sequence_ids = fields.One2many('ir.sequence', 'l10n_latam_journal_id', string="Sequences (UY)")
@@ -35,9 +29,9 @@ class AccountJournal(models.Model):
 
     @api.onchange('l10n_uy_type')
     def onchange_journal_uy_type(self):
-        """ If the uy type is contingency or preprintedthen use the unified sequence for all the documents """
+        """ If the uy type is preprinted then use the unified sequence for all the documents """
         self.l10n_uy_share_sequences = bool(
-            self.company_id.country_id.code == 'UY' and self.l10n_uy_type in ['preprinted', 'contingency'])
+            self.company_id.country_id.code == 'UY' and self.l10n_uy_type == 'preprinted')
 
     # TODO similar to _get_journal_codes() in l10n_ar, see if we can merge it in a future
     def _l10n_uy_get_journal_codes(self):
@@ -46,12 +40,9 @@ class AccountJournal(models.Model):
         if self.type != 'sale':
             return []
 
+        available_types = []
         if self.l10n_uy_type == 'preprinted':
             available_types = ['0']
-        elif self.l10n_uy_type == 'electronic':
-            available_types = ['101', '102', '103', '111', '112', '113', '121', '122', '123']
-        elif self.l10n_uy_type == 'contingency':
-            available_types = ['201', '211', '212', '213', '221', '222', '223']
         elif self.l10n_uy_type == 'manual':
             internal_types = ['invoice', 'debit_note', 'credit_note']
             doc_types = self.env['l10n_latam.document.type'].search([
@@ -86,10 +77,9 @@ class AccountJournal(models.Model):
         self.ensure_one()
         if self.company_id.country_id.code != 'UY':
             return True
-        # Si no soy de tipo venta, no uso documentos o soy de tipo electronico/manual no genero secuencias.
-        # * en diarios electronicos la secuencias se asignan al validar la factura durecto desde Uruware.
+        # Si no soy de tipo venta, no uso documentos o soy de tipo manual no genero secuencias.
         # * en diarios manuales los usuarios no tienen secuencia y deben agregar el numero de documento de manera manual siempre
-        if not self.type == 'sale' or not self.l10n_latam_use_documents or self.l10n_uy_type in ['electronic', 'manual']:
+        if not self.type == 'sale' or not self.l10n_latam_use_documents or self.l10n_uy_type == 'manual':
             return False
 
         sequences = self.l10n_uy_sequence_ids

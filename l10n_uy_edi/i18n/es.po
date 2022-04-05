@@ -392,6 +392,11 @@ msgstr "Consultar Notificaciones UCFE"
 msgid "Contact"
 msgstr "Contacto"
 
+#. module: l10n_uy
+#: model:ir.model.fields.selection,name:l10n_uy_account.selection__account_journal__l10n_uy_type__contingency
+msgid "Contingency"
+msgstr "Contingencia"
+
 #. module: l10n_uy_edi
 #: model:ir.model.fields,help:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__title_case
 msgid "Converts retreived text fields to Title Case."
@@ -504,6 +509,11 @@ msgid ""
 msgstr ""
 "E-ticket necesita estos valores porque el monto total > 10.000 * Unidad "
 "Indexada Uruguaya"
+
+#. module: l10n_uy
+#: model:ir.model.fields.selection,name:l10n_uy_account.selection__account_journal__l10n_uy_type__electronic
+msgid "Electronic"
+msgstr "Electrónica"
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__rejected
