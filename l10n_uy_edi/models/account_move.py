@@ -216,14 +216,6 @@ class AccountMove(models.Model):
             # TODO KZ I think we can avoid this loop. review
             inv._l10n_uy_dgi_post()
 
-            # This is necesary for fixing problems directly from odoo when we do not sent the proper information to
-            # uruware.
-            if 'error' in inv.l10n_uy_cfe_state:
-                # TODO need to do this in a better way.
-                inv.button_cancel()
-                inv.delete_number()
-                inv.button_draft()
-
         return res
 
     def _is_dummy_dgi_validation(self):
@@ -414,16 +406,20 @@ class AccountMove(models.Model):
             response, transport = inv.company_id._l10n_uy_ucfe_inbox_operation('310', req_data, return_transport=1)
 
             inv = inv.sudo()
+            inv.l10n_uy_ucfe_state = response.Resp.CodRta
+            inv._update_l10n_uy_cfe_state()
+
+            # Si conseguimos un error de factura electronica directamente hacemos rollback: para que la factura de odoo
+            # quede en borrador y no tengamos quede posteada y tengamos que cancelarla luego
+            if 'error' in inv.l10n_uy_cfe_state:
+                self.env.cr.rollback()
+
+            inv.l10n_uy_ucfe_state = response.Resp.CodRta
+            inv._update_l10n_uy_cfe_state()
             inv.l10n_uy_cfe_xml = CfeXmlOTexto
-            # from lxml import etree
-            # etree.tostring(etree.fromstring(response.Resp.XmlCfeFirmado), pretty_print=True).decode('utf-8')
             inv.l10n_uy_dgi_xml_response = transport.xml_response
             inv.l10n_uy_dgi_xml_request = transport.xml_request
             inv.l10n_uy_cfe_uuid = response.Resp.Uuid
-            inv.l10n_uy_ucfe_state = response.Resp.CodRta
-            # inv.l10n_uy_cfe_dgi_state = response.Resp.EstadoEnDgiCfeRecibido
-            inv._update_l10n_uy_cfe_state()
-
             inv.l10n_uy_ucfe_msg = response.Resp.MensajeRta
             inv.l10n_uy_ucfe_notif = response.Resp.TipoNotificacion
 
