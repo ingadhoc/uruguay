@@ -593,7 +593,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         adenda = ''
         for rec in self.company_id.l10n_uy_adenda_ids:
-            if safe_eval(rec.condition, {'inv': self}) == True:
+            if bool(safe_eval(rec.condition, {'inv': self})) == True:
                 adenda +=  "\n\n" + rec.content
 
         # Si el comprobante/factura tiene una referencia entonces agregarla para que se muestre al final de la Adenda
