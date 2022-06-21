@@ -29,7 +29,7 @@ class AccountMove(models.Model):
         ('rejected', 'CFE Rejected by DGI'),
 
         # TODO not sure I think we will remove this
-        ('ui_indexada', 'CFE Not sent, amount bellow 10.000 UI'),
+        ('ui_indexada', 'CFE Not sent, amount bellow 5.000 UI'),
 
         # UCFE error states
         ('xml_error', 'ERROR: CFE XML not valid'),
@@ -520,7 +520,7 @@ class AccountMove(models.Model):
 
     @api.model
     def _l10n_uy_get_min_by_unidad_indexada(self):
-        return self.env.ref('l10n_uy_account.UYI').rate * 10000
+        return self.env.ref('l10n_uy_account.UYI').rate * 5000
 
     def is_expo_cfe(self):
         """ True of False in the current invoice is an exporation invoice type """
@@ -561,7 +561,7 @@ class AccountMove(models.Model):
                 if not all([self.partner_id.street, self.partner_id.city, self.partner_id.state_id, self.partner_id.country_id, self.partner_id.vat]):
                     msg = _('Debe configurar la dirección, ciudad, provincia, pais del receptor y número de identificación')
                     if cond_e_ticket:
-                        msg += '\n' + _('E-ticket needs these values because that total amount > 10.000 * Unidad Indexada Uruguaya')
+                        msg += '\n' + _('E-ticket needs these values because that total amount > 5.000 * Unidad Indexada Uruguaya')
                     raise UserError(msg)
                 res.update({
                     'RznSocRecep': self.partner_id.name,  # C63
