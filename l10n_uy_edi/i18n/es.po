@@ -290,8 +290,8 @@ msgstr "CFE Aceptado por la DGI"
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__ui_indexada
-msgid "CFE Not sent, amount bellow 10.000 UI"
-msgstr "CFE No enviado, el monto es menor a las 10.000 UI"
+msgid "CFE Not sent, amount bellow 5.000 UI"
+msgstr "CFE No enviado, el monto es menor a las 5.000 UI"
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_cfe_pdf
@@ -499,10 +499,10 @@ msgstr "CFE Borrador"
 #: code:addons/l10n_uy_edi/models/account_move.py:0
 #, python-format
 msgid ""
-"E-ticket needs these values because that total amount > 10.000 * Unidad "
+"E-ticket needs these values because that total amount > 5.000 * Unidad "
 "Indexada Uruguaya"
 msgstr ""
-"E-ticket necesita estos valores porque el monto total > 10.000 * Unidad "
+"E-ticket necesita estos valores porque el monto total > 5.000 * Unidad "
 "Indexada Uruguaya"
 
 #. module: l10n_uy_edi
