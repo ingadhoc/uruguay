@@ -659,6 +659,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         res = {
             'FmaPago': 1 if self.l10n_uy_payment_type == 'cash' else 2,
+            'FchVenc': self.invoice_date_due.strftime('%Y-%m-%d'),
             'FchEmis': self.date.strftime('%Y-%m-%d'),
         }
         if self.is_expo_cfe():
