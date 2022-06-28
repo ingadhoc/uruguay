@@ -361,7 +361,7 @@ class AccountMove(models.Model):
         }
 
     def _l10n_uy_validate_company_data(self):
-        for company in self.mapped('company_id'):
+        for company in self.sudo().mapped('company_id'):
             errors = []
 
             if not company.vat:
