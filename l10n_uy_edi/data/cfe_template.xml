@@ -14,6 +14,7 @@
                         <!-- <MntBruto>1</MntBruto> -->
 
                         <FmaPago t-esc="IdDoc['FmaPago']"/>
+                        <FchVenc t-esc="IdDoc['FchVenc']"/>
                         <ClauVenta t-if="IdDoc.get('ClauVenta')" t-esc="IdDoc['ClauVenta']"/>
                         <ModVenta t-if="IdDoc.get('ModVenta')" t-esc="IdDoc['ModVenta']"/>
                         <ViaTransp t-if="IdDoc.get('ViaTransp')" t-esc="IdDoc['ViaTransp']"/>

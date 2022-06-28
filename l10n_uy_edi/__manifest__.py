@@ -7,7 +7,7 @@
     'author': 'ADHOC SA',
     'category': 'Localization',
     'license': 'LGPL-3',
-    'version': '13.0.1.8.0',
+    'version': '13.0.1.9.0',
     'depends': [
         'l10n_uy_account',
         'account_debit_note',
