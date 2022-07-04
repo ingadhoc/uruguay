@@ -619,7 +619,7 @@ class AccountMove(models.Model):
             if not related_cfe:
                 raise UserError(_('Para validar una ND/NC debe informar el Documento de Origen'))
             for k, related_cfe in enumerate(self._uy_found_related_invoice(), 1):
-                document_number = re.search(r"([A-Z]*)([0-9]*)", related_cfe.l10n_latam_document_number).groups()
+                document_number = re.findall(r"([A-Z])[-]*([0-9]*)", related_cfe.l10n_latam_document_number)[-1]
 
                 tpo_doc_ref = int(related_cfe.l10n_latam_document_type_id.code)
                 if not tpo_doc_ref:
