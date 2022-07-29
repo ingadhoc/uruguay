@@ -41,11 +41,6 @@ msgid "Contingency"
 msgstr "Contingencia"
 
 #. module: l10n_uy
-#: model:ir.model.fields,field_description:l10n_uy_account.field_res_company__l10n_uy_country_code
-msgid "Country Code"
-msgstr "Código País"
-
-#. module: l10n_uy
 #: model:ir.model.fields.selection,name:l10n_uy_account.selection__account_move__l10n_uy_payment_type__credit
 msgid "Credit"
 msgstr "Crédito"
@@ -153,17 +148,6 @@ msgid "RUT / RUC"
 msgstr ""
 
 #. module: l10n_uy
-#: model_terms:ir.ui.view,arch_db:l10n_uy_account.view_account_journal_form
-msgid "Sequence"
-msgstr "Secuencia"
-
-#. module: l10n_uy
-#: model:ir.model.fields,field_description:l10n_uy_account.field_account_bank_statement_import_journal_creation__l10n_uy_sequence_ids
-#: model:ir.model.fields,field_description:l10n_uy_account.field_account_journal__l10n_uy_sequence_ids
-msgid "Sequences"
-msgstr "Secuencias"
-
-#. module: l10n_uy
 #: code:addons/l10n_uy/models/account_move.py:0
 #, python-format
 msgid ""
@@ -172,15 +156,6 @@ msgid ""
 msgstr ""
 "Debe haber un único y solo un impuesto de IVA por línea. Revise la línea con"
 " el producto \"%s\" (Id Factura: %s)"
-
-#. module: l10n_uy
-#: model:ir.model.fields,help:l10n_uy_account.field_res_company__l10n_uy_country_code
-msgid ""
-"The ISO country code in two chars. \n"
-"You can use this field for quick search."
-msgstr ""
-"El código ISO de país es de dos caracteres. \n"
-"Puedes usar este campo para búsqueda rápida."
 
 #. module: l10n_uy
 #: code:addons/l10n_uy/models/account_move.py:0
@@ -199,18 +174,6 @@ msgid ""
 msgstr ""
 "Este valor es parte del XML cuando se envia el CFE (Campo 47: "
 "Emisor/CdgDGISucur)"
-
-#. module: l10n_uy
-#: model:ir.model.fields,field_description:l10n_uy_account.field_account_bank_statement_import_journal_creation__l10n_uy_share_sequences
-#: model:ir.model.fields,field_description:l10n_uy_account.field_account_journal__l10n_uy_share_sequences
-msgid "Unified Book"
-msgstr "Libro Unificado"
-
-#. module: l10n_uy
-#: model:ir.model.fields,help:l10n_uy_account.field_account_bank_statement_import_journal_creation__l10n_uy_share_sequences
-#: model:ir.model.fields,help:l10n_uy_account.field_account_journal__l10n_uy_share_sequences
-msgid "Use same sequence for all the documents in this journal"
-msgstr "Usa la misma secuencia para los documentos de este diaro"
 
 #. module: l10n_uy
 #: model:account.tax.group,name:l10n_uy_account.tax_group_vat_10
