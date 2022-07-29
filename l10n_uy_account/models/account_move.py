@@ -6,14 +6,14 @@ class AccountMove(models.Model):
 
     _inherit = 'account.move'
 
-    l10n_uy_payment_type = fields.Selection([('cash', 'Cash'), ('credit', 'Credit')], 'Payment Type', default='cash')
+    l10n_uy_payment_type = fields.Selection([('cash', 'Cash'), ('credit', 'Credit')], 'CFE Payment Type', default='cash')
     # TODO this can be removed and integrated with the payment methods we already have in odoo
 
     l10n_uy_currency_rate = fields.Float(copy=False, digits=(16, 4), string="Currency Rate (UY)")
     # TODO integrate with l10n_ar_currency_rate in next versions
     # solo mostrar en estado draft?
 
-    @api.constrains('type', 'journal_id')
+    @api.constrains('move_type', 'journal_id')
     def _l10n_uy_check_moves_use_documents(self):
         """ Do not let to create not invoices entries in journals that use documents """
         # TODO simil to _check_moves_use_documents. integrate somehow
@@ -53,25 +53,6 @@ class AccountMove(models.Model):
                     'Should be one and only one VAT tax per line. Verify lines with product "%s" (Id Invoice: %s)' % (
                         line.product_id.name, line.move_id.id)))
 
-    def _get_document_type_sequence(self):
-        """ Return the match sequences for the given journal and invoice """
-        self.ensure_one()
-        if self.journal_id.l10n_latam_use_documents and self.l10n_latam_country_code == 'UY':
-
-            # This is needed only in version 13.0, need to remove in version 15.0
-            # We need this in order to avoid Odoo ask the user the document number for the electronic documents
-            # We use the sequence auto generated from Odoo when the journals is created as a dummy sequence
-            # actually the document number is set when invoice is validated getting the info from UCFE Uruware
-            if self.journal_id.l10n_uy_type == 'electronic':
-                return self.journal_id.sequence_id
-
-            if self.journal_id.l10n_uy_share_sequences:
-                return self.journal_id.l10n_uy_sequence_ids
-            res = self.journal_id.l10n_uy_sequence_ids.filtered(
-                lambda x: x.l10n_latam_document_type_id == self.l10n_latam_document_type_id)
-            return res
-        return super()._get_document_type_sequence()
-
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
         domain = super()._get_l10n_latam_documents_domain()
@@ -84,16 +65,16 @@ class AccountMove(models.Model):
     def unlink(self):
         """ When using documents on vendor bills the document_number is set manually by the number given from the vendor
         so the odoo sequence is not used. In this case we allow to delete vendor bills with document_number/name """
-        self.filtered(lambda x: x.type in x.get_purchase_types() and x.state in ('draft', 'cancel') and
+        self.filtered(lambda x: x.move_type in x.get_purchase_types() and x.state in ('draft', 'cancel') and
                       x.l10n_latam_use_documents).write({'name': '/'})
         return super().unlink()
 
-    def post(self):
+    def _post(self, soft=True):
         uy_invoices = self.filtered(lambda x: x.company_id.country_id.code == 'UY' and x.l10n_latam_use_documents)
         # We make validations here and not with a constraint because we want validation before sending electronic
         # data on l10n_uy_edi
         uy_invoices._check_uruguayan_invoices()
-        res = super().post()
+        res = super()._post(soft=soft)
         return res
 
     # TODO review if we actually want to add the logic of filter de documents per type of partner commercial or final
@@ -127,3 +108,52 @@ class AccountMove(models.Model):
     #             res['journal_document_type'] = res['available_journal_document_types'] and \
     #                 res['available_journal_document_types'][0]
     #     return res
+
+    @api.depends('name')
+    def _compute_l10n_latam_document_number(self):
+        """En el metodo original en latam suponemos que el codigo del tipo de documento no tiene espacios.
+        Y por ello conseguimos el numero haciendo el split al coseguir el primer espacio en blanco.
+
+        En este caso los nombres de docs uruguayos tienen espacios. por eso necesitamos tomar otro criterio.
+        Este metodo lo que hace es llamar el original y posterior corregir los documentos uruguayos para solo tomar
+        realmente la ultima parte del name seria el numero en si.
+
+        Sin este cambio, si el name es "ND e-Ticket 00000001" coloca el "e-Ticket 00000001" como numero de doc
+        Con este cambio, si el name es "ND e-Ticket 00000001" coloca el "00000001" como numero de doc"""
+        super(AccountMove, self)._compute_l10n_latam_document_number()
+        uy_recs_with_name = self.filtered(lambda x: x.country_code == 'UY' and x.name != '/')
+        for rec in uy_recs_with_name:
+            name = rec.l10n_latam_document_number
+            doc_code_prefix = rec.l10n_latam_document_type_id.doc_code_prefix
+            if doc_code_prefix and name:
+                name = name.split(" ")[-1]
+            rec.l10n_latam_document_number = name
+
+    # Los metodos siguientes son en realidad copia de lo que teemos e l10n_ar y los necesitamos para que pueda funcionar
+    # el correcto nombramiento de los facturas/nc/nd usando el prefijo apropiado segun el tipo de documento y su
+    # respectivo siguiente numero a usar ahora que no existen las secuencias
+
+    def _get_starting_sequence(self):
+        """ If use documents then will create a new starting sequence using the document type code prefix and the
+        journal document number with a 8 padding number """
+        if self.journal_id.l10n_latam_use_documents and self.country_code == "UY" and self.l10n_latam_document_type_id:
+            return self._uy_get_formatted_sequence()
+        return super()._get_starting_sequence()
+
+    def _uy_get_formatted_sequence(self, number=0):
+        return "%s %08d" % (self.l10n_latam_document_type_id.doc_code_prefix, number)
+
+    def _get_last_sequence(self, relaxed=False, with_prefix=None, lock=True):
+        """ If use share sequences we need to recompute the sequence to add the proper document code prefix """
+        res = super()._get_last_sequence(relaxed=relaxed, with_prefix=with_prefix, lock=lock)
+        if self.country_code == 'UY' and self.l10n_latam_use_documents and res \
+           and self.l10n_latam_document_type_id.doc_code_prefix not in res:
+            res = self._uy_get_formatted_sequence(number=res.split()[-1])
+        return res
+
+    def _get_last_sequence_domain(self, relaxed=False):
+        where_string, param = super(AccountMove, self)._get_last_sequence_domain(relaxed)
+        if self.country_code == "UY" and self.l10n_latam_use_documents:
+            where_string += " AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s"
+            param['l10n_latam_document_type_id'] = self.l10n_latam_document_type_id.id or 0
+        return where_string, param
