@@ -7,12 +7,10 @@
         <field name="rate">1.0</field>
     </record>
 
-    <!-- TODO averiguar si este realmente es el valor de la unidad indexada -->
-
     <record id="rateUYI" model="res.currency.rate">
-        <field name="rate">4.8836</field>
-        <field name="currency_id" ref="l10n_uy_account.UYI"/>
-        <field eval="time.strftime('2021-03-28')" name="name"/>
+        <field name="rate">5.6155</field>
+        <field name="currency_id" ref="base.UYI"/>
+        <field eval="time.strftime('2022-12-05')" name="name"/>
     </record>
 
 </odoo>
