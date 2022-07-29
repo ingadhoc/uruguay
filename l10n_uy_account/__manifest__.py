@@ -7,22 +7,22 @@
     'author': 'ADHOC SA',
     'category': 'Localization',
     'license': 'LGPL-3',
-    'version': '13.0.1.6.0',
+    'version': "15.0.1.0.0",
     'depends': [
         'l10n_latam_invoice_document',
         'l10n_latam_base',
 
         # TODO move it to l10n_uy_ux once we have it?
-        'account_check',
+        'l10n_latam_check',
         'account_withholding',
     ],
     'data': [
         'data/l10n_latam.document.type.csv',
         'data/l10n_latam_identification_type_data.xml',
-        'data/account.group.csv',
         'data/account_tax_group_data.xml',
         'data/account_chart_template_data.xml',
         'data/account.account.template.csv',
+        'data/account.group.template.csv',
         'data/account_tax_template_data.xml',
         'data/res_partner_data.xml',
         'data/account_fiscal_position_template_data.xml',
@@ -46,5 +46,5 @@
         # restore
         'demo/res_users_demo.xml',
     ],
-    'installable': False,
+    'installable': True,
 }
