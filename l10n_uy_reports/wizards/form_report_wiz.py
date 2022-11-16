@@ -40,7 +40,6 @@ class FormReportWiz(models.TransientModel):
         domain = [
             ('company_id', '=', self.company_id.id), ('state', '=', 'posted'),
             ('date', '>=', self.date_from), ('date', '<', self.date_to),
-            ('l10n_latam_document_type_id.code', '!=', '121'),
             ('l10n_latam_document_type_id.code', '!=', '0'),
             ('l10n_latam_document_type_id.code', '!=', False)
         ]
@@ -80,6 +79,11 @@ class FormReportWiz(models.TransientModel):
         taxes = list(line_code.keys())
 
         invoices = self._get_invoices()
+        # TODO improve instead of using invoices and amls, use directly account.uy.vat.line
+        # vat_22 = fields.Monetary(readonly=True, string='VAT 22%', currency_field='company_currency_id')
+        # vat_10 = fields.Monetary(readonly=True, string='VAT 10%', currency_field='company_currency_id')
+        # not_taxed = fields.Monetary(
+        # TODO KZ ver como se representa en Uruware facturas en otras monedas.
 
         # Revisando que todos los impuestos esten bien configurados
         error = ""
@@ -87,7 +91,7 @@ class FormReportWiz(models.TransientModel):
             if line.tax_ids and line.tax_ids not in taxes:
                 error += "\n- %s %s" % (line.tax_ids.mapped("name"), line.move_id.display_name)
         if error:
-            raise UserError("No se puede genear declaracion de impuestos ya que no esta el codigo asociado para %s" % error)
+            _logger.warning("No se puede genear declaracion de impuestos (config impuesto) para %s" % error)
 
         # Agrupamos por partner
         # NOTA Intentamos agrupar por partner pero igual luego tenemos que hacer un brwose asi que comentamos
@@ -100,42 +104,49 @@ class FormReportWiz(models.TransientModel):
         #     lazy=False)
         data = {}
         for inv in invoices:
-            if inv.partner_id in data:
+            if inv.partner_id.id in data:
                 data[inv.partner_id.id] |= inv
             else:
                 data[inv.partner_id.id] = inv
 
+        # TODO si hay multiples periodos seleccionados tenemosque tambien filtrar las facturas por periodos
+
         for partner, invoices in data.items():
             invoice_lines = invoices.mapped('line_ids').filtered(lambda x: x.tax_ids in taxes)
+            temp = {}.fromkeys(taxes, 0.0)
             for line in invoice_lines:
                 for tax in line.tax_ids:
-                    if tax in taxes:
+                    print("tax %s" % tax)
+                    temp[tax] += line.balance
 
-                        # Campo 1 - RUT Informante. Num 12 (Si <12 dígitos completa con 0 a la izq)
-                        content_data = self.company_id.vat.zfill(12) + ";"
+            for tax in temp:
+                amount = temp.get(tax)
+                if amount > 0.0:
+                    # Campo 1 - RUT Informante. Num 12 (Si <12 dígitos completa con 0 a la izq)
+                    content_data = self.company_id.vat.zfill(12) + ";"
 
-                        # Campo 2 - Formulario. Num 5
-                        content_data += "{: 5d};".format(int(self.uy_form_id))
+                    # Campo 2 - Formulario. Num 5
+                    content_data += "{: 5d};".format(int(self.uy_form_id))
 
-                        # Campo 3 - Período (AAAAMM) Num 6. Ejemplo: 200306
-                        content_data += "{};".format(self.date_period)
+                    # Campo 3 - Período (AAAAMM) Num 6. Ejemplo: 200306
+                    content_data += "{};".format(self.date_period)
 
-                        # Campo 4 - RUT Informado. Num 12
-                        if not line.move_id.partner_id.vat:
-                            raise UserError(_(
-                                "No se puede generar archivo ya que no hay informacion RUT del partner %s") % line.move_id.partner_id.name)
-                        content_data += line.move_id.partner_id.vat.zfill(12) + ";"
+                    # Campo 4 - RUT Informado. Num 12
+                    if not line.move_id.partner_id.vat:
+                        raise UserError(_(
+                            "No se puede generar archivo ya que no hay informacion RUT del partner %s") % line.move_id.partner_id.name)
+                    content_data += line.move_id.partner_id.vat.zfill(12) + ";"
 
-                        # Campo 5 - Factura AAAAMM Num 6. Ejemplo: 200305
-                        content_data += "{};".format(line.move_id.date.strftime("%Y%m"))
+                    # Campo 5 - Factura AAAAMM Num 6. Ejemplo: 200305
+                    content_data += "{};".format(line.move_id.date.strftime("%Y%m"))
 
-                        # Campo 6 - Línea del Rubro 5 del Formulario
-                        content_data += "{};".format(line_code.get(tax))
+                    # Campo 6 - Línea del Rubro 5 del Formulario
+                    content_data += "{};".format(line_code.get(tax))
 
-                        # Campo 7 - Importe. Num 12. Ejemplo: 2750 ó -2750
-                        content_data += "{0:>015.2f};".format(line.l10n_latam_price_subtotal)
+                    # Campo 7 - Importe. Num 12. Ejemplo: 2750 ó -2750
+                    content_data += "{0:>015.2f};".format(temp.get(tax))
 
-                        lines.append(content_data)
+                    lines.append(content_data)
 
         res = '\n'.join(lines)
 
@@ -152,7 +163,10 @@ class FormReportWiz(models.TransientModel):
             raise UserError(_("Solo puede generar este reporte para compañias Uruguayas"))
 
         data = getattr(self, '_get_form_%s_data' % self.uy_form_id)()
-        self.res_filename = self.uy_form_id + ".txt"
+        self.res_filename = self.company_id.name[:4] + "Formulario2-181DGI_" + self.date_period[-2:] + self.date_period[:4] + ".txt"
+        # TODO No sabemos realmente cual es el formato, solo tomamos de ejemplo el que genera uruware
+        # Ejemplo SumiFormulario2-181DGI_10_2022.txt ver de mejorarlo del periodo
+
         self.res_file = base64.encodebytes(data.encode('ISO-8859-1'))
         if not self.res_file:
             raise UserError(_("Ningun archivo fue generado"))
