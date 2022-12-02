@@ -174,16 +174,6 @@ msgstr ""
 "                            <span class=\"fa fa-lg fa-building-o\" title=\"Los valores establecidos aquí son específicos de la empresa.\" groups=\"base.group_multi_company\"/>"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_dgi_acceptation_status__accepted
-msgid "Accepted"
-msgstr "Aceptado"
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_dgi_acceptation_status__ack_sent
-msgid "Acknowledge Sent"
-msgstr ""
-
-#. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
 msgid "Are you sure to execute the automatic update of your partners ?"
 msgstr "Estas seguro que quiere ejecutar la actualización automática del contacto ?"
@@ -279,11 +269,6 @@ msgid "Bienes propios a exclaves aduaneros"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_dgi_acceptation_status
-msgid "CFE Accept status"
-msgstr "Estado Acetado del CFE"
-
-#. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__accepted
 msgid "CFE Accepted by DGI"
 msgstr "CFE Aceptado por la DGI"
@@ -322,11 +307,6 @@ msgstr "CFE archivo xml"
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
 msgid "Cancel"
 msgstr "Cancelar"
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_dgi_acceptation_status__claimed
-msgid "Claimed"
-msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_cfe_uuid
@@ -850,11 +830,6 @@ msgid "Query Url"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_dgi_acceptation_status__received
-msgid "Received"
-msgstr "Recibido"
-
-#. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_sale_mod__1
 msgid "Régimen General"
 msgstr ""
@@ -946,17 +921,6 @@ msgstr ""
 msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields,help:l10n_uy_edi.field_account_move__l10n_uy_dgi_acceptation_status
-msgid ""
-"The status of the CFE Acceptation\n"
-"    * Received: the DTE was received by us for vendor bills, by our customers for customer invoices.\n"
-"    * Acknowledge Sent: the Acknowledge has been sent to the vendor.\n"
-"    * Claimed: the DTE was claimed by us for vendor bills, by our customers for customer invoices.\n"
-"    * Accepted: the DTE was accepted by us for vendor bills, by our customers for customer invoices.\n"
-"    "
 msgstr ""
 
 #. module: l10n_uy_edi
