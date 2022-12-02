@@ -32,6 +32,7 @@
         'views/account_journal_view.xml',
         'views/res_company_view.xml',
         'views/l10n_uy_adenda_views.xml',
+        'views/account_tax_views.xml',
         'data/account_chart_template_data2.xml',
         'data/res.country.state.csv',
         'data/res_currency_data.xml',

@@ -641,6 +641,7 @@ class L10nUyCfe(models.AbstractModel):
 
     def _l10n_uy_get_cfe_iddoc(self):
         self.ensure_one()
+        # TODO KZ need to apdat the dates with the one in picking and move lines.
         res = {
             'FmaPago': 1 if self.l10n_uy_payment_type == 'cash' else 2,
             'FchVenc': self.invoice_date_due.strftime('%Y-%m-%d'),
@@ -684,6 +685,8 @@ class L10nUyCfe(models.AbstractModel):
 
     def _l10n_uy_get_cfe_item_detail(self):
         """ Devuelve una lista con los datos que debemos informar por linea de factura en el CFE """
+        # TODO KZ this method is only working for account.move. all references to
+        # invoice_line_ids should be manage in different way
         res = []
         # e-Ticket, e-Ticket cta. Ajena y sus respectivas notas de corrección: Hasta 700
         if self.l10n_latam_document_type_id.code in [101, 102, 103, 131, 132, 133] and len(self.invoice_line_ids) > 700:
@@ -778,7 +781,7 @@ class L10nUyCfe(models.AbstractModel):
         return res
 
     def action_l10n_uy_get_pdf(self):
-        """ call query webservice to print pdf format of the invoice
+        """ call query webservice to print pdf format of the CFE
         7.1.9 Representación impresa estándar de un CFE emitido en formato PDF
 
         return: create attachment in the move and automatica download """
@@ -801,8 +804,10 @@ class L10nUyCfe(models.AbstractModel):
                 'numeroCfe': document_number[1],
             }
             response = self.company_id._l10n_uy_ucfe_query('ObtenerPdf', req_data)
+
+            prefix = 'INV' if self._name == 'account.move' else 'OBJ'
             self.l10n_uy_cfe_pdf = self.env['ir.attachment'].create({
-                'name': (self.name or 'INV').replace('/', '_') + '.pdf',
+                'name': (self.name or prefix).replace('/', '_') + '.pdf',
                 'res_model': self._name, 'res_id': self.id,
                 'type': 'binary', 'datas': base64.b64encode(response)
             })
@@ -819,7 +824,7 @@ class L10nUyCfe(models.AbstractModel):
 
     def _dummy_dgi_validation(self):
         """ Only when we want to skip DGI validation in testing environment. Fill the DGI result  fields with dummy
-        values in order to continue with the invoice validation without passing to DGI validations s"""
+        values in order to continue with the CFE validation without passing to DGI validations s"""
         # TODO need to update to the result we need, all the fields we need to add are not defined yet
         self.write({
             'l10n_uy_cfe_uuid': '123456',
