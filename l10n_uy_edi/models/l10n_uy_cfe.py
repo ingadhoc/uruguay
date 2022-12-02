@@ -100,17 +100,6 @@ class L10nUyCfe(models.AbstractModel):
         'UCFE Tipo de Notificacion', copy=False, readonly=True, tracking=True)  # TipoNotificacion
 
     # TODO not sure this fields are going to make it
-    l10n_uy_dgi_acceptation_status = fields.Selection([
-        ('received', 'Received'),
-        ('ack_sent', 'Acknowledge Sent'),
-        ('claimed', 'Claimed'),
-        ('accepted', 'Accepted'),
-    ], string='CFE Accept status', copy=False, readonly=True, help="""The status of the CFE Acceptation
-    * Received: the DTE was received by us for vendor bills, by our customers for customer invoices.
-    * Acknowledge Sent: the Acknowledge has been sent to the vendor.
-    * Claimed: the DTE was claimed by us for vendor bills, by our customers for customer invoices.
-    * Accepted: the DTE was accepted by us for vendor bills, by our customers for customer invoices.
-    """)
     l10n_uy_cfe_partner_status = fields.Selection([
         ('not_sent', 'Not Sent'),
         ('sent', 'Sent'),
