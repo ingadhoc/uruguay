@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="view_move_line_tree" model="ir.ui.view">
+        <field name="name">account.move.line.tree</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <tree position="inside">
+                <field name="resguardo_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_account_move_line_filter" model="ir.ui.view">
+        <field name="name">account.move.line.search</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_account_move_line_filter"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <search position="inside">
+                <field name="resguardo_id"/>
+                <filter string="Sin Resguardo" name="without_resguardo" domain="[('resguardo_id', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_retenciones_uy" model="ir.actions.act_window">
+        <field name="name">Retenciones UY</field>
+        <field name="res_model">account.move.line</field>
+        <field name="view_mode">form,tree</field>
+        <field name="view_id" ref="view_move_line_tree"/>
+        <field name="search_view_id" ref="view_account_move_line_filter"/>
+        <field name="domain" eval="[('tax_ids.tax_group_id', 'in', [ref('l10n_uy_account.tax_group_vat_withholdings')])]"/>
+        <field name="context">{'search_default_without_resguardo':1}</field>
+    </record>
+
+    <menuitem id="menu_uy_resguardos" name="Retenciones UY" parent="account.menu_finance_configuration" action="action_retenciones_uy" sequence="25"/>
+
+</odoo>
