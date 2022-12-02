@@ -21,6 +21,7 @@
         'views/res_config_settings_view.xml',
         'views/account_move_views.xml',
         'views/res_company_views.xml',
+        'views/account_move_line_views.xml',
         'wizards/res_partner_update_from_padron_uy_wizard_view.xml',
         'views/res_partner_view.xml',
         'data/cfe_template.xml',
