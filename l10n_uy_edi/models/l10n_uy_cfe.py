@@ -727,7 +727,8 @@ class L10nUyCfe(models.AbstractModel):
         if len(line) != 1:
             raise UserError(_('Solo se puede calcular el Indice de Factura por cada linea'))
 
-        tax_vat_22, tax_vat_10, tax_vat_exempt = self.env['account.tax']._l10n_uy_get_taxes(self.company_id)
+        vat_taxes = self.env['account.tax']._l10n_uy_get_taxes(self.company_id)
+        tax_vat_22, tax_vat_10, tax_vat_exempt = vat_taxes
         value = {
             tax_vat_exempt.id: 1,   # 1: Exento de IVA
             tax_vat_10.id: 2,       # 2: Gravado a Tasa Mínima
@@ -752,7 +753,8 @@ class L10nUyCfe(models.AbstractModel):
         if self.is_expo_cfe():
             return 10  # Exportación y asimiladas
 
-        return value.get(line.tax_ids.id)
+        # NOTA IMPORTANTE: Por el momento solo enviamos la informacion de los impuestos de tipo iva.
+        return value.get(line.tax_ids.filtered(lambda x: x in vat_taxes).id)
 
     def _uy_found_related_cfe(self):
         raise UserError(_("Not implemented found related cfe for") + " %s" % self._name)
