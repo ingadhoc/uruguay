@@ -7,15 +7,14 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
 
-            <field name="journal_id" position="after">
+            <div name="journal_div" position="after">
                 <field name="l10n_uy_journal_type" invisible="1"/>
                 <field name="l10n_uy_cfe_state" attrs="{'invisible': [('l10n_uy_journal_type', 'not in', ['electronic', 'contingency'])]}"/>
                 <field name="l10n_uy_ucfe_msg" attrs="{'invisible': [('l10n_uy_ucfe_state', 'not in', ['xml_error', 'connection_error', 'ucfe_error', 'rejected'])]}"/>
                 <button name="action_l10n_uy_get_dgi_state" type="object" string="(UY) Consult DGI State" class="oe_inline oe_link" attrs="{'invisible': [('l10n_uy_cfe_state', '!=', 'received')]}" icon="fa-refresh"/>
                 <button name="action_l10n_uy_get_pdf" type="object" string="(UY) Print Legal PDF" class="oe_inline oe_link" attrs="{
                     'invisible': [('l10n_uy_cfe_state', 'not in', ['received', 'ui_indexada'])]}" icon="fa-print"/>
-            </field>
-
+            </div>
 
             <!-- TODO need to find a way to hide computed_currency_rate field, this one is added in l10n_ar_ux, so.. maybe we should add it in another base
             ux module. to be re used. Meanwhile we do not show l10n_uy_currency_rate -->

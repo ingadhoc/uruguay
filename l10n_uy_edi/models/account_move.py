@@ -36,7 +36,7 @@ class AccountMove(models.Model):
         ('connection_error', 'ERROR: Connection to UCFE'),
         ('ucfe_error', 'ERROR: Related to UCFE'),
         ],
-        string='CFE Status', copy=False, readonly=True, track_visibility='onchange',
+        string='CFE Status', copy=False, readonly=True, tracking=True,
         help="If 'ERROR: Related to UCFE' please check details of 'UCFE State'")
 
     l10n_uy_journal_type = fields.Selection(related='journal_id.l10n_uy_type')
@@ -52,7 +52,7 @@ class AccountMove(models.Model):
         ('20', '20 - aceptado por DGI pero la consulta QR indica que hay diferencias con el CFE recibido'),
         ('25', '25 - rechazado por DGI pero la consulta QR indica que hay diferencias con el CFE recibido'),
         ('26', '26 - observado por DGI pero la consulta QR indica que hay diferencias con el CFE recibido'),
-    ], 'Vendor Bill DGI State', copy=False, readonly=True, track_visibility='onchange')  # EstadoEnDgiCfeRecibido
+    ], 'Vendor Bill DGI State', copy=False, readonly=True, tracking=True)  # EstadoEnDgiCfeRecibido
 
     l10n_uy_ucfe_state = fields.Selection([
         ('00', '00 - Petición aceptada y procesada'),
@@ -67,9 +67,9 @@ class AccountMove(models.Model):
         ('89', '89 - Terminal inválida'),
         ('96', '96 - Error en sistema'),
         ('99', '99 - Sesión no iniciada'),
-    ], 'UCFE State', copy=False, readonly=True, track_visibility='onchange')  # CodRta
+    ], 'UCFE State', copy=False, readonly=True, tracking=True)  # CodRta
 
-    l10n_uy_ucfe_msg = fields.Text('UCFE Mensaje de Respuesta', copy=False, readonly=True, track_visibility='onchange')  # MensajeRta
+    l10n_uy_ucfe_msg = fields.Text('UCFE Mensaje de Respuesta', copy=False, readonly=True, tracking=True)  # MensajeRta
 
     l10n_uy_ucfe_notif = fields.Selection([
         ('5', 'Aviso de CFE emitido rechazado por DGI'),
@@ -88,7 +88,7 @@ class AccountMove(models.Model):
         ('18', 'Aviso que a un CFE emitido se le removió una etiqueta'),
         ('19', 'Aviso que a un CFE recibido se lo ha etiquetado'),
         ('20', 'Aviso que a un CFE recibido se le removió una etiqueta'),
-        ], 'UCFE Tipo de Notificacion', copy=False, readonly=True, track_visibility='onchange')  # TipoNotificacion
+        ], 'UCFE Tipo de Notificacion', copy=False, readonly=True, tracking=True)  # TipoNotificacion
 
     l10n_uy_cfe_uuid = fields.Char(
         'Clave o UUID del CFE', help="Unique identification per CFE in UCFE. Currently is formed by the concatenation"
@@ -167,10 +167,9 @@ class AccountMove(models.Model):
         - 11: CFE aceptado por UCFE, en espera de respuesta de DGI """
         return ['00', '05', '06', '11']
 
-    # TODO 14.0 change to _post or action_post
-    def post(self):
+    def _post(self, soft=True):
         """ After validate the invoices in odoo we send it to dgi via ucfe """
-        res = super().post()
+        res = super()._post(soft=soft)
 
         uy_invoices = self.filtered(
             lambda x: x.company_id.country_id.code == 'UY' and
@@ -331,10 +330,10 @@ class AccountMove(models.Model):
         return: create attachment in the move and automatica download """
         # TODO cada vez que corremos intenta imprimir el existente, borrar el attachment para volver a generar
         if not self.l10n_uy_cfe_pdf:
-            if 'out' in self.type:
+            if 'out' in self.move_type:
                 rut_field = 'rut'
                 rut_value = self.company_id.partner_id.vat
-            elif 'in' in self.type:
+            elif 'in' in self.move_type:
                 # TODO esto no se ha probado aun
                 rut_field = 'rutRecibido'
                 rut_value = self.partner_id.vat
@@ -520,7 +519,7 @@ class AccountMove(models.Model):
 
     @api.model
     def _l10n_uy_get_min_by_unidad_indexada(self):
-        return self.env.ref('l10n_uy_account.UYI').rate * 5000
+        return self.env.ref('base.UYI').rate * 5000
 
     def is_expo_cfe(self):
         """ True of False in the current invoice is an exporation invoice type """
@@ -608,6 +607,7 @@ class AccountMove(models.Model):
             res.update({
                 'Serie': self.journal_id.code,
                 'NumeroCfe': self.journal_id.sequence_number_next,
+                # TODO KZ esto va a explocar tocaria hacerlo de otra manera, solo para tickets contigencia
             })
         return res
 
@@ -688,8 +688,8 @@ class AccountMove(models.Model):
             'cfe_tag': self._l10n_uy_get_cfe_tag(),
             'referencia_lines': self._l10n_uy_get_cfe_referencia(),
         }
-        cfe = self.env.ref('l10n_uy_edi.cfe_template').render(values)
-        cfe = unescape(cfe.decode('utf-8')).replace(r'&', '&amp;')
+        cfe = self.env.ref('l10n_uy_edi.cfe_template')._render(values)
+        cfe = cfe.unescape()
         cfe = '\n'.join([item for item in cfe.split('\n') if item.strip()])
 
         self._l10n_uy_vaidate_cfe(cfe)
@@ -957,6 +957,26 @@ class AccountMove(models.Model):
         #     'idReq': response.Resp.idReq, 'TipoNotificacion': response.Resp.TipoNotificacion})
         # if response3.Resp.CodRta != '00':
         #     raise UserError(_('ERROR: la notificacion no pudo descartarse %s') % response)
+
+    def _is_uy_cfe(self):
+        return bool(self.journal_id.l10n_latam_use_documents and self.company_id.country_code == "UY"
+                    and self.journal_id.l10n_uy_type in ['electronic', 'contingency'])
+
+    # TODO KZ No estoy segura si esto lo necesitamos o no. capaz que no. lo agrego para mantener uniformidad, evaluar si dejarlo
+    def _get_last_sequence_from_uruware(self):
+        """ This method is called to return the highest number for electronic invoices, it will try to connect to Uruware
+            only if it is necessary (when we are validating the invoice and need to set the document number) """
+        last_number = 0 if self._is_dummy_dgi_validation() or self.l10n_latam_document_number \
+            else self.journal_id._l10n_uy_get_dgi_last_invoice_number(self.l10n_latam_document_type_id)
+        return "%s %08d" % (self.l10n_latam_document_type_id.doc_code_prefix, last_number)
+
+    def _get_last_sequence(self, relaxed=False, with_prefix=None, lock=True):
+        """ For uruguayan electronic invoice, if there is not sequence already then consult the last number from Uruware
+        @return: string with the sequence, something like 'E-ticket 0000001"""
+        res = super()._get_last_sequence(relaxed=relaxed, with_prefix=with_prefix, lock=lock)
+        if self.country_code == "UY" and not res and self._is_uy_cfe() and self.l10n_latam_document_type_id:
+            res = self._get_last_sequence_from_uruware()
+        return res
 
 
 class AccountMoveLine(models.Model):

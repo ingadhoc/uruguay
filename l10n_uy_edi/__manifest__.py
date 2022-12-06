@@ -29,11 +29,12 @@
         'data/ir_actions_report_data.xml',
         'data/ir_cron.xml',
         'data/account_incoterms_data.xml',
+        'security/ir.model.access.csv',
     ],
     'demo': [
         'demo/res_partner_demo.xml',
         'demo/res_company_demo.xml',
         'demo/account_journal_demo.xml',
     ],
-    'installable': False,
+    'installable': True,
 }
