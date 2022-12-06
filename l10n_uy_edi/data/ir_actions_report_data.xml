@@ -5,8 +5,6 @@
     <record id="account.account_invoices" model="ir.actions.report">
         <field name="attachment_use">1</field>
     </record>
-
-    <!-- TODO remove it when migration to version 14.0 not neded -->
     <record id="account.account_invoices_without_payment" model="ir.actions.report">
         <field name="attachment_use">1</field>
     </record>

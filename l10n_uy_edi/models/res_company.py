@@ -112,8 +112,6 @@ class ResCompany(models.Model):
     def _l10n_uy_ucfe_inbox_operation(self, msg_type, extra_req={}, return_transport=False):
         """ Call Operation get in msg_type for UCFE inbox webservice """
         self.ensure_one()
-        # TODO I think this should be unique? see how we can generated it,  int, need to be assing using a
-        # sequence in odoo?
         # TODO consumir secuencia creada en Odoo
         id_req = 1
         now = datetime.utcnow()
