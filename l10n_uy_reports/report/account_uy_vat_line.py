@@ -2,7 +2,7 @@
 from odoo import tools, models, fields, api, _
 
 
-class AccountArVatLine(models.Model):
+class AccountUyVatLine(models.Model):
     """ Base model for new Uruguayan VAT reports. The idea is that this lines have all the necessary data and which any
     changes in odoo, this ones will be taken for this cube and then no changes will be nedeed in the reports that use
     this lines. A line is created for each accountring entry that is affected by VAT tax.
@@ -13,6 +13,7 @@ class AccountArVatLine(models.Model):
     _name = "account.uy.vat.line"
     _description = "VAT line for Analysis in Uruguayan Localization"
     _auto = False
+    _order = 'invoice_date asc, move_name asc, id asc'
 
     document_type_id = fields.Many2one('l10n_latam.document.type', 'Document Type', readonly=True)
     date = fields.Date(readonly=True)
@@ -20,7 +21,7 @@ class AccountArVatLine(models.Model):
     rut = fields.Char(readonly=True)
     partner_name = fields.Char(readonly=True)
     move_name = fields.Char(readonly=True)
-    type = fields.Selection(selection=[
+    move_type = fields.Selection(selection=[
             ('entry', 'Journal Entry'),
             ('out_invoice', 'Customer Invoice'),
             ('out_refund', 'Customer Credit Note'),
@@ -56,14 +57,14 @@ class AccountArVatLine(models.Model):
         # we use tax_ids for base amount instead of tax_base_amount for two reasons:
         # * zero taxes do not create any aml line so we can't get base for them with tax_base_amount
         # * we use same method as in odoo tax report to avoid any possible discrepancy with the computed tax_base_amount
-        query = """
+        sql = """CREATE or REPLACE VIEW account_uy_vat_line as (
 SELECT
     am.id,
     (CASE WHEN lit.l10n_uy_dgi_code = '2' THEN rp.vat ELSE null END) as rut,
     am.name as move_name,
     rp.name as partner_name,
     am.id as move_id,
-    am.type,
+    am.move_type,
     am.date,
     am.invoice_date,
     am.partner_id,
@@ -103,17 +104,16 @@ LEFT JOIN
     ON ntg.id = nt.tax_group_id
 LEFT JOIN
     res_partner AS rp
-    ON rp.id = am.partner_id
+    ON rp.id = am.commercial_partner_id
 LEFT JOIN
     l10n_latam_identification_type AS lit
     ON rp.l10n_latam_identification_type_id = lit.id
 WHERE
     (aml.tax_line_id is not null or btg.name in ('VAT 22%', 'VAT 10%', 'VAT Exempt')) and
-    am.type in ('out_invoice', 'in_invoice', 'out_refund', 'in_refund')
+    am.move_type in ('out_invoice', 'in_invoice', 'out_refund', 'in_refund')
 GROUP BY
     am.id, rp.id, lit.id
 ORDER BY
     am.date, am.name
-        """
-        sql = """CREATE or REPLACE VIEW %s as (%s)""" % (self._table, query)
+       )"""
         cr.execute(sql)

@@ -6,6 +6,7 @@
     'license': 'LGPL-3',
     'category': 'Localization',
     'summary': 'Reporting for Uruguayan Localization',
+    'license': 'LGPL-3',
     'description': """
 Add VAT Book report which holds the VAT detail info of sales or purchases made in a period of time.
 Also add a VAT summary report that is used to analyze invoicing
@@ -22,5 +23,5 @@ Also add a VAT summary report that is used to analyze invoicing
     ],
     'demo': [],
     'auto_install': True,
-    'installable': False,
+    'installable': True,
 }
