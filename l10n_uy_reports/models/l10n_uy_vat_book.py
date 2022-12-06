@@ -9,7 +9,7 @@ class L10nUYVatBook(models.AbstractModel):
     _inherit = "account.report"
     _description = "Uruguayan VAT Book"
 
-    filter_date = {'date_from': '', 'date_to': '', 'filter': 'this_month'}
+    filter_date = {'mode': 'range', 'date_from': '', 'date_to': '', 'filter': 'this_month'}
     filter_all_entries = False
 
     def _get_columns_name(self, options):
@@ -49,8 +49,7 @@ class L10nUYVatBook(models.AbstractModel):
     def _get_lines(self, options, line_id=None):
         context = self.env.context
         journal_type = context.get('journal_type') or options.get('journal_type', 'sale')
-        company_ids = context.get('company_ids')
-
+        company_ids = self.env.company.ids
         lines = []
         line_id = 0
 
@@ -79,9 +78,9 @@ class L10nUYVatBook(models.AbstractModel):
             totals['other_taxes'] += other_taxes
             totals['total'] += rec['total']
 
-            if rec['type'] in ['in_invoice', 'in_refund']:
+            if rec['move_type'] in ['in_invoice', 'in_refund']:
                 caret_type = 'account.invoice.in'
-            elif rec['type'] in ['out_invoice', 'out_refund']:
+            elif rec['move_type'] in ['out_invoice', 'out_refund']:
                 caret_type = 'account.invoice.out'
             else:
                 caret_type = 'account.move'
