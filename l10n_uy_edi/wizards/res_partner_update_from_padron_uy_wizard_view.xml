@@ -77,7 +77,13 @@
         </field>
     </record>
 
-    <act_window id="action_partner_update" res_model="res.partner.update.from.padron.uy.wizard" binding_model="res.partner"
-        target="new" view_mode="form" name="Automatic Update from DGI"/>
+    <record id="action_partner_update" model="ir.actions.act_window">
+        <field name="name">Automatic Update from DGI</field>
+        <field name="res_model">res.partner.update.from.padron.uy.wizard</field>
+        <field name="binding_model_id" ref="model_res_partner"/>
+        <field name="target">new</field>
+        <field name="view_mode">form</field>
+    </record>
+
 
 </odoo>
