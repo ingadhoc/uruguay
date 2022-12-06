@@ -14,15 +14,9 @@
 Uruguayan Currency Rate Update
 ==============================
 
-This module will add BCU (Banco Central Uruguayo) web service as currency rate provider (official Uruguayan provider). Also as an alternative the rates can be manually checked and extracted from https://www.bcu.gub.uy/Estadisticas-e-Indicadores/Paginas/Cotizaciones.aspx
+Este modulo genera la conexión con el webservice del BCU (Banco Central Uruguayo - proveedor oficial en Uruguay) para obtener de automaticamente las cotizaciones de las monedas que esten activas en su Odoo.
 
-URLS webservices used in this module:
-
-* get rates https://cotizaciones.bcu.gub.uy/wscotizaciones/servlet/awsbcucotizaciones
-* get currency names and codes https://cotizaciones.bcu.gub.uy/wscotizaciones/servlet/awsbcumonedas
-* get last date rates were updated https://cotizaciones.bcu.gub.uy/wscotizaciones/servlet/awsultimocierre
-
-For technical questions about the ws we can sent a emial to mesadeayuda@bcu.gub.uy
+En caso de no querer utilizar este modulo pueden consultar las cotizaciones en esta pagina y luego crearlas manualmente en su Odoo https://www.bcu.gub.uy/Estadisticas-e-Indicadores/Paginas/Cotizaciones.aspx
 
 Installation
 ============
@@ -60,6 +54,17 @@ Bugs are tracked on `GitHub Issues
 <https://github.com/ingadhoc/uruguay/issues>`_. In case of trouble, please
 check there if your issue has already been reported. If you spotted it first,
 help us smashing it by providing a detailed and welcomed feedback.
+
+Testing and Development
+=======================
+
+URLS webservices used in this module:
+
+* get rates https://cotizaciones.bcu.gub.uy/wscotizaciones/servlet/awsbcucotizaciones
+* get currency names and codes https://cotizaciones.bcu.gub.uy/wscotizaciones/servlet/awsbcumonedas
+* get last date rates were updated https://cotizaciones.bcu.gub.uy/wscotizaciones/servlet/awsultimocierre
+
+For technical questions about the ws we can sent a emial to mesadeayuda@bcu.gub.uy
 
 Credits
 =======

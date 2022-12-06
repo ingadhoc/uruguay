@@ -23,7 +23,7 @@ class TestL10nUyCurrencyUpdate(common.TransactionCase):
         super().setUp()
 
         self.UYU = self.env.ref('base.UYU')
-        self.UYI = self.env.ref('l10n_uy_account.UYI')
+        self.UYI = self.env.ref('base.UYI')
         self.ARS = self.env.ref('base.ARS')
         self.USD = self.env.ref('base.USD')
         self.EUR = self.env.ref('base.EUR')
