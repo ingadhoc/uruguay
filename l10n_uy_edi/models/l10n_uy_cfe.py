@@ -749,7 +749,7 @@ class L10nUyCfe(models.AbstractModel):
             # TODO parece que tenemos estos tipos de contribuyente: IVA mínimo, Monotributo o Monotributo MIDES ver si cargarlos en el patner asi como la afip responsibility
         }
 
-        if line.is_expo_cfe():
+        if self.is_expo_cfe():
             return 10  # Exportación y asimiladas
 
         # NOTA IMPORTANTE: Por el momento solo enviamos la informacion de los impuestos de tipo iva.
