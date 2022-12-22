@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Uruguay - Accounting Reports',
-    'version': '13.0.1.1.0',
+    'version': '15.0.1.1.0',
     'author': 'ADHOC SA',
     'license': 'LGPL-3',
     'category': 'Localization',
