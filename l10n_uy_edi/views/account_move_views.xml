@@ -30,14 +30,14 @@
             <notebook position="inside">
                 <page name="uy_dgi" string="DGI" attrs="{'invisible': [('l10n_uy_journal_type', 'not in', ['electronic', 'contingency'])]}">
                     <group>
-                        <group colspan="2">
+                        <group cols="4">
                             <notebook>
                                 <page string="Detail">
                                     <group string="UCFE">
                                         <field name="l10n_uy_ucfe_state"/>
                                         <field name="l10n_uy_ucfe_msg"/>
-                                        <field name="l10n_uy_ucfe_notif"/>
-                                        <field name="l10n_uy_cfe_partner_status"/>
+                                        <!-- <field name="l10n_uy_ucfe_notif"/> -->
+                                        <!-- <field name="l10n_uy_cfe_partner_status"/> -->
                                         <field name="l10n_uy_cfe_uuid"/>
                                         <button name="action_l10n_uy_get_uruware_cfe" type="object" string="Get Uruware Invoice" class="oe_inline oe_link"/>
                                         <field name="l10n_uy_cfe_file"/>

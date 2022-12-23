@@ -1,9 +1,11 @@
-from odoo import models
+from odoo import fields, models
 
 
 class L10nAccountDocumentType(models.Model):
 
     _inherit = 'l10n_latam.document.type'
+
+    internal_type = fields.Selection(selection_add=[('stock_picking', 'Remito')])
 
     def _format_document_number(self, document_number):
         """ By the moment format document_number and return
