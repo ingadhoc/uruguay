@@ -4,6 +4,7 @@
     <record id="adenda_exoneracion_impuesto_renta" model="l10n.uy.adenda">
         <field name="name">Exoneración Impuesto a la Renta</field>
         <field name="content">Honorarios por servicios de diseño, desarrollo e implementación de soportes lógicos, exonerados de impuesto a la renta según lo dispuesto en el apartado ii del primer inciso del artículo 161 bis del Decreto 150/007 del 26 de abril de 2007.</field>
+        <field name="apply_on">account.move</field>
         <field name="condition">True</field>
         <field name="active" eval="False"/>
         <field name="sequence">100</field>
@@ -13,6 +14,7 @@
     <record id="adenda_zona_franca" model="l10n.uy.adenda">
         <field name="name">Zona Franca</field>
         <field name="content">Venta considerada Exportación de Servicios amparada en el Artículo 34 ° Numeral 11 del Decreto N° 220/998</field>
+        <field name="apply_on">account.move</field>
         <field name="condition">inv.fiscal_position_id and 'zona franca' in inv.fiscal_position_id.name.lower()</field>
         <field name="active" eval="False"/>
         <field name="sequence">10</field>

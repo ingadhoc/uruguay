@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_edi_form" model="ir.ui.view">
+        <field name="model">stock.picking</field>
+        <field name="name">stock.picking.edi.form</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+
+            <form>
+                <field name="country_code" invisible="1"/>
+                <field name="l10n_latam_available_document_type_ids" invisible="1"/>
+                <field name="l10n_uy_is_cfe" invisible="1"/>
+            </form>
+
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="l10n_latam_document_type_id" domain="[('id', 'in', l10n_latam_available_document_type_ids)]" options="{'no_open': True, 'no_create': True}"/>
+                <field name="l10n_latam_document_number" attrs="{'invisible': [
+                    '|', '&amp;', '&amp;', ('l10n_latam_document_number', '=', False), ('l10n_uy_is_cfe', '=', True), ('l10n_latam_document_type_id', '!=', False),
+                    ('l10n_latam_document_type_id', '=', False)
+                    ], 'required': [('l10n_uy_is_cfe', '=', False), ('l10n_latam_document_type_id', '!=', False)]}"/>
+                <field name="l10n_uy_cfe_state" attrs="{'invisible': [('l10n_uy_is_cfe', '=', False)]}"/>
+                <field name="l10n_uy_ucfe_msg" attrs="{'invisible': [('l10n_uy_cfe_state', 'not in', ['xml_error', 'connection_error', 'ucfe_error', 'rejected'])]}"/>
+
+                <button name="action_l10n_uy_get_dgi_state" type="object" string="(UY) Consult DGI State" class="oe_inline oe_link" attrs="{'invisible': [('l10n_uy_cfe_state', '!=', 'received')]}" icon="fa-refresh"/>
+                <button name="action_l10n_uy_get_pdf" type="object" string="(UY) Print Legal PDF" class="oe_inline oe_link" attrs="{
+                    'invisible': [('l10n_uy_cfe_state', 'not in', ['received', 'ui_indexada'])]}" icon="fa-print"/>
+
+            </xpath>
+
+            <xpath expr="//header//button[@name='action_cancel']" position="after">
+                <button name="uy_post_dgi_remito" string="(UY) Enviar a DGI" type="object" attrs="{'invisible':['|', '|', '|', '|', '|', ('state', '!=', 'done'), ('l10n_uy_is_cfe', '=', False), ('l10n_uy_ucfe_state', 'in', ['00', '05', '06', '11']), ('picking_type_code', '!=', 'outgoing'), ('l10n_uy_cfe_state', 'in', ['received', 'accepted', 'rejected']), ('country_code', '!=', 'UY')]}"/>
+            </xpath>
+
+            <notebook position="inside">
+                <page name="uy_dgi" string="DGI" attrs="{'invisible': [('l10n_uy_is_cfe', '=', False)]}">
+                    <group>
+                        <group string="Datos para generar el CFE">
+                            <field name="l10n_uy_transfer_of_goods" attrs="{'required': [('l10n_latam_document_type_id', '!=', False)]}"/>
+                            <field name="l10n_uy_place_of_delivery"/>
+                            <field name="l10n_uy_extra_info_cfe"/>
+                        </group>
+                        <group cols="4" string="Resultados del CFE">
+                            <notebook>
+                                <page string="Detail">
+                                    <group string="UCFE">
+                                        <field name="l10n_uy_ucfe_state"/>
+                                        <field name="l10n_uy_ucfe_msg"/>
+                                        <field name="l10n_uy_ucfe_notif"/>
+                                        <field name="l10n_uy_cfe_partner_status"/>
+                                        <field name="l10n_uy_cfe_uuid"/>
+                                        <button name="action_l10n_uy_get_uruware_cfe" type="object" string="Obtener Remito creado en Uruware" class="oe_inline oe_link"/>
+                                        <field name="l10n_uy_cfe_file"/>
+                                    </group>
+                                    <group string="DGI">
+                                        <label for="l10n_uy_cfe_dgi_state"/>
+                                        <div>
+                                            <field name="l10n_uy_cfe_dgi_state"/>
+                                        </div>
+                                        <field name="l10n_uy_dgi_barcode"/>
+                                    </group>
+                                </page>
+                                <page string="XML CFE">
+                                    <button name="action_l10n_uy_validate_cfe" type="object" string="Validate CFE XML" class="oe_inline oe_link"/>
+                                    <field name="l10n_uy_cfe_xml" nolabel="1" widget="ace"/>
+                                </page>
+                                <page string="XML Request">
+                                    <field name="l10n_uy_dgi_xml_request" nolabel="1" widget="ace"/>
+                                </page>
+                                <page string="XML Response">
+                                    <field name="l10n_uy_dgi_xml_response" nolabel="1" widget="ace"/>
+                                </page>
+                            </notebook>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+
+        </field>
+    </record>
+
+    <record id="view_picking_edi_tree" model="ir.ui.view">
+        <field name="model">stock.picking</field>
+        <field name="name">stock.picking.edi.tree</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <field name="json_popover" position="after">
+                <field name="l10n_uy_ucfe_state"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
