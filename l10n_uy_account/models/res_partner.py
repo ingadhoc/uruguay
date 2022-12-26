@@ -111,3 +111,8 @@ class ResPartner(models.Model):
             return True
         else:
             return False
+
+    def _is_rut(self):
+        self.ensure_one()
+        return True if self.l10n_latam_identification_type_id.l10n_uy_dgi_code == '2' and self.vat and \
+            self._l10n_uy_check_ruc_rut(self.vat)[0] else False

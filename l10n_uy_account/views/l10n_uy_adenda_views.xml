@@ -8,6 +8,7 @@
             <tree string="Adendas" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
+                <field name="apply_on"/>
                 <field name="content"/>
                 <field name="condition"/>
                 <field name="company_id"/>
