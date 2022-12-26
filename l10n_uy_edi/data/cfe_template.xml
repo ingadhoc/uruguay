@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <!-- TODO KZ a futuro necesitamos ver de mejorar la forma en que creamos el cfe, en lugar de tener este archivo ver si podemos pasarle directamente el xds y solo el diccionario con los valores para que automaticamente cree el cfe segun dicho xsd y eliminamos este template por completo  -->
+
         <template id="cfe_template">
            <CFE xmlns="http://cfe.dgi.gub.uy" version="1.0">
             <t t-esc="'&lt;' + cfe_tag + '&gt;'"/>
@@ -13,26 +15,21 @@
                         <!-- TODO KZ lo dejamos fijo por el momento, ver para implementar cuando tengamos un monotributo o iva minimo -->
                         <!-- <MntBruto>1</MntBruto> -->
 
-                        <FmaPago t-esc="IdDoc['FmaPago']"/>
-                        <FchVenc t-esc="IdDoc['FchVenc']"/>
+                        <TipoTraslado t-if="IdDoc.get('TipoTraslado')" t-esc="IdDoc['TipoTraslado']"/>
+                        <FmaPago t-if="IdDoc.get('FmaPago')" t-esc="IdDoc['FmaPago']"/>
+                        <FchVenc t-if="IdDoc.get('FchVenc')" t-esc="IdDoc['FchVenc']"/>
                         <ClauVenta t-if="IdDoc.get('ClauVenta')" t-esc="IdDoc['ClauVenta']"/>
                         <ModVenta t-if="IdDoc.get('ModVenta')" t-esc="IdDoc['ModVenta']"/>
                         <ViaTransp t-if="IdDoc.get('ViaTransp')" t-esc="IdDoc['ViaTransp']"/>
                     </IdDoc>
-                    <Emisor>
-                        <RUCEmisor t-esc="RUCEmisor"/>
-                        <!-- TODO KZ company register name? -->
-                        <RznSoc t-esc="move.company_id.name"/>
-
-                        <!-- NOTA nosotros estamos reportando NomComercial pero Uruware no, ver si realmente es necesario o no si debemos quitarlo, revisar en DGI -->
-                        <NomComercial t-esc="move.company_id.name"/>
-                        <!-- <EmiSucursal>Central</EmiSucursal> es opcional para todos asi que mejor no lo pasamos -->
-                        <CdgDGISucur t-esc="move.company_id.l10n_uy_dgi_house_code"/>
-                        <!-- A48 -->
-                        <!-- TODO KZ fix street2 -->
-                        <DomFiscal t-esc="(move.company_id.street + (' ' + move.company_id.street or ''))[:70]"/>
-                        <Ciudad t-esc="move.company_id.city"/>
-                        <Departamento t-esc="move.company_id.state_id.name"/>
+                    <Emisor t-if="emisor">
+                        <RUCEmisor t-esc="emisor['RUCEmisor']"/>
+                        <RznSoc t-esc="emisor['RznSoc']"/>
+                        <NomComercial t-esc="emisor['NomComercial']"/>
+                        <CdgDGISucur t-esc="emisor['CdgDGISucur']"/>
+                        <DomFiscal t-esc="emisor['DomFiscal']"/>
+                        <Ciudad t-esc="emisor['Ciudad']"/>
+                        <Departamento t-esc="emisor['Departamento']"/>
                     </Emisor>
                     <Receptor t-if="receptor">
                         <TipoDocRecep t-esc="receptor['TipoDocRecep']"/>
@@ -44,9 +41,10 @@
                         <CiudadRecep t-if="receptor.get('CiudadRecep')" t-esc="receptor['CiudadRecep']"/>
                         <DeptoRecep t-if="receptor.get('DeptoRecep')" t-esc="receptor['DeptoRecep']"/>
                         <PaisRecep t-if="receptor.get('PaisRecep')" t-esc="receptor['PaisRecep']"/>
+                        <LugarDestEnt t-if="receptor.get('LugarDestEnt')" t-esc="receptor['LugarDestEnt']"/>
                     </Receptor>
                     <Totales>
-                        <TpoMoneda t-esc="totals_detail['TpoMoneda']"/>
+                        <TpoMoneda t-if="totals_detail.get('TpoMoneda')" t-esc="totals_detail['TpoMoneda']"/>
                         <TpoCambio t-if="totals_detail.get('TpoCambio')" t-esc="totals_detail['TpoCambio']"/>
                         <MntNoGrv t-if="totals_detail.get('MntNoGrv')" t-esc="totals_detail['MntNoGrv']"/>
                         <MntExpoyAsim t-if="totals_detail.get('MntExpoyAsim')" t-esc="totals_detail['MntExpoyAsim']"/>
@@ -60,19 +58,19 @@
                         <MntIVATasaMin t-if="totals_detail.get('MntIVATasaMin')" t-esc="totals_detail['MntIVATasaMin']"/>
                         <MntIVATasaBasica t-if="totals_detail.get('MntIVATasaBasica')" t-esc="totals_detail['MntIVATasaBasica']"/>
 
-                        <MntTotal t-esc="totals_detail['MntTotal']"/>
+                        <MntTotal t-if="totals_detail.get('MntTotal')" t-esc="totals_detail['MntTotal']"/>
                         <CantLinDet t-esc="totals_detail['CantLinDet']"/>
-                        <MntPagar t-esc="totals_detail['MntPagar']"/>
+                        <MntPagar t-if="totals_detail.get('MntPagar')"  t-esc="totals_detail['MntPagar']"/>
                     </Totales>
                 </Encabezado>
                 <Detalle>
                     <Item t-foreach="item_detail" t-as="item_line">
                         <NroLinDet t-esc="item_line['NroLinDet']"/>
-                        <IndFact t-esc="item_line['IndFact']"/>
+                        <IndFact t-if="item_line.get('IndFact')" t-esc="item_line['IndFact']"/>
                         <NomItem t-esc="item_line['NomItem']"/>
                         <Cantidad t-esc="item_line['Cantidad']"/>
                         <UniMed t-esc="item_line['UniMed']"/>
-                        <PrecioUnitario t-esc="item_line['PrecioUnitario']"/>
+                        <PrecioUnitario t-if="item_line.get('PrecioUnitario')" t-esc="item_line['PrecioUnitario']"/>
                         <MontoItem t-esc="item_line['MontoItem']"/>
                     </Item>
                 </Detalle>
