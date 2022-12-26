@@ -13,3 +13,9 @@ class L10nUyAdenda(models.Model):
     content = fields.Text()
     condition = fields.Char(default="True")
     company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
+    apply_on = fields.Selection([
+        ('account.move', 'Facturas y Tickets'),
+        ('stock.picking', 'Remitos'),
+        ('account.move.line', 'Resguardos'),
+        ('all', 'Todos los CFE'),
+    ], required=True)
