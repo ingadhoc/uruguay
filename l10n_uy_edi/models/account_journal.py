@@ -8,6 +8,7 @@ class AccountJournal(models.Model):
     def _l10n_uy_get_dgi_last_invoice_number(self, document_type):
         """ 660 Consulta Siguiente número de CFE """
         self.ensure_one()
+        res = False
         # Por los momentos, esto seria solo para comprobantes regualres electronicos, no toma en cuenta los
         # de contigencia < 200
         if self.l10n_uy_type in ['electronic'] and document_type.code != '000' and int(document_type.code) < 200:
