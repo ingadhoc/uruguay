@@ -359,8 +359,8 @@ class L10nUyCfe(models.AbstractModel):
         self.ensure_one()
         fieldname = {'account.move': 'invoice_origin',
                      'stock.picking': 'origin'}
-        res = self[fieldname[self._name]][:50] if fieldname.get(self._name) else False
-        return {'RUCEmisor': res} if res else {}
+        res = (self[fieldname[self._name]] or '')[:50] if fieldname.get(self._name) else False
+        return {'CompraID': res} if res else {}
 
     def _l10n_uy_get_cfe_emisor(self):
         self.ensure_one()
@@ -372,11 +372,12 @@ class L10nUyCfe(models.AbstractModel):
         res.update(self._uy_cfe_A47_CdgDGISucur())
         res.update(self._uy_cfe_A48_DomFiscal())
         res.update(self._uy_cfe_A49_Ciudad())
+        res.update(self._uy_cfe_A50_Departamento())
         return res
 
     def _uy_cfe_A40_RUCEmisor(self):
         self.ensure_one()
-        if not self._is_rut():
+        if not self.company_id.partner_id._is_rut():
             raise UserError(_('Debe configurar el RUT emisor para poder emitir este documento (RUC en la compañia)'))
         res = stdnum.uy.rut.compact(self.company_id.vat)
         return {'RUCEmisor': res} if res else {}
@@ -396,7 +397,7 @@ class L10nUyCfe(models.AbstractModel):
     def _uy_cfe_A47_CdgDGISucur(self):
         self.ensure_one()
         res = self.company_id.l10n_uy_dgi_house_code
-        return {'NomComercial': res} if res else {}
+        return {'CdgDGISucur': res} if res else {}
 
     def _uy_cfe_A48_DomFiscal(self):
         self.ensure_one()
@@ -412,6 +413,11 @@ class L10nUyCfe(models.AbstractModel):
         self.ensure_one()
         res = self.company_id.city[:30]
         return {'Ciudad': res} if res else {}
+
+    def _uy_cfe_A50_Departamento(self):
+        self.ensure_one()
+        res = self.company_id.state_id.name[:30]
+        return {'Departamento': res} if res else {}
 
     def _uy_cfe_A64_DirRecep(self):
         """ A64 Direccion de Receptor. Sin Validación. Maximo 70 caracteres.
@@ -809,7 +815,7 @@ class L10nUyCfe(models.AbstractModel):
                     # A119 Tasa Mínima IVA TODO
                     'IVATasaMin': 10,
                     # A-C121 Total IVA Tasa Básica? Monto del IVA Tasa Minima
-                    'MntIVATasaMin': float_repr(abs(tax_line_basica[amount_field]), 2),
+                    'MntIVATasaMin': float_repr(abs(tax_line_minima[amount_field]), 2),
                 })
 
         return res
