@@ -9,6 +9,7 @@ from odoo import _, fields, models, api
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.float_utils import float_repr
+from odoo.tools import format_amount
 from . import ucfe_errors
 
 
@@ -194,7 +195,7 @@ class L10nUyCfe(models.AbstractModel):
         for rec in self:
             if not rec.l10n_uy_cfe_uuid:
                 raise UserError(_('Necesita definir "Clave o UUID del CFE" para poder continuar'))
-            if 'error' in rec.l10n_uy_cfe_state:
+            if rec.l10n_uy_cfe_state and 'error' in rec.l10n_uy_cfe_state:
                 raise UserError(_('No se puede obtener la factura de un comprobante con error'))
             # TODO en este momento estamos usando este 360 porque es el que tenemos pero estamos esperando respuesta de
             # soporte uruware a ver como podemos extraer mas información y poder validarla.
@@ -303,27 +304,51 @@ class L10nUyCfe(models.AbstractModel):
     def _l10n_uy_get_cfe_receptor(self):
         self.ensure_one()
         res = {}
+        receptor_required = True
         document_type = int(self.l10n_latam_document_type_id.code)
         cond_e_fact = document_type in [111, 112, 113, 141, 142, 143]
-        cond_e_ticket = document_type in [101, 102, 103, 131, 132, 133] and self._amount_total_company_currency() > self._l10n_uy_get_min_by_unidad_indexada()
+        cond_e_ticket = document_type in [101, 102, 103, 131, 132, 133]
         cond_e_fact_expo = self.is_expo_cfe()
         cond_e_remito = self._is_uy_remito_type_cfe()
         # cond_e_boleta = document_type in [151, 152, 153]
         # cond_e_contg = document_type in [201, 202, 203]
         # cond_e_resguardo = self._is_uy_resguardo()
-
         # cond_e_fact: obligatorio RUC (C60= 2).
         # cond_e_ticket: si monto neto ∑ (C112 a C118) > a tope establecido (ver tabla E),
         # debe identificarse con NIE, RUC, CI, Otro, Pasaporte DNI o NIFE (C 60= 2, 3, 4, 5, 6 o 7).
 
-        if not self.partner_id.l10n_latam_identification_type_id and not self.partner_id.l10n_latam_identification_type_id.l10n_uy_dgi_code:
-            raise UserError(_('The partner of the CFE need to have a Uruguayan Identification Type'))
+        # # Si soy e-ticket y el monto es menor al monto minimo no es necesario validar y enviar la info del receptor, la
+        # enviamos solo si la tenemos disponible.
+        min_amount = self._l10n_uy_get_min_by_unidad_indexada()
+        if cond_e_ticket and self._amount_total_company_currency() < min_amount:
+            receptor_required = False
+
+        # Si no tenemos la info del receptor neceario, pero en el envio de la info del receptor no es requerido directamente
+        # no la enviamos
+        if not self.partner_id.vat and not receptor_required:
+            return res
 
         tipo_doc = int(self.partner_id.l10n_latam_identification_type_id.l10n_uy_dgi_code)
         cod_pais = 'UY' if tipo_doc in [2, 3] else '99'
 
-        if tipo_doc == 0:
-            raise UserError(_('Debe indicar un tipo de documento Uruguayo para poder facturar a este cliente'))
+        # Validaciones de tener todo los dato del receptor cuando este es requerido
+        if receptor_required:
+            if not self.partner_id.l10n_latam_identification_type_id and not self.partner_id.l10n_latam_identification_type_id.l10n_uy_dgi_code:
+                raise UserError(_('The partner of the CFE need to have a Uruguayan Identification Type'))
+            if tipo_doc == 0:
+                raise UserError(_('Debe indicar un tipo de documento Uruguayo para poder facturar a este cliente'))
+
+        if cond_e_fact_expo or cond_e_fact or (cond_e_ticket and receptor_required):
+            if not all([self.partner_id.street, self.partner_id.city, self.partner_id.state_id, self.partner_id.country_id, self.partner_id.vat]):
+                msg = _('Necesita completar los datos del receptor: dirección, ciudad, provincia, pais del receptor y número de identificación')
+                if cond_e_ticket:
+                    msg += _('\n\nNOTA: Esto es requerido ya que el e-Ticket supera el monto minimo.\nMonto minimo = 5.000 * Unidad Indexada Uruguaya (%s)' % format_amount(self.env, min_amount, self.currency_id))
+                raise UserError(msg)
+
+        if cond_e_remito and not all([self.partner_id.street, self.partner_id.city]):
+            raise UserError(_('Debe configurar al menos la dirección y ciudad del receptor para poder enviar este e-Remito'))
+
+        # Si tenemos la info disponible del receptor la enviamos no importa el caso (asi lo hace uruware)
         res.update({
             # TODO -Free Shop: siempre se debe identificar al receptor.
             'TipoDocRecep': tipo_doc,  # A60
@@ -331,12 +356,6 @@ class L10nUyCfe(models.AbstractModel):
             'DocRecep' if tipo_doc in [1, 2, 3] else 'DocRecepExt': self.partner_id.vat,  # A62 / A62.1
         })
 
-        if cond_e_fact_expo or cond_e_fact or cond_e_ticket:
-            if not all([self.partner_id.street, self.partner_id.city, self.partner_id.state_id, self.partner_id.country_id, self.partner_id.vat]):
-                msg = _('Debe configurar la dirección, ciudad, provincia, pais del receptor y número de identificación')
-                if cond_e_ticket:
-                    msg += '\n' + _('E-ticket needs these values because that total amount > 5.000 * Unidad Indexada Uruguaya')
-                raise UserError(msg)
         res.update({'RznSocRecep': self.partner_id.name[:150]})  # A63
         res.update(self._uy_cfe_A64_DirRecep())
         res.update(self._uy_cfe_A65_CiudadRecep())
@@ -348,9 +367,6 @@ class L10nUyCfe(models.AbstractModel):
             res.update(self._uy_cfe_A69_LugarDestEnt())
             res.update(self._uy_cfe_A70_CompraID())
 
-        if cond_e_remito and not all([self.partner_id.street, self.partner_id.city]):
-            raise UserError(_('Debe configurar al menos la dirección y ciudad del receptor para poder enviar este e-Remito'))
-
         return res
 
     def _uy_cfe_A70_CompraID(self):
@@ -359,8 +375,8 @@ class L10nUyCfe(models.AbstractModel):
         self.ensure_one()
         fieldname = {'account.move': 'invoice_origin',
                      'stock.picking': 'origin'}
-        res = self[fieldname[self._name]][:50] if fieldname.get(self._name) else False
-        return {'RUCEmisor': res} if res else {}
+        res = (self[fieldname[self._name]] or '')[:50] if fieldname.get(self._name) else False
+        return {'CompraID': res} if res else {}
 
     def _l10n_uy_get_cfe_emisor(self):
         self.ensure_one()
@@ -372,11 +388,12 @@ class L10nUyCfe(models.AbstractModel):
         res.update(self._uy_cfe_A47_CdgDGISucur())
         res.update(self._uy_cfe_A48_DomFiscal())
         res.update(self._uy_cfe_A49_Ciudad())
+        res.update(self._uy_cfe_A50_Departamento())
         return res
 
     def _uy_cfe_A40_RUCEmisor(self):
         self.ensure_one()
-        if not self._is_rut():
+        if not self.company_id.partner_id._is_rut():
             raise UserError(_('Debe configurar el RUT emisor para poder emitir este documento (RUC en la compañia)'))
         res = stdnum.uy.rut.compact(self.company_id.vat)
         return {'RUCEmisor': res} if res else {}
@@ -396,7 +413,7 @@ class L10nUyCfe(models.AbstractModel):
     def _uy_cfe_A47_CdgDGISucur(self):
         self.ensure_one()
         res = self.company_id.l10n_uy_dgi_house_code
-        return {'NomComercial': res} if res else {}
+        return {'CdgDGISucur': res} if res else {}
 
     def _uy_cfe_A48_DomFiscal(self):
         self.ensure_one()
@@ -412,6 +429,11 @@ class L10nUyCfe(models.AbstractModel):
         self.ensure_one()
         res = self.company_id.city[:30]
         return {'Ciudad': res} if res else {}
+
+    def _uy_cfe_A50_Departamento(self):
+        self.ensure_one()
+        res = self.company_id.state_id.name[:30]
+        return {'Departamento': res} if res else {}
 
     def _uy_cfe_A64_DirRecep(self):
         """ A64 Direccion de Receptor. Sin Validación. Maximo 70 caracteres.
@@ -809,7 +831,7 @@ class L10nUyCfe(models.AbstractModel):
                     # A119 Tasa Mínima IVA TODO
                     'IVATasaMin': 10,
                     # A-C121 Total IVA Tasa Básica? Monto del IVA Tasa Minima
-                    'MntIVATasaMin': float_repr(abs(tax_line_basica[amount_field]), 2),
+                    'MntIVATasaMin': float_repr(abs(tax_line_minima[amount_field]), 2),
                 })
 
         return res
