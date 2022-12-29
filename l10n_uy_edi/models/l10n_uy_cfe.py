@@ -335,7 +335,8 @@ class L10nUyCfe(models.AbstractModel):
             if not all([self.partner_id.street, self.partner_id.city, self.partner_id.state_id, self.partner_id.country_id, self.partner_id.vat]):
                 msg = _('Debe configurar la dirección, ciudad, provincia, pais del receptor y número de identificación')
                 if cond_e_ticket:
-                    msg += '\n' + _('E-ticket needs these values because that total amount > 5.000 * Unidad Indexada Uruguaya')
+                    min_amount = self._l10n_uy_get_min_by_unidad_indexada()
+                    msg += '\n' + _('E-ticket needs these values because that total amount > 5.000 * Unidad Indexada Uruguaya (%s)' % min_amount)
                 raise UserError(msg)
         res.update({'RznSocRecep': self.partner_id.name[:150]})  # A63
         res.update(self._uy_cfe_A64_DirRecep())
