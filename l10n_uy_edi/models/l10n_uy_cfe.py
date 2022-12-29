@@ -35,9 +35,6 @@ class L10nUyCfe(models.AbstractModel):
         ('accepted', 'CFE Accepted by DGI'),
         ('rejected', 'CFE Rejected by DGI'),
 
-        # TODO not sure I think we will remove this
-        ('ui_indexada', 'CFE Not sent, amount bellow 5.000 UI'),
-
         # UCFE error states
         ('xml_error', 'ERROR: CFE XML not valid'),
         ('connection_error', 'ERROR: Connection to UCFE'),
