@@ -7,7 +7,7 @@
     'author': 'ADHOC SA',
     'category': 'Localization',
     'license': 'LGPL-3',
-    'version': "15.0.1.1.0",
+    'version': "15.0.1.2.0",
     'depends': [
         'l10n_latam_invoice_document',
         'l10n_latam_base',
@@ -30,6 +30,7 @@
         'views/l10n_latam_document_type_views.xml',
         'views/account_move_views.xml',
         'views/account_journal_view.xml',
+        'views/account_tax_views.xml',
         'views/res_company_view.xml',
         'views/l10n_uy_adenda_views.xml',
         'data/account_chart_template_data2.xml',

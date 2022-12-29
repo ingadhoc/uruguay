@@ -45,6 +45,7 @@
         <field eval="0.0" name="amount"/>
         <field name="tax_group_id" ref="l10n_uy_account.tax_group_vat_exempt"/>
         <field name="type_tax_use">purchase</field>
+        <field name="l10n_uy_dgi_code">504</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -80,6 +81,7 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="l10n_uy_account.tax_group_vat_10"/>
         <field name="type_tax_use">sale</field>
+        <field name="l10n_uy_dgi_code">503</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -115,6 +117,7 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="l10n_uy_account.tax_group_vat_10"/>
         <field name="type_tax_use">purchase</field>
+        <field name="l10n_uy_dgi_code">506</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -150,6 +153,7 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="l10n_uy_account.tax_group_vat_22"/>
         <field name="type_tax_use">sale</field>
+        <field name="l10n_uy_dgi_code">502</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -185,6 +189,7 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="l10n_uy_account.tax_group_vat_22"/>
         <field name="type_tax_use">purchase</field>
+        <field name="l10n_uy_dgi_code">505</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
