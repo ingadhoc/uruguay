@@ -23,7 +23,7 @@
 
                 <button name="action_l10n_uy_get_dgi_state" type="object" string="(UY) Consult DGI State" class="oe_inline oe_link" attrs="{'invisible': [('l10n_uy_cfe_state', '!=', 'received')]}" icon="fa-refresh"/>
                 <button name="action_l10n_uy_get_pdf" type="object" string="(UY) Print Legal PDF" class="oe_inline oe_link" attrs="{
-                    'invisible': [('l10n_uy_cfe_state', 'not in', ['received', 'ui_indexada'])]}" icon="fa-print"/>
+                    'invisible': [('l10n_uy_cfe_state', 'not in', ['received'])]}" icon="fa-print"/>
 
             </xpath>
 

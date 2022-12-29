@@ -274,11 +274,6 @@ msgid "CFE Accepted by DGI"
 msgstr "CFE Aceptado por la DGI"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__ui_indexada
-msgid "CFE Not sent, amount bellow 5.000 UI"
-msgstr "CFE No enviado, el monto es menor a las 5.000 UI"
-
-#. module: l10n_uy_edi
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_cfe_pdf
 msgid "CFE PDF Representation"
 msgstr "CFE Representación impresa PDF"
