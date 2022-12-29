@@ -7,8 +7,8 @@ class StockPicking(models.Model):
     _name = 'stock.picking'
     _inherit = ['l10n.uy.cfe', 'stock.picking']
 
-    l10n_latam_document_type_id = fields.Many2one('l10n_latam.document.type', string='Document Type', copy=False)
-    l10n_latam_document_number = fields.Char(string='Document Number', readonly=True, states={'draft': [('readonly', False)]}, copy=False)
+    l10n_latam_document_type_id = fields.Many2one('l10n_latam.document.type', string='Document Type (UY)', copy=False)
+    l10n_latam_document_number = fields.Char(string='Document Number (UY)', readonly=True, states={'draft': [('readonly', False)]}, copy=False)
     l10n_latam_available_document_type_ids = fields.Many2many('l10n_latam.document.type', compute='_compute_l10n_latam_available_document_types')
     l10n_uy_transfer_of_goods = fields.Selection(
         [('1', 'Venta'),
