@@ -79,31 +79,20 @@ class FormReportWiz(models.TransientModel):
 
         return the string with the lines of the file to write """
         lines = []
-
         # TODO KZ Importante. por lo que vimos en el archivo generado esta mezclando iva compras e iva ventas.
-        line_code = {
-            self._search_tax('vat_22', 'sale'): '502',  # 502 IVA Ventas Tasa Básica a Contribuyentes
-            self._search_tax('vat_10', 'sale'): '503',  # 503 IVA Ventas Tasa Mínima a Contribuyentes
-            self._search_tax('vat_exempt', 'purchase'): '504',  # Compras Plaza Exentas de IVA
-            self._search_tax('vat_22', 'purchase'): '505',  # 505 IVA Compras Plaza Tasa Básica
-            self._search_tax('vat_10', 'purchase'): '506',  # 506 IVA Compras Plaza Tasa Mínima
-        }
-        # Estos dos parece que tambien van pero no tenemos un impuestos para colocarlo
-        # ("507", "507	- IVA Ventas tasa 10% a Contribuyentes"),
-        # ("508", "508	- IVA Compras Plaza Tasa 10%"),
 
-        taxes_raw = list(line_code.keys())
-        taxes = self.env['account.tax']
-        for item in taxes_raw:
-            taxes |= item
+        invoices = self._get_invoices()
+        UYU_currency = self.env.ref('base.UYU')
+
+        line_code = {}
+        taxes = invoices.mapped('line_ids.tax_ids').filtered(lambda x: x.l10n_uy_dgi_code.form == "2181")
+        for tax in taxes:
+            line_code.update({tax: tax.l10n_uy_dgi_code.code})
 
         tax_code = {}
         taxes_group_ids = taxes.mapped('tax_group_id').ids
         for tax in taxes:
             tax_code[(tax.tax_group_id.id, tax.type_tax_use)] = line_code.get(tax)
-
-        invoices = self._get_invoices()
-        UYU_currency = self.env.ref('base.UYU')
 
         # Revisando que todos los impuestos esten bien configurados
         error = ""
