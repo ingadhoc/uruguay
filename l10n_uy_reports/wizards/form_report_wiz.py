@@ -53,7 +53,7 @@ class FormReportWiz(models.TransientModel):
         self.ensure_one()
         domain = [
             ('company_id', '=', self.company_id.id), ('state', '=', 'posted'),
-            ('l10n_uy_cfe_state', 'in', ['accepted']),
+            '|', ('l10n_uy_cfe_state', 'in', ['accepted']), ('move_type', 'like', 'in_'),
             ('date', '>=', self.date_from), ('date', '<', self.date_to),
             ('partner_id.vat', '!=', False),
             ('l10n_latam_document_type_id.code', '!=', '0'),
