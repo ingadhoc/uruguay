@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="action_resguardos_uy" model="ir.actions.act_window">
+        <field name="name">Resguardos (UY)</field>
+        <field name="res_model">l10n.uy.resguardo</field>
+        <field name="view_mode">form,tree</field>
+    </record>
+
+    <menuitem id="menu_uy_resguardos" name="Resguardos (UY)" parent="account.menu_finance_configuration" action="action_resguardos_uy" sequence="25"/>
+
+</odoo>

@@ -27,7 +27,7 @@
     </record>
 
     <record id="action_retenciones_uy" model="ir.actions.act_window">
-        <field name="name">Retenciones UY</field>
+        <field name="name">Retenciones (UY)</field>
         <field name="res_model">account.move.line</field>
         <field name="view_mode">form,tree</field>
         <field name="view_id" ref="view_move_line_tree"/>
@@ -36,6 +36,6 @@
         <field name="context">{'search_default_without_resguardo':1}</field>
     </record>
 
-    <menuitem id="menu_uy_resguardos" name="Retenciones UY" parent="account.menu_finance_configuration" action="action_retenciones_uy" sequence="25"/>
+    <menuitem id="menu_uy_retenciones" name="Retenciones (UY)" parent="account.menu_finance_configuration" action="action_retenciones_uy" sequence="25"/>
 
 </odoo>
