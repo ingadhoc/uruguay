@@ -10,4 +10,31 @@
         <field name="currency_subunit_label">Centesimos</field>
     </record>
 
+    <record id="USDB" model="res.currency">
+        <field name="name">USB</field>
+        <field name="symbol">USDB</field>
+        <field name="rounding">0.01</field>
+        <field name="active" eval="True"/>
+        <field name="currency_unit_label">Dolar USA Billete</field>
+        <field name="currency_subunit_label">Centesimos</field>
+    </record>
+
+    <record id="BRLB" model="res.currency">
+        <field name="name">BRB</field>
+        <field name="symbol">BRLB</field>
+        <field name="rounding">0.01</field>
+        <field name="active" eval="True"/>
+        <field name="currency_unit_label">Real Billete</field>
+        <field name="currency_subunit_label">Centesimos</field>
+    </record>
+
+    <record id="ARGB" model="res.currency">
+        <field name="name">ARB</field>
+        <field name="symbol">ARGB</field>
+        <field name="rounding">0.01</field>
+        <field name="active" eval="True"/>
+        <field name="currency_unit_label">Peso Argentino Billete</field>
+        <field name="currency_subunit_label">Centesimos</field>
+    </record>
+
 </odoo>
