@@ -1,13 +1,13 @@
 id,l10n_uy_bcu_code
-base.ARS,500
+base.ARS,501
 base.EUR,1111
-base.USD,2222
+base.USD,2225
 base.AUD,105
 base.NZD,1490
 base.GBP,2700
 l10n_uy_account.UYI,9800
 base.ARS,500
-base.BRL,1000
+base.BRL,1001
 base.CLP,1300
 base.ZAR,1620
 base.DKK,1800
