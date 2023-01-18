@@ -50,11 +50,38 @@ class ResCompany(models.Model):
             transport = transports.Transport(operation_timeout=operation_timeout, timeout=timeout)
             client = zeep.Client(wsdl, transport=transport)
         except Exception as error:
-            raise error
+            raise UserError(_('Hubo un error al conectarnos al webservice de cotizaciones del BCU UY %s') % str(error))
 
         if return_transport:
             return client, transport
         return client
+
+    def _get_uy_bcu_rate(self, date_rate, available_currencies):
+        """ Metodo que se conecta al webservice y extrae la info de la moneda para la fecha dada
+
+        :param date_rate: fecha string o objeto tipo date() de la fecha a la cual queremos la cotización
+        :param available_currencies: recorset de res.currency que queremos consultar
+
+        :return: response_data es una lista de diccionarios, cada diccionario corresponde al resultado
+        de la moneda dada en available_currencies """
+        response_data = []
+        code_currencies = {'item': available_currencies.mapped('l10n_uy_bcu_code')}
+        # code_currencies = [0]   # Todas las monedas
+        # code_currencies = {'item': [2224, 500, 501]} # Argentino, y Argentino Billete
+
+        try:
+            _logger.log(25, "Connecting to BCU to update the currency rates for %s", available_currencies.mapped('name'))
+            client = self._get_bcu_client('awsbcucotizaciones')
+            factory = client.type_factory('ns0')
+            Entrada = factory.wsbcucotizacionesin(Moneda=code_currencies, FechaDesde=date_rate, FechaHasta=date_rate, Grupo=0)
+            response = client.service.Execute(Entrada)
+            response_data = response.datoscotizaciones['datoscotizaciones.dato']
+            if response.respuestastatus.codigoerror:
+                raise UserError(_('Error encontrado al conectar para a UY BCU para actualizar moneda') + ': %s' % response.respuestastatus.mensaje)
+        except Exception as exp:
+            _logger.warn(25, "Could not get rate for currencies %s. This is what we get:\n%s", available_currencies.mapped('name'), exp)
+
+        return response_data
 
     def _parse_bcu_data(self, available_currencies):
         """ This method is used to update the currency rates using BCU provider. Rates are given against UY
@@ -67,10 +94,6 @@ class ResCompany(models.Model):
             _logger.log(25, "Not available currencies to update BCU UY")
             return False
 
-        code_currencies = {'item': available_currencies.mapped('l10n_uy_bcu_code')}
-        # code_currencies = [0]   # Todas las monedas
-        # code_currencies = {'item': [2224, 500, 501]} # Argentino, y Argentino Billete
-
         today = fields.Date.context_today(self.with_context(tz='America/Montevideo'))
         last_date = self.env.company.get_bcu_last_date()
         yesterday = (today - relativedelta(days=1))
@@ -81,23 +104,11 @@ class ResCompany(models.Model):
         # dias con tasa 1, y no tiene sentido :(
         res = {'UYU': (1.0, today)}
 
+        # IMPORTANTE: Automaticamente solo podemos traernos la cotizacion del dia de hoy que corresponde al cierre de ayer
         if last_date != yesterday:
             return False
 
-        response_data = []
-
-        try:
-            _logger.log(25, "Connecting to BCU to update the currency rates for %s", available_currencies.mapped('name'))
-            client = self._get_bcu_client('awsbcucotizaciones')
-            factory = client.type_factory('ns0')
-            Entrada = factory.wsbcucotizacionesin(Moneda=code_currencies, FechaDesde=yesterday, FechaHasta=yesterday, Grupo=0)
-            response = client.service.Execute(Entrada)
-            response_data = response.datoscotizaciones['datoscotizaciones.dato']
-            if response.respuestastatus.codigoerror:
-                raise UserError(_('Error encontrado al conectar para a UY BCU para actualizar moneda') + ': %s' % response.respuestastatus.mensaje)
-
-        except Exception as exp:
-            _logger.log(25, "Could not get rate for currencies %s. This is what we get:\n%s", available_currencies.mapped('name'), exp)
+        response_data = self._get_uy_bcu_rate(yesterday, available_currencies)
 
         for rate_data in response_data:
             # bcu_date = rate_data.Fecha  # Fecha de la cotización
@@ -107,7 +118,7 @@ class ResCompany(models.Model):
             # y en el ws lo tenemos como U.I. (este ultimo no es un valor valido segun odoo paraname de moneda - codigo iso)
             odoo_currency = available_currencies.filtered(lambda x: x.l10n_uy_bcu_code == rate_data.Moneda)
             res.update({odoo_currency.name: (1.0 / rate, today)})
-            _logger.log(25, "Currency %s %s %s", rate_data.CodigoISO, today, rate)
+            _logger.log(25, "Currency %s %s %s", odoo_currency.name, rate_data.Fecha, rate)
         return res or False
 
     def get_bcu_last_date(self):
