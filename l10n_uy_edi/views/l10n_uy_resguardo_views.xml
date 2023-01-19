@@ -25,42 +25,34 @@
                         <field name="aml_ids"/>
                     </group>
                     <notebook>
-                        <page name="uy_dgi" string="DGI">
-                            <group>
-                                <group cols="4">
-                                    <notebook>
-                                        <page string="Detail">
-                                            <group string="UCFE">
-                                                <field name="l10n_uy_ucfe_state"/>
-                                                <field name="l10n_uy_ucfe_msg"/>
-                                                <!-- <field name="l10n_uy_ucfe_notif"/> -->
-                                                <!-- <field name="l10n_uy_cfe_partner_status"/> -->
-                                                <field name="l10n_uy_cfe_uuid"/>
-                                                <button name="action_l10n_uy_get_uruware_cfe" type="object" string="Get Uruware Invoice" class="oe_inline oe_link"/>
-                                                <field name="l10n_uy_cfe_file"/>
-                                            </group>
-                                            <group string="DGI">
-                                                <field name="l10n_latam_document_number"/>
-                                                <label for="l10n_uy_cfe_dgi_state"/>
-                                                <div>
-                                                    <field name="l10n_uy_cfe_dgi_state"/>
-                                                </div>
-                                                <field name="l10n_uy_dgi_barcode"/>
-                                            </group>
-                                        </page>
-                                        <page string="XML CFE">
-                                            <button name="action_l10n_uy_validate_cfe" type="object" string="Validate CFE XML" class="oe_inline oe_link"/>
-                                            <field name="l10n_uy_cfe_xml" nolabel="1" widget="ace"/>
-                                        </page>
-                                        <page string="XML Request">
-                                            <field name="l10n_uy_dgi_xml_request" nolabel="1" widget="ace"/>
-                                        </page>
-                                        <page string="XML Response">
-                                            <field name="l10n_uy_dgi_xml_response" nolabel="1" widget="ace"/>
-                                        </page>
-                                    </notebook>
-                                </group>
+                        <page string="Detail">
+                            <group string="UCFE">
+                                <field name="l10n_uy_ucfe_state"/>
+                                <field name="l10n_uy_ucfe_msg"/>
+                                <!-- <field name="l10n_uy_ucfe_notif"/> -->
+                                <!-- <field name="l10n_uy_cfe_partner_status"/> -->
+                                <field name="l10n_uy_cfe_uuid"/>
+                                <button name="action_l10n_uy_get_uruware_cfe" type="object" string="Get Uruware Invoice" class="oe_inline oe_link"/>
+                                <field name="l10n_uy_cfe_file"/>
                             </group>
+                            <group string="DGI">
+                                <field name="l10n_latam_document_number"/>
+                                <label for="l10n_uy_cfe_dgi_state"/>
+                                <div>
+                                    <field name="l10n_uy_cfe_dgi_state"/>
+                                </div>
+                                <field name="l10n_uy_dgi_barcode"/>
+                            </group>
+                        </page>
+                        <page string="XML CFE">
+                            <button name="action_l10n_uy_validate_cfe" type="object" string="Validate CFE XML" class="oe_inline oe_link"/>
+                            <field name="l10n_uy_cfe_xml" nolabel="1" widget="ace"/>
+                        </page>
+                        <page string="XML Request">
+                            <field name="l10n_uy_dgi_xml_request" nolabel="1" widget="ace"/>
+                        </page>
+                        <page string="XML Response">
+                            <field name="l10n_uy_dgi_xml_response" nolabel="1" widget="ace"/>
                         </page>
                     </notebook>
                 </sheet>

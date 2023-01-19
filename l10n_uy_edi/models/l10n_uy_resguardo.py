@@ -8,7 +8,7 @@ class L10nUyResguardo(models.Model):
     _description = 'Resguardos (UY)'
 
     name = fields.Char()
-    state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('cancel', 'Cancel')])
+    state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('cancel', 'Cancel')], default='draft')
     l10n_latam_document_type_id = fields.Many2one('l10n_latam.document.type', string='Document Type', copy=False)
     l10n_latam_document_number = fields.Char(string='Document Number', readonly=True, states={'draft': [('readonly', False)]}, copy=False)
     company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
