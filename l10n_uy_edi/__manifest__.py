@@ -36,5 +36,5 @@
         'demo/res_company_demo.xml',
         'demo/account_journal_demo.xml',
     ],
-    'installable': True,
+    'installable': False,
 }
