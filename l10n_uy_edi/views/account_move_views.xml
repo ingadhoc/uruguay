@@ -43,7 +43,6 @@
                                         <field name="l10n_uy_cfe_file"/>
                                     </group>
                                     <group string="DGI">
-                                        <field name="l10n_latam_document_number"/>
                                         <label for="l10n_uy_cfe_dgi_state"/>
                                         <div>
                                             <field name="l10n_uy_cfe_dgi_state"/>
