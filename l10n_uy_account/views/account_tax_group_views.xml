@@ -8,6 +8,7 @@
             <field name="country_id" position="after">
                 <field name="l10n_uy_form"/>
                 <field name="l10n_uy_code"/>
+                <field name="l10n_uy_description"/>
                 <field name="l10n_uy_retention"/>
             </field>
         </field>
@@ -21,6 +22,7 @@
             <search>
                 <field name="l10n_uy_code"/>
                 <field name="l10n_uy_form"/>
+                <field name="l10n_uy_description"/>
             </search>
             <group position="inside">
                 <filter name="group_form" string="Form (UY)" context="{'group_by': 'l10n_uy_form'}"/>
