@@ -3,7 +3,7 @@
     <record id="view_tax_group_tree" model="ir.ui.view">
         <field name="name">account.tax.group.tree</field>
         <field name="model">account.tax.group</field>
-        <field name="inherit_id" ref="account.view_tax_group_tree">
+        <field name="inherit_id" ref="account.view_tax_group_tree"/>
         <field name="arch" type="xml">
             <field name="country_id" position="after">
                 <field name="l10n_uy_form"/>
@@ -16,7 +16,7 @@
     <record id="account_tax_group_view_search" model="ir.ui.view">
         <field name="name">account.tax.group.search.filters</field>
         <field name="model">account.tax.group</field>
-        <field name="inherit_id" ref="account.account_tax_group_view_search">
+        <field name="inherit_id" ref="account.account_tax_group_view_search"/>
         <field name="arch" type="xml">
             <search>
                 <field name="l10n_uy_code"/>
@@ -24,7 +24,7 @@
             </search>
             <group position="inside">
                 <filter name="group_form" string="Form (UY)" context="{'group_by': 'l10n_uy_form'}"/>
-            </search>
+            </group>
         </field>
     </record>
 

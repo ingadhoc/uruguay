@@ -7,7 +7,7 @@ class AccountTax(models.Model):
 
     @api.model
     def _l10n_uy_get_taxes(self, company):
-        """ return the related taxes recordset for basica, minima y exento """
+        """ return the related sales vat taxes recordset for basica, minima y exento """
         taxes = self.search([('company_id', '=', company.id)])
         tax_vat_22 = taxes.filtered(lambda x: x.tax_group_id == self.env.ref("l10n_uy_account.tax_group_vat_22"))
         tax_vat_10 = taxes.filtered(lambda x: x.tax_group_id == self.env.ref("l10n_uy_account.tax_group_vat_10"))
