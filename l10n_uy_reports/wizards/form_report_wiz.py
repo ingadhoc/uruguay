@@ -85,9 +85,9 @@ class FormReportWiz(models.TransientModel):
         UYU_currency = self.env.ref('base.UYU')
 
         line_code = {}
-        taxes = invoices.mapped('line_ids.tax_ids').filtered(lambda x: x.l10n_uy_dgi_code.form == "2181")
+        taxes = invoices.mapped('line_ids.tax_ids').filtered(lambda x: x.tax_group_id.form == "2181")
         for tax in taxes:
-            line_code.update({tax: tax.l10n_uy_dgi_code.code})
+            line_code.update({tax: tax.tax_group_id.l10n_uy_code})
 
         tax_code = {}
         taxes_group_ids = taxes.mapped('tax_group_id').ids
