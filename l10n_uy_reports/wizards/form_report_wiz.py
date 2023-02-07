@@ -132,7 +132,7 @@ class FormReportWiz(models.TransientModel):
             amount_total = {}
             for inv in invoices:
                 detail_amounts = json.loads(inv.tax_totals_json)
-                for item in detail_amounts.get('groups_by_subtotal').get('Untaxed Amount'):
+                for item in list(detail_amounts.get('groups_by_subtotal').values())[0]:
                     tax_group_id = item.get('tax_group_id')
                     if tax_group_id in taxes_group_ids:
                         inv_amount = item.get('tax_group_amount')
