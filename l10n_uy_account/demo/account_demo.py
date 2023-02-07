@@ -6,7 +6,7 @@ class AccountChartTemplate(models.Model):
 
     @api.model
     def _get_demo_data(self):
-        # Do not load generic demo data on these companies
+        # Do not load generic demo data on these companies.
         uy_demo_companies = (
             self.env.ref('l10n_uy_account.company_uy', raise_if_not_found=False),
         )
