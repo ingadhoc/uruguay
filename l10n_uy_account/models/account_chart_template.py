@@ -16,11 +16,11 @@ class AccountChartTemplate(models.Model):
                     values['l10n_uy_type'] = 'preprinted'
         return journal_data
 
-    def _load(self, sale_tax_rate, purchase_tax_rate, company):
+    def _load(self, company):
         """ Set companies country by default after install the chrar of account, also set the rut as the company
         identification type because this one is the uruguayan vat """
         self.ensure_one()
-        res = super()._load(sale_tax_rate, purchase_tax_rate, company)
+        res = super()._load(company)
 
         if self == self.env.ref('l10n_uy_account.l10n_uy_chart_template'):
             company.write({

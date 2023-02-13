@@ -1,122 +1,122 @@
-id,chart_template_id/id,code,user_type_id/id,name,reconcile
-l10n_uy_account.base_deudores_por_ventas,l10n_uy_account.l10n_uy_chart_template,1.2.1.1,account.data_account_type_receivable,Deudores por ventas,True
-l10n_uy_account.base_adelanto_a_proveedores,l10n_uy_account.l10n_uy_chart_template,1.2.1.2,account.data_account_type_current_assets,Adelanto a Proveedores,False
-l10n_uy_account.base_deudores_por_ventas_pos,l10n_uy_account.l10n_uy_chart_template,1.2.1.3,account.data_account_type_receivable,Deudores por ventas (PoS),True
-l10n_uy_account.base_cuenta_de_socios,l10n_uy_account.l10n_uy_chart_template,1.2.2.1,account.data_account_type_current_assets,Cuenta de socios,False
-l10n_uy_account.base_iva_pagos,l10n_uy_account.l10n_uy_chart_template,1.2.2.4,account.data_account_type_current_assets,IVA PAGOS,True
-l10n_uy_account.base_irae_anticipo,l10n_uy_account.l10n_uy_chart_template,1.2.2.5,account.data_account_type_current_assets,IRAE ANTICIPO,False
-l10n_uy_account.base_ant_pat,l10n_uy_account.l10n_uy_chart_template,1.2.2.7,account.data_account_type_current_assets,ANT. PAT.,False
-l10n_uy_account.base_ant_icosa,l10n_uy_account.l10n_uy_chart_template,1.2.2.9,account.data_account_type_current_assets,Ant. ICOSA,False
-l10n_uy_account.base_iva_s_compras_22,l10n_uy_account.l10n_uy_chart_template,1.2.3.0,account.data_account_type_current_assets,I.V.A. s/ compras 22%,False
-l10n_uy_account.base_iva_s_compras_10,l10n_uy_account.l10n_uy_chart_template,1.2.3.1,account.data_account_type_current_assets,I.V.A. s/ compras 10%,False
-l10n_uy_account.base_ret_iva,l10n_uy_account.l10n_uy_chart_template,1.2.3.2,account.data_account_type_current_assets,Ret IVA,False
-l10n_uy_account.base_mercaderias_de_reventa,l10n_uy_account.l10n_uy_chart_template,1.3.1.1,account.data_account_type_current_assets,Mercaderias de Reventa,False
-l10n_uy_account.base_mercaderias_importadas,l10n_uy_account.l10n_uy_chart_template,1.3.1.2,account.data_account_type_current_assets,Mercaderias Importadas,False
-l10n_uy_account.base_productos_terminados,l10n_uy_account.l10n_uy_chart_template,1.3.1.3,account.data_account_type_current_assets,Productos terminados,False
-l10n_uy_account.base_materiales_varios,l10n_uy_account.l10n_uy_chart_template,1.3.1.4,account.data_account_type_current_assets,Materiales Varios,False
-l10n_uy_account.base_licencias_software,l10n_uy_account.l10n_uy_chart_template,1.3.1.5,account.data_account_type_current_assets,Licencias Software,False
-l10n_uy_account.base_productos_en_proceso,l10n_uy_account.l10n_uy_chart_template,1.3.2.1,account.data_account_type_current_assets,Productos en Proceso,False
-l10n_uy_account.base_materia_prima,l10n_uy_account.l10n_uy_chart_template,1.3.2.2,account.data_account_type_current_assets,Materia Prima,False
-l10n_uy_account.base_muebles_y_utiles,l10n_uy_account.l10n_uy_chart_template,1.4.1.1,account.data_account_type_fixed_assets,Muebles y Utiles,False
-l10n_uy_account.base_inmuebles,l10n_uy_account.l10n_uy_chart_template,1.4.1.2,account.data_account_type_fixed_assets,Inmuebles,False
-l10n_uy_account.base_equipos_informaticos,l10n_uy_account.l10n_uy_chart_template,1.4.1.3,account.data_account_type_fixed_assets,Equipos Informaticos,False
-l10n_uy_account.base_vehiculos,l10n_uy_account.l10n_uy_chart_template,1.4.1.4,account.data_account_type_fixed_assets,Vehiculos,False
-l10n_uy_account.base_mejoras,l10n_uy_account.l10n_uy_chart_template,1.4.1.5,account.data_account_type_fixed_assets,Mejoras,False
-l10n_uy_account.base_software_licencias,l10n_uy_account.l10n_uy_chart_template,1.4.1.6,account.data_account_type_fixed_assets,Software Licencias,False
-l10n_uy_account.base_amort_ac_mueb_y_utiles,l10n_uy_account.l10n_uy_chart_template,1.4.5.1,account.data_account_type_depreciation,Amort. Ac. Mueb. y Utiles,False
-l10n_uy_account.base_amort_ac_inmuebles,l10n_uy_account.l10n_uy_chart_template,1.4.5.2,account.data_account_type_depreciation,Amort. Ac. Inmuebles,False
-l10n_uy_account.base_amort_ac_eq_informatica,l10n_uy_account.l10n_uy_chart_template,1.4.5.3,account.data_account_type_depreciation,Amort. Ac. Eq. Informatica,False
-l10n_uy_account.base_amort_ac_vehiculo,l10n_uy_account.l10n_uy_chart_template,1.4.5.4,account.data_account_type_depreciation,Amort. Ac. Vehiculo,False
-l10n_uy_account.base_amort_ac_mejoras,l10n_uy_account.l10n_uy_chart_template,1.4.5.5,account.data_account_type_depreciation,Amort. Ac. Mejoras,False
-l10n_uy_account.base_amort_ac_software,l10n_uy_account.l10n_uy_chart_template,1.4.5.6,account.data_account_type_depreciation,Amort. Ac. Software,False
-l10n_uy_account.base_acreedores_varios,l10n_uy_account.l10n_uy_chart_template,2.1.1.1,account.data_account_type_payable,Acreedores varios,True
-l10n_uy_account.base_acreedores_por_importacion,l10n_uy_account.l10n_uy_chart_template,2.1.1.2,account.data_account_type_payable,Acreedores por Importacion,True
-l10n_uy_account.base_acreedores_por_che_dif,l10n_uy_account.l10n_uy_chart_template,2.1.1.3,account.data_account_type_current_liabilities,Acreedores por Che. Dif.,True
-l10n_uy_account.base_adelantos_de_pago,l10n_uy_account.l10n_uy_chart_template,2.1.1.4,account.data_account_type_payable,Adelantos de Pago,True
-l10n_uy_account.base_prestamos_bancarios,l10n_uy_account.l10n_uy_chart_template,2.1.2.1,account.data_account_type_current_liabilities,Prestamos Bancarios,False
-l10n_uy_account.base_prestamos_mda_extranj,l10n_uy_account.l10n_uy_chart_template,2.1.2.2,account.data_account_type_current_liabilities,Prestamos Mda. Extranj.,False
-l10n_uy_account.base_intereses_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.2.3,account.data_account_type_current_liabilities,Intereses a Pagar,False
-l10n_uy_account.base_intereses_mda_extranj,l10n_uy_account.l10n_uy_chart_template,2.1.2.4,account.data_account_type_current_liabilities,Intereses Mda. Extranj.,False
-l10n_uy_account.base_intereses_a_vencer,l10n_uy_account.l10n_uy_chart_template,2.1.2.5,account.data_account_type_current_liabilities,Intereses a Vencer,False
-l10n_uy_account.base_doc_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.2.6,account.data_account_type_current_liabilities,Doc a Pagar,False
-l10n_uy_account.base_seguros_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.2.7,account.data_account_type_payable,Seguros a Pagar,True
-l10n_uy_account.base_bps_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.2.8,account.data_account_type_payable,B.P.S a Pagar,True
-l10n_uy_account.base_anticipo_icosa_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.3.1,account.data_account_type_payable,Anticipo ICOSA a Pagar,True
-l10n_uy_account.base_cta_director_sdo_ac,l10n_uy_account.l10n_uy_chart_template,2.1.3.2,account.data_account_type_current_liabilities,Cta. Director Sdo. Ac,False
-l10n_uy_account.base_cofis_vtas_tm,l10n_uy_account.l10n_uy_chart_template,2.1.3.3,account.data_account_type_current_liabilities,COFIS VTAS T.M,False
-l10n_uy_account.base_cofis_vtas_tb,l10n_uy_account.l10n_uy_chart_template,2.1.3.4,account.data_account_type_current_liabilities,COFIS VTAS T.B,False
-l10n_uy_account.base_iva_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.3.5,account.data_account_type_current_liabilities,IVA a Pagar,False
-l10n_uy_account.base_irae_ant_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.3.6,account.data_account_type_current_liabilities,IRAE ANT. A PAGAR,False
-l10n_uy_account.base_sueldos_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.3.7,account.data_account_type_current_liabilities,Sueldos a Pagar,False
-l10n_uy_account.base_iric_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.3.8,account.data_account_type_payable,IRIC A PAGAR,True
-l10n_uy_account.base_ant_pat_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.3.9,account.data_account_type_payable,ANT. PAT. A PAGAR,True
-l10n_uy_account.base_convdgi_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.4.1,account.data_account_type_payable,CONV.D.G.I. A PAGAR,True
-l10n_uy_account.base_iva_s_ventas_22,l10n_uy_account.l10n_uy_chart_template,2.1.4.2,account.data_account_type_current_liabilities,I.V.A. s/ ventas 22%,False
-l10n_uy_account.base_iva_s_ventas_10,l10n_uy_account.l10n_uy_chart_template,2.1.4.3,account.data_account_type_current_liabilities,I.V.A. s/ ventas 10%,False
-l10n_uy_account.base_saldo_icosa_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.4.4,account.data_account_type_payable,Saldo Icosa a Pagar,True
-l10n_uy_account.base_saldo_patrimonial_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.4.5,account.data_account_type_payable,Saldo Patrimonial a Pagar,True
-l10n_uy_account.base_saldo_irae_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.4.6,account.data_account_type_payable,Saldo IRAE a Pagar,True
-l10n_uy_account.base_capital_integrado,l10n_uy_account.l10n_uy_chart_template,3.1.1.1,account.data_account_type_equity,Capital Integrado,False
-l10n_uy_account.base_capital_social,l10n_uy_account.l10n_uy_chart_template,3.1.1.2,account.data_account_type_equity,Capital Social,False
-l10n_uy_account.base_capital_integrado_a_autorizar,l10n_uy_account.l10n_uy_chart_template,3.1.1.3,account.data_account_type_equity,Capital Integrado a Autorizar,False
-l10n_uy_account.base_cap_aut_a_susc,l10n_uy_account.l10n_uy_chart_template,3.1.1.4,account.data_account_type_equity,Capital Autorizado a Suscribir,False
-l10n_uy_account.base_capital_suscrito,l10n_uy_account.l10n_uy_chart_template,3.1.1.5,account.data_account_type_equity,Capital Suscrito,False
-l10n_uy_account.base_revaluos_fiscales,l10n_uy_account.l10n_uy_chart_template,3.1.2.1,account.data_account_type_equity,Revaluos Fiscales,False
-l10n_uy_account.base_revaluos_voluntarios,l10n_uy_account.l10n_uy_chart_template,3.1.2.2,account.data_account_type_equity,Revaluos Voluntarios,False
-l10n_uy_account.base_reservas_legales,l10n_uy_account.l10n_uy_chart_template,3.1.3.1,account.data_account_type_equity,Reservas Legales,False
-l10n_uy_account.base_reservas_voluntarias,l10n_uy_account.l10n_uy_chart_template,3.1.3.2,account.data_account_type_equity,Reservas Voluntarias,False
-l10n_uy_account.base_fdo_rev_activo_fijo,l10n_uy_account.l10n_uy_chart_template,3.1.3.3,account.data_account_type_equity,Fdo. Rev. Activo FIJO,False
-l10n_uy_account.base_resultejercanterior,l10n_uy_account.l10n_uy_chart_template,3.2.1.1,account.data_account_type_other_income,Result.Ejerc.Anterior,False
-l10n_uy_account.base_resultdel_ejercicio,l10n_uy_account.l10n_uy_chart_template,3.2.1.2,account.data_account_type_other_income,Result.del Ejercicio,False
-l10n_uy_account.base_dist_a_cta_fut_ut,l10n_uy_account.l10n_uy_chart_template,3.2.1.3,account.data_account_type_other_income,Dist. a cta. Fut Ut,False
-l10n_uy_account.base_honorarios_profesional,l10n_uy_account.l10n_uy_chart_template,4.1.0.1,account.data_account_type_expenses,Honorarios Profesional,False
-l10n_uy_account.base_otros_gastos_administr,l10n_uy_account.l10n_uy_chart_template,4.1.0.2,account.data_account_type_expenses,Otros Gastos Administr,False
-l10n_uy_account.base_sueldos_y_jornales,l10n_uy_account.l10n_uy_chart_template,4.2.0.1,account.data_account_type_expenses,Sueldos y Jornales,False
-l10n_uy_account.base_cargas_sociales,l10n_uy_account.l10n_uy_chart_template,4.2.0.2,account.data_account_type_expenses,Cargas Sociales,False
-l10n_uy_account.base_gastos_generales,l10n_uy_account.l10n_uy_chart_template,4.2.0.3,account.data_account_type_expenses,Gastos Generales,False
-l10n_uy_account.base_manty_rep,l10n_uy_account.l10n_uy_chart_template,4.2.0.4,account.data_account_type_expenses,Mant.y Rep.,False
-l10n_uy_account.base_gastos_de_representac,l10n_uy_account.l10n_uy_chart_template,4.2.0.5,account.data_account_type_expenses,Gastos de Representac.,False
-l10n_uy_account.base_patentes,l10n_uy_account.l10n_uy_chart_template,4.2.0.6,account.data_account_type_expenses,Patentes,False
-l10n_uy_account.base_mant_de_vehiculos,l10n_uy_account.l10n_uy_chart_template,4.2.0.7,account.data_account_type_expenses,Mant. de Vehiculos,False
-l10n_uy_account.base_servicios_contratados,l10n_uy_account.l10n_uy_chart_template,4.2.0.8,account.data_account_type_expenses,Servicios Contratados,False
-l10n_uy_account.base_ute_antel_y_ose,l10n_uy_account.l10n_uy_chart_template,4.2.0.9,account.data_account_type_expenses,UTE ANTEL Y OSE,False
-l10n_uy_account.base_combustibles_y_lubric,l10n_uy_account.l10n_uy_chart_template,4.2.1.1,account.data_account_type_expenses,Combustibles y Lubric.,False
-l10n_uy_account.base_impuestos,l10n_uy_account.l10n_uy_chart_template,4.2.1.2,account.data_account_type_expenses,Impuestos,False
-l10n_uy_account.base_descuentos_concedidos,l10n_uy_account.l10n_uy_chart_template,4.2.1.3,account.data_account_type_expenses,Descuentos Concedidos,False
-l10n_uy_account.base_alquileres,l10n_uy_account.l10n_uy_chart_template,4.2.1.4,account.data_account_type_expenses,Alquileres,False
-l10n_uy_account.base_seguros,l10n_uy_account.l10n_uy_chart_template,4.2.1.5,account.data_account_type_expenses,Seguros,False
-l10n_uy_account.base_iric,l10n_uy_account.l10n_uy_chart_template,4.2.1.6,account.data_account_type_expenses,IRIC,False
-l10n_uy_account.base_amortizacion,l10n_uy_account.l10n_uy_chart_template,4.2.1.7,account.data_account_type_expenses,Amortizacion,False
-l10n_uy_account.base_publicidad_y_prop,l10n_uy_account.l10n_uy_chart_template,4.2.1.8,account.data_account_type_expenses,Publicidad y Prop.,False
-l10n_uy_account.base_uniformes,l10n_uy_account.l10n_uy_chart_template,4.2.1.9,account.data_account_type_expenses,Uniformes,False
-l10n_uy_account.base_otros_alquileres_1,l10n_uy_account.l10n_uy_chart_template,4.2.2.0,account.data_account_type_expenses,Otros Alquileres,False
-l10n_uy_account.base_perdpor_prorrateo,l10n_uy_account.l10n_uy_chart_template,4.2.2.1,account.data_account_type_expenses,Perd.por prorrateo,False
-l10n_uy_account.base_patrimonio,l10n_uy_account.l10n_uy_chart_template,4.2.2.2,account.data_account_type_expenses,PATRIMONIO,False
-l10n_uy_account.base_peajes,l10n_uy_account.l10n_uy_chart_template,4.2.2.3,account.data_account_type_expenses,Peajes,False
-l10n_uy_account.base_papeleria,l10n_uy_account.l10n_uy_chart_template,4.2.2.4,account.data_account_type_expenses,Papeleria,False
-l10n_uy_account.base_gtos_no_admitidos,l10n_uy_account.l10n_uy_chart_template,4.2.2.5,account.data_account_type_expenses,Gtos. no admitidos,False
-l10n_uy_account.base_gtos_literal_e,l10n_uy_account.l10n_uy_chart_template,4.2.2.6,account.data_account_type_expenses,Gtos. literal E,False
-l10n_uy_account.base_alquiler_irae,l10n_uy_account.l10n_uy_chart_template,4.2.2.7,account.data_account_type_expenses,Alquiler I.R.A.E.,False
-l10n_uy_account.base_alquiler_irpf,l10n_uy_account.l10n_uy_chart_template,4.2.2.8,account.data_account_type_expenses,Alquiler I.R.P.F.,False
-l10n_uy_account.base_alojamiento_gtos_exterior,l10n_uy_account.l10n_uy_chart_template,4.2.2.9,account.data_account_type_expenses,Alojamiento gtos exterior,False
-l10n_uy_account.base_otros_alquileres_2,l10n_uy_account.l10n_uy_chart_template,4.2.3.0,account.data_account_type_expenses,Otros Alquileres,False
-l10n_uy_account.base_royalties,l10n_uy_account.l10n_uy_chart_template,4.2.3.1,account.data_account_type_expenses,Royalties,False
-l10n_uy_account.base_pasajes,l10n_uy_account.l10n_uy_chart_template,4.2.3.2,account.data_account_type_expenses,Pasajes,False
-l10n_uy_account.base_gtos_exterior,l10n_uy_account.l10n_uy_chart_template,4.2.3.3,account.data_account_type_expenses,Gtos. Exterior,False
-l10n_uy_account.base_software,l10n_uy_account.l10n_uy_chart_template,4.2.3.4,account.data_account_type_expenses,Software,False
-l10n_uy_account.base_licenias,l10n_uy_account.l10n_uy_chart_template,4.2.3.5,account.data_account_type_expenses,Licenias,False
-l10n_uy_account.base_compra_de_mercaderias,l10n_uy_account.l10n_uy_chart_template,4.3.0.1,account.data_account_type_direct_costs,Compra de Mercaderias,False
-l10n_uy_account.base_merc_rev_invfinal,l10n_uy_account.l10n_uy_chart_template,4.3.0.2,account.data_account_type_direct_costs,Merc. Rev. (Inv.Final),False
-l10n_uy_account.base_costo_de_lo_vendido,l10n_uy_account.l10n_uy_chart_template,4.3.0.3,account.data_account_type_direct_costs,Costo de lo Vendido,False
-l10n_uy_account.base_intereses_y_descuentos,l10n_uy_account.l10n_uy_chart_template,4.4.0.1,account.data_account_type_expenses,Intereses y Descuentos,False
-l10n_uy_account.base_diferencias_de_cambio,l10n_uy_account.l10n_uy_chart_template,4.4.0.2,account.data_account_type_expenses,Diferencias de cambio,False
-l10n_uy_account.base_gtosbrios,l10n_uy_account.l10n_uy_chart_template,4.4.0.3,account.data_account_type_expenses,Gtos.Brios.,False
-l10n_uy_account.base_perdidas_y_ganancias,l10n_uy_account.l10n_uy_chart_template,4.5.0.1,account.data_account_type_expenses,Perdidas y Ganancias,False
-l10n_uy_account.base_ventas_exentas,l10n_uy_account.l10n_uy_chart_template,5.1.1.1,account.data_account_type_revenue,Ventas Exentas,False
-l10n_uy_account.base_ventas_tasa_basica,l10n_uy_account.l10n_uy_chart_template,5.1.1.2,account.data_account_type_revenue,Ventas Tasa Basica,False
-l10n_uy_account.base_ventas_tasa_minima,l10n_uy_account.l10n_uy_chart_template,5.1.1.3,account.data_account_type_revenue,Ventas Tasa Minima,False
-l10n_uy_account.base_ventas_bienes_de_uso,l10n_uy_account.l10n_uy_chart_template,5.1.1.4,account.data_account_type_other_income,Ventas Bienes de Uso,False
-l10n_uy_account.base_ventas_exportacion,l10n_uy_account.l10n_uy_chart_template,5.1.1.5,account.data_account_type_revenue,Ventas exportacion,False
-l10n_uy_account.base_descuentos_obtenidos,l10n_uy_account.l10n_uy_chart_template,5.3.1.1,account.data_account_type_other_income,Descuentos Obtenidos,False
-l10n_uy_account.base_intereses_ganados,l10n_uy_account.l10n_uy_chart_template,5.3.1.2,account.data_account_type_other_income,Intereses Ganados,False
-l10n_uy_account.base_diferencia_de_cambio,l10n_uy_account.l10n_uy_chart_template,5.3.1.3,account.data_account_type_other_income,Diferencia de Cambio,False
+id,chart_template_id/id,code,account_type,name,reconcile
+l10n_uy_account.base_deudores_por_ventas,l10n_uy_account.l10n_uy_chart_template,1.2.1.1,asset_receivable,Deudores por ventas,True
+l10n_uy_account.base_adelanto_a_proveedores,l10n_uy_account.l10n_uy_chart_template,1.2.1.2,asset_current,Adelanto a Proveedores,False
+l10n_uy_account.base_deudores_por_ventas_pos,l10n_uy_account.l10n_uy_chart_template,1.2.1.3,asset_receivable,Deudores por ventas (PoS),True
+l10n_uy_account.base_cuenta_de_socios,l10n_uy_account.l10n_uy_chart_template,1.2.2.1,asset_current,Cuenta de socios,False
+l10n_uy_account.base_iva_pagos,l10n_uy_account.l10n_uy_chart_template,1.2.2.4,asset_current,IVA PAGOS,True
+l10n_uy_account.base_irae_anticipo,l10n_uy_account.l10n_uy_chart_template,1.2.2.5,asset_current,IRAE ANTICIPO,False
+l10n_uy_account.base_ant_pat,l10n_uy_account.l10n_uy_chart_template,1.2.2.7,asset_current,ANT. PAT.,False
+l10n_uy_account.base_ant_icosa,l10n_uy_account.l10n_uy_chart_template,1.2.2.9,asset_current,Ant. ICOSA,False
+l10n_uy_account.base_iva_s_compras_22,l10n_uy_account.l10n_uy_chart_template,1.2.3.0,asset_current,I.V.A. s/ compras 22%,False
+l10n_uy_account.base_iva_s_compras_10,l10n_uy_account.l10n_uy_chart_template,1.2.3.1,asset_current,I.V.A. s/ compras 10%,False
+l10n_uy_account.base_ret_iva,l10n_uy_account.l10n_uy_chart_template,1.2.3.2,asset_current,Ret IVA,False
+l10n_uy_account.base_mercaderias_de_reventa,l10n_uy_account.l10n_uy_chart_template,1.3.1.1,asset_current,Mercaderias de Reventa,False
+l10n_uy_account.base_mercaderias_importadas,l10n_uy_account.l10n_uy_chart_template,1.3.1.2,asset_current,Mercaderias Importadas,False
+l10n_uy_account.base_productos_terminados,l10n_uy_account.l10n_uy_chart_template,1.3.1.3,asset_current,Productos terminados,False
+l10n_uy_account.base_materiales_varios,l10n_uy_account.l10n_uy_chart_template,1.3.1.4,asset_current,Materiales Varios,False
+l10n_uy_account.base_licencias_software,l10n_uy_account.l10n_uy_chart_template,1.3.1.5,asset_current,Licencias Software,False
+l10n_uy_account.base_productos_en_proceso,l10n_uy_account.l10n_uy_chart_template,1.3.2.1,asset_current,Productos en Proceso,False
+l10n_uy_account.base_materia_prima,l10n_uy_account.l10n_uy_chart_template,1.3.2.2,asset_current,Materia Prima,False
+l10n_uy_account.base_muebles_y_utiles,l10n_uy_account.l10n_uy_chart_template,1.4.1.1,asset_fixed,Muebles y Utiles,False
+l10n_uy_account.base_inmuebles,l10n_uy_account.l10n_uy_chart_template,1.4.1.2,asset_fixed,Inmuebles,False
+l10n_uy_account.base_equipos_informaticos,l10n_uy_account.l10n_uy_chart_template,1.4.1.3,asset_fixed,Equipos Informaticos,False
+l10n_uy_account.base_vehiculos,l10n_uy_account.l10n_uy_chart_template,1.4.1.4,asset_fixed,Vehiculos,False
+l10n_uy_account.base_mejoras,l10n_uy_account.l10n_uy_chart_template,1.4.1.5,asset_fixed,Mejoras,False
+l10n_uy_account.base_software_licencias,l10n_uy_account.l10n_uy_chart_template,1.4.1.6,asset_fixed,Software Licencias,False
+l10n_uy_account.base_amort_ac_mueb_y_utiles,l10n_uy_account.l10n_uy_chart_template,1.4.5.1,expense_depreciation,Amort. Ac. Mueb. y Utiles,False
+l10n_uy_account.base_amort_ac_inmuebles,l10n_uy_account.l10n_uy_chart_template,1.4.5.2,expense_depreciation,Amort. Ac. Inmuebles,False
+l10n_uy_account.base_amort_ac_eq_informatica,l10n_uy_account.l10n_uy_chart_template,1.4.5.3,expense_depreciation,Amort. Ac. Eq. Informatica,False
+l10n_uy_account.base_amort_ac_vehiculo,l10n_uy_account.l10n_uy_chart_template,1.4.5.4,expense_depreciation,Amort. Ac. Vehiculo,False
+l10n_uy_account.base_amort_ac_mejoras,l10n_uy_account.l10n_uy_chart_template,1.4.5.5,expense_depreciation,Amort. Ac. Mejoras,False
+l10n_uy_account.base_amort_ac_software,l10n_uy_account.l10n_uy_chart_template,1.4.5.6,expense_depreciation,Amort. Ac. Software,False
+l10n_uy_account.base_acreedores_varios,l10n_uy_account.l10n_uy_chart_template,2.1.1.1,liability_payable,Acreedores varios,True
+l10n_uy_account.base_acreedores_por_importacion,l10n_uy_account.l10n_uy_chart_template,2.1.1.2,liability_payable,Acreedores por Importacion,True
+l10n_uy_account.base_acreedores_por_che_dif,l10n_uy_account.l10n_uy_chart_template,2.1.1.3,liability_current,Acreedores por Che. Dif.,True
+l10n_uy_account.base_adelantos_de_pago,l10n_uy_account.l10n_uy_chart_template,2.1.1.4,liability_payable,Adelantos de Pago,True
+l10n_uy_account.base_prestamos_bancarios,l10n_uy_account.l10n_uy_chart_template,2.1.2.1,liability_current,Prestamos Bancarios,False
+l10n_uy_account.base_prestamos_mda_extranj,l10n_uy_account.l10n_uy_chart_template,2.1.2.2,liability_current,Prestamos Mda. Extranj.,False
+l10n_uy_account.base_intereses_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.2.3,liability_current,Intereses a Pagar,False
+l10n_uy_account.base_intereses_mda_extranj,l10n_uy_account.l10n_uy_chart_template,2.1.2.4,liability_current,Intereses Mda. Extranj.,False
+l10n_uy_account.base_intereses_a_vencer,l10n_uy_account.l10n_uy_chart_template,2.1.2.5,liability_current,Intereses a Vencer,False
+l10n_uy_account.base_doc_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.2.6,liability_current,Doc a Pagar,False
+l10n_uy_account.base_seguros_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.2.7,liability_payable,Seguros a Pagar,True
+l10n_uy_account.base_bps_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.2.8,liability_payable,B.P.S a Pagar,True
+l10n_uy_account.base_anticipo_icosa_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.3.1,liability_payable,Anticipo ICOSA a Pagar,True
+l10n_uy_account.base_cta_director_sdo_ac,l10n_uy_account.l10n_uy_chart_template,2.1.3.2,liability_current,Cta. Director Sdo. Ac,False
+l10n_uy_account.base_cofis_vtas_tm,l10n_uy_account.l10n_uy_chart_template,2.1.3.3,liability_current,COFIS VTAS T.M,False
+l10n_uy_account.base_cofis_vtas_tb,l10n_uy_account.l10n_uy_chart_template,2.1.3.4,liability_current,COFIS VTAS T.B,False
+l10n_uy_account.base_iva_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.3.5,liability_current,IVA a Pagar,False
+l10n_uy_account.base_irae_ant_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.3.6,liability_current,IRAE ANT. A PAGAR,False
+l10n_uy_account.base_sueldos_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.3.7,liability_current,Sueldos a Pagar,False
+l10n_uy_account.base_iric_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.3.8,liability_payable,IRIC A PAGAR,True
+l10n_uy_account.base_ant_pat_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.3.9,liability_payable,ANT. PAT. A PAGAR,True
+l10n_uy_account.base_convdgi_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.4.1,liability_payable,CONV.D.G.I. A PAGAR,True
+l10n_uy_account.base_iva_s_ventas_22,l10n_uy_account.l10n_uy_chart_template,2.1.4.2,liability_current,I.V.A. s/ ventas 22%,False
+l10n_uy_account.base_iva_s_ventas_10,l10n_uy_account.l10n_uy_chart_template,2.1.4.3,liability_current,I.V.A. s/ ventas 10%,False
+l10n_uy_account.base_saldo_icosa_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.4.4,liability_payable,Saldo Icosa a Pagar,True
+l10n_uy_account.base_saldo_patrimonial_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.4.5,liability_payable,Saldo Patrimonial a Pagar,True
+l10n_uy_account.base_saldo_irae_a_pagar,l10n_uy_account.l10n_uy_chart_template,2.1.4.6,liability_payable,Saldo IRAE a Pagar,True
+l10n_uy_account.base_capital_integrado,l10n_uy_account.l10n_uy_chart_template,3.1.1.1,equity,Capital Integrado,False
+l10n_uy_account.base_capital_social,l10n_uy_account.l10n_uy_chart_template,3.1.1.2,equity,Capital Social,False
+l10n_uy_account.base_capital_integrado_a_autorizar,l10n_uy_account.l10n_uy_chart_template,3.1.1.3,equity,Capital Integrado a Autorizar,False
+l10n_uy_account.base_cap_aut_a_susc,l10n_uy_account.l10n_uy_chart_template,3.1.1.4,equity,Capital Autorizado a Suscribir,False
+l10n_uy_account.base_capital_suscrito,l10n_uy_account.l10n_uy_chart_template,3.1.1.5,equity,Capital Suscrito,False
+l10n_uy_account.base_revaluos_fiscales,l10n_uy_account.l10n_uy_chart_template,3.1.2.1,equity,Revaluos Fiscales,False
+l10n_uy_account.base_revaluos_voluntarios,l10n_uy_account.l10n_uy_chart_template,3.1.2.2,equity,Revaluos Voluntarios,False
+l10n_uy_account.base_reservas_legales,l10n_uy_account.l10n_uy_chart_template,3.1.3.1,equity,Reservas Legales,False
+l10n_uy_account.base_reservas_voluntarias,l10n_uy_account.l10n_uy_chart_template,3.1.3.2,equity,Reservas Voluntarias,False
+l10n_uy_account.base_fdo_rev_activo_fijo,l10n_uy_account.l10n_uy_chart_template,3.1.3.3,equity,Fdo. Rev. Activo FIJO,False
+l10n_uy_account.base_resultejercanterior,l10n_uy_account.l10n_uy_chart_template,3.2.1.1,income_other,Result.Ejerc.Anterior,False
+l10n_uy_account.base_resultdel_ejercicio,l10n_uy_account.l10n_uy_chart_template,3.2.1.2,income_other,Result.del Ejercicio,False
+l10n_uy_account.base_dist_a_cta_fut_ut,l10n_uy_account.l10n_uy_chart_template,3.2.1.3,income_other,Dist. a cta. Fut Ut,False
+l10n_uy_account.base_honorarios_profesional,l10n_uy_account.l10n_uy_chart_template,4.1.0.1,expense,Honorarios Profesional,False
+l10n_uy_account.base_otros_gastos_administr,l10n_uy_account.l10n_uy_chart_template,4.1.0.2,expense,Otros Gastos Administr,False
+l10n_uy_account.base_sueldos_y_jornales,l10n_uy_account.l10n_uy_chart_template,4.2.0.1,expense,Sueldos y Jornales,False
+l10n_uy_account.base_cargas_sociales,l10n_uy_account.l10n_uy_chart_template,4.2.0.2,expense,Cargas Sociales,False
+l10n_uy_account.base_gastos_generales,l10n_uy_account.l10n_uy_chart_template,4.2.0.3,expense,Gastos Generales,False
+l10n_uy_account.base_manty_rep,l10n_uy_account.l10n_uy_chart_template,4.2.0.4,expense,Mant.y Rep.,False
+l10n_uy_account.base_gastos_de_representac,l10n_uy_account.l10n_uy_chart_template,4.2.0.5,expense,Gastos de Representac.,False
+l10n_uy_account.base_patentes,l10n_uy_account.l10n_uy_chart_template,4.2.0.6,expense,Patentes,False
+l10n_uy_account.base_mant_de_vehiculos,l10n_uy_account.l10n_uy_chart_template,4.2.0.7,expense,Mant. de Vehiculos,False
+l10n_uy_account.base_servicios_contratados,l10n_uy_account.l10n_uy_chart_template,4.2.0.8,expense,Servicios Contratados,False
+l10n_uy_account.base_ute_antel_y_ose,l10n_uy_account.l10n_uy_chart_template,4.2.0.9,expense,UTE ANTEL Y OSE,False
+l10n_uy_account.base_combustibles_y_lubric,l10n_uy_account.l10n_uy_chart_template,4.2.1.1,expense,Combustibles y Lubric.,False
+l10n_uy_account.base_impuestos,l10n_uy_account.l10n_uy_chart_template,4.2.1.2,expense,Impuestos,False
+l10n_uy_account.base_descuentos_concedidos,l10n_uy_account.l10n_uy_chart_template,4.2.1.3,expense,Descuentos Concedidos,False
+l10n_uy_account.base_alquileres,l10n_uy_account.l10n_uy_chart_template,4.2.1.4,expense,Alquileres,False
+l10n_uy_account.base_seguros,l10n_uy_account.l10n_uy_chart_template,4.2.1.5,expense,Seguros,False
+l10n_uy_account.base_iric,l10n_uy_account.l10n_uy_chart_template,4.2.1.6,expense,IRIC,False
+l10n_uy_account.base_amortizacion,l10n_uy_account.l10n_uy_chart_template,4.2.1.7,expense,Amortizacion,False
+l10n_uy_account.base_publicidad_y_prop,l10n_uy_account.l10n_uy_chart_template,4.2.1.8,expense,Publicidad y Prop.,False
+l10n_uy_account.base_uniformes,l10n_uy_account.l10n_uy_chart_template,4.2.1.9,expense,Uniformes,False
+l10n_uy_account.base_otros_alquileres_1,l10n_uy_account.l10n_uy_chart_template,4.2.2.0,expense,Otros Alquileres,False
+l10n_uy_account.base_perdpor_prorrateo,l10n_uy_account.l10n_uy_chart_template,4.2.2.1,expense,Perd.por prorrateo,False
+l10n_uy_account.base_patrimonio,l10n_uy_account.l10n_uy_chart_template,4.2.2.2,expense,PATRIMONIO,False
+l10n_uy_account.base_peajes,l10n_uy_account.l10n_uy_chart_template,4.2.2.3,expense,Peajes,False
+l10n_uy_account.base_papeleria,l10n_uy_account.l10n_uy_chart_template,4.2.2.4,expense,Papeleria,False
+l10n_uy_account.base_gtos_no_admitidos,l10n_uy_account.l10n_uy_chart_template,4.2.2.5,expense,Gtos. no admitidos,False
+l10n_uy_account.base_gtos_literal_e,l10n_uy_account.l10n_uy_chart_template,4.2.2.6,expense,Gtos. literal E,False
+l10n_uy_account.base_alquiler_irae,l10n_uy_account.l10n_uy_chart_template,4.2.2.7,expense,Alquiler I.R.A.E.,False
+l10n_uy_account.base_alquiler_irpf,l10n_uy_account.l10n_uy_chart_template,4.2.2.8,expense,Alquiler I.R.P.F.,False
+l10n_uy_account.base_alojamiento_gtos_exterior,l10n_uy_account.l10n_uy_chart_template,4.2.2.9,expense,Alojamiento gtos exterior,False
+l10n_uy_account.base_otros_alquileres_2,l10n_uy_account.l10n_uy_chart_template,4.2.3.0,expense,Otros Alquileres,False
+l10n_uy_account.base_royalties,l10n_uy_account.l10n_uy_chart_template,4.2.3.1,expense,Royalties,False
+l10n_uy_account.base_pasajes,l10n_uy_account.l10n_uy_chart_template,4.2.3.2,expense,Pasajes,False
+l10n_uy_account.base_gtos_exterior,l10n_uy_account.l10n_uy_chart_template,4.2.3.3,expense,Gtos. Exterior,False
+l10n_uy_account.base_software,l10n_uy_account.l10n_uy_chart_template,4.2.3.4,expense,Software,False
+l10n_uy_account.base_licenias,l10n_uy_account.l10n_uy_chart_template,4.2.3.5,expense,Licenias,False
+l10n_uy_account.base_compra_de_mercaderias,l10n_uy_account.l10n_uy_chart_template,4.3.0.1,expense_direct_cost,Compra de Mercaderias,False
+l10n_uy_account.base_merc_rev_invfinal,l10n_uy_account.l10n_uy_chart_template,4.3.0.2,expense_direct_cost,Merc. Rev. (Inv.Final),False
+l10n_uy_account.base_costo_de_lo_vendido,l10n_uy_account.l10n_uy_chart_template,4.3.0.3,expense_direct_cost,Costo de lo Vendido,False
+l10n_uy_account.base_intereses_y_descuentos,l10n_uy_account.l10n_uy_chart_template,4.4.0.1,expense,Intereses y Descuentos,False
+l10n_uy_account.base_diferencias_de_cambio,l10n_uy_account.l10n_uy_chart_template,4.4.0.2,expense,Diferencias de cambio,False
+l10n_uy_account.base_gtosbrios,l10n_uy_account.l10n_uy_chart_template,4.4.0.3,expense,Gtos.Brios.,False
+l10n_uy_account.base_perdidas_y_ganancias,l10n_uy_account.l10n_uy_chart_template,4.5.0.1,expense,Perdidas y Ganancias,False
+l10n_uy_account.base_ventas_exentas,l10n_uy_account.l10n_uy_chart_template,5.1.1.1,income,Ventas Exentas,False
+l10n_uy_account.base_ventas_tasa_basica,l10n_uy_account.l10n_uy_chart_template,5.1.1.2,income,Ventas Tasa Basica,False
+l10n_uy_account.base_ventas_tasa_minima,l10n_uy_account.l10n_uy_chart_template,5.1.1.3,income,Ventas Tasa Minima,False
+l10n_uy_account.base_ventas_bienes_de_uso,l10n_uy_account.l10n_uy_chart_template,5.1.1.4,income_other,Ventas Bienes de Uso,False
+l10n_uy_account.base_ventas_exportacion,l10n_uy_account.l10n_uy_chart_template,5.1.1.5,income,Ventas exportacion,False
+l10n_uy_account.base_descuentos_obtenidos,l10n_uy_account.l10n_uy_chart_template,5.3.1.1,income_other,Descuentos Obtenidos,False
+l10n_uy_account.base_intereses_ganados,l10n_uy_account.l10n_uy_chart_template,5.3.1.2,income_other,Intereses Ganados,False
+l10n_uy_account.base_diferencia_de_cambio,l10n_uy_account.l10n_uy_chart_template,5.3.1.3,income_other,Diferencia de Cambio,False
