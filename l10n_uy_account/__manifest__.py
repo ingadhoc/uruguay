@@ -7,7 +7,7 @@
     'author': 'ADHOC SA',
     'category': 'Localization',
     'license': 'LGPL-3',
-    'version': "15.0.1.1.0",
+    'version': "16.0.1.0.0",
     'depends': [
         'l10n_latam_invoice_document',
         'l10n_latam_base',
@@ -46,5 +46,5 @@
         # restore
         'demo/res_users_demo.xml',
     ],
-    'installable': False,
+    'installable': True,
 }
