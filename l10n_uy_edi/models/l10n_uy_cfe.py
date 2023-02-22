@@ -333,8 +333,9 @@ class L10nUyCfe(models.AbstractModel):
         if receptor_required:
             if not self.partner_id.l10n_latam_identification_type_id and not self.partner_id.l10n_latam_identification_type_id.l10n_uy_dgi_code:
                 raise UserError(_('The partner of the CFE need to have a Uruguayan Identification Type'))
-            if tipo_doc == 0:
-                raise UserError(_('Debe indicar un tipo de documento Uruguayo para poder facturar a este cliente'))
+
+        if tipo_doc == 0:
+            raise UserError(_('Debe indicar un tipo de documento Uruguayo para poder facturar a este cliente'))
 
         if cond_e_fact_expo or cond_e_fact or (cond_e_ticket and receptor_required):
             if not all([self.partner_id.street, self.partner_id.city, self.partner_id.state_id, self.partner_id.country_id, self.partner_id.vat]):
