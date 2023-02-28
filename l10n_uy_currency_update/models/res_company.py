@@ -20,19 +20,20 @@ class ResCompany(models.Model):
         selection_add=[('bcu', 'Webservices BCU - Banco Central (Uruguay)')],
     )
 
-    @api.model
-    def create(self, values):
+    @api.model_create_multi
+    def create(self, vals_list):
         """ Overwrite to include new currency provider """
-        if values.get('country_id') and 'currency_provider' not in values:
-            country = self.env['res.country'].browse(values['country_id'])
-            if country.code.upper() == 'UY':
-                values['currency_provider'] = 'bcu'
-        return super().create(values)
+        for vals in vals_list:
+            if vals.get('country_id') and 'currency_provider' not in vals:
+                country = self.env['res.country'].browse(vals['country_id'])
+                if country.code.upper() == 'UY':
+                    vals['currency_provider'] = 'bcu'
+            return super().create(vals_list)
 
     @api.model
-    def set_special_defaults_on_install(self):
+    def _compute_currency_provider(self):
         """ Overwrite to include new currency provider """
-        super().set_special_defaults_on_install()
+        super()._compute_currency_provider()
         uy_companies = self.search([]).filtered(lambda company: company.country_id.code == 'UY')
         if uy_companies:
             uy_companies.currency_provider = 'bcu'
