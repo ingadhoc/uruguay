@@ -1088,8 +1088,8 @@ class L10nUyCfe(models.AbstractModel):
                     # TODO parece que tenemos estos tipos de contribuyente: IVA mínimo, Monotributo o Monotributo MIDES ver si cargarlos en el patner asi como la afip responsibility
                 }
 
-            # NOTA IMPORTANTE: Por el momento solo enviamos la informacion de los impuestos de tipo iva.
-            res = value.get(line.tax_ids.filtered(lambda x: x in vat_taxes).id)
+                # NOTA IMPORTANTE: Por el momento solo enviamos la informacion de los impuestos de tipo iva.
+                res = value.get(line.tax_ids.filtered(lambda x: x in vat_taxes).id)
 
         return {'IndFact': res} if res else {}
 
