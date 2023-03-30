@@ -5,85 +5,85 @@
 
         <template id="cfe_template">
            <CFE xmlns="http://cfe.dgi.gub.uy" version="1.0">
-            <t t-esc="'&lt;' + cfe_tag + '&gt;'"/>
+            <t t-out="'&lt;' + cfe_tag + '&gt;'"/>
                 <Encabezado>
                     <IdDoc>
-                        <TipoCFE t-esc="int(move.l10n_latam_document_type_id.code)"/>
-                        <Serie t-if="IdDoc.get('Serie')" t-esc="IdDoc['Serie']"/>
-                        <Nro t-if="IdDoc.get('NumeroCfe')" t-esc="IdDoc['NumeroCfe']"/>
-                        <FchEmis t-esc="IdDoc['FchEmis']"/>
+                        <TipoCFE t-out="int(move.l10n_latam_document_type_id.code)"/>
+                        <Serie t-if="IdDoc.get('Serie')" t-out="IdDoc['Serie']"/>
+                        <Nro t-if="IdDoc.get('NumeroCfe')" t-out="IdDoc['NumeroCfe']"/>
+                        <FchEmis t-out="IdDoc['FchEmis']"/>
                         <!-- TODO KZ lo dejamos fijo por el momento, ver para implementar cuando tengamos un monotributo o iva minimo -->
                         <!-- <MntBruto>1</MntBruto> -->
 
-                        <TipoTraslado t-if="IdDoc.get('TipoTraslado')" t-esc="IdDoc['TipoTraslado']"/>
-                        <FmaPago t-if="IdDoc.get('FmaPago')" t-esc="IdDoc['FmaPago']"/>
-                        <FchVenc t-if="IdDoc.get('FchVenc')" t-esc="IdDoc['FchVenc']"/>
-                        <ClauVenta t-if="IdDoc.get('ClauVenta')" t-esc="IdDoc['ClauVenta']"/>
-                        <ModVenta t-if="IdDoc.get('ModVenta')" t-esc="IdDoc['ModVenta']"/>
-                        <ViaTransp t-if="IdDoc.get('ViaTransp')" t-esc="IdDoc['ViaTransp']"/>
+                        <TipoTraslado t-if="IdDoc.get('TipoTraslado')" t-out="IdDoc['TipoTraslado']"/>
+                        <FmaPago t-if="IdDoc.get('FmaPago')" t-out="IdDoc['FmaPago']"/>
+                        <FchVenc t-if="IdDoc.get('FchVenc')" t-out="IdDoc['FchVenc']"/>
+                        <ClauVenta t-if="IdDoc.get('ClauVenta')" t-out="IdDoc['ClauVenta']"/>
+                        <ModVenta t-if="IdDoc.get('ModVenta')" t-out="IdDoc['ModVenta']"/>
+                        <ViaTransp t-if="IdDoc.get('ViaTransp')" t-out="IdDoc['ViaTransp']"/>
                     </IdDoc>
                     <Emisor t-if="emisor">
-                        <RUCEmisor t-esc="emisor['RUCEmisor']"/>
-                        <RznSoc t-esc="emisor['RznSoc']"/>
-                        <NomComercial t-esc="emisor['NomComercial']"/>
-                        <CdgDGISucur t-esc="emisor['CdgDGISucur']"/>
-                        <DomFiscal t-esc="emisor['DomFiscal']"/>
-                        <Ciudad t-esc="emisor['Ciudad']"/>
-                        <Departamento t-esc="emisor['Departamento']"/>
+                        <RUCEmisor t-out="emisor['RUCEmisor']"/>
+                        <RznSoc t-out="emisor['RznSoc']"/>
+                        <NomComercial t-out="emisor['NomComercial']"/>
+                        <CdgDGISucur t-out="emisor['CdgDGISucur']"/>
+                        <DomFiscal t-out="emisor['DomFiscal']"/>
+                        <Ciudad t-out="emisor['Ciudad']"/>
+                        <Departamento t-out="emisor['Departamento']"/>
                     </Emisor>
                     <Receptor t-if="receptor">
-                        <TipoDocRecep t-esc="receptor['TipoDocRecep']"/>
-                        <CodPaisRecep t-esc="receptor['CodPaisRecep']"/>
-                        <DocRecep t-if="receptor.get('DocRecep')" t-esc="receptor['DocRecep']"/>
-                        <DocRecepExt t-if="receptor.get('DocRecepExt')" t-esc="receptor['DocRecepExt']"/>
-                        <RznSocRecep t-if="receptor.get('RznSocRecep')" t-esc="receptor['RznSocRecep']"/>
-                        <DirRecep t-if="receptor.get('DirRecep')" t-esc="receptor['DirRecep']"/>
-                        <CiudadRecep t-if="receptor.get('CiudadRecep')" t-esc="receptor['CiudadRecep']"/>
-                        <DeptoRecep t-if="receptor.get('DeptoRecep')" t-esc="receptor['DeptoRecep']"/>
-                        <PaisRecep t-if="receptor.get('PaisRecep')" t-esc="receptor['PaisRecep']"/>
-                        <LugarDestEnt t-if="receptor.get('LugarDestEnt')" t-esc="receptor['LugarDestEnt']"/>
+                        <TipoDocRecep t-out="receptor['TipoDocRecep']"/>
+                        <CodPaisRecep t-out="receptor['CodPaisRecep']"/>
+                        <DocRecep t-if="receptor.get('DocRecep')" t-out="receptor['DocRecep']"/>
+                        <DocRecepExt t-if="receptor.get('DocRecepExt')" t-out="receptor['DocRecepExt']"/>
+                        <RznSocRecep t-if="receptor.get('RznSocRecep')" t-out="receptor['RznSocRecep']"/>
+                        <DirRecep t-if="receptor.get('DirRecep')" t-out="receptor['DirRecep']"/>
+                        <CiudadRecep t-if="receptor.get('CiudadRecep')" t-out="receptor['CiudadRecep']"/>
+                        <DeptoRecep t-if="receptor.get('DeptoRecep')" t-out="receptor['DeptoRecep']"/>
+                        <PaisRecep t-if="receptor.get('PaisRecep')" t-out="receptor['PaisRecep']"/>
+                        <LugarDestEnt t-if="receptor.get('LugarDestEnt')" t-out="receptor['LugarDestEnt']"/>
                     </Receptor>
                     <Totales>
-                        <TpoMoneda t-if="totals_detail.get('TpoMoneda')" t-esc="totals_detail['TpoMoneda']"/>
-                        <TpoCambio t-if="totals_detail.get('TpoCambio')" t-esc="totals_detail['TpoCambio']"/>
-                        <MntNoGrv t-if="totals_detail.get('MntNoGrv')" t-esc="totals_detail['MntNoGrv']"/>
-                        <MntExpoyAsim t-if="totals_detail.get('MntExpoyAsim')" t-esc="totals_detail['MntExpoyAsim']"/>
+                        <TpoMoneda t-if="totals_detail.get('TpoMoneda')" t-out="totals_detail['TpoMoneda']"/>
+                        <TpoCambio t-if="totals_detail.get('TpoCambio')" t-out="totals_detail['TpoCambio']"/>
+                        <MntNoGrv t-if="totals_detail.get('MntNoGrv')" t-out="totals_detail['MntNoGrv']"/>
+                        <MntExpoyAsim t-if="totals_detail.get('MntExpoyAsim')" t-out="totals_detail['MntExpoyAsim']"/>
 
-                        <MntNetoIvaTasaMin t-if="totals_detail.get('MntNetoIvaTasaMin')" t-esc="totals_detail['MntNetoIvaTasaMin']"/>
-                        <MntNetoIVATasaBasica t-if="totals_detail.get('MntNetoIVATasaBasica')" t-esc="totals_detail['MntNetoIVATasaBasica']"/>
+                        <MntNetoIvaTasaMin t-if="totals_detail.get('MntNetoIvaTasaMin')" t-out="totals_detail['MntNetoIvaTasaMin']"/>
+                        <MntNetoIVATasaBasica t-if="totals_detail.get('MntNetoIVATasaBasica')" t-out="totals_detail['MntNetoIVATasaBasica']"/>
 
-                        <IVATasaMin t-if="totals_detail.get('IVATasaMin')" t-esc="totals_detail['IVATasaMin']"/>
-                        <IVATasaBasica t-if="totals_detail.get('IVATasaBasica')"  t-esc="totals_detail['IVATasaBasica']"/>
+                        <IVATasaMin t-if="totals_detail.get('IVATasaMin')" t-out="totals_detail['IVATasaMin']"/>
+                        <IVATasaBasica t-if="totals_detail.get('IVATasaBasica')"  t-out="totals_detail['IVATasaBasica']"/>
 
-                        <MntIVATasaMin t-if="totals_detail.get('MntIVATasaMin')" t-esc="totals_detail['MntIVATasaMin']"/>
-                        <MntIVATasaBasica t-if="totals_detail.get('MntIVATasaBasica')" t-esc="totals_detail['MntIVATasaBasica']"/>
+                        <MntIVATasaMin t-if="totals_detail.get('MntIVATasaMin')" t-out="totals_detail['MntIVATasaMin']"/>
+                        <MntIVATasaBasica t-if="totals_detail.get('MntIVATasaBasica')" t-out="totals_detail['MntIVATasaBasica']"/>
 
-                        <MntTotal t-if="totals_detail.get('MntTotal')" t-esc="totals_detail['MntTotal']"/>
-                        <CantLinDet t-esc="totals_detail['CantLinDet']"/>
-                        <MntPagar t-if="totals_detail.get('MntPagar')"  t-esc="totals_detail['MntPagar']"/>
+                        <MntTotal t-if="totals_detail.get('MntTotal')" t-out="totals_detail['MntTotal']"/>
+                        <CantLinDet t-out="totals_detail['CantLinDet']"/>
+                        <MntPagar t-if="totals_detail.get('MntPagar')"  t-out="totals_detail['MntPagar']"/>
                     </Totales>
                 </Encabezado>
                 <Detalle>
                     <Item t-foreach="item_detail" t-as="item_line">
-                        <NroLinDet t-esc="item_line['NroLinDet']"/>
-                        <IndFact t-if="item_line.get('IndFact')" t-esc="item_line['IndFact']"/>
-                        <NomItem t-esc="item_line['NomItem']"/>
-                        <Cantidad t-esc="item_line['Cantidad']"/>
-                        <UniMed t-esc="item_line['UniMed']"/>
-                        <PrecioUnitario t-if="item_line.get('PrecioUnitario')" t-esc="item_line['PrecioUnitario']"/>
-                        <MontoItem t-esc="item_line['MontoItem']"/>
+                        <NroLinDet t-out="item_line['NroLinDet']"/>
+                        <IndFact t-if="item_line.get('IndFact')" t-out="item_line['IndFact']"/>
+                        <NomItem t-out="item_line['NomItem']"/>
+                        <Cantidad t-out="item_line['Cantidad']"/>
+                        <UniMed t-out="item_line['UniMed']"/>
+                        <PrecioUnitario t-if="item_line.get('PrecioUnitario')" t-out="item_line['PrecioUnitario']"/>
+                        <MontoItem t-out="item_line['MontoItem']"/>
                     </Item>
                 </Detalle>
                 <Referencia t-if="referencia_lines">
                     <Referencia t-foreach="referencia_lines" t-as="referencia">
-                        <NroLinRef t-esc="referencia['NroLinRef']"/>
-                        <TpoDocRef t-esc="referencia['TpoDocRef']"/>
-                        <Serie t-esc="referencia['Serie']"/>
-                        <NroCFERef t-esc="referencia['NroCFERef']"/>
-                        <!-- <FechaCFEref t-esc="referencia['FechaCFEref']"/> -->
+                        <NroLinRef t-out="referencia['NroLinRef']"/>
+                        <TpoDocRef t-out="referencia['TpoDocRef']"/>
+                        <Serie t-out="referencia['Serie']"/>
+                        <NroCFERef t-out="referencia['NroCFERef']"/>
+                        <!-- <FechaCFEref t-out="referencia['FechaCFEref']"/> -->
                     </Referencia>
                 </Referencia>
-            <t t-esc="'&lt;/' + cfe_tag + '&gt;'"/>
+            <t t-out="'&lt;/' + cfe_tag + '&gt;'"/>
             </CFE>
         </template>
     </data>
