@@ -7,7 +7,7 @@
     'author': 'ADHOC SA',
     'category': 'Localization',
     'license': 'LGPL-3',
-    'version': '15.0.1.3.0',
+    'version': "16.0.1.0.0",
     'depends': [
         'l10n_uy_account',
         'account_debit_note',
@@ -36,5 +36,5 @@
         'demo/res_company_demo.xml',
         'demo/account_journal_demo.xml',
     ],
-    'installable': False,
+    'installable': True,
 }

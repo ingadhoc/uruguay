@@ -38,7 +38,7 @@ class AccountMove(models.Model):
         expo_cfes = uy_invs.filtered(
             lambda x: int(x.l10n_latam_document_type_id.code) in [121, 122, 123])
         for inv_line in expo_cfes.mapped('invoice_line_ids'):
-            vat_taxes = inv_line.tax_line_id.filtered(lambda x: x.tax_group_id in uruguayan_vat_taxes)
+            vat_taxes = inv_line.tax_ids.filtered(lambda x: x.tax_group_id in uruguayan_vat_taxes)
             if len(vat_taxes) != 0:
                 raise ValidationError(_(
                     'Should not be any VAT tax in the exportation cfe line "%s" (Id Invoice: %s)' % (

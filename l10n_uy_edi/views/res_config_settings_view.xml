@@ -20,20 +20,32 @@
                                     <div class="row">
                                         <label for="l10n_uy_ucfe_env" class="col-lg-3 o_light_label"/>
                                         <field name="l10n_uy_ucfe_env"/>
+                                    </div>
+                                    <div class="row">
                                         <label for="l10n_uy_ucfe_inbox_url" string="Inbox Url" class="col-lg-3 o_light_label"/>
                                         <field name="l10n_uy_ucfe_inbox_url"/>
+                                    </div>
+                                    <div class="row">
                                         <label for="l10n_uy_ucfe_query_url"  string="Query Url" class="col-lg-3 o_light_label"/>
                                         <field name="l10n_uy_ucfe_query_url"/>
+                                    </div>
+                                    <div class="row">
                                         <label for="l10n_uy_ucfe_user" string="Username" class="col-lg-3 o_light_label"/>
                                         <field name="l10n_uy_ucfe_user"/>
+                                    </div>
+                                    <div class="row">
                                         <label for="l10n_uy_ucfe_password" string="Password" class="col-lg-3 o_light_label"/>
                                         <field name="l10n_uy_ucfe_password"/>
+                                    </div>
+                                    <div class="row">
                                         <label for="l10n_uy_ucfe_commerce_code" string="Commerce Code" class="col-lg-3 o_light_label"/>
                                         <field name="l10n_uy_ucfe_commerce_code"/>
+                                    </div>
+                                    <div class="row">
                                         <label for="l10n_uy_ucfe_terminal_code"  string="Terminal Code" class="col-lg-3 o_light_label"/>
                                         <field name="l10n_uy_ucfe_terminal_code"/>
-                                        <button name="l10n_uy_connection_test" type="object" class="oe_link oe_inline" string="⇒ Test Connection"/>
                                     </div>
+                                    <button name="l10n_uy_connection_test" type="object" class="oe_link oe_inline" string="⇒ Test Connection"/>
                                 </div>
                             </div>
                         </div>
@@ -47,6 +59,8 @@
                                         <label for="l10n_uy_dgi_house_code" string="Código Sucursal" class="col-lg-3 o_light_label"/>
                                         <field name="l10n_uy_dgi_house_code"/>
                                         <field name="l10n_uy_dgi_crt_fname" invisible="1" force_save="1"/>
+                                    </div>
+                                    <div class="row">
                                         <label for="l10n_uy_dgi_crt" string="Digital Certificate" class="col-lg-3 o_light_label"/>
                                         <field name="l10n_uy_dgi_crt" widget="binary" filename="l10n_uy_dgi_crt_fname" help="Here need to upload the file with the Digital Certificate to operate in DGI"/>
                                     </div>

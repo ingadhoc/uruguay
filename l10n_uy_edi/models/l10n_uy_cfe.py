@@ -797,7 +797,7 @@ class L10nUyCfe(models.AbstractModel):
             # TODO this need to be improved, using a different way to print the tax information
             tax_vat_22, tax_vat_10, tax_vat_exempt = self.env['account.tax']._l10n_uy_get_taxes(self.company_id)
 
-            amount_field = 'price_subtotal'
+            amount_field = 'amount_currency'
             tax_line_exempt = self.line_ids.filtered(lambda x: tax_vat_exempt in x.tax_ids)
             if tax_line_exempt and not self.is_expo_cfe():
                 res.update({
@@ -810,12 +810,12 @@ class L10nUyCfe(models.AbstractModel):
             if tax_line_basica:
                 base_imp = sum(self.invoice_line_ids.filtered(lambda x: tax_vat_22 in x.tax_ids).mapped(amount_field))
                 res.update({
-                    # A-C117 Total Monto Neto - IVA Tasa Basica
+                    # A117 Total Monto Neto - IVA Tasa Basica
                     'MntNetoIVATasaBasica': float_repr(abs(base_imp), 2),
 
                     # A120 Tasa Mínima IVA TODO
                     'IVATasaBasica': 22,
-                    # A-C122 Total IVA Tasa Básica? Monto del IVA Tasa Basica
+                    # A122 Total IVA Tasa Básica? Monto del IVA Tasa Basica
                     'MntIVATasaBasica': float_repr(abs(tax_line_basica[amount_field]), 2),
                 })
 
@@ -905,7 +905,7 @@ class L10nUyCfe(models.AbstractModel):
             'cfe_tag': self._l10n_uy_get_cfe_tag(),
             'referencia_lines': self._l10n_uy_get_cfe_referencia(),
         }
-        cfe = self.env.ref('l10n_uy_edi.cfe_template')._render(values)
+        cfe = self.env['ir.qweb']._render('l10n_uy_edi.cfe_template', values)
         cfe = cfe.unescape()
         cfe = '\n'.join([item for item in cfe.split('\n') if item.strip()])
 
@@ -954,7 +954,9 @@ class L10nUyCfe(models.AbstractModel):
         res = False
         self.ensure_one()
         if self._is_uy_inv_type_cfe():
-            res = float_repr(line._get_price_total_and_subtotal(quantity=1)['price_subtotal'], 6)
+            line_discount_price_unit = line.price_unit * (1 - (line.discount / 100.0))
+            subtotal = 1 * line_discount_price_unit
+            res = float_repr(subtotal, 6)
         if self._is_uy_remito_exp():
             if IndFact == 5:
                 res = float_repr(0, 6)
