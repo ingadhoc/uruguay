@@ -1,28 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <!-- TODO in AR this menu is in l10n_ar module not in l10n_ar_reports, unify criteria -->
     <menuitem id="account_reports_uy_statements_menu" name="Uruguayan Statements" parent="account.menu_finance_reports" sequence="3" groups="account.group_account_user"/>
 
-    <record id="action_l10n_uy_sales_vat_book" model="ir.actions.client">
-        <field name="name">Sales VAT book</field>
-        <field name="tag">account_report</field>
-        <field name="context" eval="{'model': 'l10n_uy_account.vat.book', 'journal_type': 'sale'}"/>
+    <template id="search_template_uy_vat_book" inherit_id="account_reports.search_template" primary="True">
+        <xpath expr="." position="inside">
+            <div class="btn-group dropdown o_account_reports_filter_uy_vat_book_tax_types">
+                <button type="button" class="o-no-caret btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                    <span class="fa fa-filter"/>
+                    Tax Type:
+                        <t t-esc="options['uy_vat_book_tax_types_available'][options['uy_vat_book_tax_type_selected']]"/>
+                </button>
+                <div class="dropdown-menu o_filter_menu" role="menu">
+                    <t t-foreach="options['uy_vat_book_tax_types_available'].items()" t-as="tax_type">
+                        <a class="dropdown-item js_account_reports_one_choice_filter"
+                           data-filter="uy_vat_book_tax_type_selected"
+                           t-att-title="tax_type[1]"
+                           t-att-data-id="tax_type[0]">
+                            <t t-esc="tax_type[1]"/>
+                        </a>
+                    </t>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <record id="l10n_uy_vat_book_report" model="account.report">
+        <field name="name">Uruguayan VAT book</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.uy"/>
+        <field name="filter_unreconciled" eval="False"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_growth_comparison" eval="False"/>
+        <field name="search_template">l10n_uy_reports.search_template_uy_vat_book</field>
+        <field name="custom_handler_model_id" ref="model_l10n_uy_tax_report_handler"/>
+        <field name="load_more_limit" eval="80"/>
+        <field name="column_ids">
+            <record id="l10n_uy_vat_book_report_column_invoice_date" model="account.report.column">
+                <!-- TODO revisar que realmente es el campo invoice_date y no el campo date -->
+                <field name="name">Date</field>
+                <field name="expression_label">date</field>
+                <field name="figure_type">none</field>
+            </record>
+            <record id="l10n_uy_vat_book_report_column_partner_name" model="account.report.column">
+                <field name="name">Name</field>
+                <field name="expression_label">partner_name</field>
+                <field name="figure_type">none</field>
+            </record>
+            <record id="l10n_uy_vat_book_report_column_rut" model="account.report.column">
+                <field name="name">RUT</field>
+                <field name="expression_label">rut</field>
+                <field name="figure_type">none</field>
+            </record>
+            <record id="l10n_uy_vat_book_report_column_taxed" model="account.report.column">
+                <field name="name">Taxed</field>
+                <field name="expression_label">taxed</field>
+                <field name="figure_type">monetary</field>
+            </record>
+            <record id="l10n_uy_vat_book_report_column_not_taxed" model="account.report.column">
+                <field name="name">Not Taxed</field>
+                <field name="expression_label">not_taxed</field>
+                <field name="figure_type">monetary</field>
+            </record>
+            <record id="l10n_uy_vat_book_report_column_vat_10" model="account.report.column">
+                <field name="name">VAT 10%</field>
+                <field name="expression_label">vat_10</field>
+                <field name="figure_type">monetary</field>
+            </record>
+            <record id="l10n_uy_vat_book_report_column_vat_22" model="account.report.column">
+                <field name="name">VAT 22%</field>
+                <field name="expression_label">vat_22</field>
+                <field name="figure_type">monetary</field>
+            </record>
+            <record id="l10n_uy_vat_book_report_column_other_taxes" model="account.report.column">
+                <field name="name">Other Taxes</field>
+                <field name="expression_label">other_taxes</field>
+                <field name="figure_type">monetary</field>
+            </record>
+            <record id="l10n_uy_vat_book_report_column_total" model="account.report.column">
+                <field name="name">Total</field>
+                <field name="expression_label">total</field>
+                <field name="figure_type">monetary</field>
+            </record>
+        </field>
     </record>
-
-    <menuitem
-        id="menu_l10n_uy_sales_vat_book"
-        action="action_l10n_uy_sales_vat_book"
-        parent="account_reports_uy_statements_menu"/>
-
-    <record id="action_l10n_uy_purchases_vat_book" model="ir.actions.client">
-        <field name="name">Purchases VAT book</field>
-        <field name="tag">account_report</field>
-        <field name="context" eval="{'model': 'l10n_uy_account.vat.book', 'journal_type': 'purchase'}"/>
-    </record>
-
-    <menuitem
-        id="menu_l10n_uy_purchases_vat_book"
-        action="action_l10n_uy_purchases_vat_book"
-        parent="account_reports_uy_statements_menu"/>
-
 </odoo>

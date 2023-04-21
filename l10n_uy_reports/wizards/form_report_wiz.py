@@ -43,6 +43,23 @@ class FormReportWiz(models.TransientModel):
         self.date_from = init_of_month
         self.date_to = end_of_month
 
+    def _get_invoices_domain(self):
+        """ Devuelve el dominio a utilizar para obtener las facturas que seran
+        mostradas en el archivo del formulario.
+        """
+        domain = [
+            ('company_id', '=', self.company_id.id), ('state', '=', 'posted'),
+            ('date', '>=', self.date_from), ('date', '<', self.date_to),
+            ('partner_id.vat', '!=', False),
+            ('l10n_latam_document_type_id.code', '!=', '0'),
+            ('l10n_latam_document_type_id.code', '!=', False)
+        ]
+
+        if self.sudo().env['ir.module.module'].search([('name', '=', 'l10n_uy_edi')], limit=1).state \
+           in ('installed', 'to install', 'to upgrade'):
+            domain += ['|', ('l10n_uy_cfe_state', 'in', ['accepted']), ('move_type', 'like', 'in_')]
+        return domain
+
     def _get_invoices(self):
         """ Both customer and vendor bills
 
@@ -51,21 +68,14 @@ class FormReportWiz(models.TransientModel):
             * Solo tomar en cuenta los aceptados, el resto no
         """
         self.ensure_one()
-        domain = [
-            ('company_id', '=', self.company_id.id), ('state', '=', 'posted'),
-            '|', ('l10n_uy_cfe_state', 'in', ['accepted']), ('move_type', 'like', 'in_'),
-            ('date', '>=', self.date_from), ('date', '<', self.date_to),
-            ('partner_id.vat', '!=', False),
-            ('l10n_latam_document_type_id.code', '!=', '0'),
-            ('l10n_latam_document_type_id.code', '!=', False)
-        ]
+        domain = self._get_invoices_domain()
         res = self.env['account.move'].search(domain, order='invoice_date asc, name asc, id asc')
         return res
 
     def _search_tax(self, tax_name, tax_type):
         res = self.env['account.tax'].with_context(active_test=False).search([
             ('type_tax_use', '=', tax_type), ('company_id', '=', self.company_id.id),
-            ('tax_group_id', '=', self.env.ref('l10n_uy_account.tax_group_' + tax_name).id)], limit=1)
+            ('tax_group_id.l10n_uy_vat_code', '=', tax_name)], limit=1)
         return res
 
     def _get_form_2181_data(self):
@@ -80,7 +90,7 @@ class FormReportWiz(models.TransientModel):
         return the string with the lines of the file to write """
         lines = []
 
-        # TODO KZ Importante. por lo que vimos en el archivo generado esta mezclando iva compras e iva ventas.
+        # Importante. aca este el archivo generado mezcla iva compras e iva ventas.
         line_code = {
             self._search_tax('vat_22', 'sale'): '502',  # 502 IVA Ventas Tasa Básica a Contribuyentes
             self._search_tax('vat_10', 'sale'): '503',  # 503 IVA Ventas Tasa Mínima a Contribuyentes
@@ -111,7 +121,7 @@ class FormReportWiz(models.TransientModel):
             if line.tax_ids and line.tax_ids not in taxes:
                 error += "\n- %s %s" % (line.tax_ids.mapped("name"), line.move_id.display_name)
         if error:
-            _logger.warning("No se puede genear declaracion de impuestos (config impuesto) para %s" % error)
+            _logger.warning("No se puede generar declaracion de impuestos (config impuesto) para %s" % error)
 
         # TODO KZ: Agrupamos por RUT pero sin tener en cuenta si no fue enviado el receptor entonces no se debe tomar en cuenta para el total)
         # Ejemplo un e-tTicket con monto pequeño de monto total. de lado de Odoo esta registrado para el Partner ABC.
@@ -131,8 +141,7 @@ class FormReportWiz(models.TransientModel):
         for rut_partner, invoices in data.items():
             amount_total = {}
             for inv in invoices:
-                detail_amounts = json.loads(inv.tax_totals_json)
-                for item in list(detail_amounts.get('groups_by_subtotal').values())[0]:
+                for item in list(inv.tax_totals.get('groups_by_subtotal').values())[0]:
                     tax_group_id = item.get('tax_group_id')
                     if tax_group_id in taxes_group_ids:
                         inv_amount = item.get('tax_group_amount')
@@ -143,6 +152,9 @@ class FormReportWiz(models.TransientModel):
                         key = (tax_group_id, 'sale' if 'out_' in inv.move_type else 'purchase')
                         amount_total[key] = amount_total.get(key, 0.0) + (amount_total.get(tax_group_id, 0.0)) + inv_amount
             for tax in amount_total:
+
+                if not tax_code.get(tax):
+                    continue
 
                 # Campo 1 - RUT Informante. Num 12 (Si <12 dígitos completa con 0 a la izq)
                 content_data = self.company_id.vat.zfill(12) + ";"
