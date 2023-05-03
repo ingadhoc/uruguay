@@ -1,6 +1,6 @@
 {
     "name": """Uruguay - E-Remitos""",
-    'version': '15.0.1.0.0',
+    'version': "16.0.1.0.0",
     'category': 'Accounting/Localizations/EDI',
     'sequence': 12,
     'author': 'Adhoc',
@@ -17,7 +17,7 @@
         'data/l10n_latam.document.type.csv',
         'views/stock_picking_views.xml',
     ],
-    'installable': False,
+    'installable': True,
     'auto_install': False,
     'application': False,
     'license': 'LGPL-3',
