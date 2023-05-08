@@ -934,7 +934,7 @@ class L10nUyCfe(models.AbstractModel):
     def _uy_get_cfe_lines(self):
         self.ensure_one()
         if self._is_uy_inv_type_cfe():
-            return self.invoice_line_ids
+            return self.invoice_line_ids.filtered(lambda x: x.display_type in ('product'))
         if self._is_uy_remito_type_cfe():
             # TODO KZ: Toca revisar realmente cual es el line que corresponde, el que veo en la interfaz parece ser move_ids_without_package pero no se si esto siempre aplica
 
