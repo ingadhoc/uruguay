@@ -10,3 +10,4 @@ from . import account_chart_template
 from . import res_partner
 from . import l10n_uy_adenda
 from . import l10n_latam_document_type
+from . import account_tax_group

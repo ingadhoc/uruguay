@@ -1,0 +1,26 @@
+<odoo noupdate="1">
+
+    <record id="tax_group_vat_22" model="account.tax.group">
+        <field name="name">IVA Ventas 22%</field>
+        <field name="l10n_uy_form">2181</field>
+        <field name="l10n_uy_code">502</field>
+        <field name="l10n_uy_imprubro">3</field>
+        <field name="l10n_uy_description">IVA Ventas Tasa Básica a Contribuyentes</field>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="tax_group_vat_10" model="account.tax.group">
+        <field name="name">IVA Ventas 10%</field>
+        <field name="l10n_uy_form">2181</field>
+        <field name="l10n_uy_code">503</field>
+        <field name="l10n_uy_imprubro">3</field>
+        <field name="l10n_uy_description">IVA Ventas Tasa Mínima a Contribuyentes</field>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="tax_group_vat_exempt" model="account.tax.group">
+        <field name="name">IVA Ventas Exento</field>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+</odoo>

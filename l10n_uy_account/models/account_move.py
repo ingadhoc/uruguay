@@ -25,14 +25,17 @@ class AccountMove(models.Model):
                 "The selected Journal can't be used in this transaction, please select one that doesn't use documents"
                 " as these are just for Invoices."))
 
+    def get_uy_sales_vat_tax_groups(self):
+        return self.env.ref('l10n_uy_account.tax_group_vat_22') + self.env.ref('l10n_uy_account.tax_group_vat_10') \
+            + self.env.ref('l10n_uy_account.tax_group_vat_exempt')
+
     def _check_uruguayan_invoices(self):
         uy_invs = self.filtered(lambda x: (x.company_id.country_id.code == 'UY' and x.l10n_latam_use_documents))
         if not uy_invs:
             return True
         uy_invs.mapped('partner_id').check_vat()
 
-        uruguayan_vat_taxes = self.env.ref('l10n_uy_account.tax_group_vat_22') + self.env.ref('l10n_uy_account.tax_group_vat_10') \
-            + self.env.ref('l10n_uy_account.tax_group_vat_exempt')
+        uruguayan_vat_taxes = self.get_uy_sales_vat_tax_groups()
 
         # Check that we do not send any tax in exportation invoices
         expo_cfes = uy_invs.filtered(
