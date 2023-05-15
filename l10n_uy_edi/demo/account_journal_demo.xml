@@ -2,7 +2,7 @@
 <odoo noupdate="1">
 
     <record id="cfe_journal" model="account.journal">
-        <field name='name'>Testing CFE UY</field>
+        <field name='name'>Testing CFE UY (Electronic)</field>
         <field name='company_id' ref="l10n_uy_account.company_uy"/>
         <field name='type'>sale</field>
         <field name='code'>CFE</field>
