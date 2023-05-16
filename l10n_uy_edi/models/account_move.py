@@ -740,7 +740,7 @@ class AccountMove(models.Model):
         # C111 Tipo de Cambio
         if self._l10n_uy_get_currency() != 'UYU':
             res['TpoCambio'] = float_repr(self.l10n_uy_currency_rate, 3)
-            if self.l10n_uy_currency_rate <= 1.0:
+            if self.l10n_uy_currency_rate <= 0.0:
                 raise UserError(_('Not valid Currency Rate, need to be greather that 0 in order to be accepted by DGI'))
 
         if self.is_expo_cfe():
