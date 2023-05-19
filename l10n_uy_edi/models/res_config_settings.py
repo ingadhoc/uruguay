@@ -37,7 +37,7 @@ class ResConfigSettings(models.TransientModel):
         raise UserError(_('Connection problems, this is what we get %s') % response)
 
     @api.onchange('l10n_uy_ucfe_env')
-    def onchange_ufce_env(self):
+    def uy_onchange_ufce_env(self):
         """ Update UCFE param with what we have when Environment change."""
 
         if self.l10n_uy_ucfe_env == 'production':
@@ -56,9 +56,9 @@ class ResConfigSettings(models.TransientModel):
 
     def set_values(self):
         super().set_values()
-        self.update_saved_param_data()
+        self.uy_update_saved_param_data()
 
-    def update_saved_param_data(self):
+    def uy_update_saved_param_data(self):
         """ If any of the ucfe params change then update the env_data values of the current selected environment"""
         # Create dictionary with the data
         import pprint
