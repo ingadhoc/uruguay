@@ -10,6 +10,7 @@ from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.float_utils import float_repr
 from odoo.tools import format_amount
+from odoo.tools import html2plaintext
 from . import ucfe_errors
 
 
@@ -529,13 +530,22 @@ class L10nUyCfe(models.AbstractModel):
         return ['0', '124', '181', '224', '281']
 
     def _l10n_uy_get_cfe_adenda(self):
-        """ Las adendas son opcionales y actualmente las configuramos de manera global en el sistema, si el comprobante cumple la condición entonces automaticamente se agrega la adenda al comprobante a validar cuando lo reportamos en uruware.
+        """ Las adendas son opcionales, tenemos dos tipos de adenda:
+
+        * Global: La configuramos en el menu Adenda, si el comprobante cumple la condición definida en la adenda
+        entonces automaticamente se agrega como adenda al comprobante al enviar los datos auruware.
+
+        * Especifica:
+            * Si un comprobante tiene algo en el campo Referencia, esta se agrega como parte de la adenda con el
+            prefijo "Referencia: ..."
+            * Si la factura tiene terminos y condiciones, se agrega como adenda.
+            * Si el picking tiene internal notes se agregan como adenda del e-remito
 
         La Adenda es una sección J en el CFE:
         * Es condicional para los tipos de documento de tipo facturas locales
         * Son opcionales en el e-Rem, y todos Documents de Expo
 
-        NOTA: Actualmente no tenemos una manera de previsualizar desde la factura las adendas que se quieren aplicar, o de aplicar una particular para ese comprobante en especifico. Sin embargo esto es posible desde Uruware asi que estaria bueno podamos nosotros tambien hacerlo desde Odoo. Hasta el momento ningun cliente lo ha pedido. """
+        NOTA: Actualmente no tenemos una manera de previsualizar desde la factura las adendas que se quieren aplicar """
         self.ensure_one()
         adenda = ''
         recordtype = {'account.move': 'inv', 'stock.picking': 'picking', 'account.move.line': 'aml'}
@@ -548,6 +558,15 @@ class L10nUyCfe(models.AbstractModel):
         fieldname = {'account.move': 'ref', 'stock.picking': 'origin', 'account.move.line': 'name'}.get(self._name)
         if self[fieldname]:
             adenda += "\n\nReferencia: %s" % self[fieldname]
+
+        # Si el comprobante/factura tiene Terminos y Condiciones/Observaciones, se agrega en la Adenda
+        fieldname = {
+            'account.move': 'narration',
+            'stock.picking': 'note',
+            # 'account.move.line': 'internal_notes' no hay un campo aca para lo que podamos usar como adenda.
+        }.get(self._name)
+        if fieldname and self[fieldname]:
+            adenda += "\n\n%s" % html2plaintext(self[fieldname])
 
         if adenda:
             return {'Adenda': adenda.strip()}
