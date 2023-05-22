@@ -86,6 +86,10 @@ class ResCompany(models.Model):
             if raise_exception:
                 raise UserError(_('Please complete the ucfe data to test the connection'))
             return False
+
+        # Por si por error colocan los datos de inicio de sesion de prod en testing
+        if self.l10n_uy_ucfe_env == 'testing' and ('prod' in self.l10n_uy_ucfe_inbox_url or 'prod' in self.l10n_uy_ucfe_query_url):
+            raise UserError(_('Ambiente de Testing pero con datos de producción, por favor revisa/ajusta la configuración'))
         return True
 
     def _uy_get_client(self, url, return_transport=False):
