@@ -382,7 +382,6 @@ class L10nUyCfe(models.AbstractModel):
 
         res.update(self._uy_cfe_A40_RUCEmisor())
         res.update(self._uy_cfe_A41_RznSoc())
-        res.update(self._uy_cfe_A42_NomComercial())
         res.update(self._uy_cfe_A47_CdgDGISucur())
         res.update(self._uy_cfe_A48_DomFiscal())
         res.update(self._uy_cfe_A49_Ciudad())
@@ -401,12 +400,6 @@ class L10nUyCfe(models.AbstractModel):
         self.ensure_one()
         res = self.company_id.name[:150]
         return {'RznSoc': res} if res else {}
-
-    def _uy_cfe_A42_NomComercial(self):
-        """ NOTA nosotros estamos reportando NomComercial pero Uruware no, ver si realmente es necesario o no si debemos quitarlo, revisar en DGI """
-        self.ensure_one()
-        res = self.company_id.name[:30]
-        return {'NomComercial': res} if res else {}
 
     def _uy_cfe_A47_CdgDGISucur(self):
         self.ensure_one()
