@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime
 import logging
 import base64
 import stdnum.uy
@@ -1206,10 +1205,10 @@ class L10nUyCfe(models.AbstractModel):
 
         self._l10n_uy_validate_company_data()
         for rec in self:
-            now = datetime.utcnow()
+            now = fields.Datetime.now()
             CfeXmlOTexto = rec._l10n_uy_create_cfe().get('cfe_str')
             req_data = {
-                'Uuid': self._name + '-' + str(rec.id) + '_' + str(fields.Datetime.now()),  # TODO this need to be improve
+                'Uuid': self._name + '-' + str(rec.id) + '_' + str(now),  # TODO this need to be improve
                 'TipoCfe': int(rec.l10n_latam_document_type_id.code),
                 'HoraReq': now.strftime('%H%M%S'),
                 'FechaReq': now.date().strftime('%Y%m%d'),
