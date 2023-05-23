@@ -21,4 +21,8 @@
         <field name="country_id" ref="base.uy"/>
     </record>
 
+    <record id="tax_group_vat_withholdings" model="account.tax.group">
+        <field name="name">Retenciones (UY)</field>
+    </record>
+
 </odoo>
