@@ -25,7 +25,6 @@
                     <Emisor t-if="emisor">
                         <RUCEmisor t-esc="emisor['RUCEmisor']"/>
                         <RznSoc t-esc="emisor['RznSoc']"/>
-                        <NomComercial t-esc="emisor['NomComercial']"/>
                         <CdgDGISucur t-esc="emisor['CdgDGISucur']"/>
                         <DomFiscal t-esc="emisor['DomFiscal']"/>
                         <Ciudad t-esc="emisor['Ciudad']"/>
