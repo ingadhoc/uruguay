@@ -371,8 +371,14 @@ class L10nUyCfe(models.AbstractModel):
         """ Número que identifica la compra: número de pedido, número orden de compra etc. LEN(50)
         Opcional para todos los tipos de documentos """
         self.ensure_one()
-        fieldname = {'account.move': 'invoice_origin',
-                     'stock.picking': 'origin'}
+
+        fieldname = {
+            'account.move':
+                # El campo purchase_order_number esta en el modulo sale_require_purchase_order_number dicho modulo
+                # debe estar instalado. sino se utilizara lo que esta en el campo invoice_origin
+                'purchase_order_number' if 'purchase_order_number' in self.env['account.move'].fields_get().keys()
+                else 'invoice_origin',
+            'stock.picking': 'origin'}
         res = (self[fieldname[self._name]] or '')[:50] if fieldname.get(self._name) else False
         return {'CompraID': res} if res else {}
 
