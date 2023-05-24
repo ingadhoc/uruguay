@@ -371,9 +371,10 @@ class L10nUyCfe(models.AbstractModel):
         """ Número que identifica la compra: número de pedido, número orden de compra etc. LEN(50)
         Opcional para todos los tipos de documentos """
         self.ensure_one()
-        fieldname = {'account.move': 'invoice_origin',
-                     'stock.picking': 'origin'}
-        res = (self[fieldname[self._name]] or '')[:50] if fieldname.get(self._name) else False
+        res = False
+        if not self._is_uy_resguardo():
+            if 'purchase_order_number' in self.env['account.move'].fields_get().keys():
+                res = (self.purchase_order_number or '')[:50]
         return {'CompraID': res} if res else {}
 
     def _l10n_uy_get_cfe_emisor(self):

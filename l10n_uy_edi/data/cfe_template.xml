@@ -41,6 +41,7 @@
                         <DeptoRecep t-if="receptor.get('DeptoRecep')" t-esc="receptor['DeptoRecep']"/>
                         <PaisRecep t-if="receptor.get('PaisRecep')" t-esc="receptor['PaisRecep']"/>
                         <LugarDestEnt t-if="receptor.get('LugarDestEnt')" t-esc="receptor['LugarDestEnt']"/>
+                        <CompraID t-if="receptor.get('CompraID')" t-esc="receptor['CompraID']"/>
                     </Receptor>
                     <Totales>
                         <TpoMoneda t-if="totals_detail.get('TpoMoneda')" t-esc="totals_detail['TpoMoneda']"/>
