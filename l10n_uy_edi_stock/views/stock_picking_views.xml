@@ -31,6 +31,11 @@
                 <button name="uy_post_dgi_remito" string="(UY) Enviar a DGI" type="object" attrs="{'invisible':['|', '|', '|', '|', '|', ('state', '!=', 'done'), ('l10n_uy_is_cfe', '=', False), ('l10n_uy_ucfe_state', 'in', ['00', '05', '06', '11']), ('picking_type_code', '!=', 'outgoing'), ('l10n_uy_cfe_state', 'in', ['received', 'accepted', 'rejected']), ('country_code', '!=', 'UY')]}"/>
             </xpath>
 
+            <field name="origin" position="after">
+                <field name="l10n_uy_compraid_show" invisible="1"/>
+                <field name="l10n_uy_compraid" attrs="{'invisible': [('l10n_uy_compraid_show', '=', True)], 'readonly': [('state', 'in', ['cancel', 'done'])]}"/>
+            </field>
+
             <notebook position="inside">
                 <page name="uy_dgi" string="DGI" attrs="{'invisible': [('l10n_uy_is_cfe', '=', False)]}">
                     <group>

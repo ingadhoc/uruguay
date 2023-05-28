@@ -148,6 +148,20 @@ class L10nUyCfe(models.AbstractModel):
         size=100,
         help="Indicación de donde s entrega la mercadería o se presta el servicio (Dirección, Sucursal, Puerto, etc,)")
 
+    l10n_uy_compraid = fields.Char(compute="_compute_l10n_uy_compraid", string="Purchase Order Number (UY)")
+    l10n_uy_compraid_show = fields.Boolean(compute="_compute_l10n_uy_compraid_show", default="_compute_l10n_uy_compraid_show")
+
+    def _compute_l10n_uy_compraid_show(self):
+        # Si el modulo sale_require_purchase_order_number esta instalado no mostramos este campo porque ya se
+        # muestra en la vista el campo purchase_order_number
+        self.l10n_uy_compraid_show = False if self._fields.get('purchase_order_number') else True
+
+    @api.onchange('l10n_uy_compraid_show', 'purchase_order_number')
+    def _compute_l10n_uy_compraid(self):
+        print(" ------ _compute_l10n_uy_compraid")
+        for rec in self:
+            rec.l10n_uy_compraid = rec.l10n_uy_compraid if rec.l10n_uy_compraid_show else rec.purchase_order_number
+
     l10n_uy_extra_info_cfe = fields.Char(
         "Info. adicional del CFE",
         size=150,
@@ -369,17 +383,14 @@ class L10nUyCfe(models.AbstractModel):
 
     def _uy_cfe_A70_CompraID(self):
         """ Número que identifica la compra: número de pedido, número orden de compra etc. LEN(50)
-        Opcional para todos los tipos de documentos """
+        Opcional para todos los tipos de documentos. No corresponde para e-resgurados """
         self.ensure_one()
-
-        fieldname = {
-            'account.move':
-                # El campo purchase_order_number esta en el modulo sale_require_purchase_order_number dicho modulo
-                # debe estar instalado. sino se utilizara lo que esta en el campo invoice_origin
-                'purchase_order_number' if 'purchase_order_number' in self.env['account.move'].fields_get().keys()
-                else 'invoice_origin',
-            'stock.picking': 'origin'}
-        res = (self[fieldname[self._name]] or '')[:50] if fieldname.get(self._name) else False
+        res = {}
+        if not self._is_uy_resguardo():
+            res = (self.l10n_uy_compraid or '')[:50]
+        if not self.l10n_uy_compraid:
+            import pdb
+            pdb.set_trace()
         return {'CompraID': res} if res else {}
 
     def _l10n_uy_get_cfe_emisor(self):
