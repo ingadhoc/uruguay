@@ -980,7 +980,9 @@ class L10nUyCfe(models.AbstractModel):
         res = False
         self.ensure_one()
         if self._is_uy_inv_type_cfe():
-            res = float_repr(line._get_price_total_and_subtotal(quantity=1)['price_subtotal'], 6)
+            line_discount_price_unit = line.price_unit * (1 - (line.discount / 100.0))
+            subtotal = 1 * line_discount_price_unit
+            res = float_repr(subtotal, 6)
         if self._is_uy_remito_exp():
             if IndFact == 5:
                 res = float_repr(0, 6)
