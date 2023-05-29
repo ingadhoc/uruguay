@@ -943,9 +943,21 @@ class L10nUyCfe(models.AbstractModel):
         """
         self.ensure_one()
         if self._is_uy_inv_type_cfe():
-            return line.name[:80]
+            return line.product_id.display_name[:80]
         if self._is_uy_remito_type_cfe():
-            return line.product_id.name[:80]
+            return line.product_id.display_name[:80]
+
+    def _uy_cfe_B8_DscItem(self, line):
+        """B8 Descripcion Adicional del ítem. Maximo 1000 caracteres
+        """
+        self.ensure_one()
+        res = False
+        if self._is_uy_inv_type_cfe():
+            if line.product_id.display_name != line.name:
+                res = line.name[:1000]
+        if self._is_uy_remito_type_cfe():
+            res = line.description_picking[:1000]
+        return {'DscItem': res} if res else {}
 
     def _uy_cfe_B9_Cantidad(self, line):
         """ # B9 Cantidad. NUM 17 """
@@ -1035,6 +1047,7 @@ class L10nUyCfe(models.AbstractModel):
                 'MontoItem': self._uy_cfe_B24_MontoItem(line),  # B24 Monto Item
             })
             item.update(self._uy_cfe_B11_PrecioUnitario(line, item.get('IndFact')))
+            item.update(self._uy_cfe_B8_DscItem(line))
             res.append(item)
 
         return res
