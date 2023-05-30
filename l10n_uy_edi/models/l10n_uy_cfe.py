@@ -923,7 +923,6 @@ class L10nUyCfe(models.AbstractModel):
         cfe = cfe.unescape()
         cfe = '\n'.join([item for item in cfe.split('\n') if item.strip()])
 
-        self._l10n_uy_vaidate_cfe(cfe)
         return {'cfe_str': cfe}
 
     def _uy_get_cfe_lines(self):
@@ -1198,6 +1197,10 @@ class L10nUyCfe(models.AbstractModel):
         """ Be able to validate a cfe """
         self._l10n_uy_vaidate_cfe(self.sudo().l10n_uy_cfe_xml, raise_exception=True)
 
+    def action_l10n_uy_preview_xml(self):
+        """ Be able to show preview of the CFE to be send """
+        self.l10n_uy_cfe_xml = self._l10n_uy_create_cfe().get('cfe_str')
+
     def _dummy_dgi_validation(self):
         """ Only when we want to skip DGI validation in testing environment. Fill the DGI result  fields with dummy
         values in order to continue with the CFE validation without passing to DGI validations s"""
@@ -1224,6 +1227,7 @@ class L10nUyCfe(models.AbstractModel):
         for rec in self:
             now = datetime.utcnow()
             CfeXmlOTexto = rec._l10n_uy_create_cfe().get('cfe_str')
+            rec._l10n_uy_vaidate_cfe(CfeXmlOTexto)
             req_data = {
                 'Uuid': self._name + '-' + str(rec.id) + '_' + str(fields.Datetime.now()),  # TODO this need to be improve
                 'TipoCfe': int(rec.l10n_latam_document_type_id.code),
