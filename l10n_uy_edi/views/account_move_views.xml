@@ -50,14 +50,15 @@
                                         <field name="l10n_uy_dgi_barcode"/>
                                     </group>
                                 </page>
-                                <page string="XML CFE">
-                                    <button name="action_l10n_uy_validate_cfe" type="object" string="Validate CFE XML" class="oe_inline oe_link"/>
+                                <page string="XML CFE" groups="base.group_no_one">
+                                    <button name="action_l10n_uy_preview_xml" type="object" string="Preview" class="oe_inline oe_link" states="draft"/>
+                                    <button name="action_l10n_uy_validate_cfe" type="object" string="Validate" class="oe_inline oe_link" states="draft"/>
                                     <field name="l10n_uy_cfe_xml" nolabel="1" widget="ace"/>
                                 </page>
-                                <page string="XML Request">
+                                <page string="XML Request" groups="base.group_no_one">
                                     <field name="l10n_uy_dgi_xml_request" nolabel="1" widget="ace"/>
                                 </page>
-                                <page string="XML Response">
+                                <page string="XML Response" groups="base.group_no_one">
                                     <field name="l10n_uy_dgi_xml_response" nolabel="1" widget="ace"/>
                                 </page>
                             </notebook>
