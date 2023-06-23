@@ -340,7 +340,7 @@ class L10nUyCfe(models.AbstractModel):
             if not all([self.partner_id.street, self.partner_id.city, self.partner_id.state_id, self.partner_id.country_id, self.partner_id.vat]):
                 msg = _('Necesita completar los datos del receptor: dirección, ciudad, provincia, pais del receptor y número de identificación')
                 if cond_e_ticket:
-                    msg += _('\n\nNOTA: Esto es requerido ya que el e-Ticket supera el monto minimo.\nMonto minimo = 5.000 * Unidad Indexada Uruguaya (%s)' % format_amount(self.env, min_amount, self.currency_id))
+                    msg += _('\n\nNOTA: Esto es requerido ya que el e-Ticket supera el monto minimo.\nMonto minimo = 5.000 * Unidad Indexada Uruguaya (>%s)' % format_amount(self.env, min_amount, self.company_currency_id))
                 raise UserError(msg)
 
         if cond_e_remito and not all([self.partner_id.street, self.partner_id.city]):
@@ -494,7 +494,7 @@ class L10nUyCfe(models.AbstractModel):
 
     @api.model
     def _l10n_uy_get_min_by_unidad_indexada(self):
-        return self.env.ref('base.UYI').rate * 5000
+        return self.env.ref('base.UYI').inverse_rate * 5000
 
     def _l10n_uy_get_cfe_tag(self):
         self.ensure_one()
