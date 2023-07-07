@@ -814,7 +814,7 @@ class L10nUyCfe(models.AbstractModel):
             tax_line_exempt = self.line_ids.filtered(lambda x: tax_vat_exempt in x.tax_ids)
             if tax_line_exempt and not self.is_expo_cfe():
                 res.update({
-                    'MntNoGrv': float_repr(sum(tax_line_exempt.mapped(amount_field)), 2),  # A112 Total Monto - No Gravado
+                    'MntNoGrv': float_repr(abs(sum(tax_line_exempt.mapped(amount_field))), 2),  # A112 Total Monto - No Gravado
                 })
 
             # NOTA: todos los montos a informar deben ir en la moneda del comprobante no en pesos uruguayos, es por eso que
