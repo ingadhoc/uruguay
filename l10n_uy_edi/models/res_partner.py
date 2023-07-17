@@ -83,8 +83,11 @@ class ResPartner(models.Model):
                 values['state_id'] = state_id.id or False
                 if state_id:
                     values['country_id'] = state_id.country_id.id
-
-                values['street'] += ' ' + values.pop('street_number')
+                if 'street' in values:
+                    values['street'] += ' ' + values.get('street_number')
+                # Este campo no existe en odoo base, asi que tenemos que
+                # removerlo siempre del values
+                values.pop('street_number')
             else:
                 raise UserError(_('No se pudo conectar a DGI para extraer los datos'))
         else:
