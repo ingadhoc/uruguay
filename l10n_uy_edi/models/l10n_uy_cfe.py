@@ -9,8 +9,7 @@ from odoo import _, fields, models, api
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.float_utils import float_repr
-from odoo.tools import format_amount
-from odoo.tools import html2plaintext
+from odoo.tools import format_amount, safe_eval, html2plaintext
 from . import ucfe_errors
 
 
@@ -1180,7 +1179,20 @@ class L10nUyCfe(models.AbstractModel):
                 'serieCfe': document_number[0],
                 'numeroCfe': document_number[1],
             }
-            response = self.company_id._l10n_uy_ucfe_query('ObtenerPdf', req_data)
+            #En caso de que el cliente quiera imprimir el reporte secundario
+            report_params = safe_eval.safe_eval(self.company_id.l10n_uy_report_params or '[]')
+            if report_params:
+                nombreParametros = report_params[0]
+                valoresParametros = report_params[1]
+                versionPdf = 'ObtenerPdfConParametros'
+                req_data.update({
+                    'nombreParametros': nombreParametros,
+                    'valoresParametros': valoresParametros,
+                })
+            else:
+                versionPdf = 'ObtenerPdf'
+
+            response = self.company_id._l10n_uy_ucfe_query(versionPdf, req_data)
             self.l10n_uy_cfe_pdf = self.env['ir.attachment'].create({
                 'name': (self.name or prefix.get(self._name, 'OBJ')).replace('/', '_') + '.pdf',
                 'res_model': self._name, 'res_id': self.id,
