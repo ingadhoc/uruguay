@@ -545,7 +545,7 @@ class L10nUyCfe(models.AbstractModel):
         recordtype = {'account.move': 'inv', 'stock.picking': 'picking', 'account.move.line': 'aml'}
         context = {recordtype.get(self._name): self}
         for rec in self.company_id.l10n_uy_adenda_ids.filtered(lambda x: x.apply_on in ['all', self._name]):
-            if bool(safe_eval(rec.condition, context)) == True:
+            if bool(safe_eval.safe_eval(rec.condition, context)) == True:
                 adenda += "\n\n" + rec.content
 
         # Si el comprobante/factura tiene una referencia entonces agregarla para que se muestre al final de la Adenda
