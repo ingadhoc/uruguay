@@ -958,14 +958,17 @@ class L10nUyCfe(models.AbstractModel):
         return {'DscItem': res} if res else {}
 
     def _uy_cfe_B9_Cantidad(self, line):
-        """ # B9 Cantidad. NUM 17 """
+        """ # B9 Cantidad. Valor numerico 14 enteros y 3 decimales
+        """
         # TODO OJO se admite negativo? desglozar
-        # TODO Valor numerico 14 enteros y 3 decimales. debemos convertir el formato a representarlo
         self.ensure_one()
+        res = 0.0
         if self._is_uy_inv_type_cfe():
-            return line.quantity
-        if self._is_uy_remito_type_cfe():
-            return line.quantity_done
+            res = line.quantity
+        elif self._is_uy_remito_type_cfe():
+            res = line.quantity_done
+
+        return float_repr(res, 3)
 
     def _uy_cfe_B11_PrecioUnitario(self, line, IndFact):
         """ B11: Precio Unitario. Valor numérico de 11 enteros y 6 decimales >0, excepto:
