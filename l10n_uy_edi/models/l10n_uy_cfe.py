@@ -1182,8 +1182,20 @@ class L10nUyCfe(models.AbstractModel):
                 'serieCfe': document_number[0],
                 'numeroCfe': document_number[1],
             }
-            #En caso de que el cliente quiera imprimir el reporte secundario
-            report_params = safe_eval.safe_eval(self.company_id.l10n_uy_report_params or '[]')
+
+            # En caso de que el contenido de las adendas sea mayor a 799 caracteres, la adenda se imprimira en
+            # la segunda pagina de forma automatica, caso contrario, el cliente podra elegir el tipo de reporte que quiera
+            # Si no elige ningun tipo de reporte, se imprimira el default de uruware
+            records = self.env['l10n.uy.adenda'].sudo().search([('apply_on', '=', 'all') or ('apply_on', '=', 'account.move')])
+            caract = 0
+            for rec in records:
+                caract += len(rec.content)
+            if caract > 799:
+                report_params = [['adenda'],['true']]
+            else:
+                #En caso de que el cliente quiera imprimir el reporte secundario
+                report_params = safe_eval.safe_eval(self.company_id.l10n_uy_report_params or '[]')
+
             if report_params:
                 nombreParametros = report_params[0]
                 valoresParametros = report_params[1]
