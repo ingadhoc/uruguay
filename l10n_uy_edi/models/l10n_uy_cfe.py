@@ -122,7 +122,7 @@ class L10nUyCfe(models.AbstractModel):
     l10n_uy_dgi_barcode = fields.Text('DGI Barcode', copy=False, readonly=True, groups="base.group_system")
     l10n_uy_cfe_uuid = fields.Char(
         'Clave o UUID del CFE', help="Unique identification per CFE in UCFE. Currently is formed by the concatenation"
-        " of model name + record id + date", copy=False)
+        " of model name + record id", copy=False)
     # TODO este numero debe ser maximo 36 caracteres máximo. esto debemos mejorarlo
 
     # Campos compartidos usados desde factura/remitos
@@ -1235,6 +1235,10 @@ class L10nUyCfe(models.AbstractModel):
             elif record.l10n_uy_ucfe_state == '00':
                 raise UserError(_('The operation can not be done. This %s is accepted by DGI.') % record.l10n_latam_document_type_id.name)
 
+    def _l10n_uy_get_uuid(self):
+        self.ensure_one()
+        return self._name + '-' + str(self.id)
+
     def _l10n_uy_dgi_post(self):
         """ Implementation via web service of service 310 – Firma y envío de CFE (individual) """
 
@@ -1244,7 +1248,7 @@ class L10nUyCfe(models.AbstractModel):
             CfeXmlOTexto = rec._l10n_uy_create_cfe().get('cfe_str')
             rec._l10n_uy_vaidate_cfe(CfeXmlOTexto)
             req_data = {
-                'Uuid': self._name + '-' + str(rec.id) + '_' + str(fields.Datetime.now()),  # TODO this need to be improve
+                'Uuid': self._l10n_uy_get_uuid(),
                 'TipoCfe': int(rec.l10n_latam_document_type_id.code),
                 'HoraReq': now.strftime('%H%M%S'),
                 'FechaReq': now.date().strftime('%Y%m%d'),
