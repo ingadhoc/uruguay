@@ -353,7 +353,7 @@ class L10nUyCfe(models.AbstractModel):
             'DocRecep' if tipo_doc in [1, 2, 3] else 'DocRecepExt': self.partner_id.vat,  # A62 / A62.1
         })
 
-        res.update({'RznSocRecep': self.partner_id.name[:150]})  # A63
+        res.update({'RznSocRecep': self.partner_id.commercial_partner_id.name[:150]})  # A63
         res.update(self._uy_cfe_A64_DirRecep())
         res.update(self._uy_cfe_A65_CiudadRecep())
         res.update(self._uy_cfe_A66_DeptoRecep())
