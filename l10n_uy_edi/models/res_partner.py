@@ -64,7 +64,7 @@ class ResPartner(models.Model):
         if self.l10n_latam_identification_type_id.l10n_uy_dgi_code == '2':
             response = company._l10n_uy_ucfe_inbox_operation('640', {'RutEmisor': self.vat})
             # TODO delete after finish the tests
-            _logger.info('response %s' % pprint.pformat(response))
+            raise UserError('response %s' % pprint.pformat(response.Resp.XmlCfeFirmado))
 
             if response.Resp.CodRta == '00':
                 # TODO ver detalle de los demas campos que podemos integrar en pagin 83 Manual de integración
