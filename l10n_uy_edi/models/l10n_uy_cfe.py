@@ -1149,6 +1149,19 @@ class L10nUyCfe(models.AbstractModel):
                 })
         return res
 
+    def _get_report_params(self):
+        # En caso de que el contenido de las adendas sea mayor a 799 caracteres, la adenda se imprimira en
+        # la segunda pagina de forma automatica, caso contrario, el cliente podra elegir el tipo de reporte que quiera
+        # Si no elige ningun tipo de reporte, se imprimira el default de uruware
+
+        if len(self._l10n_uy_get_cfe_adenda().get('Adenda')) > 799:
+            report_params = [['adenda'],['true']]
+        else:
+            #En caso de que el cliente eliga el reporte que quiere imprimir
+            report_params = safe_eval.safe_eval(self.company_id.l10n_uy_report_params or '[]')
+
+        return report_params
+
     def action_l10n_uy_get_pdf(self):
         """ Call query webservice to print pdf format of the CFE
         7.1.9 Representación impresa estándar de un CFE emitido en formato PDF
@@ -1182,8 +1195,8 @@ class L10nUyCfe(models.AbstractModel):
                 'serieCfe': document_number[0],
                 'numeroCfe': document_number[1],
             }
-            #En caso de que el cliente quiera imprimir el reporte secundario
-            report_params = safe_eval.safe_eval(self.company_id.l10n_uy_report_params or '[]')
+            report_params = self._get_report_params()
+
             if report_params:
                 nombreParametros = report_params[0]
                 valoresParametros = report_params[1]
