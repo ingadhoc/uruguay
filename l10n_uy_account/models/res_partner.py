@@ -97,10 +97,14 @@ class ResPartner(models.Model):
         is_nie = self.l10n_latam_identification_type_id == self.env.ref('l10n_uy_account.it_nie')
         ci_nie_number, digit_ver = ci_nie_number[1 if is_nie else 0 :-1], int(ci_nie_number[-1])
 
-        # Si el numero es < 7 digitos completamos con 0 a la derecha
+        # Si el numero es < 7 digitos completamos con 0 a la izquierda
         ci_nie_number = "%07d" % int(ci_nie_number)
 
-        random_num = [2, 9, 8, 7, 6, 3, 4, 5]
+        # si el nie supera > 7 digitos no es un nie valido
+        if len(ci_nie_number) > 7:
+            return False
+
+        random_num = [2, 9, 8, 7, 6, 3, 4]
         sum = 0
         for index, digit in enumerate(ci_nie_number):
             sum += int(digit) * random_num[index]
