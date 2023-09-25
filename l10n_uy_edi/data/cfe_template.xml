@@ -72,6 +72,8 @@
                         <Cantidad t-out="item_line['Cantidad']"/>
                         <UniMed t-out="item_line['UniMed']"/>
                         <PrecioUnitario t-if="item_line.get('PrecioUnitario')" t-out="item_line['PrecioUnitario']"/>
+                        <DescuentoPct t-if="item_line.get('DescuentoPct')" t-out="item_line['DescuentoPct']"/>
+                        <DescuentoMonto t-if="item_line.get('DescuentoMonto')" t-out="item_line['DescuentoMonto']"/>
                         <MontoItem t-out="item_line['MontoItem']"/>
                     </Item>
                 </Detalle>
