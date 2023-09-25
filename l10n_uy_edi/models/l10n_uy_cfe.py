@@ -981,9 +981,7 @@ class L10nUyCfe(models.AbstractModel):
         res = False
         self.ensure_one()
         if self._is_uy_inv_type_cfe():
-            line_discount_price_unit = line.price_unit * (1 - (line.discount / 100.0))
-            subtotal = 1 * line_discount_price_unit
-            res = float_repr(subtotal, 6)
+            res = float_repr(line.price_unit, 6)
         if self._is_uy_remito_exp():
             if IndFact == 5:
                 res = float_repr(0, 6)
@@ -1049,11 +1047,36 @@ class L10nUyCfe(models.AbstractModel):
                 'UniMed': self._uy_cfe_B10_UniMed(line),
                 'MontoItem': self._uy_cfe_B24_MontoItem(line),  # B24 Monto Item
             })
+            if self._is_uy_inv_type_cfe() and line.discount:
+                item.update({'DescuentoPct': line._uy_cfe_B12_DescuentoPct(line),
+                             'DescuentoMonto': self._uy_cfe_B13_DescuentoMonto(line)
+                            })
             item.update(self._uy_cfe_B11_PrecioUnitario(line, item.get('IndFact')))
             item.update(self._uy_cfe_B8_DscItem(line))
             res.append(item)
 
         return res
+    def _uy_cfe_B12_DescuentoPct(self, line):
+        """ Descuento en %
+        Descuento por item en %
+        Valor numérico de 3 enteros
+        y 3 decimales
+        """
+        discount = float_repr(line.discount,3)
+
+        return discount
+
+    def _uy_cfe_B13_DescuentoMonto(self, line):
+        """ Monto descuento
+        Correspondiente a DescuentoPct. Totaliza todos los descuentos otorgados al item
+        Valor numerico de 15 enteros y 2 decimales
+        Si existe C12 debe existir C13
+        """
+
+        discount = (line.price_unit * line.discount) / 100
+        discount = float_repr(discount,2)
+
+        return discount
 
     def _uy_cfe_B10_UniMed(self, line):
         if self._is_uy_inv_type_cfe():
