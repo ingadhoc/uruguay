@@ -1048,7 +1048,7 @@ class L10nUyCfe(models.AbstractModel):
                 'MontoItem': self._uy_cfe_B24_MontoItem(line),  # B24 Monto Item
             })
             if self._is_uy_inv_type_cfe() and line.discount:
-                item.update({'DescuentoPct': line._uy_cfe_B12_DescuentoPct(line),
+                item.update({'DescuentoPct': self._uy_cfe_B12_DescuentoPct(line),
                              'DescuentoMonto': self._uy_cfe_B13_DescuentoMonto(line)
                             })
             item.update(self._uy_cfe_B11_PrecioUnitario(line, item.get('IndFact')))
