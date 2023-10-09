@@ -1142,4 +1142,4 @@ msgstr ""
 #. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.res_config_settings_view_form
 msgid "⇒ Test Connection"
-msgstr "⇒ Probar Conección"
+msgstr "⇒ Probar Conexión"
