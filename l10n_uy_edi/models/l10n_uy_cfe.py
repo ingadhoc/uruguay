@@ -1360,3 +1360,14 @@ class L10nUyCfe(models.AbstractModel):
             # TODO comprobar. este devolvera un campo clave llamado UUID que permite identificar el comprobante, si es enviando dos vence sno genera otro CFE firmado
 
         return response
+
+        def action_conciliate_received_invoices(self):
+        """Conciliar comprobantes recibidos. Manual de integración UCFE v2_13.pdf página 140 --> 7.1.19 Ejecutar el proceso de conciliación. """
+        # TODO --> aún en proceso de desarrollo. Primero lo estoy harcodeando  para verificar cómo funciona
+        #conciliacion = 'FC--8485217265990014|111|20231002|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|'
+        #req_data = {'rut': '218296790015', 'fechaDesde': '2023-04-03', 'fechaHasta': '2023-04-03', 'conciliacion': '00022747', 'nombreParametros': ['received-CFEs'], 'valoresParametros': [1]}
+        #import pdb; pdb.set_trace()
+        #response = self.env.company._l10n_uy_ucfe_query('RealizarConciliacion', req_data)
+        #req_data2 = {'rut': '218296790015', 'identificador': response, 'formato': 'html'}
+        #response2 = ''
+        #response2 = self.env.company._l10n_uy_ucfe_query('ObtenerResultadoConciliacion', req_data2)
