@@ -24,6 +24,9 @@ dc_nota_de_debito_e_ticket_venta_por_cuenta_ajena,133,Nota de debito e-Ticket Ve
 dc_e_factura_venta_por_cuenta_ajena,141,e-Factura Venta por Cuenta Ajena,invoice,e-Fac.Cta.Aj.,base.uy
 dc_nota_de_credito_e_factura_venta_por_cuenta_ajena,142,Nota de credito e-Factura Venta por Cuenta Ajena,credit_note,NC e-Fac.Cta.Aj.,base.uy
 dc_nota_de_debito_e_factura_venta_por_cuenta_ajena,143,Nota de debito e-Factura Venta por Cuenta Ajena,debit_note,ND e-Fac.Cta.Aj.,base.uy
+dc_e_boleta_de_entrada,151,e-Boleta de entrada,invoice,e-Boleta-entrada,base.uy
+dc_cn_e_boleta_de_entrada,152,Nota de crédito de e-Boleta de entrada,credit_note,NC e-Boleta-entrada,base.uy
+dc_dn_e_boleta_de_entrada,153,Nota de débito de e-Boleta de entrada,debit_note,ND e-Boleta-entrada,base.uy
 dc_e_remito,181,E-REMITO,stock_picking,E-Remito,base.uy
 dc_e_resguardo,182,E-RESGUARDO,invoice,E-Resguardo,base.uy
 dc_e_ticket_cont,201,E-TICKET CONTINGENCIA,invoice,E-Tic.Cotg,base.uy
@@ -42,5 +45,8 @@ dc_nota_de_débito_de_e_ticket_venta_por_cuenta_ajena_contingencia,233,Nota de D
 dc_e_factura_venta_por_cuenta_ajena_contingencia,241,e-Factura Venta por Cuenta Ajena Contingencia,invoice,e-Fac.Cta.Aj.Cotg,base.uy
 dc_nota_de_crédito_de_e_factura_venta_por_cuenta_ajena_contingencia,242,Nota de Crédito de e-Factura Venta por Cuenta Ajena Contingencia,credit_note,NC e-Fac.Cta.Aj.Cotg,base.uy
 dc_nota_de_débito_de_e_factura_venta_por_cuenta_ajena_contingencia,243,Nota de Débito de e-Factura Venta por Cuenta Ajena Contingencia,debit_note,ND e-Fac.Cta.Aj.Cotg,base.uy
+dc_e_boleta_contingencia,251,e-Boleta Contingencia,invoice,e-BO-C,base.uy
+dc_nota_de_credito_e_boleta_contingencia,252,Nota de Crédito e-Boleta Contingencia,credit_note,e-BO-NC-C,base.uy
+dc_nota_de_debito_e_boleta_contingencia,253,Nota de Dédito e-Boleta Contingencia,debit_note,e-BO-ND-C,base.uy
 dc_ e_remito_contingencia,281, e-Remito Contingencia,stock_picking,e-Rem.Cotg,base.uy
 dc_ e_resguardo_contingencia,282, e-Resguardo Contingencia,,E-Resguardo.Cotg,base.uy
