@@ -19,5 +19,5 @@
         'security/security.xml',
     ],
     'auto_install': ['l10n_uy_account', 'account_reports'],
-    'installable': True,
+    'installable': False,
 }
