@@ -797,15 +797,20 @@ class AccountMove(models.Model):
         return res
 
     def _uy_found_related_invoice(self):
-        """ return the related/origin cfe of a given cfe """
+        """ return the related/origin cfe of a given cfe
+        Segun cambios en formatos de CFE v.24
+        los cfe relacionados deben estar aceptados por DGI
+        """
         # next version review to merge this with l10n_ar_edi _found_related_invoice method
         self.ensure_one()
+        res = self.env['account.move']
         if self.l10n_latam_document_type_id.internal_type == 'credit_note':
-            return self.reversed_entry_id
+            res = self.reversed_entry_id
         elif self.l10n_latam_document_type_id.internal_type == 'debit_note':
-            return self.debit_origin_id
-        else:
-            return self.browse()
+            res = self.debit_origin_id
+        if res and res.l10n_uy_cfe_state != 'accepted':
+            raise UserError(_('El comprobante que estas anexando como referencia no es un comprobante valido para DGI(aceptado)'))
+        return res
 
     def action_cfe_inform_commercial_status(self, rejection=False):
         # TODO only applies for vendor bills
