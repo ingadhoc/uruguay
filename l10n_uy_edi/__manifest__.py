@@ -32,7 +32,6 @@
         'security/ir.model.access.csv',
     ],
     'demo': [
-        'demo/res_partner_demo.xml',
         'demo/res_company_demo.xml',
         'demo/account_journal_demo.xml',
     ],
