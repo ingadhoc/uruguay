@@ -48,11 +48,8 @@ class ResCompany(models.Model):
         wsdl = "https://cotizaciones.bcu.gub.uy/wscotizaciones/servlet/" + bcu_service + "/service.asmx?WSDL"
 
         operation_timeout = timeout = 60
-        try:
-            transport = UYTransport(operation_timeout=operation_timeout, timeout=timeout)
-            client = Client(wsdl, transport=transport)
-        except Exception as error:
-            raise error
+        transport = transports.Transport(operation_timeout=operation_timeout, timeout=timeout)
+        client = zeep.Client(wsdl, transport=transport)
 
         if return_transport:
             return client, transport

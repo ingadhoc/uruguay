@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="view_move_form" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+
+            <sheet position="before">
+                <div class="alert alert-danger" role="alert" style="margin-bottom:0px;" attrs="{'invisible': ['|', '|', ('l10n_uy_journal_type', 'not in', ['electronic', 'contingency']), ('state', '!=', 'posted'), ('l10n_uy_cfe_pdf', '!=', False)]}"><bold>Esta factura esta validada pero le falta el PDF legal asociado, por favor intente re generarlo</bold>
+                    <button name="action_l10n_uy_get_pdf" type="object" string="(UY) Reprint Legal PDF" class="oe_inline oe_link" icon="fa-print"/>
+                </div>
+                <div class="alert alert-warning" role="alert" style="margin-bottom:0px;" attrs="{'invisible': ['|', '|', ('l10n_uy_journal_type', 'not in', ['electronic', 'contingency']), ('state', '!=', 'draft'), ('l10n_uy_cfe_pdf', '!=', False)]}"><bold>Esta factura aun no esta validada, asi que si intenta imprimir tendra un PDF no Legal</bold></div>
+            </sheet>
+
+            <!-- TODO need to find a way to hide computed_currency_rate field, this one is added in l10n_ar_ux, so.. maybe we should add it in another base
+            ux module. to be re used. Meanwhile we do not show l10n_uy_currency_rate -->
+            <!--  <div name="currency" position="inside">
+                <field name="l10n_uy_currency_rate" attrs="{'invisible': ['|', '|', ('l10n_uy_currency_rate', '=', False), ('l10n_uy_currency_rate', '=', 0.0), ('l10n_uy_currency_rate', '=', 1.0)]}"/>
+            </div> -->
+            <field name="l10n_uy_edi_cfe_state" position="after"/>
+                <button name="l10n_uy_edi_action_update_dgi_state" type="object" title="Update DGI Status" class="oe_inline oe_link" invisible="l10n_uy_edi_cfe_state != 'received'" icon="fa-refresh" groups="base.group_no_one"/>
+            </field>
+
+            <field name="l10n_uy_edi_cfe_uuid" position="after">
+                <div name="uy_buttons" colspan="2" groups="base.group_no_one" invisible="l10n_uy_journal_type != 'electronic'">
+
+                    <button name="action_l10n_uy_get_uruware_cfe" type="object" string="Get Uruware Invoice" class="oe_link" colspan="2" invisible="state != 'draft'" />
+                    <!-- TODO KZ This one should be removed after we fix the problem with the print from menu -->
+                    <button name="action_uy_get_pdf" type="object" string="(UY) Print Legal PDF" class="oe_inline oe_link" invisible="l10n_uy_edi_cfe_state not in ['received']" icon="fa-print" groups="base.group_no_one"/>
+
+                </div>
+            </field>
+
+            <notebook position="inside">
+                <page name="uy_dgi" string="DGI" groups="base.group_no_one" invisible="l10n_uy_journal_type not in ['electronic', 'contingency']">
+                    <group>
+                        <field name="l10n_uy_dgi_xml_request" widget="code"/>
+                        <field name="l10n_uy_dgi_xml_response" widget="code"/>
+                    </group>
+                </page>
+            </notebook>
+
+            <notebook position="inside">
+                <page name="uy_dgi" string="Adendas y Leyendas" invisible="l10n_uy_journal_type != 'electronic'">
+                    <button name="action_l10n_uy_remkark_default" type="object" string="Get Defaults"/>
+                    <field name="l10n_uy_addenda_ids">
+                        <tree string="Addendas">
+                            <field name="type"/>
+                            <field name="name"/>
+                            <field name="content"/>
+                        </tree>
+                    </field>
+                    <span>Preview: </span>
+                    <button name="action_l10n_uy_addenda_preview" type="object" string="Addendas"/>
+                    <button name="action_l10n_uy_mandatory_legend" type="object" string="Info/Leyendas"/>
+                </page>
+            </notebook>
+
+        </field>
+    </record>
+
+    <record id="view_move_form" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_uy_edi.view_move_form"/>
+        <field name="arch" type="xml">
+
+            <field name="l10n_uy_edi_addenda_ids" position="attributes">
+                <attribute name="context">{'default_type': 'item', 'default_apply_on': 'account.move', 'form_view_ref': 'l10n_uy_edi.l10n_uy_edi_addenda_view_form_only_item'}</attribute>
+            </field>
+        </field>
+    </record>
+
+</odoo>

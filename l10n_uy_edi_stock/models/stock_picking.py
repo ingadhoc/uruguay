@@ -1,20 +1,51 @@
-from os import uname
 from odoo import api,  models, fields, _
+from odoo.tools import html2plaintext
 
 
 class StockPicking(models.Model):
 
-    _name = 'stock.picking'
-    _inherit = ['l10n.uy.cfe', 'stock.picking']
+    _inherit = 'stock.picking'
 
+    l10n_uy_cfe_id = fields.Many2one("l10n_uy_edi.document", string="Uruguay E-Resguardo CFE", copy=False)
     l10n_latam_document_type_id = fields.Many2one('l10n_latam.document.type', string='Document Type (UY)', copy=False)
     l10n_latam_document_number = fields.Char(string='Document Number (UY)', readonly=True, states={'draft': [('readonly', False)]}, copy=False)
+
+    # Fields that need to be fill before creating the CFE
+    l10n_uy_edi_cfe_uuid = fields.Char(
+        'Key or UUID CFE', help="Unique identification per CFE in UCFE. Currently is formed by the concatenation of model name initials plust record id", copy=False)
+    l10n_uy_addenda_ids = fields.Many2many(
+        'l10n_uy_edi.addenda', string="Addenda & Disclosure",
+        domain="[('type', 'in', ['issuer', 'receiver', 'cfe_doc', 'addenda'])]")
+
     l10n_latam_available_document_type_ids = fields.Many2many('l10n_latam.document.type', compute='_compute_l10n_latam_available_document_types')
     l10n_uy_transfer_of_goods = fields.Selection(
-        [('1', 'Venta'),
-         ('2', 'Traslados internos')],
+        [('1', 'Venta'), ('2', 'Traslados internos')],
         string="Traslados de Bienes",
     )
+
+    l10n_uy_cfe_sale_mod = fields.Selection([
+        ('1', 'General Regime'),
+        ('2', 'Consignment'),
+        ('3', 'Reviewable Price'),
+        ('4', 'Own goods to customs exclaves'),
+        ('90', 'General Regime - exportation of services'),
+        ('99', 'Other transactions'),
+    ], 'Sales Modality', help="This field is used in the XML to create an Export e-Delivery Guide")
+    l10n_uy_cfe_transport_route = fields.Selection([
+        ('1', 'Maritime'),
+        ('2', 'Air'),
+        ('3', 'Ground'),
+        ('8', 'N/A'),
+        ('9', 'Other'),
+    ], 'Transportation Route', help="This field is used in the XML to create an Export e-Delivery Guide")
+    l10n_uy_place_of_delivery = fields.Char(
+        "Place of Delivery",
+        size=100,
+        help="Indicación de donde se entrega la mercadería o se presta el servicio (Dirección, Sucursal, Puerto, etc,)")
+    l10n_uy_edi_place_of_delivery = fields.Boolean(
+        "Place of Delivery",
+        help="CFE: Indication of where the merchandise is delivered or the service is provided"
+        " (Address, Branch, Port, etc.) if True then we will inform the shipping address's name and street")
 
     def name_get(self):
         """ Display: 'Stock Picking Internal Sequence : Remito (if defined)' """
@@ -48,7 +79,7 @@ class StockPicking(models.Model):
     def action_cancel(self):
         # The move cannot be modified once the CFE has been accepted by the DGI
         remitos = self.filtered(lambda x: x.country_code == 'UY' and x.picking_type_code == 'outgoing')
-        remitos.check_uy_state()
+        remitos._uy_check_state()
         return super().action_cancel()
 
     def uy_post_dgi_remito(self):
@@ -63,12 +94,12 @@ class StockPicking(models.Model):
             lambda x: x.country_code == 'UY' and x.picking_type_code == 'outgoing'
             and x.l10n_latam_document_type_id
             and int(x.l10n_latam_document_type_id.code) > 0
-            and x.l10n_uy_ucfe_state not in x._uy_cfe_already_sent()
+            and x.l10n_uy_edi_cfe_state not in ['accepted', 'rejected', 'received']
         )
 
         # If the invoice was previosly validated in Uruware and need to be link to Odoo we check that the
-        # l10n_uy_cfe_uuid has been manually set and we consult to get the invoice information from Uruware
-        pre_validated_in_uruware = uy_remitos.filtered(lambda x: x.l10n_uy_cfe_uuid and not x.l10n_uy_cfe_file and not x.l10n_uy_cfe_state)
+        # l10n_uy_edi_cfe_uuid has been manually set and we consult to get the invoice information from Uruware
+        pre_validated_in_uruware = uy_remitos.filtered(lambda x: x.l10n_uy_edi_cfe_uuid and not x.l10n_uy_cfe_file and not x.l10n_uy_cfe_state)
         if pre_validated_in_uruware:
             pre_validated_in_uruware.action_l10n_uy_get_uruware_cfe()
             uy_remitos = uy_remitos - pre_validated_in_uruware
@@ -78,12 +109,61 @@ class StockPicking(models.Model):
 
         # Send invoices to DGI and get the return info
         for remito in uy_remitos:
-            if remito._is_dummy_dgi_validation():
-                remito._dummy_dgi_validation()
+            if remito._uy_is_demo_env():
+                remito._uy_dummy_validation()
                 continue
 
             # TODO KZ I think we can avoid this loop. review
-            remito._l10n_uy_dgi_post()
+            remito._uy_dgi_post()
 
     # TODO KZ buscar el metodo _l10n_cl_get_tax_amounts para ejemplos de como extraer la info de los impuestos en un picking. viene siempre de una
     # factura
+
+    def _uy_get_cfe_addenda(self):
+        """ Add Specific MOVE model fields to the CFE Addenda if they are set:
+
+        * field Origin added with the prefix "Origin: ..."
+        * Observation
+        """
+        self.ensure_one()
+        res = super()._uy_get_cfe_addenda()
+        if self.origin:
+            res += "\n\nOrigin: %s" % self.origin
+        if self.note:
+            res += "\n\n%s" % html2plaintext(self.note)
+        return res.strip()
+
+    def _uy_get_cfe_lines(self):
+        self.ensure_one()
+        if self._is_uy_remito_type_cfe():
+            # TODO KZ: Toca revisar realmente cual es el line que corresponde, el que veo en la interfaz parece ser move_ids_without_package pero no se si esto siempre aplica
+
+            # move_ids_without_package	Stock moves not in package (stock.move)
+            # move_line_ids	Operations (stock.move.line)
+            # move_line_ids_without_package	Operations without package (stock.move.line)
+            return self.move_ids_without_package
+
+    def _l10n_uy_get_remito_codes(self):
+        """ return list of the available document type codes for uruguayan of stock picking"""
+        # self.ensure_one()
+        # if self.picking_type_code != 'outgoing':
+        #     return []
+        return ['0', '124', '181', '224', '281']
+
+    def l10n_uy_edi_action_get_dgi_state(self):
+        self.ensure_one()
+        self.l10n_uy_edi_cfe_id.l10n_uy_edi_action_get_dgi_state()
+
+    def _l10n_uy_edi_cfe_A_receptor(self):
+        # TODO: Call super like it is in the move and then
+        res = self.env['account.move']._l10n_uy_edi_cfe_A_receptor()
+
+        # A69 - LugarDestEnt
+        if self.l10n_uy_edi_place_of_delivery:
+            value = ''
+            delivery_address = self.partner_shipping_id
+            if delivery_address:
+                value = (delivery_address.name + ' ' + delivery_address.street)[:100]
+            res['LugarDestEnt'] = value
+
+        return res

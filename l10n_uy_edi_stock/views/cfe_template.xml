@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- to implement in future:  eRem_Exp -->
+
+    <template id="cfe_template" inherit="l10n_uy_edi.cfe_template">
+        <FchEmis position="after"/>
+            <LugarDestEnt t-out="IdDoc['TipoTraslado']"/>
+        </FchEmis>
+        <InfoAdicional position="after"/>
+            <LugarDestEnt t-out="receptor.get('LugarDestEnt')"/>
+        </InfoAdicional>
+    </template>
+
+    <template id="eRem_template">
+        <CFE xmlns="http://cfe.dgi.gub.uy" version="1.0">
+            <eRem>
+                <t t-call="l10n_uy_edi.cfe_template"/>
+            </eRem>
+        </CFE>
+    </template>
+
+</odoo>
