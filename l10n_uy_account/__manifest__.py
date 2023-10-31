@@ -40,8 +40,14 @@
     ],
     'demo': [
         'demo/res_company_demo.xml',
+        'demo/account_journal_demo.xml',
+        'demo/res_currency_rate_demo.xml',
         'demo/account_chart_template_demo.xml',
         'demo/res_partner_demo.xml',
+        'demo/account_customer_invoice_demo.xml',
+        'demo/account_customer_refund_demo.xml',
+        'demo/account_supplier_invoice_demo.xml',
+        'demo/account_supplier_refund_demo.xml',
         'demo/l10n_uy_adenda_demo.xml',
         # restore
         'demo/res_users_demo.xml',
