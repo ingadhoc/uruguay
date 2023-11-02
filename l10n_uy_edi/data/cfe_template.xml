@@ -77,6 +77,17 @@
                         <MontoItem t-out="item_line['MontoItem']"/>
                     </Item>
                 </Detalle>
+                <DscRcgGlobal>
+                    <DRG_Item t-foreach="DscRcgGlobal" t-as="descuento">
+                        <NroLinDR t-if="descuento.get('NroLinDR')" t-out="descuento['NroLinDR']"/>
+                        <TpoMovDR t-if="descuento.get('TpoMovDR')" t-out="descuento['TpoMovDR']"/>
+                        <TpoDR t-if="descuento.get('TpoDR')" t-out="descuento['TpoDR']"/>
+                        <CodDR t-if="descuento.get('CodDR')" t-out="descuento['CodDR']"/>
+                        <GlosaDR t-if="descuento.get('GlosaDR')" t-out="descuento['GlosaDR']"/>
+                        <ValorDR t-if="descuento.get('ValorDR')" t-out="descuento['ValorDR']"/>
+                        <IndFactDR t-if="descuento.get('IndFactDR')" t-out="descuento['IndFactDR']"/>
+                    </DRG_Item>
+                </DscRcgGlobal>
                 <Referencia t-if="referencia_lines">
                     <Referencia t-foreach="referencia_lines" t-as="referencia">
                         <NroLinRef t-out="referencia['NroLinRef']"/>

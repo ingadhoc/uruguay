@@ -923,6 +923,38 @@ class L10nUyCfe(models.AbstractModel):
 
         return {'cfe_str': cfe}
 
+    def _get_discount_of_lines(self):
+        #retorna el descuento total de las lineas de descuento globales
+        descuento = 0.0
+        descGloblal = self.line_ids.filtered(lambda x: x.price_unit < 0)
+        for desc in descGloblal:
+            descuento = descuento + desc.price_unit
+        return descuento
+
+    def _l10n_uy_get_cfe_discount(self):
+        values = []
+        for line in self.line_ids.filtered(lambda x: x.price_unit < 0):
+            item = {}
+            item.update  ({
+                'NroLinDR': line.discount,
+                'TpoMovDR': 'D', #TODO por ahora solo implementemamos descuentos
+                'TpoDR': 2, #Nosotros tenemos descuentos (en la linea) solo por porcentaje
+                'CodDR': False, #preguntar si implementar o no
+                'GlosaDR': line.name, #descripcion del descuento, usamos directamente la descripcion
+                'ValorDR': line.sequence,
+                'IndFactDR': False, #este campo es obligatorio y tengo dudas
+            })
+            values.append(item)
+        return values
+
+    def uy_cfe_D6_ValorDR(self):
+        ValorDR = self.discount or 0 #revisar bien el valor ya que es en porcentaje
+        return ValorDR
+
+    def uy_cfe_D1_NroLinDR(self):
+        NroLinDR = self.sequence or 1 #nosotros no tenemos una linea de descuento en si
+        return NroLinDR
+
     def _uy_get_cfe_lines(self):
         self.ensure_one()
         if self._is_uy_inv_type_cfe():
