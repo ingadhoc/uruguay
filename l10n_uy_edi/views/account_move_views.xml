@@ -9,6 +9,10 @@
 
             <div name="journal_div" position="after">
                 <field name="l10n_uy_journal_type" invisible="1"/>
+
+                <field name="l10n_uy_serie"/>
+                <field name="l10n_uy_number"/>
+
                 <field name="l10n_uy_cfe_state" attrs="{'invisible': [('l10n_uy_journal_type', 'not in', ['electronic', 'contingency'])]}"/>
                 <field name="l10n_uy_ucfe_msg" attrs="{'invisible': [('l10n_uy_ucfe_state', 'not in', ['xml_error', 'connection_error', 'ucfe_error', 'rejected'])]}"/>
                 <button name="action_l10n_uy_get_dgi_state" type="object" string="(UY) Consult DGI State" class="oe_inline oe_link" attrs="{'invisible': [('l10n_uy_cfe_state', '!=', 'received')]}" icon="fa-refresh"/>

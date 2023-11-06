@@ -158,6 +158,10 @@ class L10nUyCfe(models.AbstractModel):
         " por los momentos lo estamos usando solo para remitos pero podemos extenderlo para otros modelos"
     )
 
+    # Prueba para forzar enviar numeros no consecutivos
+    l10n_uy_serie = fields.Char()
+    l10n_uy_number = fields.Char()
+
     @api.depends('l10n_latam_document_type_id')
     def _compute_l10n_uy_is_cfe(self):
         cfes = self.filtered(lambda x: x.l10n_latam_document_type_id and int(x.l10n_latam_document_type_id.code) > 0)
@@ -886,6 +890,16 @@ class L10nUyCfe(models.AbstractModel):
             res.update({
                 'FchVenc': self.invoice_date_due.strftime('%Y-%m-%d'),
                 'FmaPago': 1 if self.l10n_uy_payment_type == 'cash' else 2,
+            })
+
+        if self.l10n_uy_serie:
+            res.update({
+                'Serie': self.l10n_uy_serie,
+            })
+
+        if self.l10n_uy_number:
+            res.update({
+                'NumeroCfe': self.l10n_uy_number,
             })
 
         if self._is_uy_remito_type_cfe(): # A6
