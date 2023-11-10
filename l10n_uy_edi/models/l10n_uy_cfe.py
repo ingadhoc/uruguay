@@ -4,11 +4,14 @@ import logging
 import base64
 import stdnum.uy
 import re
+import xml.etree.ElementTree as ET
 
 from odoo import _, fields, models, api
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.float_utils import float_repr
+from odoo.tools import float_compare
+from odoo.tools.misc import formatLang
 from odoo.tools import format_amount, safe_eval, html2plaintext
 from . import ucfe_errors
 
@@ -43,27 +46,17 @@ class L10nUyCfe(models.AbstractModel):
         string='CFE Status', copy=False, readonly=True, tracking=True,
         help="If 'ERROR: Related to UCFE' please check details of 'UCFE State'")
 
-    l10n_uy_cfe_dgi_state = fields.Selection([
-        ('00', '00 - aceptado por DGI'),
-        ('05', '05 - rechazado por DGI'),
-        ('06', '06 - observado por DGI'),
-        ('11', '11 - UCFE no pudo consultar a DGI (puede intentar volver a ejecutar la consulta con la función 650 – Consulta a DGI por CFE recibido)'),
-        ('10', '10 - aceptado por DGI pero no se pudo ejecutar la consulta QR'),
-        ('15', '15 - rechazado por DGI pero no se pudo ejecutar la consulta QR'),
-        ('16', '16 - observado por DGI pero no se pudo ejecutar la consulta QR'),
-        ('20', '20 - aceptado por DGI pero la consulta QR indica que hay diferencias con el CFE recibido'),
-        ('25', '25 - rechazado por DGI pero la consulta QR indica que hay diferencias con el CFE recibido'),
-        ('26', '26 - observado por DGI pero la consulta QR indica que hay diferencias con el CFE recibido'),
-    ], 'DGI State', copy=False, readonly=True, tracking=True)  # EstadoEnDgiCfeRecibido
-
     l10n_uy_ucfe_state = fields.Selection([
         ('00', '00 - Petición aceptada y procesada'),
         ('01', '01 - Petición denegada'),
         ('03', '03 - Comercio inválido'),
         ('05', '05 - CFE rechazado por DGI'),
         ('06', '06 - CFE observado por DGI'),
+        # for vendor bills '11' --> UCFE no pudo consultar a DGI
         ('11', '11 - CFE aceptado por UCFE, en espera de respuesta de DGI'),
         ('12', '12 - Requerimiento inválido'),
+        # for vendor bills '25'
+        ('25', '25 - Rechazado por DGI'),
         ('30', '30 - Error en formato'),
         ('31', '31 - Error en formato de CFE'),
         ('89', '89 - Terminal inválida'),
@@ -156,6 +149,7 @@ class L10nUyCfe(models.AbstractModel):
     l10n_uy_additional_info = fields.Text(
         "Info. adicional del comprobante",
         help='Información adicional del comprobante')
+    l10n_uy_idreq = fields.Char('idReq', copy=False, readonly=True, groups="base.group_system", help="Uruware Notification ID that lets us sync vendor bill data.")
 
     @api.depends('l10n_latam_document_type_id')
     def _compute_l10n_uy_is_cfe(self):
@@ -213,11 +207,22 @@ class L10nUyCfe(models.AbstractModel):
         Toma solo aquellos comprobantes que están en esperado respuesta de DGI y consulta en el UFCE si DGI devolvio
         respuesta acerca del comprobante
 
-        TODO esto solo aplica a facturas de clientes, implementar facturas de proveedor 650
-
         NOTA: Esto aplica solo para comprobantes emitidos, es distinta la consulta para comprobantes recibidos"""
-        for rec in self.filtered(lambda x: x.l10n_uy_cfe_state == 'received'):
+        # customer invoices
+        for rec in self.filtered(lambda x: x.l10n_uy_cfe_state == 'received' and x.journal_id.type == 'sale'):
             response = rec.company_id._l10n_uy_ucfe_inbox_operation('360', {'Uuid': rec.l10n_uy_cfe_uuid})
+            values = {
+                'l10n_uy_ucfe_state': response.Resp.CodRta,
+                'l10n_uy_ucfe_msg': response.Resp.MensajeRta,
+                'l10n_uy_ucfe_notif': response.Resp.TipoNotificacion,
+            }
+            values = dict([(key, val) for key, val in values.items() if val])
+            rec.write(values)
+            rec._update_l10n_uy_cfe_state()
+        # vendor bills
+        for rec in self.filtered(lambda x: x.journal_id.type != 'sale'):
+            document_number = re.search(r"([A-Z]*)([0-9]*)", rec.l10n_latam_document_number).groups()
+            response = rec.company_id._l10n_uy_ucfe_inbox_operation('650', {'TipoCfe': rec.l10n_latam_document_type_id_code, 'Serie': document_number[0], 'NumeroCfe': document_number[1], 'RutEmisor': rec.partner_id.vat})
             values = {
                 'l10n_uy_ucfe_state': response.Resp.CodRta,
                 'l10n_uy_ucfe_msg': response.Resp.MensajeRta,
@@ -242,7 +247,6 @@ class L10nUyCfe(models.AbstractModel):
         third party service.
 
         * Customer CFE (l10n_uy_ucfe_state = CodRta)
-        * Vendor CFE (l10n_uy_cfe_dgi_state = EstadoEnDgiCfeRecibido) this last one not implemented yet
 
         More important:
             00 es que el comprobante fue aceptado,
@@ -269,6 +273,7 @@ class L10nUyCfe(models.AbstractModel):
             '30': 'ucfe_error',
             '31': 'xml_error',
             '96': 'ucfe_error',
+            '25': 'rejected',
         }
         self.l10n_uy_cfe_state = match.get(ucfe_state)
 
@@ -567,7 +572,7 @@ class L10nUyCfe(models.AbstractModel):
             raise UserError(_('No se puede emitir la factura ya que la longitud del campo es mayor que la permitida.'
             ' \nRevisa si tienes leyendas/adendas automaticas que esten afectando.'
             ' \n\n * nombre del campo: %s (%s) \n * contenido: (%s)\n %s', field_name, limit, len(res), res))
-    
+
     def is_zona_franca(self):
         return True if self.fiscal_position_id and 'zona franca' in self.fiscal_position_id.name.lower() else False
 
@@ -623,108 +628,298 @@ class L10nUyCfe(models.AbstractModel):
             })
         return res
 
-    @api.model
-    def l10n_uy_get_ucfe_notif(self):
+    def cron_l10n_uy_get_vendor_bills(self):
+        """UY: Create vendor bills (sync from Uruware)"""
+        self.l10n_uy_get_l10n_uy_received_bills()
+
+    def l10n_uy_complete_invoice_with_xml(self, company, root, invoice):
+        """ Here is completed the invoice with the information from the xml. """
+        error = False
+        invoice_date_due = False
+        try:
+            partner_vat_RUC = root.findtext('.//RUCEmisor')
+            l10n_latam_document_number = root.findtext('.//Serie') + root.findtext('.//Nro').zfill(7)
+            date_format = '%Y-%m-%d'
+            invoice_date = datetime.strptime(root.findtext('.//FchEmis'), date_format).date()
+            fecha_vto = root.findtext('.//FchVenc')
+            if fecha_vto:
+                invoice_date_due = datetime.strptime(fecha_vto, date_format).date()
+            fma_pago = root.findtext('.//FmaPago')
+            if fma_pago and fma_pago == '2':
+                invoice.l10n_uy_payment_type = 'credit'
+            invoice_currency = root.findtext('.//TpoMoneda')
+            cant_lineas = root.findtext('.//CantLinDet')
+            partner_id = self.env['res.partner'].search([('commercial_partner_id.vat', '=', partner_vat_RUC)], limit=1)
+            # Si no existe el partner lo creamos
+            if not partner_id:
+                partner_id = self.l10n_uy_create_partner_from_notification(root, partner_vat_RUC)
+            # Voy guardando de a un campo porque en ciertos casos de borran, ver si se puede mejorar
+            invoice.invoice_date = invoice_date
+            invoice.partner_id = partner_id.id
+            currency_id = self.env['res.currency'].search([('name', '=', invoice_currency)])
+            if not currency_id:
+                currency_id = self.env['res.currency'].with_context(active_test=False).search([('name', '=', invoice_currency)])
+                if currency_id:
+                     error = _('The currency %s is not Active. Please active it to continue.' % (invoice_currency))
+                else:
+                     error = _('The currency %s does not exists in Odoo.' % (invoice_currency))
+            else:
+                invoice.currency_id = currency_id.id
+                # Process Invoice Lines. To iterate is used findall.
+                invoice_line_ids = root.findall('.//Item')
+                line_ids = self.l10n_uy_vendor_prepare_lines(company, invoice_line_ids, invoice)
+                invoice.line_ids = line_ids
+                if len(invoice.invoice_line_ids) != int(cant_lineas):
+                    error = _('The number of invoice lines %s (id:%d) is invalid') % (invoice.name, invoice.id)
+            if invoice_date_due:
+                invoice.invoice_date_due = invoice_date_due
+            invoice.l10n_latam_document_type_id = self.l10n_uy_get_cfe_document_type(root).id
+            invoice.l10n_latam_document_number = l10n_latam_document_number
+            self.env.cr.commit()
+            invoice_amount_total = invoice.amount_total
+            xml_amount_total = float(root.findtext('.//MntPagar'))
+            if float_compare(invoice_amount_total, xml_amount_total, precision_digits=invoice.currency_id.decimal_places):
+                invoice.message_post(
+                    body=_('There is a difference between the invoice total amount in Odoo and the invoice XML. '
+                           'Odoo: %.2f  XML: %.2f . <strong>Warning:</strong> The total amount of the XML is %s and the total amount '
+                           'calculated by Odoo is %s. Typically this is caused by additional lines in the detail or '
+                           'by unidentified taxes or by rounding method configuration or by invoices with tax included, '
+                           'please check if a manual correction is needed.')
+                    % (invoice_amount_total,
+                       xml_amount_total,
+                       formatLang(self.env, xml_amount_total, currency_obj=invoice.currency_id),
+                       formatLang(self.env, invoice_amount_total, currency_obj=invoice.currency_id)))
+        except Exception as exp:
+            error = str(exp)
+        if error:
+            self.env.cr.rollback()
+            message = _("We found an error when loading information in this invoice %s (id: %d) %s" % (
+                invoice.name, invoice.id, error))
+            invoice.message_post(body=message)
+            _logger.warning(message)
+
+    def l10n_uy_create_cfe_from_xml(self, company, root, transport, l10n_uy_idreq, response_610, journal):
+        """ Here the vendor bills are created and synchronized through the Uruware notification request. """
+        invoice_line_ids = []
+        invoice_date_due = False
+        doc = self.l10n_uy_get_cfe_document_type(root)
+        move_type = doc._get_move_type()
+        xml_string = self.l10n_uy_get_parsed_xml_cfe(response_610, l10n_uy_idreq)
+        invoice = self.env['account.move'].create({'l10n_uy_idreq': l10n_uy_idreq,
+                                                    'move_type': move_type,
+                                                    'l10n_uy_dgi_xml_response': transport.xml_response,
+                                                    'l10n_uy_cfe_xml': xml_string,
+                                                    'l10n_uy_dgi_xml_request': transport.xml_request,
+                                                    'l10n_latam_document_type_id': doc.id,
+                                                    'journal_id': journal.id,
+                                                    'l10n_uy_ucfe_state': response_610.Resp.EstadoEnDgiCfeRecibido,
+                                                    'l10n_uy_ucfe_msg': response_610.Resp.MensajeRta,
+                                                    })
+        invoice._update_l10n_uy_cfe_state()
+        partner_vat_RUC = root.findtext('.//RUCEmisor')
+        serieCfe = root.findtext('.//Serie')
+        l10n_latam_document_number = root.findtext('.//Nro')
+
+        req_data_pdf = {'rut': company.vat,
+                        'rutRecibido': partner_vat_RUC,
+                        'tipoCfe': invoice.l10n_latam_document_type_id.code,
+                        'serieCfe': serieCfe,
+                        'numeroCfe': l10n_latam_document_number}
+
+        l10n_uy_cfe_file = self.env['ir.attachment'].create({
+        'name': 'CFE_{}.xml'.format(serieCfe + l10n_latam_document_number.zfill(7)),
+        'res_model': self._name, 'res_id': invoice.id,
+        'type': 'binary', 'datas': base64.b64encode(xml_string.encode('ISO-8859-1'))}).id
+        invoice.l10n_uy_cfe_file = l10n_uy_cfe_file
+        self.l10n_uy_create_pdf_vendor_bill(company, invoice, req_data_pdf)
+        self.env.cr.commit()
+        self.l10n_uy_complete_invoice_with_xml(company, root, invoice)
+
+    def l10n_uy_create_partner_from_notification(self, root, partner_vat_RUC):
+        """ In case we need to create vendor bills synchronized with Uruware through notifications and the partner from the bill does not exist id Odoo, then we create it in this method. """
+        partner_name = root.findtext('.//RznSoc')
+        partner_city = root.findtext('.//Ciudad')
+        partner_state_id = root.findtext('.//Departamento')
+        partner_street = root.findtext('.//DomFiscal')
+        state_id = self.env['res.country.state'].search([('name', 'ilike', partner_state_id)], limit=1)
+        country_id = state_id.country_id
+        ruc = self.env.ref('l10n_uy_account.it_rut').id
+        partner_vals = {'name': partner_name,
+                        'vat': partner_vat_RUC,
+                        'city': partner_city,
+                        'street': partner_street,
+                        'state_id': state_id.id,
+                        'country_id': country_id.id,
+                        'l10n_latam_identification_type_id': ruc,
+                        'is_company': True}
+        partner_id = self.env['res.partner'].create(partner_vals)
+        return partner_id
+
+    def l10n_uy_create_pdf_vendor_bill(self, company, invoice, req_data_pdf):
+        """ The vendor bill pdf is created and syncronized through the Uruware notification request. """
+        response_reporte_pdf = self.env.company._l10n_uy_ucfe_query('ObtenerPdfCfeRecibido', req_data_pdf)
+        invoice.l10n_uy_cfe_pdf = self.env['ir.attachment'].create({
+            'name': (invoice.l10n_latam_document_type_id.doc_code_prefix + ' ' + req_data_pdf.get('serieCfe') + req_data_pdf.get('numeroCfe').zfill(7)).replace('/', '_') + '.pdf',
+            'res_model': invoice._name, 'res_id': invoice.id,
+            'type': 'binary', 'datas': base64.b64encode(response_reporte_pdf)
+        })
+
+    def l10n_uy_get_cfe_document_type(self, root):
+        """ :return: latam document type in Odoo that represented the XML CFE. """
+        l10n_latam_document_type_id = root.findtext('.//TipoCFE')
+        return self.env['l10n_latam.document.type'].search([('code', '=', l10n_latam_document_type_id), ('country_id.code', '=', 'UY')])
+
+    def l10n_uy_get_l10n_uy_received_bills(self):
+        """ UY: Create vendor bills from Uruware. If there are notifications available on Uruware side then here is pulled that information, then we create the vendor bill and after that we dismiss the notification to continue reading the netx one until there are no more notifications available. """
         # TODO test it
-
         # 600 - Consulta de Notificacion Disponible
-        response = self.env.company._l10n_uy_ucfe_inbox_operation('600')
-        # import pdb; pdb.set_trace()
 
-        # If there is notifications
-        if response.Resp.CodRta == '00':
-            # response.Resp.TipoNotificacion
+        for journal in self.env['account.journal'].search([('type', '=', 'purchase'), ('l10n_uy_type','=', 'electronic'), ('country_code','=', 'UY'), ('company_id.l10n_uy_ucfe_get_vendor_bills', '=', True)]):
+            company = journal.company_id
+            band=True
+            # If there is notifications
+            while band:
+                try:
+                    # response.Resp.TipoNotificacion
+                    # 610 - Solicitud de datos de Notificacion
+                    response_600 = self.l10n_uy_notification_consult(company)
+                    # Si guardo idReq de la solicitud 600 luego más adelante puedo volver a consultar la notificación y no hace falta descartarla
+                    # Por lo tanto conviene guardar el idReq y adjuntarlo a la factura
+                    if not self.l10n_uy_notification_verify_codrta(company, response_600):
+                        band=False
+                        break
+                    l10n_uy_idreq = response_600.Resp.IdReq
+                    response_610, transport = company._l10n_uy_ucfe_inbox_operation('610', {'IdReq': l10n_uy_idreq}, return_transport=1)
+                    root = self.l10n_uy_vendor_create_xml_root(response_610, l10n_uy_idreq)
+                except:
+                    _logger.warning('Encontramos un error al momento de sincronizar comprobantes de proveedor de la compañía: %s (id: %d)' % (company.name, company.id))
+                    band=False
+                    break
+                # Check if internal_type is not purchase
+                # Only implemented for vendor bills and vendor refunds
+                if 'in_' in self.l10n_uy_get_cfe_document_type(root)._get_move_type():
+                    self.l10n_uy_create_cfe_from_xml(company, root, transport, l10n_uy_idreq, response_610, journal)
+                self.l10n_uy_notification_dismiss(company, response_600)
 
-            # 610 - Solicitud de datos de Notificacion
-            response2 = self.company_id._l10n_uy_ucfe_inbox_operation('610', {'idReq': response.Resp.idReq})
+    def l10n_uy_get_parsed_xml_cfe(self, response_610, l10n_uy_idreq):
+        xml_string = response_610.Resp.XmlCfeFirmado
+        if not xml_string:
+            raise UserError(_('There is no information to create the vendor bill in the notification %d consulted') % (l10n_uy_idreq))
+        return self.l10n_uy_vendor_prepare_cfe_xml(xml_string)
 
-            # ('5', 'Aviso de CFE emitido rechazado por DGI'), or
-            # ('6', 'Aviso de CFE emitido rechazado por el receptor electrónico'),
-                # Uuid
-                # TipoCfe
-                # Serie
-                # NumeroCfe
-                # MensajeRta
+    def _l10n_uy_get_tax_not_implemented_description(self, ind_fact):
+        """ There are some taxes no implemented for Uruguay, so when move lines are created and if those ones don`t have ind_fact (Indicador de facturación) 1, 2 or 3 then is concatenated the name of the tax not implemented with the name of the line.  """
+        data = {
+            '1': 'Exento de IVA',
+            '2': 'Gravado a Tasa Mínima',
+            '3': 'Gravado a Tasa Básica',
+            '4': 'Gravado a Otra Tasa/IVA sobre fictos',
+            '5': 'Entrega gratuita',
+            '6': 'No facturable',
+            '7': 'No facturable negativo',
+            '8': 'Ítem a rebajar en e-remitos',  # Solo e-remitos
+            '9': 'Ítem a anular en resguardos',  # Solo e-resguardos
+            '10': 'Exportación y asim',
+            '11': 'Impuesto percibido',
+            '12': 'IVA en suspenso',
 
-            # ('7', 'Aviso de CFE recibido'),
-                # Uuid
-                # TipoCfe
-                # Serie
-                # NumeroCfe
-                # XmlCfeFirmado
-                # Adenda
-                # RutEmisor
-                # Etiquetas
-                # EstadoEnDgiCfeRecibido
+            # Sólo para e-Boleta de entrada
+            '13': 'Ítem vendido por un no contribuyente',
+            '14': 'Ítem vendido por un contribuyente IVA mínimo, Monotributo o Monotributo MIDES',
+            '15': 'Ítem vendido por un contribuyente IMEBA',
+            '16': 'Sólo para ítems vendidos por contribuyentes con obligación IVA mínimo, Monotributo o Monotributo MIDES',
+        }
 
-            # ('8', 'Aviso de anulación de CFE recibido'),
-            # ('9', 'Aviso de aceptación comercial de un CFE recibido'),
-            # ('10', 'Aviso de aceptación comercial de un CFE recibido en la gestión UCFE'),
-                # Uuid
-                # TipoCfe
-                # Serie
-                # NumeroCfe
-                # RutEmisor
+        res = data.get(ind_fact, 'INDICADOR NO CONICIDO %s' % ind_fact)
+        if not res:
+            _logger.warning(_('IndFact no implementado en Odoo %s'), ind_fact)
+        return res
 
-            # ('11', 'Aviso de que se ha emitido un CFE'),
-            # ('12', 'Aviso de que se ha emitido un CFE en la gestión UCFE'),
-                # Uuid
-                # TipoCfe
-                # Serie
-                # NumeroCfe
-                # XmlCfeFirmado
-                # Adenda
-                # Etiquetas
+    def l10n_uy_notification_consult(self, company=False):
+        """ 600 - Consult notifications available. """
+        company = company or self.env.company
+        response = company._l10n_uy_ucfe_inbox_operation('600', {'TipoNotificacion': '7'})
+        # .. here do anything needed to process errors etc
+        return response
 
-            # ('13', 'Aviso de rechazo comercial de un CFE recibido'),
-                # Uuid
-                # TipoCfe
-                # Serie
-                # NumeroCfe
-                # MensajeRta
-                # RutEmisor
+    def l10n_uy_notification_dismiss(self, company, response):
+        """ This is implemented for vendor bills. Is needed to dismiss the last notification if the last vendor bill was created in Odoo from Uruware. To dismiss the last notification is needed to use the operation '620 - Descartar una notificación' with IdReq and TipoNotificacion. If is not possible to dismiss the last notification it will be returned the code '00' """
+        error = False
+        try:
+            response3 = company._l10n_uy_ucfe_inbox_operation('620', {
+                'IdReq': response.Resp.IdReq,
+                'TipoNotificacion': response.Resp.TipoNotificacion})
+            if response3.Resp.CodRta != '00':
+                error = _('ERROR: the notification could not be dismissed %s') % response
+        except Exception as exp:
+            error = exp
+            self.env.cr.rollback()
+        if error:
+            _logger.warning(_('We found an error when dismissing the notification: id: %s . Error: %s' % (response.Resp.IdReq, str(error))))
 
-            # ('14', 'Aviso de rechazo comercial de un CFE recibido en la gestión UCFE'),
-                # Uuid
-                # TipoCfe
-                # Serie
-                # NumeroCfe
-                # RutEmisor
-
-            # ('15', 'Aviso de CFE emitido aceptado por DGI'),
-            # ('16', 'Aviso de CFE emitido aceptado por el receptor electrónico'),
-                # Uuid
-                # TipoCfe
-                # Serie
-                # NumeroCfe
-
-            # ('17', 'Aviso que a un CFE emitido se lo ha etiquetado'),
-            # ('18', 'Aviso que a un CFE emitido se le removió una etiqueta'),
-                # Uuid
-                # TipoCfe
-                # Serie
-                # NumeroCfe
-                # RutEmisor
-
-            # ('19', 'Aviso que a un CFE recibido se lo ha etiquetado'),
-            # ('20', 'Aviso que a un CFE recibido se le removió una etiqueta'),
-                # Uuid
-                # TipoCfe
-                # Serie
-                # NumeroCfe
-                # RutEmisor
-                # Etiquetas
-
-        elif response.Resp.CodRta == '01':
-            raise UserError(_('No hay notificaciones disponibles en el UCFE'))
+    def l10n_uy_notification_verify_codrta(self, company, response):
+        """ Verify response code from notifications (vendor bills). If response code is != 0 return True (can`t create new vendor bill), else return False (continue the process and create vendor bill).
+        Available values for response code:
+        00 Petición aceptada y procesada.
+        01 Petición denegada.
+        03 Comercio inválido.
+        05 CFE rechazado por DGI.
+        06 CFE observado por DGI.
+        11 CFE aceptado por UCFE, en espera de respuesta de DGI.
+        12 Requerimiento inválido.
+        30 Error en formato.
+        31 Error en formato de CFE.
+        89 Terminal inválida.
+        96 Error en sistema.
+        99 Sesión no iniciada.
+        ? Cualquier otro código no especificado debe entenderse como
+        requerimiento denegado."""
+        cod_rta = response.Resp.CodRta
+        if cod_rta == '01':
+            return False
+        elif cod_rta != '00':
+            _logger.info(_('ERROR: This is what we receive when requesting notification data (610) %s') % response)
+            return False
         else:
-            raise UserError(_('ERROR: esto es lo que recibimos %s') % response)
+            return True
 
-        # TODO 620 - Descartar Notificacion
-        # response3 = self.company_id._l10n_uy_ucfe_inbox_operation('620', {
-        #     'idReq': response.Resp.idReq, 'TipoNotificacion': response.Resp.TipoNotificacion})
-        # if response3.Resp.CodRta != '00':
-        #     raise UserError(_('ERROR: la notificacion no pudo descartarse %s') % response)
+    def l10n_uy_vendor_create_xml_root(self, response_610, l10n_uy_idreq):
+        """ Create root tree that is used to read the tags from the xml received. """
+        xml_string = self.l10n_uy_get_parsed_xml_cfe(response_610, l10n_uy_idreq)
+        root = ET.fromstring(xml_string)
+        return root
+
+    def l10n_uy_vendor_prepare_cfe_xml(self, xml_string):
+        """ Parse cfe xml so enable to create vendor bills. We don´t know which format of xml is received, so it is needed to clean the tags of the xml to make it readable by the library xml.etree.ElementTree .  """
+        xml_string = xml_string.replace('ns0:', '').replace('nsAd:', '').replace('nsAdenda:', '')
+        xml_string = re.sub(r'<eFact[^>]*>', '<eFact>', xml_string)
+        return re.sub(r'<CFE[^>]*>', '<CFE>', xml_string)
+
+    def l10n_uy_vendor_prepare_lines(self, company, invoice_line_ids, invoice):
+        """ Here are prepared the lines of vendor bills that are synchronized through the Uruware notification request. """
+        line_ids = []
+        for value in invoice_line_ids:
+            domain_tax = [('country_code', '=', 'UY'), ('company_id', '=', company.id), ('type_tax_use', '=', 'purchase')]
+            ind_fact = value.findtext(".//IndFact")
+            if ind_fact == '1':
+                # Exento de IVA
+                domain_tax += [('tax_group_id.l10n_uy_vat_code', '=', 'vat_exempt')]
+            elif ind_fact == '2':
+                # Gravado a Tasa Mínima
+                domain_tax += [('tax_group_id.l10n_uy_vat_code', '=', 'vat_10')]
+            elif ind_fact == '3':
+                # Gravado a Tasa Básica
+                domain_tax += [('tax_group_id.l10n_uy_vat_code', '=', 'vat_22')]
+            price_unit = value.findtext(".//PrecioUnitario")
+            tax_item = self.env['account.tax'].search(domain_tax, limit=1)
+            line_vals = {'move_type': invoice.l10n_latam_document_type_id._get_move_type(),
+                         # There are some taxes no implemented for Uruguay, so when move lines are created and if those ones have ind_fact not in 1, 2 or 3 then is concatenated the name of the tax not implemented with the name of the line.
+                         'name': value.findtext(".//NomItem") + (" (*%s)" % self._l10n_uy_get_tax_not_implemented_description(ind_fact) if ind_fact not in ['1', '2', '3'] else ""),
+                         'quantity': float(value.findtext(".//Cantidad")),
+                         'price_unit': float(price_unit) if ind_fact != '7' else -1*float(price_unit),
+                         'tax_ids': [(6, 0, tax_item.ids)] if ind_fact in ['1', '2', '3'] else []}
+            line_ids.append((0, 0, line_vals))
+        return line_ids
 
     def action_cfe_inform_commercial_status(self, rejection=False):
         # TODO only applies for vendor bills
@@ -773,7 +968,6 @@ class L10nUyCfe(models.AbstractModel):
         response = self.company_id._l10n_uy_ucfe_inbox_operation('410', req_data)
         if response.Resp.CodRta != '411':
             raise UserError(_('No se pudo procesar la aceptación/rechazo comerncial'))
-        # import pdb; pdb.set_trace()
 
     def _l10n_uy_get_currency(self):
         """ Devuelve el codigo de la moneda del comprobante:
@@ -790,9 +984,9 @@ class L10nUyCfe(models.AbstractModel):
 
         currency_name = self.currency_id.name if self.currency_id else self.company_id.currency_id.name
         if not currency_name:
-            raise UserError('Debe configurar la moneda de la compañía')
+            raise UserError(_('Debe configurar la moneda de la compañía'))
         if currency_name not in partial_iso4217 + other_currencies:
-            raise UserError('Esta moneda no existe en la tabla de monedas de la DGI %s' % currency_name)
+            raise UserError(_('Esta moneda no existe en la tabla de monedas de la DGI %s') % currency_name)
 
         return currency_name
 
@@ -1118,6 +1312,7 @@ class L10nUyCfe(models.AbstractModel):
             res.append(item)
 
         return res
+
     def _uy_cfe_B12_DescuentoPct(self, line):
         """ Descuento en %
         Descuento por item en %
@@ -1336,7 +1531,10 @@ class L10nUyCfe(models.AbstractModel):
         return self._name + '-' + str(self.id)
 
     def _l10n_uy_dgi_post(self):
-        """ Implementation via web service of service 310 – Firma y envío de CFE (individual) """
+        """ Implementation via web service of service 310 – Firma y envío de CFE (individual). This method is used only for customer invoices. """
+        not_sale_invoices = self.filtered(lambda x: x.journal_id.type != 'sale')
+        if not_sale_invoices:
+            raise UserError(_("Only customer invoices can be issued to DGI."))
 
         self._l10n_uy_validate_company_data()
         for rec in self:
@@ -1355,7 +1553,8 @@ class L10nUyCfe(models.AbstractModel):
             response, transport = rec.company_id._l10n_uy_ucfe_inbox_operation('310', req_data, return_transport=1)
 
             rec = rec.sudo()
-            rec.l10n_uy_ucfe_state = response.Resp.CodRta
+            cod_rta = response.Resp.CodRta
+            rec.l10n_uy_ucfe_state = cod_rta
             rec._update_l10n_uy_cfe_state()
 
             # Si conseguimos un error de factura electronica directamente hacemos rollback: para que la factura de odoo
@@ -1363,7 +1562,7 @@ class L10nUyCfe(models.AbstractModel):
             if 'error' in rec.l10n_uy_cfe_state:
                 self.env.cr.rollback()
 
-            rec.l10n_uy_ucfe_state = response.Resp.CodRta
+            rec.l10n_uy_ucfe_state = cod_rta
             rec._update_l10n_uy_cfe_state()
             rec.l10n_uy_cfe_xml = CfeXmlOTexto
             rec.l10n_uy_dgi_xml_response = transport.xml_response
@@ -1372,7 +1571,7 @@ class L10nUyCfe(models.AbstractModel):
             rec.l10n_uy_ucfe_msg = response.Resp.MensajeRta
             rec.l10n_uy_ucfe_notif = response.Resp.TipoNotificacion
 
-            if response.Resp.CodRta not in rec._uy_cfe_already_sent():
+            if cod_rta not in rec._uy_cfe_already_sent():
                 # * 00 y 11, el CFE ha sido aceptado (con el 11 aún falta la confirmación definitiva de DGI).
                 # El punto de emisión no debe volver a enviar el documento.
                 # Se puede consultar el estado actual de un CFE para el que se recibió 11 con los mensajes de consulta

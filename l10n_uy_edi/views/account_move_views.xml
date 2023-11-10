@@ -9,7 +9,8 @@
 
             <sheet position="before">
                 <div class="alert alert-danger" role="alert" style="margin-bottom:0px;" attrs="{'invisible': ['|', '|', ('l10n_uy_journal_type', 'not in', ['electronic', 'contingency']), ('state', '!=', 'posted'), ('l10n_uy_cfe_pdf', '!=', False)]}"><bold>Esta factura esta validada pero le falta el PDF legal asociado, por favor intente re generarlo</bold>
-                    <button name="action_l10n_uy_get_pdf" type="object" string="(UY) Reprint Legal PDF" class="oe_inline oe_link" icon="fa-print"/>
+                    <button name="action_l10n_uy_get_pdf" type="object" string="(UY) Reprint Legal PDF" class="oe_inline oe_link" attrs="{
+                    'invisible': ['|', ('l10n_uy_cfe_state', 'not in', ['received']), ('invoice_filter_type_domain', '=', 'purchase')]}" icon="fa-print"/>
                 </div>
                 <div class="alert alert-warning" role="alert" style="margin-bottom:0px;" attrs="{'invisible': ['|', '|', ('l10n_uy_journal_type', 'not in', ['electronic', 'contingency']), ('state', '!=', 'draft'), ('l10n_uy_cfe_pdf', '!=', False)]}"><bold>Esta factura aun no esta validada, asi que si intenta imprimir tendra un PDF no Legal</bold></div>
             </sheet>
@@ -40,26 +41,28 @@
                 <page name="uy_dgi" string="DGI" attrs="{'invisible': [('l10n_uy_journal_type', 'not in', ['electronic', 'contingency'])]}">
                             <notebook>
                                 <page string="Detail">
-                                    <group string="UCFE">
-                                        <field name="l10n_uy_ucfe_state"/>
-                                        <field name="l10n_uy_ucfe_msg"/>
-                                        <!-- <field name="l10n_uy_ucfe_notif"/> -->
-                                        <!-- <field name="l10n_uy_cfe_partner_status"/> -->
+                                    <group string="UCFE" attrs="{'invisible': [('invoice_filter_type_domain', '=', 'purchase')]}">
                                         <field name="l10n_uy_cfe_uuid"/>
                                         <button name="action_l10n_uy_get_uruware_cfe" type="object" string="Get Uruware Invoice" class="oe_link" colspan="2"/>
+                                    </group>
+                                    <group>
+                                        <field name="l10n_uy_ucfe_state"/>
+                                        <field name="l10n_uy_ucfe_msg"/>
+                                        <field name="l10n_uy_idreq" attrs="{'invisible': [('invoice_filter_type_domain', '!=', 'purchase')]}"/>
                                         <field name="l10n_uy_cfe_file"/>
                                     </group>
                                     <group string="DGI">
-                                        <label for="l10n_uy_cfe_dgi_state"/>
-                                        <div>
-                                            <field name="l10n_uy_cfe_dgi_state"/>
-                                        </div>
                                         <field name="l10n_uy_dgi_barcode"/>
                                     </group>
                                 </page>
                                 <page string="XML CFE" groups="base.group_no_one">
-                                    <button name="action_l10n_uy_preview_xml" type="object" string="Preview" class="oe_inline oe_link" states="draft"/>
-                                    <button name="action_l10n_uy_validate_cfe" type="object" string="Validate" class="oe_inline oe_link" states="draft"/>
+                                    <span attrs="{'invisible': [('invoice_filter_type_domain', '=', 'purchase')]}">
+                                        <button name="action_l10n_uy_preview_xml" type="object" string="Preview" class="oe_inline oe_link" states="draft"/>
+                                        <button name="action_l10n_uy_validate_cfe" type="object" string="Validate" class="oe_inline oe_link" states="draft"/>
+                                    </span>
+                                    <div attrs="{'invisible': [('invoice_filter_type_domain', '!=', 'purchase')]}">
+                                        <button name="action_l10n_uy_update_fields" type="object" string="Update Fields" class="oe_inline oe_link" states="draft" help="Read the XML and fill the fields of the invoice/bill with the xml values" confirm="Are you sure? this action will update the invoice information."/>
+                                    </div>
                                     <field name="l10n_uy_cfe_xml" nolabel="1" widget="ace"/>
                                 </page>
                                 <page string="XML Request" groups="base.group_no_one">
