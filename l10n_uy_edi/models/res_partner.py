@@ -24,9 +24,10 @@ class ResPartner(models.Model):
         company = self.company_id or self.env.company
         if self.l10n_latam_identification_type_id.l10n_uy_dgi_code == '2':
             response = company._l10n_uy_ucfe_inbox_operation('630', {'RutEmisor': self.vat})
-            if response.Resp.CodRta == '00':
+            cod_rta = response.Resp.CodRta
+            if cod_rta == '00':
                 raise UserError(_('Es un emisor electrónico'))
-            elif response.Resp.CodRta == '01':
+            elif cod_rta == '01':
                 raise UserError(_('NO es un emisor electrónico'))
         else:
             raise UserError(_('Solo puede consultar si el partner tiene tipo de identificación RUT'))
