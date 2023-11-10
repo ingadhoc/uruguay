@@ -493,7 +493,13 @@ class L10nUyCfe(models.AbstractModel):
 
     @api.model
     def _l10n_uy_get_min_by_unidad_indexada(self):
-        return self.env.ref('base.UYI').inverse_rate * 5000
+        currency = self.env.ref('base.UYI')
+        conversion_rate = currency._convert(
+            1.0, self.currency_id, self.company_id,
+            date=self.date or
+            fields.Date.context_today(self),
+            round=False)
+        return conversion_rate * 5000
 
     def _l10n_uy_get_cfe_tag(self):
         self.ensure_one()
