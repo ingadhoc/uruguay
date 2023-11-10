@@ -8,3 +8,4 @@ from . import account_tax
 from . import res_partner
 from . import product_product
 from . import ir_actions_report
+from . import l10n_latam_document_type

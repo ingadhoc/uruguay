@@ -1,8 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models, _
 from odoo.exceptions import UserError
-from datetime import datetime
-import base64
+import xml.etree.ElementTree as ET
+import logging
+
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountMove(models.Model):
@@ -31,7 +34,7 @@ class AccountMove(models.Model):
             x.journal_id.l10n_uy_type in ['electronic', 'contingency'] and
             x.l10n_uy_ucfe_state not in x._uy_cfe_already_sent() and
             # TODO possible we are missing electronic documents here, review the
-            int(x.l10n_latam_document_type_id.code) > 100)
+            int(x.l10n_latam_document_type_id.code) > 100 and x.journal_id.type == 'sale')
 
         # Esto es para evitar que puedan crear facturas de contingencia desde el Odoo, para poder soportarlo tenemos
         # que integrar la lógica de manejar el CAE desde el lado de Odoo, enviar info de numero de serie, numero a usar
@@ -130,3 +133,29 @@ class AccountMove(models.Model):
         if self.country_code == "UY" and not res and self._is_uy_cfe() and self.l10n_latam_document_type_id:
             res = self._get_last_sequence_from_uruware()
         return res
+
+    def action_l10n_uy_update_fields(self):
+        """ Sync with Uruware and complete vendor bill information. """
+        self.ensure_one()
+        self.clear_l10n_uy_invoice_fields()
+        xml_string = self.l10n_uy_cfe_xml
+        root = ET.fromstring(xml_string)
+        self.l10n_uy_complete_invoice_with_xml(self.company_id, root, self)
+
+    def clear_l10n_uy_invoice_fields(self):
+        """ When click the button 'Update fields' in the vendor bill form view, firstly is neccessary to clean the invoices lines, the partner, the invoices date due and the payment type and if there is an error then is posted the message of the error in the invoice chatter.  """
+        error = False
+        try:
+            self = self.filtered(lambda x: x.invoice_filter_type_domain == 'purchase').with_context(dynamic_unlink=True)
+            self.line_ids.unlink()
+            self.partner_id = False
+            self.invoice_date_due = False
+            self.l10n_uy_payment_type = False
+        except Exception as exp:
+            error = exp
+            self.env.cr.rollback()
+        if error:
+            msg = _('We found an error when cleaning the information from the invoice: id: %s.' % (str(error)))
+            _logger.warning(msg)
+            self.message_post(body=msg)
+

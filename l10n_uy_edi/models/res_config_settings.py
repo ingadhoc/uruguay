@@ -26,6 +26,8 @@ class ResConfigSettings(models.TransientModel):
     l10n_uy_report_params = fields.Char(
         related='company_id.l10n_uy_report_params', readonly=False
     )
+    l10n_uy_ucfe_get_vendor_bills = fields.Boolean(related='company_id.l10n_uy_ucfe_get_vendor_bills', readonly=False)
+
     def l10n_uy_connection_test(self):
         """ Make a ECO test to UCFE """
         self.ensure_one()
