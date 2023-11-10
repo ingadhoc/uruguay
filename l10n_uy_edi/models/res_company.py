@@ -62,6 +62,7 @@ class ResCompany(models.Model):
         'DGI Certificate', groups="base.group_system", help="This certificate lets us"
         " connect to DGI to validate electronic invoice. Please upload here the DGI certificate in PEM format.")
     l10n_uy_dgi_crt_fname = fields.Char('DGI Certificate name')
+    l10n_uy_ucfe_get_vendor_bills = fields.Boolean('Create vendor bills from Uruware', groups="base.group_system")
 
     # @api.depends('l10n_uy_dgi_crt')
     # def _compute_l10n_uy_dgi_crt_fname(self):
@@ -118,7 +119,7 @@ class ResCompany(models.Model):
         """ Call Operation get in msg_type for UCFE inbox webservice """
         self.ensure_one()
         # TODO consumir secuencia creada en Odoo
-        id_req = 1
+        id_req = extra_req.get('IdReq', 1)
         now = datetime.utcnow()
         company = self.sudo()
         data = {'Req': {'TipoMensaje': msg_type, 'CodComercio': company.l10n_uy_ucfe_commerce_code,
