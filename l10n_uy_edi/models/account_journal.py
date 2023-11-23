@@ -1,4 +1,5 @@
-from odoo import models
+from odoo import _, models
+from odoo.exceptions import UserError
 
 
 class AccountJournal(models.Model):
@@ -14,6 +15,8 @@ class AccountJournal(models.Model):
         if self.l10n_uy_type in ['electronic'] and document_type.code != '000' and int(document_type.code) < 200:
             response = self.company_id._l10n_uy_ucfe_inbox_operation('660', {'TipoCfe': document_type.code})
             # response.Resp.Serie
+            if not response.Resp.NumeroCfe:
+                raise UserError(_('You are not enabled to emit this document, please check your configuration settings of ') + document_type.display_name)
             res = int(response.Resp.NumeroCfe)
 
         # TODO Al consultar los valores de contigencia de la instancia me aparece error, por eso usamos los
