@@ -493,9 +493,11 @@ class L10nUyCfe(models.AbstractModel):
 
     @api.model
     def _l10n_uy_get_min_by_unidad_indexada(self):
+        """ retorna le minimo en pesos uruguayos de 5000 Unidades Indexadas necesario para
+        poder saber cuando es requerido los datos del receptor """
         currency = self.env.ref('base.UYI')
         conversion_rate = currency._convert(
-            1.0, self.currency_id, self.company_id,
+            1.0, self.company_id.currency_id, self.company_id,
             date=self.date or
             fields.Date.context_today(self),
             round=False)
