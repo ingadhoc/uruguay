@@ -1081,7 +1081,7 @@ class L10nUyCfe(models.AbstractModel):
         Si existe C12 debe existir C13
         """
 
-        discount = (line.price_unit * line.discount) / 100
+        discount = (line.quantity * line.price_unit * line.discount) / 100
         discount = float_repr(discount,2)
 
         return discount
