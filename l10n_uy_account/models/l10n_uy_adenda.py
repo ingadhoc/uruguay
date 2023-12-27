@@ -13,6 +13,13 @@ class L10nUyAdenda(models.Model):
     content = fields.Text()
     condition = fields.Char(default="True")
     company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
+    legend_type = fields.Selection([
+        ('emisor', 'Emisor'),
+        ('receptor', 'Receptor'),
+        ('item', 'Item'),
+        ('comprobante', 'Comprobante'),
+        ('adenda', 'Adenda'),
+    ], required=True, string='Tipo de leyenda', default='adenda')
     apply_on = fields.Selection([
         ('account.move', 'Facturas y Tickets'),
         ('stock.picking', 'Remitos'),
