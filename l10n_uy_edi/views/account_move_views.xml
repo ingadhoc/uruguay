@@ -17,6 +17,9 @@
             </field>
 
 
+            <group id="header_left_group">
+                <field name="l10n_uy_additional_info" attrs="{'invisible': [('l10n_uy_journal_type', 'not in', ['electronic', 'contingency'])]}"/>
+            </group>
             <!-- TODO need to find a way to hide computed_currency_rate field, this one is added in l10n_ar_ux, so.. maybe we should add it in another base
             ux module. to be re used. Meanwhile we do not show l10n_uy_currency_rate -->
             <!--  <div name="currency" position="inside">

@@ -1,4 +1,4 @@
-from odoo import api, models, _
+from odoo import api, models,fields,  _
 from odoo.exceptions import UserError
 from xml.etree.ElementTree import fromstring, ElementTree
 import pprint
@@ -9,6 +9,10 @@ _logger = logging.getLogger(__name__)
 class ResPartner(models.Model):
 
     _inherit = 'res.partner'
+
+    l10n_uy_additional_info = fields.Text(
+        "Info. adicional del receptor",
+        help='Información adicional del receptor')
 
     # TODO partners
     # 650 Consulta a DGI por CFE recibido
