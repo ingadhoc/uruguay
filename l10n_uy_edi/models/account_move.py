@@ -1073,7 +1073,7 @@ class AccountMoveLine(models.Model):
         res = []
         recordtype = {'account.move': 'inv', 'stock.picking': 'picking', 'account.move.line': 'aml', 'product.product': 'product'}
         context = {recordtype.get(record._name): record}
-        for rec in record.company_id.l10n_uy_adenda_ids.filtered(lambda x: x.legend_type == tipo_leyenda and x.apply_on in ['all', self._name]):
+        for rec in record.company_id.l10n_uy_adenda_ids.filtered(lambda x: x.legend_type == tipo_leyenda):
             if bool(safe_eval.safe_eval(rec.condition, context)) == True:
                 res.append(rec.content)
         return res
