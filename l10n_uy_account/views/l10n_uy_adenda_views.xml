@@ -9,6 +9,7 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="apply_on"/>
+                <field name="legend_type" />
                 <field name="content"/>
                 <field name="condition"/>
                 <field name="company_id"/>
@@ -17,8 +18,20 @@
         </field>
     </record>
 
+    <record id="l10n_uy_adenda_view_search" model="ir.ui.view">
+        <field name="name">l10n.uy.adenda.view.search</field>
+        <field name="model">l10n.uy.adenda</field>
+        <field name="arch" type="xml">
+            <search string="Search Description">
+                <group expand="0" string="Group By...">
+                        <filter string="Tipo de leyenda" name="legend_type" domain="[]" context="{'group_by':'legend_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record model="ir.actions.act_window" id="action_l10n_uy_adenda">
-        <field name="name">Adendas</field>
+        <field name="name">Leyendas obligatorias y Adendas (automaticas)</field>
         <field name="res_model">l10n.uy.adenda</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{'active_test': False}</field>
