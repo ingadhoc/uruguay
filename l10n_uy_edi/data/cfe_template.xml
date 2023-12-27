@@ -15,6 +15,7 @@
                         <!-- TODO KZ lo dejamos fijo por el momento, ver para implementar cuando tengamos un monotributo o iva minimo -->
                         <!-- <MntBruto>1</MntBruto> -->
 
+<<<<<<< HEAD
                         <TipoTraslado t-if="IdDoc.get('TipoTraslado')" t-out="IdDoc['TipoTraslado']"/>
                         <FmaPago t-if="IdDoc.get('FmaPago')" t-out="IdDoc['FmaPago']"/>
                         <FchVenc t-if="IdDoc.get('FchVenc')" t-out="IdDoc['FchVenc']"/>
@@ -22,8 +23,25 @@
                         <ModVenta t-if="IdDoc.get('ModVenta')" t-out="IdDoc['ModVenta']"/>
                         <ViaTransp t-if="IdDoc.get('ViaTransp')" t-out="IdDoc['ViaTransp']"/>
                         <InfoAdicionalDoc t-if="IdDoc.get('InfoAdicionalDoc')" t-out="IdDoc['InfoAdicionalDoc']"/>
+||||||| parent of 7797dc8 (temp)
+                        <TipoTraslado t-if="IdDoc.get('TipoTraslado')" t-esc="IdDoc['TipoTraslado']"/>
+                        <FmaPago t-if="IdDoc.get('FmaPago')" t-esc="IdDoc['FmaPago']"/>
+                        <FchVenc t-if="IdDoc.get('FchVenc')" t-esc="IdDoc['FchVenc']"/>
+                        <ClauVenta t-if="IdDoc.get('ClauVenta')" t-esc="IdDoc['ClauVenta']"/>
+                        <ModVenta t-if="IdDoc.get('ModVenta')" t-esc="IdDoc['ModVenta']"/>
+                        <ViaTransp t-if="IdDoc.get('ViaTransp')" t-esc="IdDoc['ViaTransp']"/>
+=======
+                        <TipoTraslado t-if="IdDoc.get('TipoTraslado')" t-esc="IdDoc['TipoTraslado']"/>
+                        <FmaPago t-if="IdDoc.get('FmaPago')" t-esc="IdDoc['FmaPago']"/>
+                        <FchVenc t-if="IdDoc.get('FchVenc')" t-esc="IdDoc['FchVenc']"/>
+                        <ClauVenta t-if="IdDoc.get('ClauVenta')" t-esc="IdDoc['ClauVenta']"/>
+                        <ModVenta t-if="IdDoc.get('ModVenta')" t-esc="IdDoc['ModVenta']"/>
+                        <ViaTransp t-if="IdDoc.get('ViaTransp')" t-esc="IdDoc['ViaTransp']"/>
+                        <InfoAdicionalDoc t-if="IdDoc.get('InfoAdicionalDoc')" t-esc="IdDoc['InfoAdicionalDoc']"/>
+>>>>>>> 7797dc8 (temp)
                     </IdDoc>
                     <Emisor t-if="emisor">
+<<<<<<< HEAD
                         <RUCEmisor t-out="emisor['RUCEmisor']"/>
                         <RznSoc t-out="emisor['RznSoc']"/>
                         <CdgDGISucur t-out="emisor['CdgDGISucur']"/>
@@ -31,8 +49,25 @@
                         <Ciudad t-out="emisor['Ciudad']"/>
                         <Departamento t-out="emisor['Departamento']"/>
                         <InfoAdicionalEmisor t-if="emisor.get('InfoAdicionalEmisor')" t-out="emisor['InfoAdicionalEmisor']"/>
+||||||| parent of 7797dc8 (temp)
+                        <RUCEmisor t-esc="emisor['RUCEmisor']"/>
+                        <RznSoc t-esc="emisor['RznSoc']"/>
+                        <CdgDGISucur t-esc="emisor['CdgDGISucur']"/>
+                        <DomFiscal t-esc="emisor['DomFiscal']"/>
+                        <Ciudad t-esc="emisor['Ciudad']"/>
+                        <Departamento t-esc="emisor['Departamento']"/>
+=======
+                        <RUCEmisor t-esc="emisor['RUCEmisor']"/>
+                        <RznSoc t-esc="emisor['RznSoc']"/>
+                        <CdgDGISucur t-esc="emisor['CdgDGISucur']"/>
+                        <DomFiscal t-esc="emisor['DomFiscal']"/>
+                        <Ciudad t-esc="emisor['Ciudad']"/>
+                        <Departamento t-esc="emisor['Departamento']"/>
+                        <InfoAdicionalEmisor t-if="emisor.get('InfoAdicionalEmisor')" t-esc="emisor['InfoAdicionalEmisor']"/>
+>>>>>>> 7797dc8 (temp)
                     </Emisor>
                     <Receptor t-if="receptor">
+<<<<<<< HEAD
                         <TipoDocRecep t-out="receptor['TipoDocRecep']"/>
                         <CodPaisRecep t-out="receptor['CodPaisRecep']"/>
                         <DocRecep t-if="receptor.get('DocRecep')" t-out="receptor['DocRecep']"/>
@@ -45,6 +80,32 @@
                         <InfoAdicional  t-if="receptor.get('InfoAdicional')" t-out="receptor['InfoAdicional']"/>
                         <LugarDestEnt t-if="receptor.get('LugarDestEnt')" t-out="receptor['LugarDestEnt']"/>
                         <CompraID t-if="receptor.get('CompraID')" t-out="receptor['CompraID']"/>
+||||||| parent of 7797dc8 (temp)
+                        <TipoDocRecep t-esc="receptor['TipoDocRecep']"/>
+                        <CodPaisRecep t-esc="receptor['CodPaisRecep']"/>
+                        <DocRecep t-if="receptor.get('DocRecep')" t-esc="receptor['DocRecep']"/>
+                        <DocRecepExt t-if="receptor.get('DocRecepExt')" t-esc="receptor['DocRecepExt']"/>
+                        <RznSocRecep t-if="receptor.get('RznSocRecep')" t-esc="receptor['RznSocRecep']"/>
+                        <DirRecep t-if="receptor.get('DirRecep')" t-esc="receptor['DirRecep']"/>
+                        <CiudadRecep t-if="receptor.get('CiudadRecep')" t-esc="receptor['CiudadRecep']"/>
+                        <DeptoRecep t-if="receptor.get('DeptoRecep')" t-esc="receptor['DeptoRecep']"/>
+                        <PaisRecep t-if="receptor.get('PaisRecep')" t-esc="receptor['PaisRecep']"/>
+                        <LugarDestEnt t-if="receptor.get('LugarDestEnt')" t-esc="receptor['LugarDestEnt']"/>
+                        <CompraID t-if="receptor.get('CompraID')" t-esc="receptor['CompraID']"/>
+=======
+                        <TipoDocRecep t-esc="receptor['TipoDocRecep']"/>
+                        <CodPaisRecep t-esc="receptor['CodPaisRecep']"/>
+                        <DocRecep t-if="receptor.get('DocRecep')" t-esc="receptor['DocRecep']"/>
+                        <DocRecepExt t-if="receptor.get('DocRecepExt')" t-esc="receptor['DocRecepExt']"/>
+                        <RznSocRecep t-if="receptor.get('RznSocRecep')" t-esc="receptor['RznSocRecep']"/>
+                        <DirRecep t-if="receptor.get('DirRecep')" t-esc="receptor['DirRecep']"/>
+                        <CiudadRecep t-if="receptor.get('CiudadRecep')" t-esc="receptor['CiudadRecep']"/>
+                        <DeptoRecep t-if="receptor.get('DeptoRecep')" t-esc="receptor['DeptoRecep']"/>
+                        <PaisRecep t-if="receptor.get('PaisRecep')" t-esc="receptor['PaisRecep']"/>
+                        <InfoAdicional  t-if="receptor.get('InfoAdicional')" t-esc="receptor['InfoAdicional']"/>
+                        <LugarDestEnt t-if="receptor.get('LugarDestEnt')" t-esc="receptor['LugarDestEnt']"/>
+                        <CompraID t-if="receptor.get('CompraID')" t-esc="receptor['CompraID']"/>
+>>>>>>> 7797dc8 (temp)
                     </Receptor>
                     <Totales>
                         <TpoMoneda t-if="totals_detail.get('TpoMoneda')" t-out="totals_detail['TpoMoneda']"/>

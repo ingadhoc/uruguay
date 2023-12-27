@@ -7,7 +7,13 @@
     'author': 'ADHOC SA',
     'category': 'Localization',
     'license': 'LGPL-3',
+<<<<<<< HEAD
     'version': "16.0.1.3.0",
+||||||| parent of 7797dc8 (temp)
+    'version': "15.0.1.2.0",
+=======
+    'version': "15.0.1.3.0",
+>>>>>>> 7797dc8 (temp)
     'depends': [
         'l10n_latam_invoice_document',
         'l10n_latam_base',
