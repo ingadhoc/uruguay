@@ -15,9 +15,14 @@
             <field name="l10n_latam_identification_type_id" position="attributes">
                 <attribute name="domain"/>
             </field>
+
+            <xpath expr="//field[@name='vat']/.." position="inside">
+                <!-- Hacer que este campo solo se muestre en comp. Uruguayas (se resolvio en versiones mas nuevas) -->
+                <field name="l10n_uy_additional_info"/>
+            </xpath>
+
         </field>
     </record>
-
 
     <!-- TODO Not suse if this going to the last commit. By the moment this let us to filter easier the kind of partner we are looking for Uruguay. Maybe it is usefull we can move it to latam module -->
     <record id="view_res_partner_filter" model="ir.ui.view">
