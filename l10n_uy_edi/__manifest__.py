@@ -7,7 +7,7 @@
     'author': 'ADHOC SA',
     'category': 'Localization',
     'license': 'LGPL-3',
-    'version': '15.0.1.8.0',
+    'version': '15.0.1.9.0',
     'depends': [
         'l10n_uy_account',
         'account_debit_note',
@@ -23,6 +23,7 @@
         'views/res_company_views.xml',
         'wizards/res_partner_update_from_padron_uy_wizard_view.xml',
         'views/res_partner_view.xml',
+        'views/product_view.xml',
         'data/cfe_template.xml',
         'data/ir_sequence.xml',
         'data/ir_actions_server.xml',

@@ -21,6 +21,7 @@
                         <ClauVenta t-if="IdDoc.get('ClauVenta')" t-esc="IdDoc['ClauVenta']"/>
                         <ModVenta t-if="IdDoc.get('ModVenta')" t-esc="IdDoc['ModVenta']"/>
                         <ViaTransp t-if="IdDoc.get('ViaTransp')" t-esc="IdDoc['ViaTransp']"/>
+                        <InfoAdicionalDoc t-if="IdDoc.get('InfoAdicionalDoc')" t-esc="IdDoc['InfoAdicionalDoc']"/>
                     </IdDoc>
                     <Emisor t-if="emisor">
                         <RUCEmisor t-esc="emisor['RUCEmisor']"/>
@@ -29,6 +30,7 @@
                         <DomFiscal t-esc="emisor['DomFiscal']"/>
                         <Ciudad t-esc="emisor['Ciudad']"/>
                         <Departamento t-esc="emisor['Departamento']"/>
+                        <InfoAdicionalEmisor t-if="emisor.get('InfoAdicionalEmisor')" t-esc="emisor['InfoAdicionalEmisor']"/>
                     </Emisor>
                     <Receptor t-if="receptor">
                         <TipoDocRecep t-esc="receptor['TipoDocRecep']"/>
@@ -40,6 +42,7 @@
                         <CiudadRecep t-if="receptor.get('CiudadRecep')" t-esc="receptor['CiudadRecep']"/>
                         <DeptoRecep t-if="receptor.get('DeptoRecep')" t-esc="receptor['DeptoRecep']"/>
                         <PaisRecep t-if="receptor.get('PaisRecep')" t-esc="receptor['PaisRecep']"/>
+                        <InfoAdicional  t-if="receptor.get('InfoAdicional')" t-esc="receptor['InfoAdicional']"/>
                         <LugarDestEnt t-if="receptor.get('LugarDestEnt')" t-esc="receptor['LugarDestEnt']"/>
                         <CompraID t-if="receptor.get('CompraID')" t-esc="receptor['CompraID']"/>
                     </Receptor>
