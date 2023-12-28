@@ -73,6 +73,7 @@
                         <NroLinDet t-esc="item_line['NroLinDet']"/>
                         <IndFact t-esc="item_line['IndFact']"/>
                         <NomItem t-esc="item_line['NomItem']"/>
+                        <DscItem t-if="item_line.get('DscItem')" t-esc="item_line['DscItem']"/>
                         <Cantidad t-esc="item_line['Cantidad']"/>
                         <UniMed t-esc="item_line['UniMed']"/>
                         <PrecioUnitario t-esc="item_line['PrecioUnitario']"/>
