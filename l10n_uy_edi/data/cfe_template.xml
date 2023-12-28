@@ -23,6 +23,7 @@
                         <ViaTransp t-if="IdDoc.get('ViaTransp')" t-esc="IdDoc['ViaTransp']"/>
                         <InfoAdicionalDoc t-if="IdDoc.get('InfoAdicionalDoc')" t-esc="IdDoc['InfoAdicionalDoc']"/>
                     </IdDoc>
+<<<<<<< HEAD
                     <Emisor t-if="emisor">
                         <RUCEmisor t-esc="emisor['RUCEmisor']"/>
                         <RznSoc t-esc="emisor['RznSoc']"/>
@@ -31,6 +32,38 @@
                         <Ciudad t-esc="emisor['Ciudad']"/>
                         <Departamento t-esc="emisor['Departamento']"/>
                         <InfoAdicionalEmisor t-if="emisor.get('InfoAdicionalEmisor')" t-esc="emisor['InfoAdicionalEmisor']"/>
+||||||| parent of 7d63004 (temp)
+                    <Emisor>
+                        <RUCEmisor t-esc="RUCEmisor"/>
+                        <!-- TODO KZ company register name? -->
+                        <RznSoc t-esc="move.company_id.name"/>
+
+                        <!-- NOTA nosotros estamos reportando NomComercial pero Uruware no, ver si realmente es necesario o no si debemos quitarlo, revisar en DGI -->
+                        <NomComercial t-esc="move.company_id.name"/>
+                        <!-- <EmiSucursal>Central</EmiSucursal> es opcional para todos asi que mejor no lo pasamos -->
+                        <CdgDGISucur t-esc="move.company_id.l10n_uy_dgi_house_code"/>
+                        <!-- A48 -->
+                        <!-- TODO KZ fix street2 -->
+                        <DomFiscal t-esc="(move.company_id.street + (' ' + move.company_id.street or ''))[:70]"/>
+                        <Ciudad t-esc="move.company_id.city"/>
+                        <Departamento t-esc="move.company_id.state_id.name"/>
+=======
+                    <Emisor>
+                        <RUCEmisor t-esc="RUCEmisor"/>
+                        <!-- TODO KZ company register name? -->
+                        <RznSoc t-esc="move.company_id.name"/>
+
+                        <!-- NOTA nosotros estamos reportando NomComercial pero Uruware no, ver si realmente es necesario o no si debemos quitarlo, revisar en DGI -->
+                        <NomComercial t-esc="move.company_id.name"/>
+                        <!-- <EmiSucursal>Central</EmiSucursal> es opcional para todos asi que mejor no lo pasamos -->
+                        <CdgDGISucur t-esc="move.company_id.l10n_uy_dgi_house_code"/>
+                        <!-- A48 -->
+                        <!-- TODO KZ fix street2 -->
+                        <DomFiscal t-esc="(move.company_id.street + (' ' + move.company_id.street or ''))[:70]"/>
+                        <Ciudad t-esc="move.company_id.city"/>
+                        <Departamento t-esc="move.company_id.state_id.name"/>
+                        <InfoAdicionalEmisor t-if="emisor.get('InfoAdicionalEmisor')" t-esc="emisor['InfoAdicionalEmisor']"/>
+>>>>>>> 7d63004 (temp)
                     </Emisor>
                     <Receptor t-if="receptor">
                         <TipoDocRecep t-esc="receptor['TipoDocRecep']"/>
@@ -42,9 +75,14 @@
                         <CiudadRecep t-if="receptor.get('CiudadRecep')" t-esc="receptor['CiudadRecep']"/>
                         <DeptoRecep t-if="receptor.get('DeptoRecep')" t-esc="receptor['DeptoRecep']"/>
                         <PaisRecep t-if="receptor.get('PaisRecep')" t-esc="receptor['PaisRecep']"/>
+<<<<<<< HEAD
                         <InfoAdicional  t-if="receptor.get('InfoAdicional')" t-esc="receptor['InfoAdicional']"/>
                         <LugarDestEnt t-if="receptor.get('LugarDestEnt')" t-esc="receptor['LugarDestEnt']"/>
                         <CompraID t-if="receptor.get('CompraID')" t-esc="receptor['CompraID']"/>
+||||||| parent of 7d63004 (temp)
+=======
+                        <InfoAdicional  t-if="receptor.get('InfoAdicional')" t-esc="receptor['InfoAdicional']"/>
+>>>>>>> 7d63004 (temp)
                     </Receptor>
                     <Totales>
                         <TpoMoneda t-if="totals_detail.get('TpoMoneda')" t-esc="totals_detail['TpoMoneda']"/>

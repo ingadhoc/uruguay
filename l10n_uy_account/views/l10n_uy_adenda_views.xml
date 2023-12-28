@@ -8,8 +8,13 @@
             <tree string="Adendas" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
+<<<<<<< HEAD
                 <field name="apply_on"/>
                 <field name="legend_type" />
+||||||| parent of 7d63004 (temp)
+=======
+                <field name="legend_type" />
+>>>>>>> 7d63004 (temp)
                 <field name="content"/>
                 <field name="condition"/>
                 <field name="company_id"/>

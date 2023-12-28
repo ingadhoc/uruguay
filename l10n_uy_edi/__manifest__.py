@@ -7,7 +7,13 @@
     'author': 'ADHOC SA',
     'category': 'Localization',
     'license': 'LGPL-3',
+<<<<<<< HEAD
     'version': '15.0.1.9.0',
+||||||| parent of 7d63004 (temp)
+    'version': '13.0.1.10.0',
+=======
+    'version': '13.0.1.11.0',
+>>>>>>> 7d63004 (temp)
     'depends': [
         'l10n_uy_account',
         'account_debit_note',
