@@ -146,6 +146,31 @@ class AccountMove(models.Model):
 
     # Buttons
 
+    @api.model
+    def get_leyendas(self, tipo_leyenda, record):
+        """ This method filters the legends configured in the
+        Automatic Addenda menu with their printing conditions
+        Return type: list
+        """
+        res = []
+        recordtype = {'account.move': 'inv', 'stock.picking': 'picking', 'account.move.line': 'aml', 'product.product': 'product'}
+        context = {recordtype.get(record._name): record}
+        for rec in record.company_id.l10n_uy_adenda_ids.filtered(lambda x: x.legend_type == tipo_leyenda):
+            if bool(safe_eval(rec.condition, context)) == True:
+                res.append(rec.content)
+        return res
+
+    @api.model
+    def _uy_check_field_size(self, field_name, res, limit):
+        if len(res) > limit:
+            raise UserError(_(
+                'No se puede emitir la factura ya que la longitud del campo es mayor que la permitida.'
+                ' \nRevisa si tienes leyendas/adendas automaticas que esten afectando.'
+                ' \n\n * nombre del campo: %s (%s) \n * contenido: (%s)\n %s', field_name, limit, len(res), res))
+
+    def is_zona_franca(self):
+        return True if self.fiscal_position_id and 'zona franca' in self.fiscal_position_id.name.lower() else False
+
     def action_invoice_cancel(self):
         # TODO funcionando para facturas de clientes, ver para facturas de proveedor
         uy_sale_docs = self.filtered(lambda x: x.company_id.country_id.code == 'UY' and x.is_sale_document(include_receipts=True))
@@ -490,6 +515,20 @@ class AccountMove(models.Model):
     # TODO Consulta si un RUT es emisor electrónico 630 / 631
     # TODO RUT consultado a DGI (función 640 – Consulta a DGI por datos de RUT)
 
+    def _uy_cfe_B8_DscItem(self, line):
+        """B8 Descripcion Adicional del ítem. Maximo 1000 caracteres
+        """
+        self.ensure_one()
+        res = self.get_leyendas('item', line)
+        if line.product_id.l10n_uy_additional_info:
+            res.append(line.product_id.l10n_uy_additional_info)
+        if line.product_id.display_name != line.name:
+            res = line.name[:1000]
+        res = '\n'.join(res)
+        self._uy_check_field_size('B8_DscItem', res, 1000)
+
+        return {'DscItem': res} if res else {}
+
     def _l10n_uy_get_cfe_item_detail(self):
         """ Devuelve una lista con los datos que debemos informar por linea de factura en el CFE """
         res = []
@@ -507,7 +546,7 @@ class AccountMove(models.Model):
             item = {
                 'NroLinDet': k,  # B1 No de línea o No Secuencial. a partir de 1
                 'IndFact': line._l10n_uy_get_cfe_indfact(),  # B4 Indicador de facturación
-                'NomItem': line.name[:80],  # B7 Nombre del ítem (producto o servicio). Maximo 80 caracteres
+                'NomItem': line.product_id.display_name[:80] if line.product_id else line.name[:80],  # B7 Nombre del ítem (producto o servicio). Maximo 80 caracteres
 
                 'Cantidad': line.quantity,  # B9 Cantidad. NUM 17
                 # TODO OJO se admite negativo? desglozar
@@ -531,6 +570,17 @@ class AccountMove(models.Model):
         """ True of False in the current invoice is an exporation invoice type """
         self.ensure_one()
         return int(self.l10n_latam_document_type_id.code) in [121, 122, 123]
+
+    def _uy_cfe_A68_InfoAdicional(self):
+        """Informacion adicional Receptor. Otra informacion relativa al receptor
+        """
+        self.ensure_one()
+        receptor = self.get_leyendas('receptor', self)
+        if self.partner_id.l10n_uy_additional_info:
+            receptor.append(self.partner_id.l10n_uy_additional_info)
+        receptor = '\n'.join(receptor)
+        self._uy_check_field_size('A68_InfoAdicional', receptor, 150)
+        return {'InfoAdicional': receptor} if receptor else {}
 
     def _l10n_uy_get_cfe_receptor(self):
         self.ensure_one()
@@ -661,6 +711,17 @@ class AccountMove(models.Model):
                 ' Puede indicar este valor en el tab Otra Información'))
         return int(self.l10n_uy_cfe_transport_route)
 
+    def _uy_cfe_A16_InfoAdicionalDoc(self):
+        """Informacion adicional del comprobante. Otra informacion relativa al comprobante
+        """
+        self.ensure_one()
+        res = self.get_leyendas('comprobante', self)
+        if self.l10n_uy_additional_info:
+            res.append(self.l10n_uy_additional_info)
+        res = '\n'.join(res)
+        self._uy_check_field_size('A16_InfoAdicionalDoc', res, 150)
+        return {'InfoAdicionalDoc': res} if res else {}
+
     def _l10n_uy_get_cfe_iddoc(self):
         self.ensure_one()
         res = {
@@ -677,6 +738,18 @@ class AccountMove(models.Model):
         res.update(self._uy_cfe_A16_InfoAdicionalDoc())
         res.update(self._l10n_uy_get_cfe_serie())
         return res
+
+    def _uy_cfe_A51_InfoAdicionalEmisor(self):
+        """Informacion adicional del emisor. Informacion relativa al Emisor.
+        """
+        self.ensure_one()
+        emisor = self.get_leyendas('emisor', self)
+        if self.company_id.partner_id.l10n_uy_additional_info:
+            emisor.append(self.company_id.partner_id.l10n_uy_additional_info)
+        emisor = '\n'.join(emisor)
+        self._uy_check_field_size('A51_InfoAdicionalEmisor', emisor, 150)
+
+        return {'InfoAdicionalEmisor': emisor} if emisor else {}
 
     def _l10n_uy_get_cfe_emisor(self):
         self.ensure_one()
@@ -1015,76 +1088,3 @@ class AccountMoveLine(models.Model):
             return 10  # Exportación y asimiladas
 
         return value.get(self.tax_ids.id)
-
-    def _uy_cfe_A51_InfoAdicionalEmisor(self):
-        """Informacion adicional del emisor. Informacion relativa al Emisor.
-        """
-        self.ensure_one()
-        emisor = self.get_leyendas('emisor', self)
-        if self.company_id.partner_id.l10n_uy_additional_info:
-            emisor.append(self.company_id.partner_id.l10n_uy_additional_info)
-        emisor = '\n'.join(emisor)
-        self._uy_check_field_size('A51_InfoAdicionalEmisor', emisor, 150)
-
-        return {'InfoAdicionalEmisor': emisor} if emisor else {}
-
-    def _uy_cfe_A68_InfoAdicional(self):
-        """Informacion adicional Receptor. Otra informacion relativa al receptor
-        """
-        self.ensure_one()
-        receptor = self.get_leyendas('receptor', self)
-        if self.partner_id.l10n_uy_additional_info:
-            receptor.append(self.partner_id.l10n_uy_additional_info)
-        receptor = '\n'.join(receptor)
-        self._uy_check_field_size('A68_InfoAdicional', receptor, 150)
-        return {'InfoAdicional': receptor} if receptor else {}
-
-    def _uy_cfe_A16_InfoAdicionalDoc(self):
-        """Informacion adicional del comprobante. Otra informacion relativa al comprobante
-        """
-        self.ensure_one()
-        res = self.get_leyendas('comprobante', self)
-        if self.l10n_uy_additional_info:
-            res.append(self.l10n_uy_additional_info)
-        res = '\n'.join(res)
-        self._uy_check_field_size('A16_InfoAdicionalDoc', res, 150)
-        return {'InfoAdicionalDoc': res} if res else {}
-
-    def _uy_cfe_B8_DscItem(self, line):
-        """B8 Descripcion Adicional del ítem. Maximo 1000 caracteres
-        """
-        self.ensure_one()
-        res = self.get_leyendas('item', line)
-        if line.product_id.l10n_uy_additional_info:
-            res.append(line.product_id.l10n_uy_additional_info)
-        if line.product_id.display_name != line.name:
-            res = line.name[:1000]
-        res = '\n'.join(res)
-        self._uy_check_field_size('B8_DscItem', res, 1000)
-
-        return {'DscItem': res} if res else {}
-
-    @api.model
-    def get_leyendas(self, tipo_leyenda, record):
-        """ This method filters the legends configured in the
-        Automatic Addenda menu with their printing conditions
-        Return type: list
-        """
-        res = []
-        recordtype = {'account.move': 'inv', 'stock.picking': 'picking', 'account.move.line': 'aml', 'product.product': 'product'}
-        context = {recordtype.get(record._name): record}
-        for rec in record.company_id.l10n_uy_adenda_ids.filtered(lambda x: x.legend_type == tipo_leyenda):
-            if bool(safe_eval.safe_eval(rec.condition, context)) == True:
-                res.append(rec.content)
-        return res
-
-    @api.model
-    def _uy_check_field_size(self, field_name, res, limit):
-        if len(res) > limit:
-            raise UserError(_(
-                'No se puede emitir la factura ya que la longitud del campo es mayor que la permitida.'
-                ' \nRevisa si tienes leyendas/adendas automaticas que esten afectando.'
-                ' \n\n * nombre del campo: %s (%s) \n * contenido: (%s)\n %s', field_name, limit, len(res), res))
-
-    def is_zona_franca(self):
-        return True if self.fiscal_position_id and 'zona franca' in self.fiscal_position_id.name.lower() else False
