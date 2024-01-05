@@ -1,4 +1,4 @@
-from odoo import api, models,fields,  _
+from odoo import models, fields,  _
 from odoo.exceptions import UserError
 from xml.etree.ElementTree import fromstring, ElementTree
 import pprint
@@ -9,10 +9,6 @@ _logger = logging.getLogger(__name__)
 class ResPartner(models.Model):
 
     _inherit = 'res.partner'
-
-    l10n_uy_additional_info = fields.Text(
-        "Info. adicional del receptor",
-        help='Información adicional del receptor')
 
     # TODO partners
     # 650 Consulta a DGI por CFE recibido
@@ -98,20 +94,3 @@ class ResPartner(models.Model):
             raise UserError(_('Solo puede consultar si el partner tiene tipo de identificación RUT'))
 
         return values
-
-    # TODO this need to be fixed directly in l10n_latam_base module, menawhile we leave here the patch
-    @api.onchange('country_id')
-    def _onchange_country(self):
-        """ New logic will take the company country to show the identification type:
-        * the country of the invoice
-        * if not the company of the environment.
-        * if not then the country of the partner
-        """
-        super()._onchange_country()
-        country = (self.company_id and self.company_id.country_id) or self.env.company.country_id or self.country_id
-        identification_type = self.l10n_latam_identification_type_id
-        if not identification_type or (identification_type.country_id != country):
-            self.l10n_latam_identification_type_id = self.env['l10n_latam.identification.type'].search(
-                [('country_id', '=', country.id), ('is_vat', '=', True)], limit=1) or self.env.ref(
-                    'l10n_latam_base.it_vat', raise_if_not_found=False)
-        return {'domain': {'l10n_latam_identification_type_id': [('country_id', '=', country.id)]}}

@@ -2,17 +2,18 @@
    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
    :alt: License: AGPL-3
 
-=================================
-Uruguay - Facturacion Electronica
-=================================
+============
+Uruguay - UX
+============
 
-Este modulo permite la integración para que desde su base de Odoo se puedan emitir comprobantes electrónicos a la DGI (comprobantes del tipo ticket/facturas en todas sus variantes y sus respectivas nd/nc.
+Aca agregamos adaptaciones y cosas que no han sido aceptadas por Odoo modulo oficial.
 
-A demás de emitir el comprobante permite conectarse a la DGI para ver el estado del comprobante (si este fue rechazado o aprobado) ** esto porque la validacion electronica es asincrona
+Pero que nos interesa la funcionalidad se mantenga para nuestros clientes.
 
-Permite consultar los datos de un contacto en su odoo, si este es o no emisor electronico, y los datos de padron como asistente para que les permita llenar los datos del contacto de manera mas sencilla en su odoo.
+* Padron DGI: Permite consultar los datos de un contacto en su odoo, si este es o no emisor electronico, y los datos de padron como asistente para que les permita llenar los datos del contacto de manera mas sencilla en su odoo.
 
-NOTA: Todas estas conexiones se hacen a traves de un servicio de tercero llamado Uruware
+* Boton para manualmente actualizar/checar estado de DGI de un comprobante
+* En ajustes tenemos campos para almacenar como data informativo el certificado DGI y clave asociada, asi tenerlo de respaldo para configurarlos en Uruware prod/test
 
 Para poder tener una representacion impresa de una factura electronica uruguaya se necesita que el pdf cumpla ciertas restricciones de ley, al momento desde el odoo no hemos hecho estas adaptaciones, pero lo que si hicimos fue agregar una marca de agua "no es un documento legal" para que los usuarios puedan identificar rapidamente si imprimen el reporte que este no es el oficial. En si el reporte PDF valido legalmente lo generaremos desde Uruware al momento de validar la factura. Si esta este documento pdf legal adjunto es el que seimprime esto desde cualquier lugar del odoo (y en caso de no estarlo tenemos un boton que permite regenerarlo):
 

@@ -9,7 +9,7 @@
     reportados a la DGI
     """,
     'depends': [
-        'l10n_uy_edi',
+        'l10n_uy_edi_ux',
         'stock_account',
         'sale_stock',
         ],
