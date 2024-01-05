@@ -10,8 +10,8 @@
                 <label for="l10n_uy_bcu_code"/>
                 <div>
                     <field name="l10n_uy_bcu_code" class="oe_inline"/>
-                    <button name="action_l10n_uy_get_bcu_rate" string="⇒ (UY) Mostrar ultima cotización BCU" type="object" attrs="{'invisible':['|', ('l10n_uy_bcu_code', '=', False), ('l10n_uy_bcu_code', '=', 0)]}" class="oe_link" help="Este boton permitira traer la última cotinzación de BCU para esta moenda. Puedes usar esta información para crear manualmente tu propia tasa Odoo"/>
-                    <button name="action_get_available_currencies" type="object" class="btn-link" string="⇒ (UY) Obtener info monedas disponibles" attrs="{'invisible': [('l10n_uy_bcu_code', '!=', 0)]}"/>
+                    <button name="action_l10n_uy_get_bcu_rate" string="⇒ (UY) Mostrar ultima cotización BCU" type="object" invisible="not l10n_uy_bcu_code or l10n_uy_bcu_code == 0" class="oe_link" help="Este boton permitira traer la última cotinzación de BCU para esta moenda. Puedes usar esta información para crear manualmente tu propia tasa Odoo"/>
+                    <button name="action_get_available_currencies" type="object" class="btn-link" string="⇒ (UY) Obtener info monedas disponibles" invisible="l10n_uy_bcu_code != 0"/>
                 </div>
 
             </field>

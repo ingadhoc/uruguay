@@ -19,7 +19,7 @@
 ##############################################################################
 {
     'name': 'Uruguayan Currency Rate Update',
-    'version': "16.0.1.0.0",
+    'version': "17.0.1.0.0",
     'category': 'Localization/Uruguay',
     'sequence': 14,
     'author': 'ADHOC SA',
@@ -28,7 +28,7 @@
     'summary': '',
     'depends': [
         'currency_rate_live',
-        'l10n_uy_account',
+        'l10n_uy',
     ],
     'external_dependencies': {
         'python': ['pyOpenSSL', 'zeep']
@@ -39,7 +39,7 @@
         'data/res.currency.csv',
         'views/res_currency_views.xml',
     ],
-    'installable': False,
+    'installable': True,
     'auto_install': True,
     'application': False,
 }
