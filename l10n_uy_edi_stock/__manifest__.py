@@ -1,10 +1,10 @@
 {
     "name": """Uruguay - E-Remitos""",
-    'version': "16.0.1.0.0",
+    'version': "17.0.1.0.0",
     'category': 'Accounting/Localizations/EDI',
     'sequence': 12,
     'author': 'Adhoc',
-    'description': """
+    'summary': """
     Este modulo permite a los usuarios hacer e-remitos en el sistemas que son
     reportados a la DGI
     """,
