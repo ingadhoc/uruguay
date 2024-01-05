@@ -28,7 +28,7 @@
     'summary': '',
     'depends': [
         'currency_rate_live',
-        'l10n_uy_account',
+        'l10n_uy',
     ],
     'external_dependencies': {
         'python': ['pyOpenSSL', 'zeep']
