@@ -1300,10 +1300,8 @@ class L10nUyCfe(models.AbstractModel):
                 'type': 'binary', 'datas': base64.b64encode(response)
             })
         return {
-            'type': 'ir.actions.act_url',
-            'url': "web/content/?model=ir.attachment&id=" + str(self.l10n_uy_cfe_pdf.id) +
-            "&filename_field=name&field=datas&download=true&name=" + self.l10n_uy_cfe_pdf.name,
-            'target': 'self'
+            'type': 'ir.actions.client',
+            'tag': 'reload',
         }
 
     def action_l10n_uy_validate_cfe(self):

@@ -7,3 +7,4 @@ from . import account_journal
 from . import account_tax
 from . import res_partner
 from . import product_product
+from . import ir_actions_report
