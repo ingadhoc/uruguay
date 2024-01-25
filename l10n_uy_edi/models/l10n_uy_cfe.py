@@ -1299,7 +1299,6 @@ class L10nUyCfe(models.AbstractModel):
                 'res_model': self._name, 'res_id': self.id,
                 'type': 'binary', 'datas': base64.b64encode(response)
             })
-            self.message_main_attachment_id = self.l10n_uy_cfe_pdf
         return {
             'type': 'ir.actions.act_url',
             'url': "web/content/?model=ir.attachment&id=" + str(self.l10n_uy_cfe_pdf.id) +

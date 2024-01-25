@@ -130,10 +130,3 @@ class AccountMove(models.Model):
         if self.country_code == "UY" and not res and self._is_uy_cfe() and self.l10n_latam_document_type_id:
             res = self._get_last_sequence_from_uruware()
         return res
-
-    # def _get_name_invoice_report(self):
-    #     self.ensure_one()
-    #     if self.l10n_uy_journal_type == 'electronic' and self.company_id.account_fiscal_country_id.code == 'UY':
-    #         print(" ---------- _get_name_invoice_report FORZADO")
-    #         return 'l10n_uy_edi.report_edi_customer_invoice'
-    #     return super()._get_name_invoice_report()
