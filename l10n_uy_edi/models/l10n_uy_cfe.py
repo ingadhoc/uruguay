@@ -1403,6 +1403,7 @@ class L10nUyCfe(models.AbstractModel):
             # If the record has been posted automatically print and attach the legal record reporte to the record.
             if 'error' not in rec.l10n_uy_cfe_state:
                 rec.action_l10n_uy_get_pdf()
+                rec.message_main_attachment_id = rec.l10n_uy_cfe_pdf
 
             # TODO este viene vacio, ver cuando realmente es seteado para asi setearlo en este momento
             # Tambien tenemos ver para que sirve 'DatosQr': 'https://www.efactura.dgi.gub.uy/consultaQRPrueba/cfe?218435730016,101,A,1,18.00,17/09/2020,gKSy8dDHR0YsTy0P4cx%2bcSu4Zvo%3d',

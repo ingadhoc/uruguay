@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--We need to create the following empty report template so we can use to print the EDI Invoices PDF generated
+        by the third party sofware -->
+        <template id="report_edi_customer_invoice">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')"></div>
+                </t>
+            </t>
+        </template>
+
+    <!-- FIXME: Temp fix to allow fetching invoice_documemt in Studio Reports with localisation -->
+    <!-- <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-if="o._get_name_invoice_report() == 'l10n_uy_edi.report_edi_customer_invoice'"
+                t-call="l10n_uy_edi.report_edi_customer_invoice" t-lang="lang"/>
+        </xpath>
+    </template>
+
+    <template id="report_invoice_with_payments" inherit_id="account.report_invoice_with_payments">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-if="o._get_name_invoice_report() == 'l10n_uy_edi.report_edi_customer_invoice'"
+                t-call="l10n_uy_edi.report_edi_customer_invoice" t-lang="lang"/>
+        </xpath>
+    </template> -->
+
+    </data>
+</odoo>
