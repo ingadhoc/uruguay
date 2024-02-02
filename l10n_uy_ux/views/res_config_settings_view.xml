@@ -8,14 +8,19 @@
         <field name="arch" type="xml">
 
             <setting id="uy_dgi" position="inside">
-
-                <field name="l10n_uy_dgi_crt_fname" invisible="1" force_save="1"/>
-                <label for="l10n_uy_dgi_crt" string="Digital Certificate" class="col-lg-3 o_light_label"/>
-                <field name="l10n_uy_dgi_crt" widget="binary" filename="l10n_uy_dgi_crt_fname" help="Here need to upload the file with the Digital Certificate to operate in DGI"/>
-
-                <label for="l10n_uy_dgi_crt_pass" string="Digital Certificate" class="col-lg-3 o_light_label"/>
-                <field name="l10n_uy_dgi_crt_pass" widget="password"/>
+                <div class="content-group">
+                    <div class="row">
+                        <field name="l10n_uy_dgi_crt_fname" invisible="1" force_save="1"/>
+                        <label for="l10n_uy_dgi_crt" string="Certificate" class="col-lg-3 o_light_label"/>
+                        <field name="l10n_uy_dgi_crt" widget="binary" filename="l10n_uy_dgi_crt_fname" help="Here need to upload the file with the Digital Certificate to operate in DGI"/>
+                    </div>
+                    <div class="row">
+                        <label for="l10n_uy_dgi_crt_pass" class="col-lg-3 o_light_label"/>
+                        <field name="l10n_uy_dgi_crt_pass" widget="password"/>
+                    </div>
+                </div>
             </setting>
+
             <setting id="uy_ucfe" position="inside">
                 <!-- Formato de reporte -->
                 <label for="l10n_uy_report_params" string="Parametros de reporte" class="col-lg-3 o_light_label"/>

@@ -17,7 +17,7 @@ class ResCompany(models.Model):
         'DGI Certificate', groups="base.group_system", help="This certificate lets us"
         " connect to DGI to validate electronic invoice. Please upload here the DGI certificate in PEM format.")
     l10n_uy_dgi_crt_fname = fields.Char('DGI Certificate name')
-    l10n_uy_dgi_crt_pass = fields.Char('Certificate Password')
+    l10n_uy_dgi_crt_pass = fields.Char('Private Password')
 
     # @api.depends('l10n_uy_dgi_crt')
     # def _compute_l10n_uy_dgi_crt_fname(self):
