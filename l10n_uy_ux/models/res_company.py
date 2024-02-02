@@ -46,26 +46,3 @@ class ResCompany(models.Model):
 
         config = safe_eval(config or "{}")
         self.write(config)
-
-    # TODO
-    # Servicio para listados con autenticación en los cabezales SOAP
-    # Url de publicación del servicio/ WebServicesListadosFE.svc
-
-    # Servicio para obtener el Informe de cierre parcial de operaciones con autenticación en los cabezales SOAP:
-    # Url de publicación del servicio/ WebServicesReportesFE.svc
-
-    # 7.1.1 Consulta de CFE rechazados por DGI
-    # Esta operación permitirá consultar los CFE rechazados de una empresa en determinada fecha.
-    # Operación a invocar: ComprobantesPorEmpresaDenegadosPorDgi
-    # Parámetros:
-    # • rut, indicando el RUT de la empresa que emitió los CFE.
-    # • fechaComprobante, indicando la fecha en la que se rechazaron los comprobantes.
-    # Respuesta:
-    # Arreglo de Comprobantes, conteniendo todos los comprobantes rechazados para la empresa indicada en la fch inform.
-    # La entidad Comprobante contiene los siguientes campos:
-    # ▪ CodigoComercio, conteniendo el código de la sucursal que emitió el comprobante.
-    # ▪ CodigoTerminal, conteniendo el código del punto de emisión que emitió el comprobante.
-    # ▪ Numero, conteniendo el número del comprobante.
-    # ▪ Serie, conteniendo la serie del comprobante.
-    # ▪ TipoCfe, conteniendo el tipo del CFE según su número indicado en DGI
-    # ▪ Uuid, conteniendo el identificador externo asignado al CFE

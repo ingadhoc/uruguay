@@ -1,4 +1,4 @@
-from odoo import models, fields,  _
+from odoo import models, _
 from odoo.exceptions import UserError
 from xml.etree.ElementTree import fromstring, ElementTree
 import pprint
@@ -9,9 +9,6 @@ _logger = logging.getLogger(__name__)
 class ResPartner(models.Model):
 
     _inherit = 'res.partner'
-
-    # TODO partners
-    # 650 Consulta a DGI por CFE recibido
 
     def action_l10n_uy_is_electronic_issuer(self):
         """ Return True/False if the partner is an electronic issuer or not

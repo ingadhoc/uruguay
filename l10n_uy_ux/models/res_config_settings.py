@@ -26,8 +26,7 @@ class ResConfigSettings(models.TransientModel):
             config = False
 
         config = safe_eval(config or "{}")
-        uruware_fields = [
- 'l10n_uy_ucfe_password', 'l10n_uy_ucfe_commerce_code',
+        uruware_fields = ['l10n_uy_ucfe_password', 'l10n_uy_ucfe_commerce_code',
             'l10n_uy_ucfe_terminal_code']
         for ufce_field in uruware_fields:
             self[ufce_field] = config.get(ufce_field, '')
