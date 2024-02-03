@@ -50,8 +50,8 @@ class L10nUyCfe(models.AbstractModel):
 
         # TODO KZ: Aca tenemos un problema estamos revisando longitud de caracteres, pero en realidad debemos revisar es cantidad
         # de lineas que lleva la adenda, porque si es mayor que 6 lineas se corta
-        adenda = self._l10n_uy_get_cfe_adenda().get('Adenda')
-        if adenda and len(adenda) > 799:
+        addenda = self._l10n_uy_get_cfe_addenda().get('Adenda')
+        if addenda and len(addenda) > 799:
             report_params = [['adenda'], ['true']]
         else:
             # En caso de que el cliente eliga el reporte que quiere imprimir

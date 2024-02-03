@@ -61,9 +61,9 @@
                         <field name="field_to_update_ids" widget="many2many_tags" options="{'no_create': True}" />
                         <field name="title_case"/>
                     </group>
-                    <group invisible="state in ('option', 'finished')" col="1">
+                    <group invisible="state in ('option', 'finished')" colspan="1">
                         <field name="partner_id" required="state == 'selection'"/>
-                        <field name="field_ids" nolabel="1">
+                        <field name="field_ids" nolabel="1" colspan="2">
                             <tree create="false">
                                 <field name="field"/>
                                 <field name="old_value"/>
