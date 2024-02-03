@@ -6,9 +6,9 @@ class AccountJournal(models.Model):
     _inherit = 'account.journal'
 
     l10n_uy_type = fields.Selection(selection_add=[
-        ('preprinted', 'Preprinte'),
-        ('contingency', 'contingency')],
-        # Estos dos tipos son agregados para tener compatibilidad hacia atras
+        ('preprinted', 'Preprinted'),
+        ('contingency', 'Contingency')],
+        # Estos dos tipos son agregados para tener compatibilidad hacia atras evaluar quien los tiene, y si lo queremos borrar o no.
     )
 
     # def _l10n_uy_get_dgi_last_invoice_number(self, document_type):

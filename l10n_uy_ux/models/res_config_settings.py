@@ -8,7 +8,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     l10n_uy_dgi_crt = fields.Binary(related='company_id.l10n_uy_dgi_crt', readonly=False)
-    l10n_uy_dgi_crt_fname = fields.Char(related='company_id.l10n_uy_dgi_crt_fname')
+    l10n_uy_dgi_crt_fname = fields.Char(related='company_id.l10n_uy_dgi_crt_fname', readonly=False)
     l10n_uy_dgi_crt_pass = fields.Char(related='company_id.l10n_uy_dgi_crt_pass', readonly=False)
     l10n_uy_report_params = fields.Char(
         related='company_id.l10n_uy_report_params', readonly=False

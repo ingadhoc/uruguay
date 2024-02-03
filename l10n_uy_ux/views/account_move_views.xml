@@ -22,7 +22,7 @@
 
             <div name="uy_buttons" colspan="2" position="inside">
 
-                <button name="action_l10n_uy_get_dgi_state" type="object" string="Update DGI Status" class="oe_inline oe_link" invisible="l10n_uy_cfe_state != 'received'" icon="fa-refresh"/>
+                <button name="action_l10n_uy_get_dgi_state" type="object" string="(UY) Update DGI Status" class="oe_inline oe_link" invisible="l10n_uy_cfe_state != 'received'" icon="fa-refresh"/>
 
                 <!-- TODO KZ This one should be removed after we fix the problem with the print from menu -->
                 <button name="action_l10n_uy_get_pdf" type="object" string="(UY) Print Legal PDF" class="oe_inline oe_link" invisible="l10n_uy_cfe_state not in ['received']" icon="fa-print" groups="base.group_no_one"/>
@@ -30,20 +30,11 @@
             </div>
 
             <notebook position="inside">
-                <page name="uy_dgi" string="DGI" invisible="l10n_uy_journal_type not in ['electronic', 'contingency']">
-                    <notebook>
-                        <page string="XML CFE" groups="base.group_no_one">
-                            <button name="action_l10n_uy_preview_xml" type="object" string="Preview" class="oe_inline oe_link" invisible="state != 'draft'"/>
-                            <button name="action_l10n_uy_validate_cfe" type="object" string="Validate" class="oe_inline oe_link" invisible="state != 'draft'"/>
-                            <field name="l10n_uy_cfe_xml" nolabel="1" widget="ace"/>
-                        </page>
-                        <page string="XML Request" groups="base.group_no_one">
-                            <field name="l10n_uy_dgi_xml_request" nolabel="1" widget="ace"/>
-                        </page>
-                        <page string="XML Response" groups="base.group_no_one">
-                            <field name="l10n_uy_dgi_xml_response" nolabel="1" widget="ace"/>
-                        </page>
-                    </notebook>
+                <page name="uy_dgi" string="DGI" groups="base.group_no_one" invisible="l10n_uy_journal_type not in ['electronic', 'contingency']">
+                    <group>
+                        <field name="l10n_uy_dgi_xml_request" widget="code"/>
+                        <field name="l10n_uy_dgi_xml_response" widget="code"/>
+                    </group>
                 </page>
             </notebook>
         </field>

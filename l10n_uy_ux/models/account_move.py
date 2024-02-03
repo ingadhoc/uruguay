@@ -56,7 +56,8 @@ class AccountMove(models.Model):
         """En el metodo original en latam suponemos que el codigo del tipo de documento no tiene espacios.
         Y por ello conseguimos el numero haciendo el split al coseguir el primer espacio en blanco.
 
-        En este caso los nombres de docs uruguayos tienen espacios. por eso necesitamos tomar otro criterio.
+        En este caso los nombres de docs uruguayos a hoy en adhoc, tienen espacios. por eso necesitamos tomar otro criterio.
+
         Este metodo lo que hace es llamar el original y posterior corregir los documentos uruguayos para solo tomar
         realmente la ultima parte del name seria el numero en si.
 

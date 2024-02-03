@@ -18,9 +18,25 @@ class ResPartner(models.Model):
         if self.l10n_latam_identification_type_id.l10n_uy_dgi_code == '2':
             response = company._l10n_uy_ucfe_inbox_operation('630', {'RutEmisor': self.vat})
             if response.Resp.CodRta == '00':
-                raise UserError(_('Es un emisor electrónico'))
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'type': 'info',
+                        'message': _('Es un emisor electrónico'),
+                        'next': {'type': 'ir.actions.act_window_close'},
+                    }
+                }
             elif response.Resp.CodRta == '01':
-                raise UserError(_('NO es un emisor electrónico'))
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'type': 'danger',
+                        'message': _('NO es un emisor electrónico'),
+                        'next': {'type': 'ir.actions.act_window_close'},
+                    }
+                }
         else:
             raise UserError(_('Solo puede consultar si el partner tiene tipo de identificación RUT'))
 

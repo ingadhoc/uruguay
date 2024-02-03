@@ -22,11 +22,5 @@
         'views/report_invoice.xml',
         'security/ir.model.access.csv',
     ],
-    'demo': [
-        'demo/res_company_demo.xml',
-        # restore
-        'demo/res_users_demo.xml',
-
-    ],
     'installable': True,
 }
