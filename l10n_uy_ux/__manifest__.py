@@ -22,5 +22,8 @@
         'views/report_invoice.xml',
         'security/ir.model.access.csv',
     ],
+    'demo': [
+        'demo/account_journal_demo.xml',
+    ],
     'installable': True,
 }

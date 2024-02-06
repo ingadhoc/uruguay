@@ -10,23 +10,30 @@ class AccountMove(models.Model):
     def _post(self, soft=True):
         """ Avoid validate contingency invoices
 
-       Esto es para evitar que puedan crear facturas de contingencia desde el Odoo, para poder soportarlo tenemos
-       que integrar la lógica de manejar el CAE desde el lado de Odoo, enviar info de numero de serie, numero a usar
-       etc en el xml para que sea un XML valido. Una vez que este implementado esta parte se puede ir.
+        Esto es para evitar que puedan crear facturas de contingencia desde el Odoo, para poder soportarlo tenemos
+        que integrar la lógica de manejar el CAE desde el lado de Odoo, enviar info de numero de serie, numero a usar
+        etc en el xml para que sea un XML valido. Una vez que este implementado esta parte se puede ir.
         """
-        contigency_uy_invoices = self.filtered(
+        uy_invoices = self.filtered(
             lambda x: x.company_id.country_id.code == 'UY' and
             x.is_invoice() and
-            x.journal_id.l10n_uy_type == 'contingency' and
+            x.journal_id.l10n_uy_type in ['electronic', 'contingency']  and
             x.l10n_uy_cfe_state not in ['accepted', 'rejected', 'received'] and
             int(x.l10n_latam_document_type_id.code) > 100)
 
-        if contigency_uy_invoices:
+        if uy_invoices.filtered(lambda x: x.journal_id.l10n_uy_type == 'contingency'):
             raise UserError(_(
                 'Las facturas de Contingencia aun no están implementadas en el Odoo, para crear facturas'
                 ' de contingencia por favor generarla directamente desde al Uruware y luego cargar en el Odoo'))
 
-        return super()._post(soft=soft)
+        # If the invoice was previosly validated in Uruware and need to be link to Odoo we check that the
+        # l10n_uy_cfe_uuid has been manually set and we consult to get the invoice information from Uruware
+        pre_validated_in_uruware = uy_invoices.filtered(lambda x: x.l10n_uy_cfe_uuid and not x.l10n_uy_cfe_state)
+        if pre_validated_in_uruware:
+            pre_validated_in_uruware.action_l10n_uy_get_uruware_cfe()
+
+        return super(AccountMove, self - pre_validated_in_uruware)._post(soft=soft)
+
 
     @api.constrains('move_type', 'journal_id')
     def _l10n_uy_check_moves_use_documents(self):
@@ -71,3 +78,29 @@ class AccountMove(models.Model):
             if doc_code_prefix and name:
                 name = name.split(" ")[-1]
             rec.l10n_latam_document_number = name
+
+    def action_l10n_uy_get_uruware_cfe(self):
+        """ 360: Consulta de estado de CFE: estado del comprobante en DGI,
+
+        Nos permite extraer la info del comprobante que fue emitido desde uruware
+        y que no esta en Odoo para asi quede la info de numero de documento tipo
+        de documento estado del comprobante.
+        """
+        uy_docs = self.env['l10n_latam.document.type'].search([('country_id.code', '=', 'UY')])
+        for rec in self:
+            if not rec.l10n_uy_cfe_uuid:
+                raise UserError(_('Please return a "UUID CFE Key" in order to continue'))
+            if rec.l10n_uy_cfe_state and 'error' in rec.l10n_uy_cfe_state:
+                raise UserError(_('You can not obtain the invoice with errors'))
+            # TODO en este momento estamos usando este 360 porque es el que tenemos pero estamos esperando respuesta de
+            # soporte uruware a ver como podemos extraer mas información y poder validarla.
+            response = rec.company_id._l10n_uy_ucfe_inbox_operation('360', {'Uuid': rec.l10n_uy_cfe_uuid})
+            rec.write({
+                'l10n_latam_document_number': response.Resp.Serie + '%07d' % int(response.Resp.NumeroCfe),
+                'l10n_latam_document_type_id': uy_docs.filtered(lambda x: x.code == response.Resp.TipoCfe).id,
+            })
+            rec._update_l10n_uy_cfe_state(response)
+            # TODO Improve add logic:
+            # 1. add information to the cfe xml
+            # 2. cfe another data
+            # 3. validation that is the same CFE

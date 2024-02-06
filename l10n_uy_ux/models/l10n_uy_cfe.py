@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import _, fields, models, api
-from odoo.exceptions import UserError
+from odoo import _, fields, models
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools import safe_eval
+from . import ucfe_errors
 
 
 class L10nUyCfe(models.AbstractModel):
@@ -47,10 +47,9 @@ class L10nUyCfe(models.AbstractModel):
         1. Sirve para detectar si la adenda es muy grande automaticamente mandar a imprimir el reporte con adenda en hoja separada
         2. Sirve para enviar un reporte pre definido por el cliente en la configuracion de Odoo en lugar de imprimir el reporte por defecto de Uruware
         """
-
         # TODO KZ: Aca tenemos un problema estamos revisando longitud de caracteres, pero en realidad debemos revisar es cantidad
         # de lineas que lleva la adenda, porque si es mayor que 6 lineas se corta
-        addenda = self._l10n_uy_get_cfe_addenda().get('Adenda')
+        addenda = self._l10n_uy_get_cfe_addenda()
         if addenda and len(addenda) > 799:
             report_params = [['adenda'], ['true']]
         else:
@@ -87,8 +86,35 @@ class L10nUyCfe(models.AbstractModel):
     def action_l10n_uy_validate_cfe(self):
         """ Be able to validate a cfe """
         self.l10n_uy_edi_error = False
-        self._l10n_uy_vaidate_cfe(self.sudo().l10n_uy_cfe_xml)
+        self._l10n_uy_validate_cfe(self.sudo().l10n_uy_cfe_xml)
 
     def action_l10n_uy_preview_xml(self):
         """ Be able to show preview of the CFE to be send """
         self.l10n_uy_cfe_xml = self._l10n_uy_create_cfe().get('cfe_str')
+
+    def _uy_prepare_req_data(self):
+        self.ensure_on()
+        req_data = super()._uy_prepare_req_data()
+        req_data.update(self._l10n_uy_get_cfe_serie())
+        return req_data
+
+    def _l10n_uy_get_cfe_serie(self):
+        """ Return dictionary with Serie CFE number.
+        NOTE: In future need to be adapted for contigency records """
+        res = {}
+        cfe_code = int(self.l10n_latam_document_type_id.code)
+        if cfe_code > 200:
+            res.update({
+                'Serie': self.journal_id.code,
+                'NumeroCfe': self.journal_id.sequence_number_next,
+            })
+        return res
+
+    def _l10n_uy_get_cfe_iddoc(self):
+        res = super()._l10n_uy_get_cfe_iddoc()
+
+        if self._is_uy_remito_type_cfe():  # A6
+            res.update({'TipoTraslado': self.l10n_uy_transfer_of_goods})
+
+        res.update(self._l10n_uy_get_cfe_serie())
+        return res
