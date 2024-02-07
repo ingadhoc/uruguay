@@ -7,9 +7,10 @@ from . import ucfe_errors
 
 class L10nUyCfe(models.AbstractModel):
 
-    _inherit = 'l10n.uy.cfe'
+    _name = 'account.move'
+    _inherit = ['account.move', 'l10n.uy.cfe']
 
-    # TODO KZ not sure if we needed
+    # TODO not sure if we needed
     # company_id = fields.Many2one("res.compaany")
 
     # TO remove via script
@@ -47,7 +48,7 @@ class L10nUyCfe(models.AbstractModel):
         1. Sirve para detectar si la adenda es muy grande automaticamente mandar a imprimir el reporte con adenda en hoja separada
         2. Sirve para enviar un reporte pre definido por el cliente en la configuracion de Odoo en lugar de imprimir el reporte por defecto de Uruware
         """
-        # TODO KZ: Aca tenemos un problema estamos revisando longitud de caracteres, pero en realidad debemos revisar es cantidad
+        # TODO: Aca tenemos un problema estamos revisando longitud de caracteres, pero en realidad debemos revisar es cantidad
         # de lineas que lleva la adenda, porque si es mayor que 6 lineas se corta
         addenda = self._l10n_uy_get_cfe_addenda()
         if addenda and len(addenda) > 799:
@@ -72,7 +73,7 @@ class L10nUyCfe(models.AbstractModel):
 
     def action_l10n_uy_get_pdf(self):
         """ Solo permitir crear PDF cuando este aun no existe, y grabar en campo binario """
-        # TODO KZ toca poner a prueba
+        # TODO toca poner a prueba
         self.ensure_one()
         if not self.l10n_uy_cfe_pdf:
             self.l10n_uy_cfe_pdf = self._l10n_uy_get_pdf()
@@ -93,7 +94,7 @@ class L10nUyCfe(models.AbstractModel):
         self.l10n_uy_cfe_xml = self._l10n_uy_create_cfe().get('cfe_str')
 
     def _uy_prepare_req_data(self):
-        self.ensure_on()
+        self.ensure_one()
         req_data = super()._uy_prepare_req_data()
         req_data.update(self._l10n_uy_get_cfe_serie())
         return req_data
@@ -118,3 +119,42 @@ class L10nUyCfe(models.AbstractModel):
 
         res.update(self._l10n_uy_get_cfe_serie())
         return res
+
+    # def _uy_cfe_B24_MontoItem(self, line):
+    # TODO en futuro para incluir descuentos B24 = (B9 * B11) - B13 + B17
+
+    # TODO parece que tenemos estos tipos de contribuyente: IVA mínimo, Monotributo o Monotributo MIDES ver si cargarlos en el patner asi como la afip responsibility
+
+    # def _uy_cfe_A41_RznSoc(self):
+    # TODO company register name?
+
+    # def _l10n_uy_get_cfe_receptor(self):
+    # TODO -Free Shop: siempre se debe identificar al receptor.
+
+    # A130 Monto Total a Pagar (NO debe ser reportado si de tipo remito u e-resguardo)
+    # if not self._is_uy_remito_type_cfe() and not self._is_uy_resguardo():
+    #     res['MntPagar'] = float_repr(self.amount_total, 2)
+    #     # TODO Esto toca adaptarlo cuando agreguemos retenciones y percepciones ya que representa la
+    #     # "Suma de (monto total + valor de la retención/percepción + monto no facturable)
+
+    # def _uy_cfe_B4_IndFact(self, line):
+    #     """ B4: Indicador de facturación
+
+    #         TODO KZ: Toca revisar realmente cual es el line que corresponde, el que veo en la interfaz parece ser move_ids_without_package pero no se si esto siempre aplica
+    #             move_ids_without_package	Stock moves not in package (stock.move)
+    #             move_line_ids	Operations (stock.move.line)
+    #             move_line_ids_without_package	Operations without package (stock.move.line)
+    #     """
+
+    # def _uy_cfe_A5_FchEmis(self):
+    #     """ A5 FchEmis. Fecha del Comprobante """
+    # return self.scheduled_date.strftime('%Y-%m-%d')
+    # TODO KZ ver que fecha deberiamos de usar en caso de ser picking. opciones
+    #   scheduled_date - Scheduled Date
+    #   date - Creation Date
+    #   date_deadline - Deadline
+    #   date_done - Date of Transfer
+
+    # def _uy_check_uy_invoices(self):
+    # We check that there is one and only one vat tax per line
+    # TODO KZ this could change soon, waiting functional confirmation
