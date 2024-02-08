@@ -1,4 +1,4 @@
-from odoo import models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from xml.etree.ElementTree import fromstring, ElementTree
 import pprint
@@ -9,6 +9,8 @@ _logger = logging.getLogger(__name__)
 class ResPartner(models.Model):
 
     _inherit = 'res.partner'
+
+    fiscal_countries = fields.Many2many('res.country', compute="compute_fiscal_countries")
 
     def action_l10n_uy_is_electronic_issuer(self):
         """ Return True/False if the partner is an electronic issuer or not
@@ -107,3 +109,33 @@ class ResPartner(models.Model):
             raise UserError(_('Solo puede consultar si el partner tiene tipo de identificación RUT'))
 
         return values
+
+    # TODO KZ From here to to bottom is a patch, we think this should be fixed directly
+    # in l10n_latam_base module, if approved, then we need to move it to l10n_latam_base.
+    # meanwhile we leave here as a patch
+    def _get_countries(self):
+        self.ensure_one()
+        countries = self.env['res.country'].search([('code', 'in', self.fiscal_country_codes.split(','))])
+        if not countries:
+            countries = self.country_id
+        return countries
+
+    @api.onchange('country_id', 'company_id')
+    def _onchange_country(self):
+        """ Take into account the fiscal countries to filter the identification types,
+        if not define ones, then use the partner country
+        """
+        super()._onchange_country()
+        countries = self._get_countries()
+        if countries:
+            identification_type = self.l10n_latam_identification_type_id
+            if not identification_type or (identification_type.country_id not in countries):
+                self.l10n_latam_identification_type_id = self.env['l10n_latam.identification.type'].search(
+                    [('country_id', 'in', countries.ids), ('is_vat', '=', True)], limit=1) or self.env.ref(
+                        'l10n_latam_base.it_vat', raise_if_not_found=False)
+
+    @api.onchange('company_id')
+    def compute_fiscal_countries(self):
+        """ Only used for """
+        for rec in self:
+            rec.fiscal_countries = rec._get_countries()

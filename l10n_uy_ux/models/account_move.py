@@ -1,11 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, models, _
+from odoo import api, models, fields, _
 from odoo.exceptions import UserError, ValidationError
 
 
 class AccountMove(models.Model):
 
     _inherit = 'account.move'
+
+    l10n_latam_document_type_id = fields.Many2one(change_default=True)  # This is needed to be able to save default values
+    # TODO KZ hacer pr a 17 o master pidiendo que hagan este fix directamtne en el modulo de l10n_latam_base
 
     def _post(self, soft=True):
         """ Avoid validate contingency invoices
@@ -99,7 +102,7 @@ class AccountMove(models.Model):
                 'l10n_latam_document_number': response.Resp.Serie + '%07d' % int(response.Resp.NumeroCfe),
                 'l10n_latam_document_type_id': uy_docs.filtered(lambda x: x.code == response.Resp.TipoCfe).id,
             })
-            rec._update_l10n_uy_cfe_state(response)
+            rec._uy_update_cfe_state(response)
             # TODO Improve add logic:
             # 1. add information to the cfe xml
             # 2. cfe another data

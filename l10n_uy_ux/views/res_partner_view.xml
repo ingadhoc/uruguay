@@ -11,6 +11,15 @@
                 <button name="action_l10n_uy_is_electronic_issuer" string="(UY) Is Electronic Issuer?" class="oe_link oe_inline" type="object"/>
                 <button name="%(action_partner_update)d" string="(UY) Update From DGI" class="oe_link oe_inline" type="action" invisible="l10n_latam_identification_type_id != %(l10n_uy.it_rut)d or vat == False"/>
             </xpath>
+
+            <!-- TODO KZ: Patch to resolve problem added in l10n_latam_base module. If you think is Ok we can move it that module in a separate PR -->
+            <field name="l10n_latam_identification_type_id" position="before">
+                <field name="fiscal_countries" invisible="1"/>
+            </field>
+            <field name="l10n_latam_identification_type_id" position="attributes">
+                <attribute name="domain">fiscal_countries and ['|', ('country_id', '=', False), ('country_id', 'in', fiscal_countries)] or []</attribute>
+            </field>
+
         </field>
     </record>
 

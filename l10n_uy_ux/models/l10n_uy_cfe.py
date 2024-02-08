@@ -35,13 +35,13 @@ class L10nUyCfe(models.AbstractModel):
     l10n_uy_cfe_file = fields.Many2one('ir.attachment', string='CFE XML file', copy=False)
     l10n_uy_cfe_pdf = fields.Many2one('ir.attachment', string='CFE PDF Representation', copy=False)
 
-    def set_any_extra_field(self, data):
+    def _uy_set_any_extra_field(self, data):
         self.l10n_uy_cfe_xml = data.get('CfeXmlOTexto')
         transport = data.get('transport')
         self.l10n_uy_dgi_xml_response = transport.xml_response
         self.l10n_uy_dgi_xml_request = transport.xml_request
 
-    def _get_report_params(self):
+    def _uy_get_report_params(self):
         """ En odoo ofical por defecto solo imprime el reporte standard de uruware.
         Aca lo extendemos para que haga dos cosas:
 
@@ -50,7 +50,7 @@ class L10nUyCfe(models.AbstractModel):
         """
         # TODO: Aca tenemos un problema estamos revisando longitud de caracteres, pero en realidad debemos revisar es cantidad
         # de lineas que lleva la adenda, porque si es mayor que 6 lineas se corta
-        addenda = self._l10n_uy_get_cfe_addenda()
+        addenda = self._uy_get_cfe_addenda()
         if addenda and len(addenda) > 799:
             report_params = [['adenda'], ['true']]
         else:
@@ -71,12 +71,12 @@ class L10nUyCfe(models.AbstractModel):
 
         return versionPdf, extra_params
 
-    def action_l10n_uy_get_pdf(self):
+    def action_uy_get_pdf(self):
         """ Solo permitir crear PDF cuando este aun no existe, y grabar en campo binario """
         # TODO toca poner a prueba
         self.ensure_one()
         if not self.l10n_uy_cfe_pdf:
-            self.l10n_uy_cfe_pdf = self._l10n_uy_get_pdf()
+            self.l10n_uy_cfe_pdf = self._uy_get_pdf()
         return {
             'type': 'ir.actions.act_url',
             'url': "web/content/?model=ir.attachment&id=" + str(self.l10n_uy_cfe_pdf.id) +
@@ -84,14 +84,14 @@ class L10nUyCfe(models.AbstractModel):
             'target': 'self'
         }
 
-    def action_l10n_uy_validate_cfe(self):
+    def action_uy_validate_cfe(self):
         """ Be able to validate a cfe """
         self.l10n_uy_edi_error = False
-        self._l10n_uy_validate_cfe(self.sudo().l10n_uy_cfe_xml)
+        self._uy_validate_cfe(self.sudo().l10n_uy_cfe_xml)
 
     def action_l10n_uy_preview_xml(self):
         """ Be able to show preview of the CFE to be send """
-        self.l10n_uy_cfe_xml = self._l10n_uy_create_cfe().get('cfe_str')
+        self.l10n_uy_cfe_xml = self._uy_create_cfe().get('cfe_str')
 
     def _uy_prepare_req_data(self):
         self.ensure_one()
@@ -111,8 +111,8 @@ class L10nUyCfe(models.AbstractModel):
             })
         return res
 
-    def _l10n_uy_get_cfe_iddoc(self):
-        res = super()._l10n_uy_get_cfe_iddoc()
+    def _uy_cfe_A_iddoc(self):
+        res = super()._uy_cfe_A_iddoc()
 
         if self._is_uy_remito_type_cfe():  # A6
             res.update({'TipoTraslado': self.l10n_uy_transfer_of_goods})
@@ -128,7 +128,7 @@ class L10nUyCfe(models.AbstractModel):
     # def _uy_cfe_A41_RznSoc(self):
     # TODO company register name?
 
-    # def _l10n_uy_get_cfe_receptor(self):
+    # def _uy_cfe_A_receptor(self):
     # TODO -Free Shop: siempre se debe identificar al receptor.
 
     # A130 Monto Total a Pagar (NO debe ser reportado si de tipo remito u e-resguardo)
