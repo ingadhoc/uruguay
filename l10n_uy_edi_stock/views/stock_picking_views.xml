@@ -22,7 +22,7 @@
                 <field name="l10n_uy_ucfe_msg" attrs="{'invisible': [('l10n_uy_cfe_state', 'not in', ['xml_error', 'connection_error', 'ucfe_error', 'rejected'])]}"/>
 
                 <button name="action_l10n_uy_get_dgi_state" type="object" string="(UY) Consult DGI State" class="oe_link" colspan="2" attrs="{'invisible': [('l10n_uy_cfe_state', '!=', 'received')]}" icon="fa-refresh"/>
-                <button name="action_l10n_uy_get_pdf" type="object" string="(UY) Print Legal PDF" class="oe_link" colspan="2" attrs="{
+                <button name="action_uy_get_pdf" type="object" string="(UY) Print Legal PDF" class="oe_link" colspan="2" attrs="{
                     'invisible': [('l10n_uy_cfe_state', 'not in', ['received'])]}" icon="fa-print"/>
 
             </xpath>
@@ -59,7 +59,7 @@
                                     </group>
                                 </page>
                                 <page string="XML CFE">
-                                    <button name="action_l10n_uy_validate_cfe" type="object" string="Validate CFE XML" class="oe_link" colspan="2"/>
+                                    <button name="action_uy_validate_cfe" type="object" string="Validate CFE XML" class="oe_link" colspan="2"/>
                                     <field name="l10n_uy_cfe_xml" nolabel="1" widget="ace"/>
                                 </page>
                                 <page string="XML Request">

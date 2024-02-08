@@ -78,24 +78,24 @@ class StockPicking(models.Model):
 
         # Send invoices to DGI and get the return info
         for remito in uy_remitos:
-            if remito._is_demo_env():
-                remito._dummy_dgi_validation()
+            if remito._uy_is_demo_env():
+                remito._uy_dummy_validation()
                 continue
 
             # TODO KZ I think we can avoid this loop. review
-            remito._l10n_uy_dgi_post()
+            remito._uy_dgi_post()
 
     # TODO KZ buscar el metodo _l10n_cl_get_tax_amounts para ejemplos de como extraer la info de los impuestos en un picking. viene siempre de una
     # factura
 
-    def _l10n_uy_get_cfe_addenda(self):
+    def _uy_get_cfe_addenda(self):
         """ Add Specific MOVE model fields to the CFE Addenda if they are set:
 
         * field Origin added with the prefix "Origin: ..."
         * Observation
         """
         self.ensure_one()
-        res = super()._l10n_uy_get_cfe_addenda()
+        res = super()._uy_get_cfe_addenda()
         if self.origin:
             res += "\n\nOrigin: %s" % self.origin
         if self.note:
