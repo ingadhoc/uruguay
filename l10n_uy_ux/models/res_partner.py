@@ -125,6 +125,7 @@ class ResPartner(models.Model):
         """ Take into account the fiscal countries to filter the identification types,
         if not define ones, then use the partner country
         """
+        # TODO Ahora que vamos a re-usar los tipos genericos toca ver de revisar esto, porque tenemos que tomar en cuenta los que no tienen pais,
         super()._onchange_country()
         countries = self._get_countries()
         if countries:
