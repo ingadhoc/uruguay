@@ -19,7 +19,6 @@
         'views/res_company_views.xml',
         'views/res_config_settings_view.xml',
         'views/res_partner_view.xml',
-        'views/report_invoice.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [

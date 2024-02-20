@@ -107,3 +107,11 @@ class AccountMove(models.Model):
             # 1. add information to the cfe xml
             # 2. cfe another data
             # 3. validation that is the same CFE
+
+    def action_l10n_uy_get_pdf(self):
+        self.ensure_one()
+        self._uy_get_pdf()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
