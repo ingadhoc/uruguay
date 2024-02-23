@@ -93,7 +93,11 @@ class ResPartner(models.Model):
                 # removerlo siempre del values
                 values.pop('street_number')
             else:
-                raise UserError(_('No se pudo conectar a DGI para extraer los datos'))
+                raise UserError(_('No puede obtener datos de DGi. Puede ser que el servicio del Padron este caido o haya algun problema'
+                                  ' particular con el RUT a consultar. Por favor verifique primero que el RUT que esta intentando '
+                                  'consultar es un emisor electronico (esta consulta al padron solo funciona para emisores electronicos).'
+                                  '\n\nSi el contacto es emisor electronico y sigue teniendo problemas por favor avisar via ticket a'
+                                  ' ADHOC para revisar el caso particular'))
         else:
             raise UserError(_('Solo puede consultar si el partner tiene tipo de identificación RUT'))
 
