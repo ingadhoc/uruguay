@@ -161,4 +161,23 @@ class L10nUyCfe(models.Model):
             raise UserError(_('Export e-Delivery Guide'))
         return False
 
-    #  Helpders
+    def _uy_cfe_A113_MntExpoyAsim(self, res):
+        """ Si tipo de CFE= 124 (e-remito de exportación):
+            * Suma de ítems del e-remito de exportación Menos Suma de ítems del e-remito de exportación con indicador de facturación (B- C4)=8
+            * Sino, Suma de ítems de exportación y asimilados, menos descuentos globales más recargos globales (asignados a ítems de exportación
+
+        Es de tipo NUM 17 - -Valor numérico de 15 enteros y 2 decimales
+
+        * Es condicional para los docs regulares.
+        * No corresponde si es de tipo e-Rem
+        * es Obligatorio si es cualquier tipo de tipo Expo incluyendo e-Rem Exp.
+
+        Si A-C2=124, C113= ∑B-C24 - ∑B-C24 (si B- C4=8), sino
+        C113= ∑ B-C24 (si B-C4=10) menos ∑ D-C6 (si D-C7=10 y si D- C2=D) más ∑ D-C6 (si D-C7=10 y si D- C2=R))
+        """
+        if self._is_uy_remito_exp():
+            res.update({
+                'MntExpoyAsim': float_repr(self.move_id.amount_total, 2),
+            })
+            return res
+        return super()._uy_cfe_A113_MntExpoyAsim(res)
