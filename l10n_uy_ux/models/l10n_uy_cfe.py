@@ -3,10 +3,9 @@ from odoo import _, fields, models
 from odoo.tools import safe_eval
 
 
-class L10nUyCfe(models.AbstractModel):
+class L10nUyCfe(models.Model):
 
-    _name = 'account.move'
-    _inherit = ['account.move', 'l10n.uy.cfe']
+    _inherit = 'l10n.uy.cfe'
 
     # TODO not sure if we needed
     # company_id = fields.Many2one("res.compaany")
@@ -33,11 +32,34 @@ class L10nUyCfe(models.AbstractModel):
     l10n_uy_cfe_file = fields.Many2one('ir.attachment', string='CFE XML file', copy=False)
     l10n_uy_cfe_pdf = fields.Many2one('ir.attachment', string='CFE PDF Representation', copy=False)
 
-    def _uy_set_any_extra_field(self, data):
-        self.l10n_uy_cfe_xml = data.get('CfeXmlOTexto')
-        transport = data.get('transport')
+    def _is_uy_remito_exp(self):
+        return self.l10n_latam_document_type_id.code == '124'
+
+    def _is_uy_remito_loc(self):
+        return self.l10n_latam_document_type_id.code == '181'
+
+    def _is_uy_resguardo(self):
+        return self.l10n_latam_document_type_id.code in ['182', '282']
+
+    def _uy_get_cfe_tag(self):
+        """ No usado aun pero lo dejamos aca para futuro. capaz moverlo a modulo de resguardos? """
+        self.ensure_one()
+        if self._is_uy_resguardo():
+            return 'eResg'
+        return super()._uy_get_cfe_tag()
+
+    def _uy_send_invoice_request(self):
+        """ Extender para alamancer tambien los datos del xml request.
+        Necesita ser testeado
+        """
+        self.ensure_one()
+        # ORIG res = self.company_id._l10n_uy_ucfe_inbox_operation('310', self._uy_prepare_req_data())
+        response, transport = super()._uy_send_invoice_request()
+
+        self.l10n_uy_cfe_xml = response.get('CfeXmlOTexto')
         self.l10n_uy_dgi_xml_response = transport.xml_response
         self.l10n_uy_dgi_xml_request = transport.xml_request
+        return response
 
     def _uy_get_report_params(self):
         """ En odoo ofical por defecto solo imprime el reporte standard de uruware.
@@ -126,8 +148,28 @@ class L10nUyCfe(models.AbstractModel):
     # def _uy_cfe_A41_RznSoc(self):
     # TODO company register name?
 
-    # def _uy_cfe_A_receptor(self):
-    # TODO -Free Shop: siempre se debe identificar al receptor.
+    def _uy_cfe_A_receptor(self):
+        # TODO -Free Shop: siempre se debe identificar al receptor.
+        # cond_e_boleta = document_type in [151, 152, 153]
+        # cond_e_contg = document_type in [201, 202, 203]
+        # cond_e_resguardo = self._is_uy_resguardo()
+        # cond_e_fact: obligatorio RUC (C60= 2).
+        # cond_e_ticket: si monto neto ∑ (C112 a C118) > a tope establecido (ver tabla E),
+        # debe identificarse con NIE, RUC, CI, Otro, Pasaporte DNI o NIFE (C 60= 2, 3, 4, 5, 6 o 7).
+
+        res = super()._uy_cfe_A_receptor()
+        if not self._is_uy_resguardo():
+            res.update(self._uy_cfe_A70_CompraID())
+
+        # A69 LugarDestEnt No debe de reportarse si es e-resguardo
+        if self._is_uy_resguardo():
+            res.pop('LugarDestEnt')
+
+        # A130 Monto Total a Pagar (NO debe ser reportado si de tipo e-resguardo)
+        if self._is_uy_resguardo():
+            res.pop('MntPagar')
+
+        return res
 
     # A130 Monto Total a Pagar (NO debe ser reportado si de tipo remito u e-resguardo)
     # if not self._is_uy_remito_type_cfe() and not self._is_uy_resguardo():
@@ -135,14 +177,28 @@ class L10nUyCfe(models.AbstractModel):
     #     # TODO Esto toca adaptarlo cuando agreguemos retenciones y percepciones ya que representa la
     #     # "Suma de (monto total + valor de la retención/percepción + monto no facturable)
 
-    # def _uy_cfe_B4_IndFact(self, line):
-    #     """ B4: Indicador de facturación
+    def _uy_cfe_B4_IndFact(self, line):
+        """ B4: Indicador de facturación
 
-    #         TODO KZ: Toca revisar realmente cual es el line que corresponde, el que veo en la interfaz parece ser move_ids_without_package pero no se si esto siempre aplica
-    #             move_ids_without_package	Stock moves not in package (stock.move)
-    #             move_line_ids	Operations (stock.move.line)
-    #             move_line_ids_without_package	Operations without package (stock.move.line)
-    #     """
+            TODO KZ: Toca revisar realmente cual es el line que corresponde, el que veo en la interfaz parece ser move_ids_without_package pero no se si esto siempre aplica
+                move_ids_without_package	Stock moves not in package (stock.move)
+                move_line_ids	Operations (stock.move.line)
+                move_line_ids_without_package	Operations without package (stock.move.line)
+        """
+        # Another cases for future
+        # 4: Gravado a Otra Tasa/IVA sobre fictos
+        # 5: Entrega Gratuita. Por ejemplo docenas de trece
+        # 6: Producto o servicio no facturable. No existe validación, excepto si A-C20= 1, B-C4=6 o 7.
+        # 7: Producto o servicio no facturable negativo. . No existe validación, excepto si A-C20= 1, B-C4=6 o 7.
+        # 8: Sólo para remitos: Ítem a rebajar en e-remitos y en e- remitos de exportación. En área de referencia se debe indicar el N° de remito que ajusta
+        # 9: Sólo para resguardos: Ítem a anular en resguardos. En área de referencia se debe indicar el N° de resguardo que anular
+        # 11: Impuesto percibido
+        # 12: IVA en suspenso
+        # 13: Sólo para e-Boleta de entrada y sus notas de corrección: Ítem vendido por un no contribuyente (valida que A-C60≠2)
+        # 14: Sólo para e-Boleta de entrada y sus notas de corrección: Ítem vendido por un contribuyente IVA mínimo, Monotributo o Monotributo MIDES (valida que A-C60=2)
+        # 15: Sólo para e-Boleta de entrada y sus notas de corrección: Ítem vendido por un contribuyente IMEBA (valida A-C60 = 2)
+        # 16: Sólo para ítems vendidos por contribuyentes con obligación IVA mínimo, Monotributo o Monotributo MIDES. Si A-C10=3, no puede utilizar indicadores 1, 2, 3, 4, 11 ni 12
+        return super()._uy_cfe_B4_IndFact(line)
 
     # def _uy_cfe_A5_FchEmis(self):
     #     """ A5 FchEmis. Fecha del Comprobante """
@@ -222,3 +278,13 @@ class L10nUyCfe(models.AbstractModel):
         """ NOTE: Need to improve the way to identify the fiscal position
         """
         return bool(self.fiscal_position_id and 'zona franca' in self.fiscal_position_id.name.lower())
+
+    def _uy_cfe_A70_CompraID(self):
+        """ Número que identifica la compra: número de pedido, número orden de compra etc. LEN(50)
+        Opcional para todos los tipos de documentos """
+        self.ensure_one()
+        res = False
+        if not self._is_uy_resguardo():
+            if 'purchase_order_number' in 'purchase_order_number' in self.env['account.move'].fields_get():
+                res = (self.purchase_order_number or '')[:50]
+        return {'CompraID': res} if res else {}

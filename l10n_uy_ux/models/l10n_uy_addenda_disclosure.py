@@ -9,3 +9,5 @@ class L10nUyAddenda(models.Model):
     sequence = fields.Integer()
     active = fields.Boolean(default=True)
     condition = fields.Char(default="False")
+
+    apply_on = fields.Selection(selection_add=[('account.move.line', 'Resguardos')])

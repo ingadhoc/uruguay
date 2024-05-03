@@ -29,3 +29,10 @@ class ResCompany(models.Model):
 
         config = safe_eval(config or "{}")
         self.write(config)
+
+    def _l10n_uy_ucfe_inbox_operation(self, msg_type, extra_req={}, return_transport=True):
+        """ sobre escribimos super solo para definir que siempre devuelva el transport asi almacenamos el xml request/response """
+        return super()._l10n_uy_ucfe_inbox_operation(msg_type, extra_req=extra_req, return_transport=return_transport)
+
+    def _uy_get_client(self, url, return_transport=True):
+        return super()._uy_get_client(url, return_transport=return_transport)
