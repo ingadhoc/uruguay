@@ -115,3 +115,17 @@ class AccountMove(models.Model):
             'type': 'ir.actions.client',
             'tag': 'reload',
         }
+
+    def _uy_get_cfe_addenda(self):
+        """ Add Specific MOVE model fields to the CFE Addenda if they are set:
+
+        * field Reference added with the prefix "Reference: ..."
+        * Terms and Conditions
+        """
+        self.ensure_one()
+        res = super()._uy_get_cfe_addenda()
+        if self.ref:
+            res += "\n\n" + _("Reference") + ": %s" % self.ref
+        if self.narration:
+            res += "\n\n%s" % html2plaintext(self.narration)
+        return res.strip()

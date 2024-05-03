@@ -19,6 +19,7 @@
         'views/res_company_views.xml',
         'views/res_config_settings_view.xml',
         'views/res_partner_view.xml',
+        'views/l10n_uy_addenda_disclosure_views.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [

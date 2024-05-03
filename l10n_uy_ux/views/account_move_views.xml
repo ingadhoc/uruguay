@@ -39,6 +39,23 @@
                     </group>
                 </page>
             </notebook>
+
+            <notebook position="inside">
+                <page name="uy_dgi" string="Adendas y Leyendas" invisible="l10n_uy_journal_type != 'electronic'">
+                    <button name="action_l10n_uy_remkark_default" type="object" string="Get Defaults"/>
+                    <field name="l10n_uy_addenda_ids">
+                        <tree string="Addendas">
+                            <field name="type"/>
+                            <field name="name"/>
+                            <field name="content"/>
+                        </tree>
+                    </field>
+                    <span>Preview: </span>
+                    <button name="action_l10n_uy_addenda_preview" type="object" string="Addendas"/>
+                    <button name="action_l10n_uy_mandatory_legend" type="object" string="Info/Leyendas"/>
+                </page>
+            </notebook>
+
         </field>
     </record>
 

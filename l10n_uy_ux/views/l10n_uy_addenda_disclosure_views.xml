@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="l10n_uy_addenda_disclosure_view_tree" model="ir.ui.view">
+        <field name="name">l10n.uy.addenda..disclosure.view.tree</field>
+        <field name="model">l10n.uy.addenda.disclosure</field>
+        <field name="model">l10n.uy.addenda.disclosure</field>
+        <field name="arch" type="xml">
+            <field name="content" position="after">
+                <field name="condition"/>
+                <field name="company_id"/>
+                <field name="active" widget="boolean_toggle"/    >
+            </field>
+
+            <field name="name" position="before"/>
+                <field name="sequence" widget="handle"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

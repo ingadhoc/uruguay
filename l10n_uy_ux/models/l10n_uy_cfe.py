@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import _, fields, models
-from odoo.tools.safe_eval import safe_eval
 from odoo.tools import safe_eval
-from . import ucfe_errors
 
 
 class L10nUyCfe(models.AbstractModel):
@@ -158,3 +156,69 @@ class L10nUyCfe(models.AbstractModel):
     # def _uy_check_uy_invoices(self):
     # We check that there is one and only one vat tax per line
     # TODO KZ this could change soon, waiting functional confirmation
+
+    # All for addendas
+
+    def _uy_get_legends(self, tipo_leyenda, record):
+        """ This method check and return the legendas configured by default that applies to the
+        current CFE.
+        Return type: list """
+        res = []
+        recordtype = {'account.move': 'inv', 'stock.picking': 'picking', 'account.move.line': 'aml', 'product.product': 'product'}
+        context = {recordtype.get(record._name): record}
+        for rec in record.company_id.l10n_uy_addenda_ids.filtered(lambda x: x.type == tipo_leyenda and x.apply_on in ['all', self._name]):
+            if bool(safe_eval.safe_eval(rec.condition, context)):
+                res.append(rec.content)
+        return res
+
+    def action_l10n_uy_mandatory_legend(self):
+        self.ensure_one()
+        addenda = self._uy_get_cfe_addenda()
+        A16_InfoAdicionalDoc = self._uy_cfe_A16_InfoAdicionalDoc().get('InfoAdicionalDoc')
+        A51_InfoAdicionalEmisor = self._uy_cfe_A51_InfoAdicionalEmisor().get('InfoAdicionalEmisor')
+        A68_InfoAdicionalReceptor = self._uy_cfe_A68_InfoAdicional().get('InfoAdicional')
+        B8_DscItem = []
+        lines = self._uy_get_cfe_lines()
+        for line in lines:
+            value = self._uy_cfe_B8_DscItem(line).get('DscItem')
+            if value:
+                B8_DscItem.append((line.display_name, value))
+
+        messge = "* Adenda\n%s\n\n* Info Adicional Doc\n%s\n\n* Info Adicional Emisor\n%s\n\n* Info Adicional Receptor\n%s\n\n * Info Adicional Items\n%s" % (
+            addenda, A16_InfoAdicionalDoc, A51_InfoAdicionalEmisor, A68_InfoAdicionalReceptor, '\n'.join(str(item) for item in B8_DscItem))
+
+        raise UserError(messge)
+
+    def action_l10n_uy_addenda_preview(self):
+        self.ensure_one()
+        raise UserError(self._uy_get_cfe_addenda())
+
+    def action_l10n_uy_remkark_default(self):
+        self.ensure_one()
+        res = self.env['l10n.uy.addenda']
+
+        res |= self._uy_get_legends_recs('addenda', self)
+        res |= self._uy_get_legends_recs('cfe_doc', self)
+        res |= self._uy_get_legends_recs('emisor', self)
+        res |= self._uy_get_legends_recs('receiver', self)
+
+        for line in self._uy_get_cfe_lines():
+            res |= self._uy_get_legends_recs('item', line)
+
+        self.l10n_uy_addenda_ids = res
+
+    def _uy_get_legends_recs(self, tipo_leyenda, record):
+        """ copy of  _uy_get_legends but return browseables """
+        res = self.env['l10n.uy.addenda']
+        recordtype = {'account.move': 'inv', 'stock.picking': 'picking', 'account.move.line': 'aml', 'product.product': 'product'}
+        context = {recordtype.get(record._name): record}
+        for rec in record.company_id.l10n_uy_addenda_ids.filtered(lambda x: x.type == tipo_leyenda and x.apply_on in ['all', self._name]):
+            if bool(safe_eval.safe_eval(rec.condition, context)):
+                res |= rec
+        return res
+
+    @api.model
+    def is_zona_franca(self):
+        """ NOTE: Need to improve the way to identify the fiscal position
+        """
+        return bool(self.fiscal_position_id and 'zona franca' in self.fiscal_position_id.name.lower())
