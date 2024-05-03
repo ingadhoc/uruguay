@@ -4,17 +4,45 @@ from odoo.tools import html2plaintext
 
 class StockPicking(models.Model):
 
-    _name = 'stock.picking'
-    _inherit = ['l10n.uy.cfe', 'stock.picking']
+    _inherit = 'stock.picking'
+
+    l10n_uy_cfe_id = fields.Many2one("l10n.uy.cfe", string="Uruguay E-Resguardo CFE", copy=False)
 
     l10n_latam_document_type_id = fields.Many2one('l10n_latam.document.type', string='Document Type (UY)', copy=False)
     l10n_latam_document_number = fields.Char(string='Document Number (UY)', readonly=True, states={'draft': [('readonly', False)]}, copy=False)
+
+    # Fields that need to be fill before creating the CFE
+    l10n_uy_cfe_uuid = fields.Char(
+        'Key or UUID CFE', help="Unique identification per CFE in UCFE. Currently is formed by the concatenation of model name initials plust record id", copy=False)
+    l10n_uy_addenda_ids = fields.Many2many(
+        'l10n.uy.addenda.disclosure', string="Addenda & Disclosure",
+        domain="[('type', 'in', ['issuer', 'receiver', 'cfe_doc', 'addenda'])]")
+
     l10n_latam_available_document_type_ids = fields.Many2many('l10n_latam.document.type', compute='_compute_l10n_latam_available_document_types')
     l10n_uy_transfer_of_goods = fields.Selection(
-        [('1', 'Venta'),
-         ('2', 'Traslados internos')],
+        [('1', 'Venta'), ('2', 'Traslados internos')],
         string="Traslados de Bienes",
     )
+
+    l10n_uy_cfe_sale_mod = fields.Selection([
+        ('1', 'General Regime'),
+        ('2', 'Consignment'),
+        ('3', 'Reviewable Price'),
+        ('4', 'Own goods to customs exclaves'),
+        ('90', 'General Regime - exportation of services'),
+        ('99', 'Other transactions'),
+    ], 'Sales Modality', help="This field is used in the XML to create an Export e-Delivery Guide")
+    l10n_uy_cfe_transport_route = fields.Selection([
+        ('1', 'Maritime'),
+        ('2', 'Air'),
+        ('3', 'Ground'),
+        ('8', 'N/A'),
+        ('9', 'Other'),
+    ], 'Transportation Route', help="This field is used in the XML to create an Export e-Delivery Guide")
+    l10n_uy_place_of_delivery = fields.Char(
+        "Place of Delivery",
+        size=100,
+        help="Indicación de donde se entrega la mercadería o se presta el servicio (Dirección, Sucursal, Puerto, etc,)")
 
     def name_get(self):
         """ Display: 'Stock Picking Internal Sequence : Remito (if defined)' """

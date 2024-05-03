@@ -9,7 +9,7 @@
     reportados a la DGI
     """,
     'depends': [
-        'l10n_uy_edi_ux',
+        'l10n_uy_edi_ux', # TODO no recuerdo. porque no directo l10n_uy_ux
         'stock_account',
         'sale_stock',
         ],
