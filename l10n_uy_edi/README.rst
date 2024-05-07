@@ -23,7 +23,14 @@ La configuración necesaria para poder tener esta funcionalidad es:
    1) Que la base tenga conexión a Uruware para facturación electrónica.
    2) Crear compañía uruguaya y dar de alta su correspondiente plan de cuentas.
    3) Tener creado en Odoo al menos un diario de Compras electrónico con la opción tildada "Usa Documentos". Los comprobantes de compras que sean creados en Odoo a través de la sincronización con Uruware serán registrados en este diario.
-   4) En Contabilidad / Configuración / Ajustes tener tildado "Create vendor bills from Uruware" en la sección "Localización Uruguaya" para habilitar la sincronización.
+   4) En Uruware es necesario hacer una configuración que consiste en dar de alta una acción para activar notificaciones. Esto se hace en Uruware desde la consola, menú: COMPROBANTES > CFE RECIBIDOS > CONFIGURACION > ACCIONES.
+
+      - Dar de alta la acción que crea notificaciones: botón del menú inferior ALTA:
+      - Desencadenador: CFE RECIBIDO
+      - Condición: NINGUNA (cualquier CFE recibido activará la generación de una notificación, en caso de que quieran ser específicos, pueden configurar la condición).
+      - Acción: PERMITIR CONSULTA REGISTRO POR BANDEJA
+
+   5) En Contabilidad / Configuración / Ajustes tener tildado "Create vendor bills from Uruware" en la sección "Localización Uruguaya" para habilitar la sincronización.
 
 Consideraciones a tener en cuenta:
 
