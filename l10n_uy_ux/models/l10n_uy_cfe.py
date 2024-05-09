@@ -288,3 +288,6 @@ class L10nUyCfe(models.Model):
             if 'purchase_order_number' in 'purchase_order_number' in self.env['account.move'].fields_get():
                 res = (self.purchase_order_number or '')[:50]
         return {'CompraID': res} if res else {}
+
+    # def _uy_cfe_F_referencia(self):
+    #     # Not sure if FechaCFEref': 2015-01-31, shuould be inform
