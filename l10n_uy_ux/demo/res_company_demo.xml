@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo noupdate="1">
+
+    <record id="l10n_uy.demo_company_uy" model="res.company">
+        <field name='l10n_uy_branch_code'>8</field>
+    </record>
+
+</odoo>

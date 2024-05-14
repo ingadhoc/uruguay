@@ -24,6 +24,7 @@
     ],
     'demo': [
         'demo/account_journal_demo.xml',
+        'demo/res_company_demo.xml',
     ],
     'installable': True,
 }
