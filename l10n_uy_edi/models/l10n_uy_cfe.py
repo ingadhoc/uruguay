@@ -1362,7 +1362,7 @@ class L10nUyCfe(models.AbstractModel):
             rec.l10n_uy_cfe_file = self.env['ir.attachment'].create({
                 'name': 'CFE_{}.xml'.format(rec.l10n_latam_document_number),
                 'res_model': self._name, 'res_id': rec.id,
-                'type': 'binary', 'datas': base64.b64encode(CfeXmlOTexto.encode('ISO-8859-1'))}).id
+                'type': 'binary', 'datas': base64.b64encode(CfeXmlOTexto.encode())}).id
 
             # If the record has been posted automatically print and attach the legal record reporte to the record.
             if 'error' not in rec.l10n_uy_cfe_state:
