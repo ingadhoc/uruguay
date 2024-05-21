@@ -53,7 +53,7 @@ class L10nUyCfe(models.Model):
         Necesita ser testeado
         """
         self.ensure_one()
-        # ORIG res = self.company_id._l10n_uy_ucfe_inbox_operation('310', self._uy_prepare_req_data())
+        # ORIG res = self.company_id._l10n_uy_edi_ucfe_inbox_operation('310', self._uy_prepare_req_data())
         response, transport = super()._uy_send_invoice_request()
 
         self.l10n_uy_cfe_xml = response.get('CfeXmlOTexto')

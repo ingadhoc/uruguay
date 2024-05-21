@@ -97,7 +97,7 @@ class AccountMove(models.Model):
                 raise UserError(_('You can not obtain the invoice with errors'))
             # TODO en este momento estamos usando este 360 porque es el que tenemos pero estamos esperando respuesta de
             # soporte uruware a ver como podemos extraer mas información y poder validarla.
-            response = rec.company_id._l10n_uy_ucfe_inbox_operation('360', {'Uuid': rec.l10n_uy_cfe_uuid})
+            response = rec.company_id._l10n_uy_edi_ucfe_inbox_operation('360', {'Uuid': rec.l10n_uy_cfe_uuid})
             rec.write({
                 'l10n_latam_document_number': response.Resp.Serie + '%07d' % int(response.Resp.NumeroCfe),
                 'l10n_latam_document_type_id': uy_docs.filtered(lambda x: x.code == response.Resp.TipoCfe).id,
