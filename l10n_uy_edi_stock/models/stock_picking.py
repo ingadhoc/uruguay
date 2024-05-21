@@ -7,7 +7,6 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
     l10n_uy_cfe_id = fields.Many2one("l10n.uy.cfe", string="Uruguay E-Resguardo CFE", copy=False)
-
     l10n_latam_document_type_id = fields.Many2one('l10n_latam.document.type', string='Document Type (UY)', copy=False)
     l10n_latam_document_number = fields.Char(string='Document Number (UY)', readonly=True, states={'draft': [('readonly', False)]}, copy=False)
 
@@ -146,3 +145,7 @@ class StockPicking(models.Model):
         # if self.picking_type_code != 'outgoing':
         #     return []
         return ['0', '124', '181', '224', '281']
+
+    def l10n_uy_edi_action_get_dgi_state(self):
+        self.ensure_one()
+        self.l10n_uy_edi_cfe_id.l10n_uy_edi_action_get_dgi_state()
