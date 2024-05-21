@@ -209,7 +209,7 @@ class L10nUyCfe(models.Model):
     #   date_deadline - Deadline
     #   date_done - Date of Transfer
 
-    # def _uy_check_uy_invoices(self):
+    # def _l10n_uy_edi_check_invoices(self):
     # We check that there is one and only one vat tax per line
     # TODO KZ this could change soon, waiting functional confirmation
 
