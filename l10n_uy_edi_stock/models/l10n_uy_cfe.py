@@ -19,7 +19,7 @@ class L10nUyCfe(models.Model):
         self.ensure_one()
         if self.picking_id and not self.move_id:
             res = self.picking_id._name + '-' + str(self.picking_id.id)
-            if self.company_id._uy_get_environment_type() == 'testing':
+            if self.company_id._l10n_uy_edi_get_environment_type() == 'testing':
                 res = 'sp' + str(self.picking_id.id) + '-' + self.env.cr.dbname
             return res[:50]
         return super()._uy_get_uuid()
