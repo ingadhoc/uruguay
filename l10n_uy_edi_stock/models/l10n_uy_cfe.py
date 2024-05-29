@@ -181,3 +181,28 @@ class L10nUyCfe(models.Model):
             })
             return res
         return super()._uy_cfe_A113_MntExpoyAsim(res)
+
+    def _uy_cfe_A5_FchEmis(self):
+        self.ensure_one()
+        if self._is_uy_remito_type_cfe():
+            return self.scheduled_date.strftime('%Y-%m-%d')
+        return super()._uy_cfe_A5_FchEmis()
+
+    def _uy_cfe_B7_NomItem(self, line):
+        """ B7 Nombre del ítem (producto o servicio). Maximo 80 caracteres """
+        self.ensure_one()
+        if self._is_uy_inv_type_cfe() or self._is_uy_remito_type_cfe():
+            return super()._uy_cfe_B7_NomItem(line)
+
+    def _uy_cfe_B10_UniMed(self, line):
+        if self._is_uy_remito_type_cfe():
+            return line.product_uom.name[:4] if line.product_uom else 'N/A'
+        return super()._uy_cfe_B10_UniMed(line)
+
+    def _uy_cfe_B9_Cantidad(self, line):
+        """ # B9 Cantidad. Valor numerico 14 enteros y 3 decimales. Puede ser numero negativo """
+        if self._is_uy_remito_type_cfe():
+            res = 0.0
+            res = line.quantity_done
+            return float_repr(res, 3)
+        return super()._uy_cfe_B9_Cantidad(line)

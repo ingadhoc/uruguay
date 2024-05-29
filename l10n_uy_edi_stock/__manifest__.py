@@ -15,6 +15,7 @@
         ],
     'data': [
         'data/l10n_latam.document.type.csv',
+        'data/cfe_template.xml',
         'views/stock_picking_views.xml',
     ],
     'installable': False,
