@@ -87,6 +87,180 @@ class AccountMove(models.Model):
 
     # Main methods
 
+<<<<<<< HEAD
+||||||| parent of bb5162f (temp)
+    def _l10n_uy_dgi_post(self):
+        """ Implementation via web service of service 310 – Firma y envío de CFE (individual) """
+
+        self._l10n_uy_validate_company_data()
+        for inv in self:
+            now = datetime.utcnow()
+            CfeXmlOTexto = inv._l10n_uy_create_cfe().get('cfe_str')
+            req_data = {
+                'Uuid': 'account.move-' + str(inv.id) + '_' + str(fields.Datetime.now()),  # TODO this need to be improve
+                'TipoCfe': int(inv.l10n_latam_document_type_id.code),
+                'HoraReq': now.strftime('%H%M%S'),
+                'FechaReq': now.date().strftime('%Y%m%d'),
+                'CfeXmlOTexto': CfeXmlOTexto}
+
+            req_data.update(inv._l10n_uy_get_cfe_adenda())
+            req_data.update(inv._l10n_uy_get_cfe_serie())
+            response, transport = inv.company_id._l10n_uy_ucfe_inbox_operation('310', req_data, return_transport=1)
+
+            inv = inv.sudo()
+            inv.l10n_uy_ucfe_state = response.Resp.CodRta
+            inv._update_l10n_uy_cfe_state()
+
+            # Si conseguimos un error de factura electronica directamente hacemos rollback: para que la factura de odoo
+            # quede en borrador y no tengamos quede posteada y tengamos que cancelarla luego
+            if 'error' in inv.l10n_uy_cfe_state:
+                self.env.cr.rollback()
+
+            inv.l10n_uy_ucfe_state = response.Resp.CodRta
+            inv._update_l10n_uy_cfe_state()
+            inv.l10n_uy_cfe_xml = CfeXmlOTexto
+            inv.l10n_uy_dgi_xml_response = transport.xml_response
+            inv.l10n_uy_dgi_xml_request = transport.xml_request
+            inv.l10n_uy_cfe_uuid = response.Resp.Uuid
+            inv.l10n_uy_ucfe_msg = response.Resp.MensajeRta
+            inv.l10n_uy_ucfe_notif = response.Resp.TipoNotificacion
+
+            if response.Resp.CodRta not in inv._uy_invoice_already_sent():
+                # * 00 y 11, el CFE ha sido aceptado (con el 11 aún falta la confirmación definitiva de DGI).
+                # El punto de emisión no debe volver a enviar el documento.
+                # Se puede consultar el estado actual de un CFE para el que se recibió 11 con los mensajes de consulta
+                # disponibles.
+                # • 01 y 05 son rechazos. Cuando rechaza DGI se recibe 05 e implica que quedó anulado el documento.
+                # El punto de emisión no debe volver a enviar el comprobante ni tampoco enviar una nota de crédito
+                # para comenzar.
+                # * 03 y 89, indican un problema de configuración en UCFE.
+                # El punto de emisión debe enviar de nuevo el CFE luego de que el administrador configure correctamente
+                # los parámetros
+                # • 12, 94 y 99 no se van a recibir.
+                # • 30, falta algún campo requerido para el mensaje que se está enviando. Requiere estudio técnico, el punto de emisión no debe volver a enviar el documento hasta que no se solucione el problema.
+                # • 31, error de formato en el CFE pues se encuentra mal armado el XML. Requiere estudio técnico, el punto de emisión no debe volver a enviar el documento hasta que no se solucione el problema.
+                # • 96, error interno en UCFE (por ejemplo bug, motor de base de datos caído, disco lleno, etc.). Requiere soporte técnico, el punto de emisión debe enviar de nuevo el CFE cuando se solucione el problema
+                return
+
+            # If everything is ok we save the return information
+            inv.l10n_latam_document_number = response.Resp.Serie + '%07d' % int(response.Resp.NumeroCfe)
+
+            # TODO this one is failing, review why
+            inv.l10n_uy_cfe_file = self.env['ir.attachment'].create({
+                'name': 'CFE_{}.xml'.format(inv.l10n_latam_document_number),
+                'res_model': self._name, 'res_id': inv.id,
+                'type': 'binary', 'datas': base64.b64encode(CfeXmlOTexto.encode('ISO-8859-1'))}).id
+
+            # If the invoice has been posted automatically print and attach the legal invoice reporte to the record.
+            if 'error' not in inv.l10n_uy_cfe_state:
+                inv.action_l10n_uy_get_pdf()
+
+            # TODO este viene vacio, ver cuando realmente es seteado para asi setearlo en este momento
+            # Tambien tenemos ver para que sirve 'DatosQr': 'https://www.efactura.dgi.gub.uy/consultaQRPrueba/cfe?218435730016,101,A,1,18.00,17/09/2020,gKSy8dDHR0YsTy0P4cx%2bcSu4Zvo%3d',
+            # self.l10n_uy_dgi_barcode = response.Resp.ImagenQr
+            # TODO evaluate if this is usefull to put it in a invoice place?
+            # 'Adenda': None,
+            # 'CodigoSeguridad': 'gKSy8d',
+            # 'EstadoSituacion': None,
+            # 'Etiquetas': None,
+            # 'FechaFirma': '2020-09-17T19:50:50.0000000-03:00',
+            # 'IdCae': '90200001010',
+            # 'IdReq': '1',
+            # 'RutEmisor': None,
+
+            # ??? – Recepcion de CFE en UCFE
+            # ??? – Conversion y validation
+            # TODO comprobar. este devolvera un campo clave llamado UUID que permite identificar el comprobante, si es enviando dos vence sno genera otro CFE firmado
+
+        return response
+
+=======
+    def _l10n_uy_dgi_post(self):
+        """ Implementation via web service of service 310 – Firma y envío de CFE (individual) """
+
+        self._l10n_uy_validate_company_data()
+        for inv in self:
+            now = datetime.utcnow()
+            CfeXmlOTexto = inv._l10n_uy_create_cfe().get('cfe_str')
+            req_data = {
+                'Uuid': 'account.move-' + str(inv.id) + '_' + str(fields.Datetime.now()),  # TODO this need to be improve
+                'TipoCfe': int(inv.l10n_latam_document_type_id.code),
+                'HoraReq': now.strftime('%H%M%S'),
+                'FechaReq': now.date().strftime('%Y%m%d'),
+                'CfeXmlOTexto': CfeXmlOTexto}
+
+            req_data.update(inv._l10n_uy_get_cfe_adenda())
+            req_data.update(inv._l10n_uy_get_cfe_serie())
+            response, transport = inv.company_id._l10n_uy_ucfe_inbox_operation('310', req_data, return_transport=1)
+
+            inv = inv.sudo()
+            inv.l10n_uy_ucfe_state = response.Resp.CodRta
+            inv._update_l10n_uy_cfe_state()
+
+            # Si conseguimos un error de factura electronica directamente hacemos rollback: para que la factura de odoo
+            # quede en borrador y no tengamos quede posteada y tengamos que cancelarla luego
+            if 'error' in inv.l10n_uy_cfe_state:
+                self.env.cr.rollback()
+
+            inv.l10n_uy_ucfe_state = response.Resp.CodRta
+            inv._update_l10n_uy_cfe_state()
+            inv.l10n_uy_cfe_xml = CfeXmlOTexto
+            inv.l10n_uy_dgi_xml_response = transport.xml_response
+            inv.l10n_uy_dgi_xml_request = transport.xml_request
+            inv.l10n_uy_cfe_uuid = response.Resp.Uuid
+            inv.l10n_uy_ucfe_msg = response.Resp.MensajeRta
+            inv.l10n_uy_ucfe_notif = response.Resp.TipoNotificacion
+
+            if response.Resp.CodRta not in inv._uy_invoice_already_sent():
+                # * 00 y 11, el CFE ha sido aceptado (con el 11 aún falta la confirmación definitiva de DGI).
+                # El punto de emisión no debe volver a enviar el documento.
+                # Se puede consultar el estado actual de un CFE para el que se recibió 11 con los mensajes de consulta
+                # disponibles.
+                # • 01 y 05 son rechazos. Cuando rechaza DGI se recibe 05 e implica que quedó anulado el documento.
+                # El punto de emisión no debe volver a enviar el comprobante ni tampoco enviar una nota de crédito
+                # para comenzar.
+                # * 03 y 89, indican un problema de configuración en UCFE.
+                # El punto de emisión debe enviar de nuevo el CFE luego de que el administrador configure correctamente
+                # los parámetros
+                # • 12, 94 y 99 no se van a recibir.
+                # • 30, falta algún campo requerido para el mensaje que se está enviando. Requiere estudio técnico, el punto de emisión no debe volver a enviar el documento hasta que no se solucione el problema.
+                # • 31, error de formato en el CFE pues se encuentra mal armado el XML. Requiere estudio técnico, el punto de emisión no debe volver a enviar el documento hasta que no se solucione el problema.
+                # • 96, error interno en UCFE (por ejemplo bug, motor de base de datos caído, disco lleno, etc.). Requiere soporte técnico, el punto de emisión debe enviar de nuevo el CFE cuando se solucione el problema
+                return
+
+            # If everything is ok we save the return information
+            inv.l10n_latam_document_number = response.Resp.Serie + '%07d' % int(response.Resp.NumeroCfe)
+
+            # TODO this one is failing, review why
+            inv.l10n_uy_cfe_file = self.env['ir.attachment'].create({
+                'name': 'CFE_{}.xml'.format(inv.l10n_latam_document_number),
+                'res_model': self._name, 'res_id': inv.id,
+                'type': 'binary', 'datas': base64.b64encode(CfeXmlOTexto.encode())}).id
+
+            # If the invoice has been posted automatically print and attach the legal invoice reporte to the record.
+            if 'error' not in inv.l10n_uy_cfe_state:
+                inv.action_l10n_uy_get_pdf()
+
+            # TODO este viene vacio, ver cuando realmente es seteado para asi setearlo en este momento
+            # Tambien tenemos ver para que sirve 'DatosQr': 'https://www.efactura.dgi.gub.uy/consultaQRPrueba/cfe?218435730016,101,A,1,18.00,17/09/2020,gKSy8dDHR0YsTy0P4cx%2bcSu4Zvo%3d',
+            # self.l10n_uy_dgi_barcode = response.Resp.ImagenQr
+            # TODO evaluate if this is usefull to put it in a invoice place?
+            # 'Adenda': None,
+            # 'CodigoSeguridad': 'gKSy8d',
+            # 'EstadoSituacion': None,
+            # 'Etiquetas': None,
+            # 'FechaFirma': '2020-09-17T19:50:50.0000000-03:00',
+            # 'IdCae': '90200001010',
+            # 'IdReq': '1',
+            # 'RutEmisor': None,
+
+            # ??? – Recepcion de CFE en UCFE
+            # ??? – Conversion y validation
+            # TODO comprobar. este devolvera un campo clave llamado UUID que permite identificar el comprobante, si es enviando dos vence sno genera otro CFE firmado
+
+        return response
+
+>>>>>>> bb5162f (temp)
     # Helpers
 
     def _uy_found_related_cfe(self):
