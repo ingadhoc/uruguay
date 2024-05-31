@@ -476,7 +476,7 @@ class AccountMove(models.Model):
             inv.l10n_uy_cfe_file = self.env['ir.attachment'].create({
                 'name': 'CFE_{}.xml'.format(inv.l10n_latam_document_number),
                 'res_model': self._name, 'res_id': inv.id,
-                'type': 'binary', 'datas': base64.b64encode(CfeXmlOTexto.encode('ISO-8859-1'))}).id
+                'type': 'binary', 'datas': base64.b64encode(CfeXmlOTexto.encode())}).id
 
             # If the invoice has been posted automatically print and attach the legal invoice reporte to the record.
             if 'error' not in inv.l10n_uy_cfe_state:
