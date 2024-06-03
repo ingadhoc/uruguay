@@ -263,7 +263,7 @@ class AccountMove(models.Model):
         for inv in self:
             if not inv.l10n_uy_cfe_uuid:
                 raise UserError(_('Necesita definir "Clave o UUID del CFE" para poder continuar'))
-            if 'error' in inv.l10n_uy_cfe_state:
+            if inv.l10n_uy_cfe_state and 'error' in inv.l10n_uy_cfe_state:
                 raise UserError(_('No se puede obtener la factura de un comprobante con error'))
             # TODO en este momento estamos usando este 360 porque es el que tenemos pero estamos esperando respuesta de
             # soporte uruware a ver como podemos extraer mas información y poder validarla.
@@ -424,7 +424,7 @@ class AccountMove(models.Model):
             now = datetime.utcnow()
             CfeXmlOTexto = inv._l10n_uy_create_cfe().get('cfe_str')
             req_data = {
-                'Uuid': 'account.move-' + str(inv.id) + '_' + str(fields.Datetime.now()),  # TODO this need to be improve
+                'Uuid': 'account.move-' + str(inv.id),
                 'TipoCfe': int(inv.l10n_latam_document_type_id.code),
                 'HoraReq': now.strftime('%H%M%S'),
                 'FechaReq': now.date().strftime('%Y%m%d'),
