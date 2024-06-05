@@ -1,6 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
+
+from . import UYTransport
+
 from odoo import fields, models
 from odoo.tools.safe_eval import safe_eval
+from odoo.tools.zeep import Client
+from odoo.exceptions import UserError
+from odoo.tools.zeep.wsse.username import UsernameToken
+
+_logger = logging.getLogger(__name__)
 
 
 class ResCompany(models.Model):
@@ -34,5 +43,23 @@ class ResCompany(models.Model):
         """ sobre escribimos super solo para definir que siempre devuelva el transport asi almacenamos el xml request/response """
         return super()._l10n_uy_edi_ucfe_inbox_operation(msg_type, extra_req=extra_req, return_transport=return_transport)
 
-    def _l10n_uy_edi_get_client(self, url, return_transport=True):
-        return super()._l10n_uy_edi_get_client(url, return_transport=return_transport)
+    def _l10n_uy_edi_get_client(self, url):
+        """ Overwrite completely to return transport with copy of the xml request/response"""
+        self.ensure_one()
+        self._l10n_uy_edi_is_connection_info_complete()
+        wsdl = url
+        if not wsdl.endswith('?wsdl'):
+            wsdl += '?wsdl'
+
+        try:
+            transport = UYTransport.UYTransport(operation_timeout=3, timeout=3)
+            user_name_token = UsernameToken(self.l10n_uy_edi_ucfe_username, self.l10n_uy_edi_ucfe_password)
+            client = Client(wsdl, transport=transport, wsse=user_name_token)
+        except ConnectionError as error:
+            _logger.error(repr(error))
+            raise UserError(_(
+                'Unable to connect to Uruware. Check the next options and try again\n'
+                '\n1) Check your internet connection.'
+                '\n2) Uruware server could be temporarily down.'))
+
+        return client, transport
