@@ -757,7 +757,7 @@ class L10nUyCfe(models.AbstractModel):
 
     def l10n_uy_create_pdf_vendor_bill(self, company, invoice, req_data_pdf):
         """ The vendor bill pdf is created and syncronized through the Uruware notification request. """
-        response_reporte_pdf = self.env.company._l10n_uy_ucfe_query('ObtenerPdfCfeRecibido', req_data_pdf)
+        response_reporte_pdf = company._l10n_uy_ucfe_query('ObtenerPdfCfeRecibido', req_data_pdf)
         invoice.l10n_uy_cfe_pdf = self.env['ir.attachment'].create({
             'name': (invoice.l10n_latam_document_type_id.doc_code_prefix + ' ' + req_data_pdf.get('serieCfe') + req_data_pdf.get('numeroCfe').zfill(7)).replace('/', '_') + '.pdf',
             'res_model': invoice._name, 'res_id': invoice.id,
