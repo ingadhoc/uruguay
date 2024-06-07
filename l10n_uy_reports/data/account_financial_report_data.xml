@@ -1,30 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- TODO in AR this menu is in l10n_ar module not in l10n_ar_reports, unify criteria -->
     <menuitem id="account_reports_uy_statements_menu" name="Uruguayan Statements" parent="account.menu_finance_reports" sequence="3" groups="account.group_account_user"/>
-
-    <template id="search_template_uy_vat_book" inherit_id="account_reports.search_template" primary="True">
-        <xpath expr="." position="inside">
-            <div class="btn-group dropdown o_account_reports_filter_uy_vat_book_tax_types">
-                <button type="button" class="o-no-caret btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
-                    <span class="fa fa-filter"/>
-                    Tax Type:
-                        <t t-esc="options['uy_vat_book_tax_types_available'][options['uy_vat_book_tax_type_selected']]"/>
-                </button>
-                <div class="dropdown-menu o_filter_menu" role="menu">
-                    <t t-foreach="options['uy_vat_book_tax_types_available'].items()" t-as="tax_type">
-                        <a class="dropdown-item js_account_reports_one_choice_filter"
-                           data-filter="uy_vat_book_tax_type_selected"
-                           t-att-title="tax_type[1]"
-                           t-att-data-id="tax_type[0]">
-                            <t t-esc="tax_type[1]"/>
-                        </a>
-                    </t>
-                </div>
-            </div>
-        </xpath>
-    </template>
 
     <record id="l10n_uy_vat_book_report" model="account.report">
         <field name="name">Uruguayan VAT book</field>
@@ -33,7 +10,6 @@
         <field name="filter_unreconciled" eval="False"/>
         <field name="filter_period_comparison" eval="False"/>
         <field name="filter_growth_comparison" eval="False"/>
-        <field name="search_template">l10n_uy_reports.search_template_uy_vat_book</field>
         <field name="custom_handler_model_id" ref="model_l10n_uy_tax_report_handler"/>
         <field name="load_more_limit" eval="80"/>
         <field name="column_ids">
@@ -41,17 +17,17 @@
                 <!-- TODO revisar que realmente es el campo invoice_date y no el campo date -->
                 <field name="name">Date</field>
                 <field name="expression_label">date</field>
-                <field name="figure_type">none</field>
+                <field name="figure_type">date</field>
             </record>
             <record id="l10n_uy_vat_book_report_column_partner_name" model="account.report.column">
                 <field name="name">Name</field>
                 <field name="expression_label">partner_name</field>
-                <field name="figure_type">none</field>
+                <field name="figure_type">string</field>
             </record>
             <record id="l10n_uy_vat_book_report_column_rut" model="account.report.column">
                 <field name="name">RUT</field>
                 <field name="expression_label">rut</field>
-                <field name="figure_type">none</field>
+                <field name="figure_type">float</field>
             </record>
             <record id="l10n_uy_vat_book_report_column_taxed" model="account.report.column">
                 <field name="name">Taxed</field>

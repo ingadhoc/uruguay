@@ -52,7 +52,8 @@ class FormReportWiz(models.TransientModel):
             ('date', '>=', self.date_from), ('date', '<', self.date_to),
             ('partner_id.vat', '!=', False),
             ('l10n_latam_document_type_id.code', '!=', '0'),
-            ('l10n_latam_document_type_id.code', '!=', False)
+            ('l10n_latam_document_type_id.code', '!=', False),
+            ('l10n_latam_document_type_id.code', 'not in', ['121', '122', '123', '124', '221', '222', '223', '224'])
         ]
 
         if self.sudo().env['ir.module.module'].search([('name', '=', 'l10n_uy_edi')], limit=1).state \
@@ -72,10 +73,10 @@ class FormReportWiz(models.TransientModel):
         res = self.env['account.move'].search(domain, order='invoice_date asc, name asc, id asc')
         return res
 
-    def _search_tax(self, tax_name, tax_type):
+    def _search_tax(self, tax_amount, tax_type):
         res = self.env['account.tax'].with_context(active_test=False).search([
             ('type_tax_use', '=', tax_type), ('company_id', '=', self.company_id.id),
-            ('tax_group_id.l10n_uy_vat_code', '=', tax_name)], limit=1)
+            ('amount', '=', tax_amount), ('l10n_uy_tax_category', '=', 'vat')], limit=1)
         return res
 
     def _get_form_2181_data(self):
@@ -92,11 +93,11 @@ class FormReportWiz(models.TransientModel):
 
         # Importante. aca este el archivo generado mezcla iva compras e iva ventas.
         line_code = {
-            self._search_tax('vat_22', 'sale'): '502',  # 502 IVA Ventas Tasa Básica a Contribuyentes
-            self._search_tax('vat_10', 'sale'): '503',  # 503 IVA Ventas Tasa Mínima a Contribuyentes
-            self._search_tax('vat_exempt', 'purchase'): '504',  # Compras Plaza Exentas de IVA
-            self._search_tax('vat_22', 'purchase'): '505',  # 505 IVA Compras Plaza Tasa Básica
-            self._search_tax('vat_10', 'purchase'): '506',  # 506 IVA Compras Plaza Tasa Mínima
+            self._search_tax(22.0, 'sale'): '502',  # 502 IVA Ventas Tasa Básica a Contribuyentes
+            self._search_tax(10.0, 'sale'): '503',  # 503 IVA Ventas Tasa Mínima a Contribuyentes
+            self._search_tax(0.0, 'purchase'): '504',  # Compras Plaza Exentas de IVA
+            self._search_tax(22.0, 'purchase'): '505',  # 505 IVA Compras Plaza Tasa Básica
+            self._search_tax(10.0, 'purchase'): '506',  # 506 IVA Compras Plaza Tasa Mínima
         }
         # Estos dos parece que tambien van pero no tenemos un impuestos para colocarlo
         # ("507", "507	- IVA Ventas tasa 10% a Contribuyentes"),
@@ -141,14 +142,22 @@ class FormReportWiz(models.TransientModel):
         for rut_partner, invoices in data.items():
             amount_total = {}
             for inv in invoices:
-                for item in list(inv.tax_totals.get('groups_by_subtotal').values())[0]:
+                group_by_subtotal_values = list(inv.tax_totals.get('groups_by_subtotal').values())[0] if list(inv.tax_totals.get('groups_by_subtotal').values()) else []
+                for item in group_by_subtotal_values:
                     tax_group_id = item.get('tax_group_id')
                     if tax_group_id in taxes_group_ids:
                         inv_amount = item.get('tax_group_amount')
                         # No estaba ene especifcacion pero vimos via un ejemplo que los montos reportados siempre son en
                         # pesos. aun qu el comprobamte sea de otra moneda, es por eso que hacemos esta conversion
                         if inv.currency_id != UYU_currency:
-                            inv_amount = inv_amount * inv.l10n_uy_currency_rate
+                            currency_rate = inv.currency_id._convert(
+                                1.0,
+                                inv.company_id.currency_id,
+                                inv.company_id,
+                                inv.date or fields.Date.today(),
+                                round=False
+                            )
+                            inv_amount = inv_amount * currency_rate
                         key = (tax_group_id, 'sale' if 'out_' in inv.move_type else 'purchase')
                         amount_total[key] = amount_total.get(key, 0.0) + (amount_total.get(tax_group_id, 0.0)) + inv_amount
             for tax in amount_total:
@@ -157,7 +166,10 @@ class FormReportWiz(models.TransientModel):
                     continue
 
                 # Campo 1 - RUT Informante. Num 12 (Si <12 dígitos completa con 0 a la izq)
-                content_data = self.company_id.vat.zfill(12) + ";"
+                if self.company_id.vat:
+                    content_data = self.company_id.vat.zfill(12) + ";"
+                else:
+                    raise UserError(_('Configure un numero de vat para su compañia'))
 
                 # Campo 2 - Formulario. Num 5
                 content_data += "{: 5d};".format(int(self.uy_form_id))
