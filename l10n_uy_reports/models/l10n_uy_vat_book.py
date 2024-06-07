@@ -7,7 +7,14 @@ class UruguayanReportCustomHandler(models.AbstractModel):
     _inherit = 'account.generic.tax.report.handler'
     _description = 'Uruguayan Report Custom Handler'
 
-    def _dynamic_lines_generator(self, report, options, all_column_groups_expression_totals):
+    def _get_custom_display_config(self):
+        return {
+            'templates': {
+                'AccountReportFilters': 'l10n_uy_reports.L10nUyReportsFiltersCustomizable',
+            },
+        }
+
+    def _dynamic_lines_generator(self, report, options, all_column_groups_expression_totals, warnings=None):
         # dict of the form {move_id: {column_group_key: {expression_label: value}}}
         move_info_dict = {}
 
@@ -103,11 +110,7 @@ class UruguayanReportCustomHandler(models.AbstractModel):
             expression_label = column['expression_label']
             value = move_vals.get(column['column_group_key'], {}).get(expression_label)
 
-            columns.append({
-                'name': report.format_value(value, figure_type=column['figure_type']) if value is not None else None,
-                'no_format': value,
-                'class': 'number' if expression_label in number_values else '',
-            })
+            columns.append(report._build_column_dict(value, column, options=options))
 
         return {
             'id': report._get_generic_line_id('account.move', move_id),
@@ -127,11 +130,7 @@ class UruguayanReportCustomHandler(models.AbstractModel):
             expression_label = column['expression_label']
             value = total_vals.get(column['column_group_key'], {}).get(expression_label)
 
-            columns.append({
-                'name': report.format_value(value, figure_type=column['figure_type']) if value is not None else None,
-                'no_format': value,
-                'class': 'number',
-            })
+            columns.append(report._build_column_dict(value, column, options=options))
         return {
             'id': report._get_generic_line_id(None, None, markup='total'),
             'name': _('Total'),

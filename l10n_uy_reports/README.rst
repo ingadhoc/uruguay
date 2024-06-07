@@ -18,6 +18,18 @@ Uruguay - Accounting Reports
 * Agrega el menu Resumen de IVA para uruguay, reporte que se puee usar para analizar los datos de facturacióneed
 * Nuevo asistente que permite generar los archivos TXT para presentar el Formulario 2/181 (hasta el momento solo repota impuestos de iva compra/venta)
 
+
+Detalle de implementacion
+=========================
+
+* Detalle completo aplicativo B https://www.gub.uy/direccion-general-impositiva/politicas-y-gestion/aplicacion-beta-version-990
+* Especificacion de formularios https://www.gub.uy/direccion-general-impositiva/comunicacion/publicaciones/instructivo-para-confeccion-presentacion-declaraciones-beta
+* Agentes de Informacion https://www.gub.uy/direccion-general-impositiva/sites/direccion-general-impositiva/files/documentos/publicaciones/Agentes%20de%20informaci%C3%B3n.%20Cuadro%20formulario%202181_1.pdf
+* Reference contacts:
+   - Telefónicas: 1344 opción 5 (21344 desde el interior del país).
+   - Correo electrónico: dacontri@dgi.gub.uy o a través del servicio Consultas Web ("restantes impuestos")
+   - Por incidentes informáticos: SAC - Registro de Incidentes
+
 Installation
 ============
 

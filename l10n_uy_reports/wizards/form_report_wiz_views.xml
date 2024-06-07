@@ -15,7 +15,7 @@
         <field name='model'>form.report.wiz</field>
         <field name='arch' type='xml'>
             <form string='Generate Files'>
-                <group attrs="{'readonly': [('res_file', '!=', False)]}">
+                <group readonly="res_file">
                     <group>
                         <field name="company_id"/>
                         <field name="date_from"/>
@@ -26,8 +26,8 @@
                 </group>
                 <footer>
                     <button string="Get Files" class="btn-primary" type="object" name="action_get_files"/>
-                    <field name="res_filename" attrs="{'invisible': [('res_filename', '!=', 'Ningun archivo fue generado')]}" class="oe_inline o_light_label" nolabel="1" readonly="1"/>
-                    <field name="res_file" readonly="1" filename="res_filename" attrs="{'readonly': [('res_file', '=', False)]}" />
+                    <field name="res_filename" class="oe_inline o_light_label" nolabel="1" readonly="1" invisible="res_filename != 'Ningun archivo fue generado'"/>
+                    <field name="res_file" filename="res_filename" readonly="1" />
                     <button string="Cerrar" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>

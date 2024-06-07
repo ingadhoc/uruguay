@@ -89,13 +89,13 @@ class AccountUyVatLine(models.Model):
                     account_move.l10n_latam_document_type_id as document_type_id,
                     account_move.state,
                     account_move.company_id,
-                    SUM(CASE WHEN btg.l10n_uy_vat_code = 'vat_22' THEN account_move_line.balance ELSE 0 END) AS base_22,
-                    SUM(CASE WHEN ntg.l10n_uy_vat_code = 'vat_22' THEN account_move_line.balance ELSE 0 END) AS vat_22,
-                    SUM(CASE WHEN btg.l10n_uy_vat_code = 'vat_10' THEN account_move_line.balance ELSE 0 END) AS base_10,
-                    SUM(CASE WHEN ntg.l10n_uy_vat_code = 'vat_10' THEN account_move_line.balance ELSE 0 END) AS vat_10,
-                    SUM(CASE WHEN btg.l10n_uy_vat_code = 'vat_exempt' THEN account_move_line.balance ELSE 0 END) AS not_taxed,
-                    SUM(CASE WHEN btg.l10n_uy_vat_code in ('vat_22', 'vat_10') THEN account_move_line.balance ELSE 0 END) AS taxed,
-                    SUM(CASE WHEN ntg.l10n_uy_vat_code not in ('vat_22', 'vat_10', 'vat_exempt') THEN account_move_line.balance ELSE 0 END) AS other_taxes,
+                    SUM(CASE WHEN bt.amount = 22.0 AND bt.l10n_uy_tax_category = 'vat' THEN account_move_line.balance ELSE 0 END) AS base_22,
+                    SUM(CASE WHEN nt.amount = 22.0 AND nt.l10n_uy_tax_category = 'vat' THEN account_move_line.balance ELSE 0 END) AS vat_22,
+                    SUM(CASE WHEN bt.amount = 10.0 AND bt.l10n_uy_tax_category = 'vat' THEN account_move_line.balance ELSE 0 END) AS base_10,
+                    SUM(CASE WHEN nt.amount = 10.0 AND nt.l10n_uy_tax_category = 'vat' THEN account_move_line.balance ELSE 0 END) AS vat_10,
+                    SUM(CASE WHEN bt.amount = 0.0 AND bt.l10n_uy_tax_category = 'vat' THEN account_move_line.balance ELSE 0 END) AS not_taxed,
+                    SUM(CASE WHEN bt.amount in (22.0, 10.0) AND bt.l10n_uy_tax_category = 'vat' THEN account_move_line.balance ELSE 0 END) AS taxed,
+                    SUM(CASE WHEN nt.amount not in (22.0, 10.0, 0.0) AND nt.l10n_uy_tax_category = 'vat' THEN account_move_line.balance ELSE 0 END) AS other_taxes,
                     SUM(account_move_line.balance) AS total
                 FROM
                     {tables}
@@ -110,15 +110,11 @@ class AccountUyVatLine(models.Model):
                         -- bt = base tax
                         account_tax AS bt ON amltr.account_tax_id = bt.id
                     LEFT JOIN
-                        account_tax_group AS btg ON btg.id = bt.tax_group_id
-                    LEFT JOIN
-                        account_tax_group AS ntg ON ntg.id = nt.tax_group_id
-                    LEFT JOIN
                         res_partner AS rp ON rp.id = account_move.commercial_partner_id
                     LEFT JOIN
                         l10n_latam_identification_type AS lit ON rp.l10n_latam_identification_type_id = lit.id
                     WHERE
-                        (account_move_line.tax_line_id is not NULL OR btg.l10n_uy_vat_code IN ('vat_22', 'vat_10', 'vat_exempt')) AND
+                        (account_move_line.tax_line_id is not NULL OR bt.amount IN (22.0, 10.0, 0.0) AND bt.l10n_uy_tax_category = 'vat') AND
                         account_move.move_type IN ('out_invoice', 'in_invoice', 'out_refund', 'in_refund')
                         AND (nt.type_tax_use in %s OR bt.type_tax_use in %s)
                     {where_clause}
