@@ -86,7 +86,7 @@ class ResCompany(models.Model):
         if not all([self.l10n_uy_ucfe_env, self.l10n_uy_ucfe_user, self.l10n_uy_ucfe_password, self.l10n_uy_ucfe_commerce_code,
                    self.l10n_uy_ucfe_terminal_code, self.l10n_uy_ucfe_inbox_url, self.l10n_uy_ucfe_query_url]):
             if raise_exception:
-                raise UserError(_('Please complete the ucfe data to test the connection'))
+                raise UserError(_('Please complete the ucfe data to test the connection on company %s' % (self.name)))
             return False
 
         # Por si por error colocan los datos de inicio de sesion de prod en testing
