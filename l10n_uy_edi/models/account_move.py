@@ -110,7 +110,8 @@ class AccountMove(models.Model):
         return res
 
     def _is_uy_cfe(self):
-        return bool(self.journal_id.l10n_latam_use_documents and self.company_id.country_code == "UY"
+        """ Verify if account move is uruguayan and belongs to sale journal that use documents and is electronic or contingency. """
+        return bool(self.journal_id.type == 'sale' and self.journal_id.l10n_latam_use_documents and self.company_id.country_code == "UY"
                     and self.journal_id.l10n_uy_type in ['electronic', 'contingency'])
 
     def check_uy_state(self):

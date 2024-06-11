@@ -729,7 +729,7 @@ class L10nUyCfe(models.AbstractModel):
         l10n_uy_cfe_file = self.env['ir.attachment'].create({
         'name': 'CFE_{}.xml'.format(serieCfe + l10n_latam_document_number.zfill(7)),
         'res_model': self._name, 'res_id': invoice.id,
-        'type': 'binary', 'datas': base64.b64encode(xml_string.encode('ISO-8859-1'))}).id
+        'type': 'binary', 'datas': base64.b64encode(response_610.Resp.XmlCfeFirmado.encode())}).id
         invoice.l10n_uy_cfe_file = l10n_uy_cfe_file
         self.l10n_uy_create_pdf_vendor_bill(company, invoice, req_data_pdf)
         self.env.cr.commit()
@@ -791,14 +791,14 @@ class L10nUyCfe(models.AbstractModel):
                     l10n_uy_idreq = response_600.Resp.IdReq
                     response_610, transport = company._l10n_uy_ucfe_inbox_operation('610', {'IdReq': l10n_uy_idreq}, return_transport=1)
                     root = self.l10n_uy_vendor_create_xml_root(response_610, l10n_uy_idreq)
-                except:
-                    _logger.warning('Encontramos un error al momento de sincronizar comprobantes de proveedor de la compañía: %s (id: %d)' % (company.name, company.id))
+                    # Check if internal_type is not purchase
+                    # Only implemented for vendor bills and vendor refunds
+                    if 'in_' in self.l10n_uy_get_cfe_document_type(root)._get_move_type():
+                        self.l10n_uy_create_cfe_from_xml(company, root, transport, l10n_uy_idreq, response_610, journal)
+                except Exception as exp:
+                    _logger.warning('Encontramos un error al momento de sincronizar comprobantes de proveedor de la compañía: %s (id: %d): %s' % (company.name, company.id, str(exp)))
                     band=False
                     break
-                # Check if internal_type is not purchase
-                # Only implemented for vendor bills and vendor refunds
-                if 'in_' in self.l10n_uy_get_cfe_document_type(root)._get_move_type():
-                    self.l10n_uy_create_cfe_from_xml(company, root, transport, l10n_uy_idreq, response_610, journal)
                 self.l10n_uy_notification_dismiss(company, response_600)
 
     def l10n_uy_get_parsed_xml_cfe(self, response_610, l10n_uy_idreq):
@@ -891,7 +891,7 @@ class L10nUyCfe(models.AbstractModel):
 
     def l10n_uy_vendor_prepare_cfe_xml(self, xml_string):
         """ Parse cfe xml so enable to create vendor bills. We don´t know which format of xml is received, so it is needed to clean the tags of the xml to make it readable by the library xml.etree.ElementTree .  """
-        xml_string = xml_string.replace('ns0:', '').replace('nsAd:', '').replace('nsAdenda:', '')
+        xml_string = re.sub(r'\bns[A-Za-z0-9]*:', '', xml_string)
         xml_string = re.sub(r'<eFact[^>]*>', '<eFact>', xml_string)
         return re.sub(r'<CFE[^>]*>', '<CFE>', xml_string)
 
