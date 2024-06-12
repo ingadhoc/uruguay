@@ -129,3 +129,12 @@ class AccountMove(models.Model):
         if self.narration:
             res += "\n\n%s" % html2plaintext(self.narration)
         return res.strip()
+
+    @api.constrains('state')
+    def _l10n_uy_edi_check_can_edit(self):
+        """ The CFE cannot be modified once it has been processed by DGI.
+        This method only applies to customer invoices """
+        self.filtered(
+            lambda x: x.country_code == 'UY' and x.is_sale_document(include_receipts=True)
+            and not x.l10n_uy_edi_document_id._can_edit()
+        )
