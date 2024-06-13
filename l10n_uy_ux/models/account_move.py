@@ -10,6 +10,11 @@ class AccountMove(models.Model):
     l10n_latam_document_type_id = fields.Many2one(change_default=True)  # This is needed to be able to save default values
     # TODO KZ hacer pr a 17 o master pidiendo que hagan este fix directamtne en el modulo de l10n_latam_base
 
+    # other fields
+    l10n_uy_edi_currency_rate = fields.Float(
+        string="Currency Rate (UY)", copy=False,
+        help="Technical field that stores the rate used to inform the EDI document")
+
     def _post(self, soft=True):
         """ Avoid validate contingency invoices
 
@@ -17,26 +22,34 @@ class AccountMove(models.Model):
         que integrar la lógica de manejar el CAE desde el lado de Odoo, enviar info de numero de serie, numero a usar
         etc en el xml para que sea un XML valido. Una vez que este implementado esta parte se puede ir.
         """
-        uy_invoices = self.filtered(
+        uy_moves = self.filtered(
             lambda x: x.company_id.country_id.code == 'UY' and
             x.is_invoice() and
-            x.journal_id.l10n_uy_type in ['electronic', 'contingency']  and
+            x.journal_id.l10n_uy_type in ['electronic', 'contingency'] and
+            x.journal_id.l10n_latam_use_documents and
+            x.journal_id.type == 'sale' and
             x.l10n_uy_cfe_state not in ['accepted', 'rejected', 'received'] and
             int(x.l10n_latam_document_type_id.code) > 100)
 
-        if uy_invoices.filtered(lambda x: x.journal_id.l10n_uy_type == 'contingency'):
+        if uy_moves.filtered(lambda x: x.journal_id.l10n_uy_type == 'contingency'):
             raise UserError(_(
                 'Las facturas de Contingencia aun no están implementadas en el Odoo, para crear facturas'
                 ' de contingencia por favor generarla directamente desde al Uruware y luego cargar en el Odoo'))
 
         # If the invoice was previosly validated in Uruware and need to be link to Odoo we check that the
         # l10n_uy_cfe_uuid has been manually set and we consult to get the invoice information from Uruware
-        pre_validated_in_uruware = uy_invoices.filtered(lambda x: x.l10n_uy_cfe_uuid and not x.l10n_uy_cfe_state)
+        pre_validated_in_uruware = uy_moves.filtered(lambda x: x.l10n_uy_cfe_uuid and not x.l10n_uy_cfe_state)
         if pre_validated_in_uruware:
             pre_validated_in_uruware.action_l10n_uy_get_uruware_cfe()
 
-        return super(AccountMove, self - pre_validated_in_uruware)._post(soft=soft)
+        """ After validating invoices in Odoo we send them to validate on DGI via UCFE (Uruware) """
+        for move in uy_moves:  # Set the invoice rate
+            move.l10n_uy_edi_currency_rate = 1.0 / move.currency_id._convert(
+                1.0, move.company_id.currency_id, move.company_id,
+                move.date or fields.Date.today(), round=False) if move.company_id.currency_id != move.currency_id \
+                    else 1.0
 
+        return super(AccountMove, self - pre_validated_in_uruware)._post(soft=soft)
 
     @api.constrains('move_type', 'journal_id')
     def _l10n_uy_check_moves_use_documents(self):
@@ -138,3 +151,11 @@ class AccountMove(models.Model):
             lambda x: x.country_code == 'UY' and x.is_sale_document(include_receipts=True)
             and not x.l10n_uy_edi_document_id._can_edit()
         )
+
+    def _l10n_uy_edi_cfe_C_totals(self):
+        res = super()._l10n_uy_edi_cfe_C_totals()
+        res['TpoCambio'] = float_repr(self.l10n_uy_edi_currency_rate, 3)
+        if self.l10n_uy_edi_currency_rate <= 0.0:
+            raise UserError(
+                _('Not valid Currency Rate, need to be greather that 0 in order to be accepted by DGI')
+                + f" ({self.l10n_uy_edi_currency_rate})")
