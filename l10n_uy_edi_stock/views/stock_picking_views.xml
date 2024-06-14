@@ -36,6 +36,7 @@
                         <group string="Datos para generar el CFE">
                             <field name="l10n_uy_transfer_of_goods" attrs="{'required': [('l10n_latam_document_type_id', '!=', False)]}"/>
                             <field name="l10n_uy_place_of_delivery"/>
+                            <field name="l10n_uy_edi_place_of_delivery"     readonly="state != 'draft'"/>
                             <field name="l10n_uy_additional_info"/>
                         </group>
                         <group cols="4" string="Resultados del CFE"/>

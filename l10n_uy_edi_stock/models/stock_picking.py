@@ -42,6 +42,10 @@ class StockPicking(models.Model):
         "Place of Delivery",
         size=100,
         help="Indicación de donde se entrega la mercadería o se presta el servicio (Dirección, Sucursal, Puerto, etc,)")
+    l10n_uy_edi_place_of_delivery = fields.Boolean(
+        "Place of Delivery",
+        help="CFE: Indication of where the merchandise is delivered or the service is provided"
+        " (Address, Branch, Port, etc.) if True then we will inform the shipping address's name and street")
 
     def name_get(self):
         """ Display: 'Stock Picking Internal Sequence : Remito (if defined)' """
@@ -149,3 +153,17 @@ class StockPicking(models.Model):
     def l10n_uy_edi_action_get_dgi_state(self):
         self.ensure_one()
         self.l10n_uy_edi_cfe_id.l10n_uy_edi_action_get_dgi_state()
+
+    def _l10n_uy_edi_cfe_A_receptor(self):
+        # TODO: Call super like it is in the move and then
+        res = self.env['account.move']._l10n_uy_edi_cfe_A_receptor()
+
+        # A69 - LugarDestEnt
+        if self.l10n_uy_edi_place_of_delivery:
+            value = ''
+            delivery_address = self.partner_shipping_id
+            if delivery_address:
+                value = (delivery_address.name + ' ' + delivery_address.street)[:100]
+            res['LugarDestEnt'] = value
+
+        return res
