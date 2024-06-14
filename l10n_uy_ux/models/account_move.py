@@ -159,3 +159,8 @@ class AccountMove(models.Model):
             raise UserError(
                 _('Not valid Currency Rate, need to be greather that 0 in order to be accepted by DGI')
                 + f" ({self.l10n_uy_edi_currency_rate})")
+
+    def l10n_uy_edi_action_update_dgi_state(self):
+        self.filtered(
+            lambda x: x.l10n_uy_edi_cfe_state == 'received' and
+            x.journal_id.type == 'sale').l10n_uy_edi_document_id.action_update_dgi_state()
