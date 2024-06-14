@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models, _
 from odoo.exceptions import UserError
-from zeep import Client, transports
+from odoo.tools.zeep import Client, Transport
 from requests import Session
 from zeep.wsse.username import UsernameToken
 from odoo.tools.safe_eval import safe_eval
@@ -16,7 +16,7 @@ import os
 _logger = logging.getLogger(__name__)
 
 
-class UYTransport(transports.Transport):
+class UYTransport(Transport):
     def post(self, address, message, headers):
         """ We overwrite this method only to be able to save the xml request and response.
         This will only affect to the connections that are made n this field and it do not extend the original
