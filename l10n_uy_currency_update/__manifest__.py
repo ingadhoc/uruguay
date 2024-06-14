@@ -30,9 +30,6 @@
         'currency_rate_live',
         'l10n_uy_account',
     ],
-    'external_dependencies': {
-        'python': ['pyOpenSSL', 'zeep']
-    },
     'data': [
         'data/ir_cron_data.xml',
         'data/res_company_data.xml',
