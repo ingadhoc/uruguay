@@ -4,9 +4,10 @@
 ##############################################################################
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError
+from odoo.tools.zeep import Client
+from odoo.addons.l10n_uy_edi.models.res_company import UYTransport
+
 from dateutil.relativedelta import relativedelta
-from zeep import transports
-import zeep
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -48,8 +49,8 @@ class ResCompany(models.Model):
 
         operation_timeout = timeout = 60
         try:
-            transport = transports.Transport(operation_timeout=operation_timeout, timeout=timeout)
-            client = zeep.Client(wsdl, transport=transport)
+            transport = UYTransport(operation_timeout=operation_timeout, timeout=timeout)
+            client = Client(wsdl, transport=transport)
         except Exception as error:
             raise error
 
