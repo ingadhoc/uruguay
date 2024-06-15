@@ -131,15 +131,6 @@ class L10nUyCfe(models.Model):
             })
         return res
 
-    def _uy_cfe_A_iddoc(self):
-        res = super()._uy_cfe_A_iddoc()
-
-        if self._is_uy_remito_type_cfe():  # A6
-            res.update({'TipoTraslado': self.l10n_uy_transfer_of_goods})
-
-        res.update(self._l10n_uy_get_cfe_serie())
-        return res
-
     # def _uy_cfe_B24_MontoItem(self, line):
     # TODO en futuro para incluir descuentos B24 = (B9 * B11) - B13 + B17
 

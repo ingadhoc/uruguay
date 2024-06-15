@@ -6,6 +6,9 @@
     -->
     <template id="cfe_template" inherit="l10n_uy_edi.cfe_template">
 
+        <FchEmis position="after"/>
+            <LugarDestEnt t-out="IdDoc['TipoTraslado']"/>
+        </FchEmis>
         <InfoAdicional position="after"/>
             <LugarDestEnt t-out="receptor.get('LugarDestEnt')"/>
         </InfoAdicional>
