@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Posible xml tags:
+    implemented so far: eTck|eFact|eFact_Exp|eRem
+    to implement in future: eResg|eRem_Exp|eBoleta
+    -->
+    <!-- <template id="cfe_template" inherit="l10n_uy_edi.cfe_template">
+
+    </template> -->
+
+</odoo>
