@@ -61,4 +61,16 @@
         </field>
     </record>
 
+    <record id="view_move_form" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_uy_edi.view_move_form"/>
+        <field name="arch" type="xml">
+
+            <field name="l10n_uy_edi_addenda_ids" position="attributes">
+                <attribute name="context">{'default_type': 'item', 'default_apply_on': 'account.move', 'form_view_ref': 'l10n_uy_edi.l10n_uy_edi_addenda_view_form_only_item'}</attribute>
+            </field>
+        </field>
+    </record>
+
 </odoo>
