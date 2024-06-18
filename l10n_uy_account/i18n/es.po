@@ -1,154 +1,374 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* l10n_uy
-#
+# 	* l10n_uy_account
+# 
+# Translators:
+# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0+e\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 23:11+0000\n"
-"PO-Revision-Date: 2020-10-02 23:11+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2024-06-18 12:26+0000\n"
+"PO-Revision-Date: 2023-04-25 20:42+0000\n"
+"Last-Translator: Juan José Scarafía <scarafia.juanjose@gmail.com>, 2023\n"
+"Language-Team: Spanish (https://app.transifex.com/adhoc/teams/46451/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Language: es\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#. module: l10n_uy
+#. module: l10n_uy_account
 #: model:ir.model,name:l10n_uy_account.model_account_chart_template
 msgid "Account Chart Template"
-msgstr "Plantilla de Plan de Cuenta"
+msgstr "Plantilla de Plan de Cuentas"
 
-#. module: l10n_uy
+#. module: l10n_uy_account
+#: model:ir.model.fields,field_description:l10n_uy_account.field_l10n_uy_adenda__active
+msgid "Active"
+msgstr "Activo"
+
+#. module: l10n_uy_account
+#: model:ir.model.fields.selection,name:l10n_uy_account.selection__l10n_uy_adenda__legend_type__adenda
+msgid "Adenda"
+msgstr ""
+
+#. module: l10n_uy_account
+#: model_terms:ir.ui.view,arch_db:l10n_uy_account.l10n_uy_adenda_view_tree
+msgid "Adendas"
+msgstr ""
+
+#. module: l10n_uy_account
+#: model:ir.model.fields,help:l10n_uy_account.field_l10n_latam_document_type__internal_type
+msgid ""
+"Analog to odoo account.move.move_type but with more options allowing to "
+"identify the kind of document we are working with. (not only related to "
+"account.move, could be for documents of other models like stock.picking)"
+msgstr ""
+"Análogo a account.move.type de Odoo pero con más opciones, permitiendo "
+"identificar el tipo de documento sobre el que estamos trabajando. (no "
+"solamente relativo a account.move, podría ser relativo a otros modelos, como"
+" por ejemplo stock.picking)"
+
+#. module: l10n_uy_account
+#: model:ir.model.fields,field_description:l10n_uy_account.field_l10n_uy_adenda__apply_on
+msgid "Apply On"
+msgstr "Aplicar en"
+
+#. module: l10n_uy_account
+#: model:ir.model,name:l10n_uy_account.model_l10n_uy_adenda
+msgid "CFE Adenda"
+msgstr ""
+
+#. module: l10n_uy_account
+#: model:ir.model.fields,field_description:l10n_uy_account.field_res_company__l10n_uy_adenda_ids
+msgid "CFE Adendas"
+msgstr ""
+
+#. module: l10n_uy_account
+#: model:ir.model.fields,field_description:l10n_uy_account.field_account_bank_statement_line__l10n_uy_payment_type
+#: model:ir.model.fields,field_description:l10n_uy_account.field_account_move__l10n_uy_payment_type
+#: model:ir.model.fields,field_description:l10n_uy_account.field_account_payment__l10n_uy_payment_type
+msgid "CFE Payment Type"
+msgstr "Forma de Pago"
+
+#. module: l10n_uy_account
 #: model:l10n_latam.identification.type,name:l10n_uy_account.it_ci
 msgid "CI"
 msgstr ""
 
-#. module: l10n_uy
+#. module: l10n_uy_account
 #: model:ir.model.fields.selection,name:l10n_uy_account.selection__account_move__l10n_uy_payment_type__cash
 msgid "Cash"
 msgstr "Contado"
 
-#. module: l10n_uy
+#. module: l10n_uy_account
 #: model:ir.model,name:l10n_uy_account.model_res_company
 msgid "Companies"
 msgstr "Compañías"
 
-#. module: l10n_uy
+#. module: l10n_uy_account
+#: model:ir.model.fields,field_description:l10n_uy_account.field_l10n_uy_adenda__company_id
+msgid "Company"
+msgstr "Compañía"
+
+#. module: l10n_uy_account
+#: model:ir.model.fields.selection,name:l10n_uy_account.selection__l10n_uy_adenda__legend_type__comprobante
+msgid "Comprobante"
+msgstr ""
+
+#. module: l10n_uy_account
+#: model:ir.model.fields,field_description:l10n_uy_account.field_l10n_uy_adenda__condition
+msgid "Condition"
+msgstr ""
+
+#. module: l10n_uy_account
+#: model:ir.model,name:l10n_uy_account.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: l10n_uy_account
+#: model:ir.model.fields,field_description:l10n_uy_account.field_l10n_uy_adenda__content
+msgid "Content"
+msgstr "Contenido"
+
+#. module: l10n_uy_account
 #: model:ir.model.fields.selection,name:l10n_uy_account.selection__account_journal__l10n_uy_type__contingency
 msgid "Contingency"
 msgstr "Contingencia"
 
-#. module: l10n_uy
+#. module: l10n_uy_account
+#: model:ir.model.fields,field_description:l10n_uy_account.field_l10n_uy_adenda__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: l10n_uy_account
+#: model:ir.model.fields,field_description:l10n_uy_account.field_l10n_uy_adenda__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: l10n_uy_account
 #: model:ir.model.fields.selection,name:l10n_uy_account.selection__account_move__l10n_uy_payment_type__credit
 msgid "Credit"
 msgstr "Crédito"
 
-#. module: l10n_uy
+#. module: l10n_uy_account
+#: model:ir.model.fields,field_description:l10n_uy_account.field_account_bank_statement_line__l10n_uy_currency_rate
 #: model:ir.model.fields,field_description:l10n_uy_account.field_account_move__l10n_uy_currency_rate
-msgid "Currency Rate"
+#: model:ir.model.fields,field_description:l10n_uy_account.field_account_payment__l10n_uy_currency_rate
+msgid "Currency Rate (UY)"
 msgstr "Tasa de Cambio"
 
-#. module: l10n_uy
+#. module: l10n_uy_account
+#: model:ir.model.fields,field_description:l10n_uy_account.field_res_company__l10n_uy_dgi_house_code
+msgid "Código Casa Principal/Sucursal"
+msgstr ""
+
+#. module: l10n_uy_account
 #: model:ir.ui.menu,name:l10n_uy_account.menu_dgi_config
 msgid "DGI"
 msgstr ""
 
-#. module: l10n_uy
+#. module: l10n_uy_account
 #: model:ir.model.fields,field_description:l10n_uy_account.field_l10n_latam_identification_type__l10n_uy_dgi_code
 msgid "DGI Code"
 msgstr "Código DGI"
 
-#. module: l10n_uy
-#: model:ir.model.fields,field_description:l10n_uy_account.field_res_company__l10n_uy_dgi_house_code
-msgid "DGI House Code"
-msgstr "Código Casa Principal/Sucursal"
-
-#. module: l10n_uy
+#. module: l10n_uy_account
 #: model:l10n_latam.identification.type,name:l10n_uy_account.it_dni
 msgid "DNI"
 msgstr ""
 
-#. module: l10n_uy
+#. module: l10n_uy_account
+#: model:ir.model.fields,field_description:l10n_uy_account.field_l10n_uy_adenda__display_name
+msgid "Display Name"
+msgstr "Mostrar Nombre"
+
+#. module: l10n_uy_account
 #: model:ir.actions.act_window,name:l10n_uy_account.action_document_type_uruguay
 #: model:ir.ui.menu,name:l10n_uy_account.menu_document_type_uruguay
 msgid "Document Types"
 msgstr "Tipos de Documentos"
 
-#. module: l10n_uy
+#. module: l10n_uy_account
 #: model:ir.model.fields.selection,name:l10n_uy_account.selection__account_journal__l10n_uy_type__electronic
 msgid "Electronic"
 msgstr "Electrónica"
 
-#. module: l10n_uy
+#. module: l10n_uy_account
+#: model:ir.model.fields.selection,name:l10n_uy_account.selection__l10n_uy_adenda__legend_type__emisor
+msgid "Emisor"
+msgstr ""
+
+#. module: l10n_uy_account
+#: model:ir.model.fields,help:l10n_uy_account.field_res_company__l10n_uy_dgi_house_code
+msgid ""
+"Este valor es parte del XML cuando se envia el CFE. Campo 47 (Emisor/CdgDGISucur)\n"
+"Para obtener ese datos podrias seguir los siguientes datos:\n"
+"1. Ingresar a la pagina de servicios en linea de DGI.\n"
+"2. Seleccionar la opción Registro único tributario -> Consulta de datos (es un link del menú de la derecha).\n"
+"3. Seleccionar Consulta de Datos Registrales -> Consulta de Datos de Entidades.\n"
+"4. Se abre un PDF. El dato aparece en Domicilio Fiscal -> Número de Local"
+msgstr ""
+
+#. module: l10n_uy_account
+#: model:ir.model.fields.selection,name:l10n_uy_account.selection__account_tax_group__l10n_uy_vat_code__vat_exempt
+msgid "Exempt"
+msgstr ""
+
+#. module: l10n_uy_account
+#: model:ir.model.fields.selection,name:l10n_uy_account.selection__l10n_uy_adenda__apply_on__account_move
+msgid "Facturas y Tickets"
+msgstr ""
+
+#. module: l10n_uy_account
+#: model_terms:ir.ui.view,arch_db:l10n_uy_account.l10n_uy_adenda_view_search
+msgid "Group By..."
+msgstr "Agrupar por..."
+
+#. module: l10n_uy_account
+#: model:ir.model.fields,field_description:l10n_uy_account.field_l10n_uy_adenda__id
+msgid "ID"
+msgstr "ID (identificación)"
+
+#. module: l10n_uy_account
 #: model:ir.model,name:l10n_uy_account.model_l10n_latam_identification_type
 msgid "Identification Types"
 msgstr "Tipos de Identificación"
 
-#. module: l10n_uy
-#: model:ir.model.fields,field_description:l10n_uy_account.field_account_bank_statement_import_journal_creation__l10n_uy_type
+#. module: l10n_uy_account
+#: model:ir.model.fields,field_description:l10n_uy_account.field_l10n_latam_document_type__internal_type
+msgid "Internal Type"
+msgstr "Tipo interno"
+
+#. module: l10n_uy_account
+#. odoo-python
+#: code:addons/l10n_uy_account/models/res_partner.py:0
+#, python-format
+msgid "Invalid length for \"%s\""
+msgstr ""
+
+#. module: l10n_uy_account
 #: model:ir.model.fields,field_description:l10n_uy_account.field_account_journal__l10n_uy_type
 msgid "Invoicing Type"
 msgstr "Tipo de facturación"
 
-#. module: l10n_uy
+#. module: l10n_uy_account
+#: model:ir.model.fields.selection,name:l10n_uy_account.selection__l10n_uy_adenda__legend_type__item
+msgid "Item"
+msgstr ""
+
+#. module: l10n_uy_account
 #: model:ir.model,name:l10n_uy_account.model_account_journal
 msgid "Journal"
 msgstr "Diario"
 
-#. module: l10n_uy
+#. module: l10n_uy_account
 #: model:ir.model,name:l10n_uy_account.model_account_move
-msgid "Journal Entries"
-msgstr "Asientos contables"
+msgid "Journal Entry"
+msgstr "Asiento contable"
 
-#. module: l10n_uy
+#. module: l10n_uy_account
+#: model:ir.model.fields,field_description:l10n_uy_account.field_l10n_uy_adenda____last_update
+msgid "Last Modified on"
+msgstr "Última modificación el"
+
+#. module: l10n_uy_account
+#: model:ir.model.fields,field_description:l10n_uy_account.field_l10n_uy_adenda__write_uid
+msgid "Last Updated by"
+msgstr "Última Actualización por"
+
+#. module: l10n_uy_account
+#: model:ir.model.fields,field_description:l10n_uy_account.field_l10n_uy_adenda__write_date
+msgid "Last Updated on"
+msgstr "Última Actualización el"
+
+#. module: l10n_uy_account
 #: model:ir.model,name:l10n_uy_account.model_l10n_latam_document_type
 msgid "Latam Document Type"
-msgstr "Tipo de Documento"
+msgstr "Tipo de Documento Latam"
 
-#. module: l10n_uy
+#. module: l10n_uy_account
+#: model:ir.actions.act_window,name:l10n_uy_account.action_l10n_uy_adenda
+#: model:ir.ui.menu,name:l10n_uy_account.menu_l10n_uy_adenda
+msgid "Leyendas obligatorias y Adendas (automaticas)"
+msgstr ""
+
+#. module: l10n_uy_account
+#: model:ir.model.fields.selection,name:l10n_uy_account.selection__account_journal__l10n_uy_type__manual
+msgid "Manual"
+msgstr ""
+
+#. module: l10n_uy_account
 #: model:l10n_latam.identification.type,name:l10n_uy_account.it_nie
 msgid "NIE"
 msgstr ""
 
-#. module: l10n_uy
+#. module: l10n_uy_account
 #: model:l10n_latam.identification.type,name:l10n_uy_account.it_nife
 msgid "NIFE"
 msgstr ""
 
-#. module: l10n_uy
-#: model_terms:ir.ui.view,arch_db:l10n_uy_account.view_account_journal_form
-msgid "Next Number"
-msgstr "Próximo Número"
+#. module: l10n_uy_account
+#: model:ir.model.fields,field_description:l10n_uy_account.field_l10n_uy_adenda__name
+msgid "Name"
+msgstr "Nombre"
 
-#. module: l10n_uy
+#. module: l10n_uy_account
+#. odoo-python
+#: code:addons/l10n_uy_account/models/res_partner.py:0
+#, python-format
+msgid "Not a valid CI/NIE"
+msgstr ""
+
+#. module: l10n_uy_account
+#. odoo-python
+#: code:addons/l10n_uy_account/models/res_partner.py:0
+#, python-format
+msgid "Not a valid RUT/RUC: %s"
+msgstr ""
+
+#. module: l10n_uy_account
 #: model:l10n_latam.identification.type,name:l10n_uy_account.it_other
 msgid "OTR"
 msgstr ""
 
-#. module: l10n_uy
+#. module: l10n_uy_account
+#. odoo-python
+#: code:addons/l10n_uy_account/models/res_partner.py:0
+#, python-format
+msgid "Only numbers allowed for \"%s\""
+msgstr ""
+
+#. module: l10n_uy_account
 #: model:l10n_latam.identification.type,name:l10n_uy_account.it_pass
 msgid "PAS"
 msgstr ""
 
-#. module: l10n_uy
-#: model:ir.model.fields,field_description:l10n_uy_account.field_account_move__l10n_uy_payment_type
-msgid "Payment Type"
-msgstr "Forma de Pago"
-
-#. module: l10n_uy
+#. module: l10n_uy_account
 #: model:ir.model.fields.selection,name:l10n_uy_account.selection__account_journal__l10n_uy_type__preprinted
 msgid "Preprinted (Traditional)"
 msgstr "Preimpreso (Tradicional)"
 
-#. module: l10n_uy
+#. module: l10n_uy_account
 #: model:l10n_latam.identification.type,name:l10n_uy_account.it_rut
 msgid "RUT / RUC"
 msgstr ""
 
-#. module: l10n_uy
-#: code:addons/l10n_uy/models/account_move.py:0
+#. module: l10n_uy_account
+#: model:ir.model.fields.selection,name:l10n_uy_account.selection__l10n_uy_adenda__legend_type__receptor
+msgid "Receptor"
+msgstr ""
+
+#. module: l10n_uy_account
+#: model:ir.model.fields.selection,name:l10n_uy_account.selection__l10n_latam_document_type__internal_type__stock_picking
+msgid "Remito"
+msgstr ""
+
+#. module: l10n_uy_account
+#: model:ir.model.fields.selection,name:l10n_uy_account.selection__l10n_uy_adenda__apply_on__stock_picking
+msgid "Remitos"
+msgstr ""
+
+#. module: l10n_uy_account
+#: model:ir.model.fields.selection,name:l10n_uy_account.selection__l10n_uy_adenda__apply_on__account_move_line
+msgid "Resguardos"
+msgstr ""
+
+#. module: l10n_uy_account
+#: model_terms:ir.ui.view,arch_db:l10n_uy_account.l10n_uy_adenda_view_search
+msgid "Search Description"
+msgstr ""
+
+#. module: l10n_uy_account
+#: model:ir.model.fields,field_description:l10n_uy_account.field_l10n_uy_adenda__sequence
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: l10n_uy_account
+#. odoo-python
+#: code:addons/l10n_uy_account/models/account_move.py:0
 #, python-format
 msgid ""
 "Should be one and only one VAT tax per line. Verify lines with product "
@@ -157,8 +377,30 @@ msgstr ""
 "Debe haber un único y solo un impuesto de IVA por línea. Revise la línea con"
 " el producto \"%s\" (Id Factura: %s)"
 
-#. module: l10n_uy
-#: code:addons/l10n_uy/models/account_move.py:0
+#. module: l10n_uy_account
+#. odoo-python
+#: code:addons/l10n_uy_account/models/account_move.py:0
+#, python-format
+msgid ""
+"Should not be any VAT tax in the exportation cfe line \"%s\" (Id Invoice: "
+"%s)"
+msgstr ""
+
+#. module: l10n_uy_account
+#: model:ir.model,name:l10n_uy_account.model_account_tax_group
+msgid "Tax Group"
+msgstr "Grupo de impuestos"
+
+#. module: l10n_uy_account
+#: model:ir.model.fields,help:l10n_uy_account.field_account_tax_group__l10n_uy_vat_code
+msgid ""
+"Tehcnical field used to identify the VAT taxes to print on the VAT book "
+"report"
+msgstr ""
+
+#. module: l10n_uy_account
+#. odoo-python
+#: code:addons/l10n_uy_account/models/account_move.py:0
 #, python-format
 msgid ""
 "The selected Journal can't be used in this transaction, please select one "
@@ -167,25 +409,57 @@ msgstr ""
 "El diario seleccionado no puede ser usado en esta transacción, por favor "
 "seleccione uno que no use documentos ya que estos son solo para Facturas."
 
-#. module: l10n_uy
-#: model:ir.model.fields,help:l10n_uy_account.field_res_company__l10n_uy_dgi_house_code
-msgid ""
-"This value is used when the CFE xml is sent (Field 47: Emisor/CdgDGISucur)"
+#. module: l10n_uy_account
+#. odoo-python
+#: code:addons/l10n_uy_account/models/res_partner.py:0
+#, python-format
+msgid "The validation digit is not valid for \"%s\""
 msgstr ""
-"Este valor es parte del XML cuando se envia el CFE (Campo 47: "
-"Emisor/CdgDGISucur)"
 
-#. module: l10n_uy
+#. module: l10n_uy_account
+#: model:ir.model.fields,field_description:l10n_uy_account.field_l10n_uy_adenda__legend_type
+#: model_terms:ir.ui.view,arch_db:l10n_uy_account.l10n_uy_adenda_view_search
+msgid "Tipo de leyenda"
+msgstr ""
+
+#. module: l10n_uy_account
+#: model:ir.model.fields.selection,name:l10n_uy_account.selection__l10n_uy_adenda__apply_on__all
+msgid "Todos los CFE"
+msgstr ""
+
+#. module: l10n_uy_account
+#: model:ir.model.fields,help:l10n_uy_account.field_account_journal__l10n_uy_type
+msgid ""
+"Type of journals that can be used for Uruguayan companies:\n"
+"* Manual: You can generate any document type (electronic or traditional) entering the document number manually. This is usefull if you have electronic documents created using external systems and then you want to upload the documents to Odoo. Similar to Argentinean Online Invoice type.\n"
+"* Preprinted: For traditional invoicing using a pre printed tradicional documents (the ones with code 0).\n"
+"* Electronic: To generate electronic documents via web service to DGI using UCFE Uruware provider service.\n"
+"* Contingency: To generate documents to be send post morten via web service (when electronic is not working).\n"
+msgstr ""
+
+#. module: l10n_uy_account
+#: model_terms:ir.ui.view,arch_db:l10n_uy_account.view_document_type_filter
+msgid "Uruguayan Documents"
+msgstr ""
+
+#. module: l10n_uy_account
 #: model:account.tax.group,name:l10n_uy_account.tax_group_vat_10
+#: model:ir.model.fields.selection,name:l10n_uy_account.selection__account_tax_group__l10n_uy_vat_code__vat_10
 msgid "VAT 10%"
 msgstr "IVA 10%"
 
-#. module: l10n_uy
+#. module: l10n_uy_account
 #: model:account.tax.group,name:l10n_uy_account.tax_group_vat_22
+#: model:ir.model.fields.selection,name:l10n_uy_account.selection__account_tax_group__l10n_uy_vat_code__vat_22
 msgid "VAT 22%"
 msgstr "IVA 22%"
 
-#. module: l10n_uy
+#. module: l10n_uy_account
+#: model:ir.model.fields,field_description:l10n_uy_account.field_account_tax_group__l10n_uy_vat_code
+msgid "VAT Code (UY)"
+msgstr ""
+
+#. module: l10n_uy_account
 #: model:account.tax.group,name:l10n_uy_account.tax_group_vat_exempt
 msgid "VAT Exempt"
 msgstr "IVA Exento"
