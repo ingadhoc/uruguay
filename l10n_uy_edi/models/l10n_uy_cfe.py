@@ -1193,8 +1193,10 @@ class L10nUyCfe(models.AbstractModel):
         if self._is_uy_inv_type_cfe() or self._is_uy_remito_type_cfe():
             if line.product_id:
                 return line.product_id.display_name[:80]
-            else:
+            elif line.name:
                 return line.name[:80]
+            else:
+                raise UserError(_('It is not allowed to post an invoice (id: %s) with one or more invoice lines without product and without label.' % line.move_id.id))
 
     def _uy_cfe_B8_DscItem(self, line):
         """B8 Descripcion Adicional del ítem. Maximo 1000 caracteres
