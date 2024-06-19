@@ -149,13 +149,17 @@ class L10nUyCfe(models.Model):
         # debe identificarse con NIE, RUC, CI, Otro, Pasaporte DNI o NIFE (C 60= 2, 3, 4, 5, 6 o 7).
 
         res = super()._uy_cfe_A_receptor()
+
+        res['CompraID'] = False
         if not self._is_uy_resguardo():
             res.update(self._uy_cfe_A70_CompraID())
 
+        res['LugarDestEnt'] = False
         # A69 LugarDestEnt No debe de reportarse si es e-resguardo
         if self._is_uy_resguardo():
             res.pop('LugarDestEnt')
 
+        res['MntPagar'] = False
         # A130 Monto Total a Pagar (NO debe ser reportado si de tipo e-resguardo)
         if self._is_uy_resguardo():
             res.pop('MntPagar')
