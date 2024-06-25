@@ -1,8 +1,13 @@
-from odoo import _, api, fields, models
-from odoo.exceptions import UserError
-from xml.etree.ElementTree import fromstring, ElementTree
-import pprint
 import logging
+import pprint
+import stdnum
+from stdnum.exceptions import InvalidLength, InvalidChecksum, InvalidFormat
+from xml.etree.ElementTree import fromstring, ElementTree
+
+from odoo import _, api, fields, models
+
+from odoo.exceptions import UserError
+
 _logger = logging.getLogger(__name__)
 
 
@@ -140,3 +145,42 @@ class ResPartner(models.Model):
         """ Only used for """
         for rec in self:
             rec.fiscal_countries = rec._get_countries()
+
+    @api.onchange('vat',  'l10n_latam_identification_type_id')
+    def _l10n_uy_edi_onchange_document_number(self):
+        """ Show warning to the user when editing the vat number """
+        msg = self._l10n_uy_edi_identification_validation()
+        if msg:
+            return {'warning': {'title': "Warning", 'message': msg, 'type': 'notification'}}
+
+    def check_vat_uy(self, vat):
+        # NOTE by the moment we include the RUT (VAT UY) validation also here because we extend the messages errors to be
+        # more friendly to the user. In a future when Odoo improve the base_vat message errors  we can change
+        # this method and use the base_vat.check_vat_uy method instead.
+        valid = super().check_vat_uy()
+        if not valid and vat:
+            self._l10n_uy_edi_check_ruc_rut(vat)
+        return valid
+
+    @api.model
+    def _l10n_uy_edi_check_ruc_rut(self, vat):
+        """ Check if the VAT is valid.
+        Return: False if valid vat number, a msg containing the error if not
+
+        NOTE: This method is only to add more info to the error
+
+        # TODO this will not work we need to improved to properly show message error
+        """
+        msg = False
+        try:
+            stdnum.util.get_cc_module('uy', 'rut').validate(vat)
+        except ImportError:
+            _logger.warning('Urugayan RUT/RUC can not be validated (missing stnum lib)')
+        except InvalidChecksum:
+            msg = _('The validation digit is not valid')
+        except InvalidLength:
+            msg = _('Invalid length')
+        except InvalidFormat:
+            msg = _('Only numbers allowed')
+
+        return msg

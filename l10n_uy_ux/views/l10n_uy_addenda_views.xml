@@ -38,7 +38,12 @@
             <field name="content" position="after">
                 <field name="apply_on"/>
             </field>
-
         </field>
     </record>
+
+    <record model="ir.actions.act_window" id="l10n_uy_edi.action_l10n_uy_edi_addenda">
+        <field name="context">{'active_test': False}</field>
+    </record>
+
+
 </odoo>
