@@ -140,8 +140,9 @@ class FormReportWiz(models.TransientModel):
 
         for rut_partner, invoices in data.items():
             amount_total = {}
+            group_by_subtotal_values = list(inv.tax_totals.get('groups_by_subtotal').values())[0] if list(inv.tax_totals.get('groups_by_subtotal').values()) else []
             for inv in invoices:
-                for item in list(inv.tax_totals.get('groups_by_subtotal').values())[0]:
+                for item in group_by_subtotal_values:
                     tax_group_id = item.get('tax_group_id')
                     if tax_group_id in taxes_group_ids:
                         inv_amount = item.get('tax_group_amount')
