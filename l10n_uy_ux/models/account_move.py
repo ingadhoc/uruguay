@@ -164,3 +164,26 @@ class AccountMove(models.Model):
         self.filtered(
             lambda x: x.l10n_uy_edi_cfe_state == 'received' and
             x.journal_id.type == 'sale').l10n_uy_edi_document_id.action_update_dgi_state()
+
+    def _l10n_uy_edi_check_moves(self):
+        errors = super()._l10n_uy_edi_check_moves()
+
+        uy_moves = self.filtered(lambda x: (x.company_id.country_code == 'UY' and x.l10n_latam_use_documents))
+        currency_names = uy_moves.currency_id.mapped('name') + uy_moves.company_id.currency_id.mapped('name')
+        if not currency_names:
+            errors.append(_("You need to configure the company currency"))
+
+        return errors
+
+    def _get_l10n_latam_documents_domain(self):
+        domain = super()._get_l10n_latam_documents_domain()
+        if self.journal_id.country_code == 'UY':
+            domain.extend([('active', '=', True)])
+        return domain
+
+    def _l10n_uy_edi_get_journal_codes(self):
+        res = super()._l10n_uy_edi_get_journal_codes()
+        self.ensure_one()
+        if self.type == 'sale' and self.l10n_uy_edi_type not in ['electronic', 'manual']:
+            raise UserError(_('Missing uruguayan invoicing type on journal %s.', self.name))
+        return res
