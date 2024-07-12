@@ -19,7 +19,8 @@
 ##############################################################################
 {
     'name': 'Uruguayan Currency Rate Update',
-    'version': "17.0.1.0.0",
+    'version': "17.0.1.1.0",
+    'countries': ['uy'],
     'category': 'Localization/Uruguay',
     'sequence': 14,
     'author': 'ADHOC SA',
@@ -31,9 +32,6 @@
         'l10n_uy',
     ],
     'data': [
-        'data/ir_cron_data.xml',
-        'data/res_company_data.xml',
-        'data/res.currency.csv',
         'views/res_currency_views.xml',
     ],
     'installable': True,

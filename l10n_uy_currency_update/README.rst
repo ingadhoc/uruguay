@@ -14,7 +14,7 @@
 Uruguayan Currency Rate Update
 ==============================
 
-Este modulo genera la conexión con el webservice del BCU (Banco Central Uruguayo - proveedor oficial en Uruguay) para obtener de automaticamente las cotizaciones de las monedas que esten activas en su Odoo.
+Este modulo agrega dos botones a las vistas de monedas, para consultar la ultima cotizacion de la moneda y para obtener las monedas disponibles.
 
 En caso de no querer utilizar este modulo pueden consultar las cotizaciones en esta pagina y luego crearlas manualmente en su Odoo https://www.bcu.gub.uy/Estadisticas-e-Indicadores/Paginas/Cotizaciones.aspx
 
