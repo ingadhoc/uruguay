@@ -33,8 +33,8 @@
             </div> -->
 
             <field name="invoice_incoterm_id" position="after">
-                <field name="l10n_uy_cfe_sale_mod"/>
-                <field name="l10n_uy_cfe_transport_route"/>
+                <field name="l10n_uy_cfe_sale_mod" attrs="{'invisible': ('country_code', '!=', 'UY')}"/>
+                <field name="l10n_uy_cfe_transport_route" attrs="{'invisible': ('country_code', '!=', 'UY')}"/>
             </field>
 
             <notebook position="inside">
