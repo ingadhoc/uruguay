@@ -523,7 +523,7 @@ class AccountMove(models.Model):
         if line.product_id.l10n_uy_additional_info:
             res.append(line.product_id.l10n_uy_additional_info)
         if line.product_id.display_name != line.name:
-            res = line.name[:1000]
+            res.append(line.name)
         res = '\n'.join(res)
         self._uy_check_field_size('B8_DscItem', res, 1000)
 
