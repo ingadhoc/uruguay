@@ -19,7 +19,6 @@
                     ('l10n_latam_document_type_id', '=', False)
                     ], 'required': [('l10n_uy_is_cfe', '=', False), ('l10n_latam_document_type_id', '!=', False)]}"/>
                 <field name="l10n_uy_cfe_state" attrs="{'invisible': [('l10n_uy_is_cfe', '=', False)]}"/>
-                <field name="l10n_uy_ucfe_msg" attrs="{'invisible': [('l10n_uy_cfe_state', 'not in', ['xml_error', 'connection_error', 'ucfe_error', 'rejected'])]}"/>
 
                 <button name="l10n_uy_edi_action_get_dgi_state" type="object" string="(UY) Consult DGI State" class="oe_link" colspan="2" attrs="{'invisible': [('l10n_uy_cfe_state', '!=', 'received')]}" icon="fa-refresh"/>
                 <button name="action_uy_get_pdf" type="object" string="(UY) Print Legal PDF" class="oe_link" colspan="2" attrs="{
@@ -28,7 +27,7 @@
             </xpath>
 
             <xpath expr="//header//button[@name='action_cancel']" position="after">
-                <button name="uy_post_dgi_remito" string="(UY) Enviar a DGI" type="object" attrs="{'invisible':['|', '|', '|', '|', '|', ('state', '!=', 'done'), ('l10n_uy_is_cfe', '=', False), ('l10n_uy_ucfe_state', 'in', ['00', '05', '06', '11']), ('picking_type_code', '!=', 'outgoing'), ('l10n_uy_cfe_state', 'in', ['received', 'accepted', 'rejected']), ('country_code', '!=', 'UY')]}"/>
+                <button name="uy_post_dgi_remito" string="(UY) Enviar a DGI" type="object" attrs="{'invisible':['|', '|', '|', '|', '|', ('state', '!=', 'done'), ('l10n_uy_is_cfe', '=', False), ('l10n_uy_edi_cfe_state', 'not in', ['accepted', 'rejected', 'received']), ('picking_type_code', '!=', 'outgoing'), ('l10n_uy_cfe_state', 'in', ['received', 'accepted', 'rejected']), ('country_code', '!=', 'UY')]}"/>
             </xpath>
 
             <notebook position="inside">
@@ -43,11 +42,10 @@
                             <notebook>
                                 <page string="Detail">
                                     <group string="UCFE">
-                                        <field name="l10n_uy_ucfe_state"/>
-                                        <field name="l10n_uy_ucfe_msg"/>
+                                        <field name="l10n_uy_edi_error"/>
                                         <field name="l10n_uy_ucfe_notif"/>
                                         <field name="l10n_uy_cfe_partner_status"/>
-                                        <field name="l10n_uy_cfe_uuid"/>
+                                        <field name="l10n_uy_edi_cfe_uuid"/>
                                         <button name="action_l10n_uy_get_uruware_cfe" type="object" string="Obtener Remito creado en Uruware" class="oe_link" colspan="2"/>
                                         <field name="l10n_uy_cfe_file"/>
                                     </group>
@@ -82,7 +80,7 @@
         <field name="inherit_id" ref="stock.vpicktree"/>
         <field name="arch" type="xml">
             <field name="json_popover" position="after">
-                <field name="l10n_uy_ucfe_state"/>
+                <field name="l10n_uy_edi_error"/>
             </field>
         </field>
     </record>
