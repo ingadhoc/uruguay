@@ -11,7 +11,6 @@
     'depends': [
         'l10n_uy_edi',
         'l10n_latam_check',
-        # 'account_withholding', TODO activate after merged
     ],
     'data': [
         'wizards/res_partner_update_from_padron_uy_wizard_view.xml',

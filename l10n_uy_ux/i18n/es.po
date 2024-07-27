@@ -38,38 +38,13 @@ msgid ""
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__00
-msgid "00 - Petición aceptada y procesada"
-msgstr ""
-
-#. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__00
 msgid "00 - aceptado por DGI"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__01
-msgid "01 - Petición denegada"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__03
-msgid "03 - Comercio inválido"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__05
-msgid "05 - CFE rechazado por DGI"
-msgstr ""
-
-#. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__05
 msgid "05 - rechazado por DGI"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__06
-msgid "06 - CFE observado por DGI"
 msgstr ""
 
 #. module: l10n_uy_edi
@@ -83,20 +58,10 @@ msgid "10 - aceptado por DGI pero no se pudo ejecutar la consulta QR"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__11
-msgid "11 - CFE aceptado por UCFE, en espera de respuesta de DGI"
-msgstr ""
-
-#. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__11
 msgid ""
 "11 - UCFE no pudo consultar a DGI (puede intentar volver a ejecutar la "
 "consulta con la función 650 – Consulta a DGI por CFE recibido)"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__12
-msgid "12 - Requerimiento inválido"
 msgstr ""
 
 #. module: l10n_uy_edi
@@ -128,31 +93,6 @@ msgstr ""
 msgid ""
 "26 - observado por DGI pero la consulta QR indica que hay diferencias con el"
 " CFE recibido"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__30
-msgid "30 - Error en formato"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__31
-msgid "31 - Error en formato de CFE"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__89
-msgid "89 - Terminal inválida"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__96
-msgid "96 - Error en sistema"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__99
-msgid "99 - Sesión no iniciada"
 msgstr ""
 
 #. module: l10n_uy_edi
@@ -304,7 +244,7 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_cfe_uuid
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_edi_cfe_uuid
 msgid "Clave o UUID del CFE"
 msgstr ""
 
@@ -982,22 +922,12 @@ msgid "UCFE"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_ucfe_msg
-msgid "UCFE Mensaje de Respuesta"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_ucfe_state
-msgid "UCFE State"
-msgstr ""
-
-#. module: l10n_uy_edi
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_ucfe_notif
 msgid "UCFE Tipo de Notificacion"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,help:l10n_uy_edi.field_account_move__l10n_uy_cfe_uuid
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_move__l10n_uy_edi_cfe_uuid
 msgid ""
 "Unique identification per CFE in UCFE. Currently is formed by the "
 "concatenation of model name + record id"
