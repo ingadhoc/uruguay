@@ -6,7 +6,7 @@ class StockPicking(models.Model):
 
     _inherit = 'stock.picking'
 
-    l10n_uy_cfe_id = fields.Many2one("l10n.uy.cfe", string="Uruguay E-Resguardo CFE", copy=False)
+    l10n_uy_cfe_id = fields.Many2one("l10n_uy_edi.document", string="Uruguay E-Resguardo CFE", copy=False)
     l10n_latam_document_type_id = fields.Many2one('l10n_latam.document.type', string='Document Type (UY)', copy=False)
     l10n_latam_document_number = fields.Char(string='Document Number (UY)', readonly=True, states={'draft': [('readonly', False)]}, copy=False)
 
@@ -14,7 +14,7 @@ class StockPicking(models.Model):
     l10n_uy_edi_cfe_uuid = fields.Char(
         'Key or UUID CFE', help="Unique identification per CFE in UCFE. Currently is formed by the concatenation of model name initials plust record id", copy=False)
     l10n_uy_addenda_ids = fields.Many2many(
-        'l10n.uy.addenda.disclosure', string="Addenda & Disclosure",
+        'l10n_uy_edi.addenda', string="Addenda & Disclosure",
         domain="[('type', 'in', ['issuer', 'receiver', 'cfe_doc', 'addenda'])]")
 
     l10n_latam_available_document_type_ids = fields.Many2many('l10n_latam.document.type', compute='_compute_l10n_latam_available_document_types')

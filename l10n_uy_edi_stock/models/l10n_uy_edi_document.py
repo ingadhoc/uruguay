@@ -3,9 +3,16 @@ from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_repr
 
 
-class L10nUyCfe(models.Model):
+class L10nUyEdiDocument(models.Model):
 
-    _inherit = 'l10n.uy.cfe'
+    _inherit = 'l10n_uy_edi.document'
+
+    def _is_uy_remito_exp(self):
+        return self.l10n_latam_document_type_id.code == '124'
+
+    def _is_uy_remito_loc(self):
+        return self.l10n_latam_document_type_id.code == '181'
+
 
     def _is_uy_remito_type_cfe(self):
         return self.l10n_latam_document_type_id.internal_type in ['stock_picking']
