@@ -38,64 +38,6 @@ msgid ""
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__00
-msgid "00 - aceptado por DGI"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__05
-msgid "05 - rechazado por DGI"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__06
-msgid "06 - observado por DGI"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__10
-msgid "10 - aceptado por DGI pero no se pudo ejecutar la consulta QR"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__11
-msgid ""
-"11 - UCFE no pudo consultar a DGI (puede intentar volver a ejecutar la "
-"consulta con la función 650 – Consulta a DGI por CFE recibido)"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__15
-msgid "15 - rechazado por DGI pero no se pudo ejecutar la consulta QR"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__16
-msgid "16 - observado por DGI pero no se pudo ejecutar la consulta QR"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__20
-msgid ""
-"20 - aceptado por DGI pero la consulta QR indica que hay diferencias con el "
-"CFE recibido"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__25
-msgid ""
-"25 - rechazado por DGI pero la consulta QR indica que hay diferencias con el"
-" CFE recibido"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__26
-msgid ""
-"26 - observado por DGI pero la consulta QR indica que hay diferencias con el"
-" CFE recibido"
-msgstr ""
-
-#. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">DGI</span>\n"
@@ -683,17 +625,6 @@ msgid "Partners"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.res_config_settings_view_form
-msgid "Password"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/res_company.py:0
-#, python-format
-msgid "Please complete the ucfe data to test the connection"
-msgstr "Por favor complete la data ucfe para hacer la prueba de conección"
-
-#. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_sale_mod__3
 msgid "Precio Revisable"
 msgstr ""
@@ -702,11 +633,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_move_form
 msgid "Reprint legal pdf Legal PDF"
 msgstr "Reimprimir PDF legal"
-
-#. module: l10n_uy_edi
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.res_config_settings_view_form
-msgid "Query Url"
-msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_sale_mod__1
@@ -779,11 +705,6 @@ msgstr ""
 #: model:ir.model,name:l10n_uy_edi.model_account_tax
 msgid "Tax"
 msgstr "Impuesto"
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_cfe_dgi_state
-msgid "Technical Field: CFE DGI State from UFCE"
-msgstr "Campo Tecnico: CFE Estado DGI desde UFCE"
 
 #. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.res_config_settings_view_form
@@ -898,41 +819,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.res_config_settings_view_form
 msgid "Uruguay Localization"
 msgstr "Localización Uruguaya"
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_company__l10n_uy_ucfe_commerce_code
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_config_settings__l10n_uy_ucfe_commerce_code
-msgid "Uruware Commerce code"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_company__l10n_uy_ucfe_password
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_config_settings__l10n_uy_ucfe_password
-msgid "Uruware Password"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_company__l10n_uy_ucfe_query_url
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_config_settings__l10n_uy_ucfe_query_url
-msgid "Uruware Query URL"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_company__l10n_uy_ucfe_terminal_code
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_config_settings__l10n_uy_ucfe_terminal_code
-msgid "Uruware Terminal code"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_company__l10n_uy_ucfe_user
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_config_settings__l10n_uy_ucfe_user
-msgid "Uruware User"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.res_config_settings_view_form
-msgid "Username"
-msgstr ""
 
 #. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_move_form

@@ -22,9 +22,17 @@ class ResPartner(models.Model):
         630 - Consulta si un RUT es emisor electronico """
         self.ensure_one()
         company = self.company_id or self.env.company
+        # TODO KZ need to ensure that use the proper company
+        edi_doc = self.env['l10n_uy_edi.document']
         if self.l10n_latam_identification_type_id.l10n_uy_dgi_code == '2':
-            response = company._ucfe_inbox('630', {'RutEmisor': self.vat})
-            if response.Resp.CodRta == '00':
+            result = edi_doc._ucfe_inbox('630', {'RutEmisor': self.vat})
+
+            cod_rta = False
+            response = result.get('response')
+            if response is not None:
+                cod_rta = response.findtext(".//{*}CodRta")
+
+            if cod_rta == '00':
                 return {
                     'type': 'ir.actions.client',
                     'tag': 'display_notification',
@@ -34,7 +42,7 @@ class ResPartner(models.Model):
                         'next': {'type': 'ir.actions.act_window_close'},
                     }
                 }
-            elif response.Resp.CodRta == '01':
+            elif cod_rta == '01':
                 return {
                     'type': 'ir.actions.client',
                     'tag': 'display_notification',
@@ -81,8 +89,10 @@ class ResPartner(models.Model):
         }
 
         # If partner has RUC
+        edi_doc = self.env['l10n_uy_edi.document']
+        # TODO KZ need to ensure that use the proper company
         if self.l10n_latam_identification_type_id.l10n_uy_dgi_code == '2':
-            response = company._ucfe_inbox('640', {'RutEmisor': self.vat})
+            response = edi_doc._ucfe_inbox('640', {'RutEmisor': self.vat})
             # TODO delete after finish the tests
             _logger.info('response %s' % pprint.pformat(response))
 

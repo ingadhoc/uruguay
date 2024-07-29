@@ -1,5 +1,4 @@
-from odoo import fields, models, api
-from odoo.osv import expression
+from odoo import models
 
 
 class L10nLatamDocumentType(models.Model):

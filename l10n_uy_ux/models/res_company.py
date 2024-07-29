@@ -1,9 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
-from . import UYTransport
-
-from odoo import fields, models
+from odoo import _, fields, models
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.zeep import Client
 from odoo.exceptions import UserError
@@ -15,6 +13,8 @@ _logger = logging.getLogger(__name__)
 class ResCompany(models.Model):
 
     _inherit = "res.company"
+
+    l10n_uy_ucfe_get_vendor_bills = fields.Boolean('Create vendor bills from Uruware', groups="base.group_system")
 
     l10n_uy_ucfe_prod_env = fields.Text('Uruware Production Data', groups="base.group_system", default="{}")
     l10n_uy_ucfe_test_env = fields.Text('Uruware Testing Data', groups="base.group_system", default="{}")
@@ -48,9 +48,8 @@ class ResCompany(models.Model):
             wsdl += '?wsdl'
 
         try:
-            transport = UYTransport.UYTransport(operation_timeout=3, timeout=3)
             user_name_token = UsernameToken(self.l10n_uy_edi_ucfe_username, self.l10n_uy_edi_ucfe_password)
-            client = Client(wsdl, transport=transport, wsse=user_name_token)
+            client = Client(wsdl, wsse=user_name_token)
         except ConnectionError as error:
             _logger.error(repr(error))
             raise UserError(_(
@@ -58,4 +57,4 @@ class ResCompany(models.Model):
                 '\n1) Check your internet connection.'
                 '\n2) Uruware server could be temporarily down.'))
 
-        return client, transport
+        return client

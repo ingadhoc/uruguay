@@ -13,13 +13,15 @@
         'l10n_latam_check',
     ],
     'data': [
-        'wizards/res_partner_update_from_padron_uy_wizard_view.xml',
+        'data/ir_cron.xml',
+        'views/account_journal_views.xml',
         'views/account_move_views.xml',
         'views/res_company_views.xml',
         'views/res_config_settings_view.xml',
         'views/res_partner_view.xml',
         'views/cfe_template.xml',
         'views/l10n_uy_addenda_disclosure_views.xml',
+        'wizards/res_partner_update_from_padron_uy_wizard_view.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [

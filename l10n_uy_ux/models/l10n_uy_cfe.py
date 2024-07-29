@@ -22,11 +22,9 @@ class L10nUyEdiDocument(models.Model):
         """
         self.ensure_one()
         # ORIG res = self.company_id._ucfe_inbox('310', self._uy_prepare_req_data())
-        response, transport = super()._uy_send_invoice_request()
+        response = super()._uy_send_invoice_request()
 
         self.l10n_uy_cfe_xml = response.get('CfeXmlOTexto')
-        self.l10n_uy_dgi_xml_response = transport.xml_response
-        self.l10n_uy_dgi_xml_request = transport.xml_request
         return response
 
     def _uy_get_report_params(self):

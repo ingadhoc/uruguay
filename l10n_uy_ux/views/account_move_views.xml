@@ -9,7 +9,10 @@
 
             <sheet position="before">
                 <div class="alert alert-danger" role="alert" style="margin-bottom:0px;" attrs="{'invisible': ['|', '|', ('l10n_uy_journal_type', 'not in', ['electronic', 'contingency']), ('state', '!=', 'posted'), ('l10n_uy_cfe_pdf', '!=', False)]}"><bold>Esta factura esta validada pero le falta el PDF legal asociado, por favor intente re generarlo</bold>
-                    <button name="action_l10n_uy_get_pdf" type="object" string="(UY) Reprint Legal PDF" class="oe_inline oe_link" icon="fa-print"/>
+                    <button name="action_l10n_uy_get_pdf" type="object" string="(UY) Reprint Legal PDF"
+                        class="oe_inline oe_link" icon="fa-print"
+                        invisible="l10n_uy_cfe_state != 'received' or invoice_filter_type_domain == 'purchase'"
+                    />
                 </div>
                 <div class="alert alert-warning" role="alert" style="margin-bottom:0px;" attrs="{'invisible': ['|', '|', ('l10n_uy_journal_type', 'not in', ['electronic', 'contingency']), ('state', '!=', 'draft'), ('l10n_uy_cfe_pdf', '!=', False)]}"><bold>Esta factura aun no esta validada, asi que si intenta imprimir tendra un PDF no Legal</bold></div>
             </sheet>
@@ -19,9 +22,6 @@
             <!--  <div name="currency" position="inside">
                 <field name="l10n_uy_currency_rate" attrs="{'invisible': ['|', '|', ('l10n_uy_currency_rate', '=', False), ('l10n_uy_currency_rate', '=', 0.0), ('l10n_uy_currency_rate', '=', 1.0)]}"/>
             </div> -->
-            <field name="l10n_uy_edi_cfe_state" position="after"/>
-                <button name="l10n_uy_edi_action_update_dgi_state" type="object" title="Update DGI Status" class="oe_inline oe_link" invisible="l10n_uy_edi_cfe_state != 'received'" icon="fa-refresh" groups="base.group_no_one"/>
-            </field>
 
             <field name="l10n_uy_edi_cfe_uuid" position="after">
                 <div name="uy_buttons" colspan="2" groups="base.group_no_one" invisible="l10n_uy_journal_type != 'electronic'">
@@ -31,19 +31,12 @@
                     <button name="action_uy_get_pdf" type="object" string="(UY) Print Legal PDF" class="oe_inline oe_link" invisible="l10n_uy_edi_cfe_state not in ['received']" icon="fa-print" groups="base.group_no_one"/>
 
                 </div>
+                <field name="l10n_uy_idreq" attrs="{'invisible': [('invoice_filter_type_domain', '!=', 'purchase')]}"/>
             </field>
 
             <notebook position="inside">
-                <page name="uy_dgi" string="DGI" groups="base.group_no_one" invisible="l10n_uy_journal_type not in ['electronic', 'contingency']">
-                    <group>
-                        <field name="l10n_uy_dgi_xml_request" widget="code"/>
-                        <field name="l10n_uy_dgi_xml_response" widget="code"/>
-                    </group>
-                </page>
-            </notebook>
-
-            <notebook position="inside">
-                <page name="uy_dgi" string="Adendas y Leyendas" invisible="l10n_uy_journal_type != 'electronic'">
+                <page name="uy_dgi" string="DGI" invisible="l10n_uy_journal_type != 'electronic'">
+                    <separator string="Adendas & Leyendas">
                     <button name="action_l10n_uy_remkark_default" type="object" string="Get Defaults"/>
                     <field name="l10n_uy_addenda_ids">
                         <tree string="Addendas">
@@ -55,6 +48,15 @@
                     <span>Preview: </span>
                     <button name="action_l10n_uy_addenda_preview" type="object" string="Addendas"/>
                     <button name="action_l10n_uy_mandatory_legend" type="object" string="Info/Leyendas"/>
+
+                    <button name="action_l10n_uy_preview_xml" type="object" string="Preview" class="oe_inline oe_link" states="draft"/>
+                    <button name="action_l10n_uy_validate_cfe" type="object" string="Validate" class="oe_inline oe_link" states="draft"/>
+
+                    <button name="action_l10n_uy_update_fields" type="object" string="Update Fields"
+                        class="oe_inline oe_link" states="draft"
+                        help="Read the XML and fill the fields of the invoice/bill with the xml values"
+                        confirm="Are you sure? this action will update the invoice information."/>
+
                 </page>
             </notebook>
 
