@@ -23,7 +23,7 @@ class ResPartner(models.Model):
         self.ensure_one()
         company = self.company_id or self.env.company
         if self.l10n_latam_identification_type_id.l10n_uy_dgi_code == '2':
-            response = company._l10n_uy_edi_ucfe_inbox_operation('630', {'RutEmisor': self.vat})
+            response = company._ucfe_inbox('630', {'RutEmisor': self.vat})
             if response.Resp.CodRta == '00':
                 return {
                     'type': 'ir.actions.client',
@@ -82,7 +82,7 @@ class ResPartner(models.Model):
 
         # If partner has RUC
         if self.l10n_latam_identification_type_id.l10n_uy_dgi_code == '2':
-            response = company._l10n_uy_edi_ucfe_inbox_operation('640', {'RutEmisor': self.vat})
+            response = company._ucfe_inbox('640', {'RutEmisor': self.vat})
             # TODO delete after finish the tests
             _logger.info('response %s' % pprint.pformat(response))
 

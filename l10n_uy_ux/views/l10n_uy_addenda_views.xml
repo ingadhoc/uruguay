@@ -2,8 +2,8 @@
 <odoo>
 
     <record id="l10n_uy_edi_addenda_view_tree" model="ir.ui.view">
-        <field name="name">l10n.uy.addenda.view.tree</field>
-        <field name="model">l10n.uy.addenda</field>
+        <field name="name">l10n_uy_edi.addenda.view.tree</field>
+        <field name="model">l10n_uy_edi.addenda</field>
         <field name="inherit_id" ref="l10n_uy_edi.l10n_uy_edi_addenda_view_tree"/>
         <field name="arch" type="xml">
             <field name="content" position="after">
@@ -20,8 +20,8 @@
     </record>
 
     <record id="l10n_uy_edi_addenda_view_form_only_item" model="ir.ui.view">
-        <field name="name">l10n.uy.addenda.view.form</field>
-        <field name="model">l10n.uy.addenda</field>
+        <field name="name">l10n_uy_edi.addenda.view.form</field>
+        <field name="model">l10n_uy_edi.addenda</field>
         <field name="inherit_id" ref="l10n_uy_edi.l10n_uy_edi_addenda_view_form_only_item"/>
         <field name="arch" type="xml">
             <field name="type" position="aftter">
@@ -31,7 +31,7 @@
     </record>
 
     <record id="l10n_uy_edi_addenda_view_form" model="ir.ui.view">
-        <field name="name">l10n.uy.addenda.view.form</field>
+        <field name="name">l10n_uy_edi.addenda.view.form</field>
         <field name="model">l10n_uy_edi.addenda</field>
         <field name="inherit_id" ref="l10n_uy_edi.l10n_uy_edi_addenda_view_form"/>
         <field name="arch" type="xml">

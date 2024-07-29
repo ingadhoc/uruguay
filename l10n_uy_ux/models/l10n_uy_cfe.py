@@ -3,23 +3,9 @@ from odoo import _, fields, models
 from odoo.tools import safe_eval
 
 
-class L10nUyCfe(models.Model):
+class L10nUyEdiDocument(models.Model):
 
-    _inherit = 'l10n.uy.cfe'
-
-    # TODO not sure if we needed
-    # company_id = fields.Many2one("res.compaany")
-
-    # TO remove via script
-    """
-    l10n_uy_cfe_state = fields.Selection([
-        ('not_apply', 'Not apply - Not a CFE'),
-        ('draft_cfe', 'Draft CFE'),
-        # UCFE error states
-        ('xml_error', 'ERROR: CFE XML not valid'),
-        ('connection_error', 'ERROR: Connection to UCFE'),
-        ('ucfe_error', 'ERROR: Related to UCFE'),
-    """
+    _inherit = 'l10n_uy_edi.document'
 
     # Campos preparacion y acuseo de recepcion/envio xml
 
@@ -27,33 +13,15 @@ class L10nUyCfe(models.Model):
     l10n_uy_dgi_xml_request = fields.Text('DGI XML Request', copy=False, readonly=True, groups="base.group_system")
     l10n_uy_dgi_xml_response = fields.Text('DGI XML Response', copy=False, readonly=True, groups="base.group_system")
 
-    # Campos resultados almacenamiento de comprobantes emitidos
-
-    l10n_uy_cfe_file = fields.Many2one('ir.attachment', string='CFE XML file', copy=False)
-    l10n_uy_cfe_pdf = fields.Many2one('ir.attachment', string='CFE PDF Representation', copy=False)
-
-    def _is_uy_remito_exp(self):
-        return self.l10n_latam_document_type_id.code == '124'
-
-    def _is_uy_remito_loc(self):
-        return self.l10n_latam_document_type_id.code == '181'
-
     def _is_uy_resguardo(self):
         return self.l10n_latam_document_type_id.code in ['182', '282']
-
-    def _uy_get_cfe_tag(self):
-        """ No usado aun pero lo dejamos aca para futuro. capaz moverlo a modulo de resguardos? """
-        self.ensure_one()
-        if self._is_uy_resguardo():
-            return 'eResg'
-        return super()._uy_get_cfe_tag()
 
     def _uy_send_invoice_request(self):
         """ Extender para alamancer tambien los datos del xml request.
         Necesita ser testeado
         """
         self.ensure_one()
-        # ORIG res = self.company_id._l10n_uy_edi_ucfe_inbox_operation('310', self._uy_prepare_req_data())
+        # ORIG res = self.company_id._ucfe_inbox('310', self._uy_prepare_req_data())
         response, transport = super()._uy_send_invoice_request()
 
         self.l10n_uy_cfe_xml = response.get('CfeXmlOTexto')
@@ -246,7 +214,7 @@ class L10nUyCfe(models.Model):
 
     def action_l10n_uy_remkark_default(self):
         self.ensure_one()
-        res = self.env['l10n.uy.addenda']
+        res = self.env['l10n_uy_edi.addenda']
 
         res |= self._uy_get_legends_recs('addenda', self)
         res |= self._uy_get_legends_recs('cfe_doc', self)
@@ -260,7 +228,7 @@ class L10nUyCfe(models.Model):
 
     def _uy_get_legends_recs(self, tipo_leyenda, record):
         """ copy of  _uy_get_legends but return browseables """
-        res = self.env['l10n.uy.addenda']
+        res = self.env['l10n_uy_edi.addenda']
         recordtype = {'account.move': 'inv', 'stock.picking': 'picking', 'account.move.line': 'aml', 'product.product': 'product'}
         context = {recordtype.get(record._name): record}
         for rec in record.company_id.l10n_uy_addenda_ids.filtered(lambda x: x.type == tipo_leyenda and x.apply_on in ['all', self._name]):

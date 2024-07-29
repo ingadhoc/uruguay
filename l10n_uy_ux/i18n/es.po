@@ -254,12 +254,6 @@ msgid "Close"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/ucfe_errors.py:0
-#, python-format
-msgid "Codigo Respuesta"
-msgstr ""
-
-#. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.res_config_settings_view_form
 msgid "Commerce Code"
 msgstr "Código de Comercio"
@@ -346,12 +340,6 @@ msgid "Código Sucursal"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/ucfe_errors.py:0
-#, python-format
-msgid "Código de error de la solicitud"
-msgstr ""
-
-#. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_move_form
 msgid "DGI"
 msgstr ""
@@ -406,11 +394,6 @@ msgid "Display Name"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__draft_cfe
-msgid "Draft CFE"
-msgstr "CFE Borrador"
-
-#. module: l10n_uy_edi
 #: code:addons/l10n_uy_edi/models/account_move.py:0
 #, python-format
 msgid ""
@@ -424,16 +407,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__rejected
 msgid "ERROR: CFE Rejected by DGI"
 msgstr "ERROR: CFE Rechazo por la DGI"
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__xml_error
-msgid "ERROR: CFE XML not valid"
-msgstr "ERROR: CFE XML no valido"
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__connection_error
-msgid "ERROR: Connection to UCFE"
-msgstr "ERROR: Conección a la UCFE"
 
 #. module: l10n_uy_edi
 #: code:addons/l10n_uy_edi/models/account_move.py:0
@@ -450,12 +423,6 @@ msgstr "Es Emisor Electrónico?"
 #: code:addons/l10n_uy_edi/models/res_partner.py:0
 #, python-format
 msgid "Es un emisor electrónico"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/ucfe_errors.py:0
-#, python-format
-msgid "Estado en DGI"
 msgstr ""
 
 #. module: l10n_uy_edi
@@ -581,18 +548,6 @@ msgid "Marítimo"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/ucfe_errors.py:0
-#, python-format
-msgid "Mensaje código de error"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/ucfe_errors.py:0
-#, python-format
-msgid "Mensaje de Respuesta"
-msgstr ""
-
-#. module: l10n_uy_edi
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_cfe_sale_mod
 msgid "Modalidad de Venta"
 msgstr ""
@@ -639,12 +594,6 @@ msgid ""
 msgstr ""
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/ucfe_errors.py:0
-#, python-format
-msgid "No se pudo interpretar el requerimiento recibido"
-msgstr ""
-
-#. module: l10n_uy_edi
 #: code:addons/l10n_uy_edi/models/account_move.py:0
 #, python-format
 msgid "No se pudo procesar la aceptación/rechazo comerncial"
@@ -660,11 +609,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_partner_status__not_sent
 msgid "Not Sent"
 msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__not_apply
-msgid "Not apply - Not a CFE"
-msgstr "No Aplica - No es un CFE"
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field__old_value
@@ -900,18 +844,6 @@ msgstr ""
 "Por favor suba el certificado en formato PEM."
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/ucfe_errors.py:0
-#, python-format
-msgid "Tipo Mensaje"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/ucfe_errors.py:0
-#, python-format
-msgid "Tipo Notificacion"
-msgstr ""
-
-#. module: l10n_uy_edi
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__title_case
 msgid "Title Case"
 msgstr ""
@@ -971,12 +903,6 @@ msgstr "Localización Uruguaya"
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_res_company__l10n_uy_ucfe_commerce_code
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_res_config_settings__l10n_uy_ucfe_commerce_code
 msgid "Uruware Commerce code"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_company__l10n_uy_ucfe_inbox_url
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_config_settings__l10n_uy_ucfe_inbox_url
-msgid "Uruware Inbox URL"
 msgstr ""
 
 #. module: l10n_uy_edi

@@ -8,7 +8,9 @@ class IrActionsReport(models.Model):
 
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
         """ Similar approach to vendor bills (print original bill), but in this case we use
-        the original pdf that was added when creating the EDI invoice """
+        the original pdf that was added when creating the EDI invoice. We avoid to use the
+        Odoo pdf and we try to get the PDF from uruware. This helps if someone delete the
+        pdf by mistake """
 
         # If we are not printing the invoice report then we continue as it is
         invoice_reports = ['account.report_invoice', 'account.report_invoice_with_payments']
@@ -20,9 +22,9 @@ class IrActionsReport(models.Model):
         uy_edi_invoices_w_legal_pdf = invoices.filtered(
             lambda x: x.l10n_uy_edi_journal_type == 'electronic'
             and x.company_id.account_fiscal_country_id.code == 'UY'
-            and x.invoice_pdf_report_id
+            and x.invoice_pdf_report_file
         )
-        demo_env = {move._l10n_uy_edi_is_demo_env() for move in invoices}
+        demo_env = {move.company_id.l10n_uy_edi_ucfe_env == "demo" for move in invoices}
 
         if not uy_edi_invoices_w_legal_pdf or demo_env == {True}:
             return super()._render_qweb_pdf_prepare_streams(report_ref, data, res_ids=res_ids)
@@ -34,7 +36,7 @@ class IrActionsReport(models.Model):
             collected_streams = OrderedDict()
 
         for invoice in uy_edi_invoices_w_legal_pdf:
-            original_attachment = invoice.invoice_pdf_report_id
+            original_attachment = invoice.invoice_pdf_report_file
             stream = pdf.to_pdf_stream(original_attachment)
             collected_streams[invoice.id] = {
                 'stream': stream,

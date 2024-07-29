@@ -3,6 +3,7 @@ import re
 from odoo import _, api, models
 from odoo.exceptions import UserError
 
+
 class L10nUyEdiDocument(models.Model):
     _inherit = 'l10n_uy_edi.document'
 
@@ -72,3 +73,10 @@ class L10nUyEdiDocument(models.Model):
                     document=document_type.display_name))
             res = int(next_number)
         return res
+
+    def _get_cfe_tag(self):
+        """ No usado aun pero lo dejamos aca para futuro. capaz moverlo a modulo de resguardos? """
+        self.ensure_one()
+        if self._is_uy_resguardo():
+            return 'eResg'
+        return super()._get_cfe_tag()

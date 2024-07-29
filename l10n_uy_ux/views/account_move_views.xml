@@ -28,7 +28,7 @@
 
                     <button name="action_l10n_uy_get_uruware_cfe" type="object" string="Get Uruware Invoice" class="oe_link" colspan="2" invisible="state != 'draft'" />
                     <!-- TODO KZ This one should be removed after we fix the problem with the print from menu -->
-                    <button name="action_uy_get_pdf" type="object" string="(UY) Print Legal PDF" class="oe_inline oe_link" invisible="l10n_uy_cfe_state not in ['received']" icon="fa-print" groups="base.group_no_one"/>
+                    <button name="action_uy_get_pdf" type="object" string="(UY) Print Legal PDF" class="oe_inline oe_link" invisible="l10n_uy_edi_cfe_state not in ['received']" icon="fa-print" groups="base.group_no_one"/>
 
                 </div>
             </field>
