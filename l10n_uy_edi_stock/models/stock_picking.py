@@ -109,7 +109,7 @@ class StockPicking(models.Model):
 
         # Send invoices to DGI and get the return info
         for remito in uy_remitos:
-            if remito._uy_is_demo_env():
+            if remito.company_id.l10n_uy_edi_ucfe_env == "demo":
                 remito._uy_dummy_validation()
                 continue
 
