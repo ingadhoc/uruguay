@@ -57,12 +57,6 @@
                                     <button name="action_uy_validate_cfe" type="object" string="Validate CFE XML" class="oe_link" colspan="2"/>
                                     <field name="l10n_uy_cfe_xml" nolabel="1" widget="ace"/>
                                 </page>
-                                <page string="XML Request">
-                                    <field name="l10n_uy_dgi_xml_request" nolabel="1" widget="ace"/>
-                                </page>
-                                <page string="XML Response">
-                                    <field name="l10n_uy_dgi_xml_response" nolabel="1" widget="ace"/>
-                                </page>
                             </notebook>
                 </page>
             </notebook>

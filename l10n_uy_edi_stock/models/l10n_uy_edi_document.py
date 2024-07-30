@@ -213,12 +213,3 @@ class L10nUyEdiDocument(models.Model):
             res = line.quantity_done
             return float_repr(res, 3)
         return super()._uy_cfe_B9_Cantidad(line)
-
-    def _uy_cfe_A_iddoc(self):
-        res = super()._uy_cfe_A_iddoc()
-
-        if self._is_uy_remito_type_cfe():  # A6
-            res.update({'TipoTraslado': self.l10n_uy_transfer_of_goods})
-
-        res.update(self._l10n_uy_get_cfe_serie())
-        return res

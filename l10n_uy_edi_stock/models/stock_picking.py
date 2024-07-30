@@ -154,16 +154,64 @@ class StockPicking(models.Model):
         self.ensure_one()
         self.l10n_uy_edi_cfe_id.l10n_uy_edi_action_get_dgi_state()
 
+    # TODO KZ este metodo esta en el account.move. debemos de generarlo tal cual en stock picking
     def _l10n_uy_edi_cfe_A_receptor(self):
-        # TODO: Call super like it is in the move and then
-        res = self.env['account.move']._l10n_uy_edi_cfe_A_receptor()
-
+        # EXTEND l10n_uy_edi
+        """ Agregamos mas campos no obligatorios que no nos permitieron agregar en oficial """
+        res = super()._l10n_uy_edi_cfe_A_receptor()
         # A69 - LugarDestEnt
-        if self.l10n_uy_edi_place_of_delivery:
+        if self.l10n_uy_edi_place_of_delivery and not self._is_uy_resguardo():
             value = ''
             delivery_address = self.partner_shipping_id
             if delivery_address:
                 value = (delivery_address.name + ' ' + delivery_address.street)[:100]
             res['LugarDestEnt'] = value
 
+    def _uy_cfe_A_iddoc(self):
+        res = super()._uy_cfe_A_iddoc()
+
         return res
+
+    def _l10n_uy_edi_cfe_A_iddoc(self):
+        res = self.env['account.move']._l10n_uy_edi_cfe_A_iddoc()
+
+        if self._is_uy_remito_type_cfe():  # A6
+            res.update({'TipoTraslado': self.l10n_uy_transfer_of_goods})
+
+        # TODO KZ A5 FchEmis - Fecha del Comprobante -
+        # ver que fecha deberiamos de usar en caso de ser picking. opciones
+    #   scheduled_date - Scheduled Date
+    #   date - Creation Date
+    #   date_deadline - Deadline
+    #   date_done - Date of Transfer
+    #     return res
+        # .   self.scheduled_date.strftime('%Y-%m-%d')
+
+        res.update(self._l10n_uy_get_cfe_serie())
+
+        return res
+
+
+    # TODO KZ este metodo debemos adaptarlo para obtener el IndFact
+    def _uy_cfe_B4_IndFact(self, line):
+        """ B4: Indicador de facturación
+
+            TODO KZ: Toca revisar realmente cual es el line que corresponde, el que veo en la interfaz parece ser move_ids_without_package pero no se si esto siempre aplica
+                move_ids_without_package	Stock moves not in package (stock.move)
+                move_line_ids	Operations (stock.move.line)
+                move_line_ids_without_package	Operations without package (stock.move.line)
+        """
+        # Another cases for future
+        # 4: Gravado a Otra Tasa/IVA sobre fictos
+        # 5: Entrega Gratuita. Por ejemplo docenas de trece
+        # 6: Producto o servicio no facturable. No existe validación, excepto si A-C20= 1, B-C4=6 o 7.
+        # 7: Producto o servicio no facturable negativo. . No existe validación, excepto si A-C20= 1, B-C4=6 o 7.
+        # 8: Sólo para remitos: Ítem a rebajar en e-remitos y en e- remitos de exportación. En área de referencia se debe indicar el N° de remito que ajusta
+        # 9: Sólo para resguardos: Ítem a anular en resguardos. En área de referencia se debe indicar el N° de resguardo que anular
+        # 11: Impuesto percibido
+        # 12: IVA en suspenso
+        # 13: Sólo para e-Boleta de entrada y sus notas de corrección: Ítem vendido por un no contribuyente (valida que A-C60≠2)
+        # 14: Sólo para e-Boleta de entrada y sus notas de corrección: Ítem vendido por un contribuyente IVA mínimo, Monotributo o Monotributo MIDES (valida que A-C60=2)
+        # 15: Sólo para e-Boleta de entrada y sus notas de corrección: Ítem vendido por un contribuyente IMEBA (valida A-C60 = 2)
+        # 16: Sólo para ítems vendidos por contribuyentes con obligación IVA mínimo, Monotributo o Monotributo MIDES. Si A-C10=3, no puede utilizar indicadores 1, 2, 3, 4, 11 ni 12
+        return super()._uy_cfe_B4_IndFact(line)
