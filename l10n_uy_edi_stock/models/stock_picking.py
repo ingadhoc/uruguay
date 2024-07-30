@@ -13,7 +13,7 @@ class StockPicking(models.Model):
     # Fields that need to be fill before creating the CFE
     l10n_uy_edi_cfe_uuid = fields.Char(
         'Key or UUID CFE', help="Unique identification per CFE in UCFE. Currently is formed by the concatenation of model name initials plust record id", copy=False)
-    l10n_uy_addenda_ids = fields.Many2many(
+    l10n_uy_edi_addenda_ids = fields.Many2many(
         'l10n_uy_edi.addenda', string="Addenda & Disclosure",
         domain="[('type', 'in', ['issuer', 'receiver', 'cfe_doc', 'addenda'])]")
 
@@ -99,9 +99,9 @@ class StockPicking(models.Model):
 
         # If the invoice was previosly validated in Uruware and need to be link to Odoo we check that the
         # l10n_uy_edi_cfe_uuid has been manually set and we consult to get the invoice information from Uruware
-        pre_validated_in_uruware = uy_remitos.filtered(lambda x: x.l10n_uy_edi_cfe_uuid and not x.l10n_uy_cfe_file and not x.l10n_uy_cfe_state)
+        pre_validated_in_uruware = uy_remitos.filtered(lambda x: x.l10n_uy_edi_cfe_uuid and not x.l10n_uy_cfe_file and not x.l10n_uy_edi_cfe_state)
         if pre_validated_in_uruware:
-            pre_validated_in_uruware.action_l10n_uy_get_uruware_cfe()
+            pre_validated_in_uruware.uy_ux_action_get_uruware_cfe()
             uy_remitos = uy_remitos - pre_validated_in_uruware
 
         if not uy_remitos:

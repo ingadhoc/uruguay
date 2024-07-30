@@ -72,7 +72,7 @@ class L10nUyEdiDocument(models.Model):
 
         self.ensure_one()
         res = []
-        for rec in line.l10n_uy_addenda_ids:
+        for rec in line.l10n_uy_edi_addenda_ids:
             res.append('{ %s }' % rec.content if rec.is_legend else rec.content)
 
         if self._is_uy_remito_type_cfe():
