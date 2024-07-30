@@ -1,6 +1,8 @@
-from odoo import _, api, fields, models
-from odoo.exceptions import UserError
 
+from odoo import _, api, fields, models
+
+from odoo.exceptions import UserError
+from odoo.tools import safe_eval
 from odoo.addons.l10n_uy_edi.models import l10n_uy_edi_document
 
 
@@ -13,13 +15,18 @@ l10n_uy_edi_document.RESPONSE_CODE_TO_STATE.update({
 class L10nUyEdiDocument(models.Model):
     _inherit = 'l10n_uy_edi.document'
 
-    l10n_uy_idreq = fields.Char('idReq', copy=False, readonly=True, groups="base.group_system",
-                                help="Uruware Notification ID that lets us sync vendor bill data.")
+    l10n_uy_idreq = fields.Char(
+        'idReq', copy=False, readonly=True, groups="base.group_system",
+        help="Uruware Notification ID that lets us sync vendor bill data.")
+
+    l10n_uy_cfe_xml = fields.Text('XML CFE', copy=False, groups="base.group_system")
+
+    # Methods extend for l10n_uy_edi
 
     @api.model
     def _is_connection_info_incomplete(self, company):
-        """ Extend from l10n_uy_edi
-        Intenta mandar mensaje de error de alerta si estas en ambiente de testing con datos
+        # EXTEND l10n_uy_edi
+        """ Intenta mnadar mensaje de error de alerta si estas en ambiente de testing con datos
         de produccion
 
         Return:
@@ -33,6 +40,50 @@ class L10nUyEdiDocument(models.Model):
         if company.l10n_uy_edi_ucfe_env == 'testing' and ('prod' in inbox_url or 'prod' in query_url):
             res = (res or '') + _('Testing environment with production data. Please check/adjust the configuration')
         return res
+
+    def _get_report_params(self):
+        # EXTEND l10n_uy_edi
+        """ Odoo oficial solo imprime el reporte standard de uruware.
+        Aca extendemos para que haga dos cosas:
+
+        1. Sirve para detectar si la adenda es muy grande automaticamente mandar a imprimir el reporte con adenda en hoja separada
+        2. Sirve para enviar un reporte pre definido por el cliente en la configuracion de Odoo en lugar de imprimir el reporte por defecto de Uruware
+        """
+        # TODO: Aca tenemos un problema estamos revisando longitud de caracteres, pero en realidad debemos revisar es cantidad
+        # de lineas que lleva la adenda, porque si es mayor que 6 lineas se corta
+        addenda = self.move_id._l10n_uy_edi_get_addenda()
+        if addenda and len(addenda) > 799:
+            report_params = [['adenda'], ['true']]
+        else:
+            # En caso de que el cliente eliga el reporte que quiere imprimir
+            report_params = safe_eval.safe_eval(self.company_id.l10n_uy_report_params or '[]')
+
+        extra_params = {}
+        if report_params:
+            nombreParametros = report_params[0]
+            valoresParametros = report_params[1]
+            versionPdf = 'ObtenerPdfConParametros'
+            extra_params.update({
+                'nombreParametros': nombreParametros,
+                'valoresParametros': valoresParametros,
+            })
+        else:
+            versionPdf = 'ObtenerPdf'
+
+        return versionPdf, extra_params
+
+    def _get_cfe_tag(self):
+        """ Agregamos el tag eResg. aun no lo usamos pero lo dejaamos disponible """
+        self.ensure_one()
+        if self._is_uy_resguardo():
+            return 'eResg'
+        return super()._get_cfe_tag()
+
+    # def _l10n_uy_edi_check_invoices(self):
+    # We check that there is one and only one vat tax per line
+    # TODO KZ this could change soon, waiting functional confirmation
+
+    # Metodos nuevos
 
     def _get_dgi_last_invoice_number(self, document_type):
         """ En este momento no lo usamos, en la version anterior lo usabamos para calcular la secuencia del proximo numero a usar.
@@ -66,9 +117,31 @@ class L10nUyEdiDocument(models.Model):
             res = int(next_number)
         return res
 
-    def _get_cfe_tag(self):
-        """ Agregamos el tag eResg. aun no lo usamos pero lo dejaamos disponible """
+    def action_uy_get_pdf(self):
+        """ Permite volver a generar el PDF cuando este aun no existe """
+        # TODO KZ revisar porque en si conviene que almacene tambien en el file.
+        # no estoy segura si lo esta haciendo
         self.ensure_one()
-        if self._is_uy_resguardo():
-            return 'eResg'
-        return super()._get_cfe_tag()
+        if not self.invoice_pdf_report_file:
+            return super()._l10n_uy_edi_get_pdf()
+
+    # Methods related to vendor bill functionality
+
+    # Metodos genericos que aun no se estarian usando mucho
+
+    def _is_uy_resguardo(self):
+        return self.l10n_latam_document_type_id.code in ['182', '282']
+
+    def _l10n_uy_get_cfe_serie(self):
+        """ Return dictionary with Serie CFE number.
+        Si soy ticket de contingencia usar los valores que estan definidos en el Odoo
+
+        NOTE: In future need to be adapted for contigency records """
+        res = {}
+        cfe_code = int(self.l10n_latam_document_type_id.code)
+        if cfe_code > 200:
+            res.update({
+                'Serie': self.journal_id.code,
+                'NumeroCfe': self.journal_id.sequence_number_next,
+            })
+        return res

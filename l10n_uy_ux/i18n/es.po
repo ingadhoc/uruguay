@@ -304,16 +304,6 @@ msgid "DGI Certificate name"
 msgstr "Nombre Certificado DGI"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_dgi_xml_request
-msgid "DGI XML Request"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_dgi_xml_response
-msgid "DGI XML Response"
-msgstr ""
-
-#. module: l10n_uy_edi
 #: code:addons/l10n_uy_edi/models/account_move.py:0
 #, python-format
 msgid "Debe configurar la dirección, ciudad, provincia y pais del receptor"
@@ -485,18 +475,8 @@ msgid "Latam Document Type"
 msgstr "Tipo de Documento"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_transport_route__1
-msgid "Marítimo"
-msgstr ""
-
-#. module: l10n_uy_edi
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_cfe_sale_mod
 msgid "Modalidad de Venta"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_transport_route__8
-msgid "N/A"
 msgstr ""
 
 #. module: l10n_uy_edi
@@ -577,11 +557,6 @@ msgstr ""
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_sale_mod__99
 msgid "Otras transacciones"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_transport_route__9
-msgid "Otro"
 msgstr ""
 
 #. module: l10n_uy_edi
@@ -712,11 +687,6 @@ msgid "Terminal Code"
 msgstr "Código Terminal"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_transport_route__3
-msgid "Terrestre"
-msgstr ""
-
-#. module: l10n_uy_edi
 #: model:ir.model.fields,help:l10n_uy_edi.field_res_config_settings__l10n_uy_country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -836,11 +806,6 @@ msgstr ""
 "configurados"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_cfe_transport_route
-msgid "Vía de Transporte"
-msgstr ""
-
-#. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__received
 msgid "Waiting response from DGI"
 msgstr "Esperando respuesta de la DGI"
@@ -849,12 +814,6 @@ msgstr "Esperando respuesta de la DGI"
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field__wizard_id
 msgid "Wizard"
 msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_cfe_xml
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_move_form
-msgid "XML CFE"
-msgstr "CFE XML"
 
 #. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_move_form
