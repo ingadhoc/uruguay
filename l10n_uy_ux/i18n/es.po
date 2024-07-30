@@ -151,14 +151,9 @@ msgid "Bienes propios a exclaves aduaneros"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__accepted
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_edi_cfe_state__accepted
 msgid "CFE Accepted by DGI"
 msgstr "CFE Aceptado por la DGI"
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_cfe_pdf
-msgid "CFE PDF Representation"
-msgstr "CFE Representación impresa PDF"
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_cfe_partner_status
@@ -171,7 +166,7 @@ msgid "CFE State"
 msgstr "CFE Estado"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_cfe_state
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_edi_cfe_state
 msgid "CFE Status"
 msgstr "CFE Estatus"
 
@@ -336,7 +331,7 @@ msgstr ""
 "Indexada Uruguaya"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__rejected
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_edi_cfe_state__rejected
 msgid "ERROR: CFE Rejected by DGI"
 msgstr "ERROR: CFE Rechazo por la DGI"
 
@@ -432,7 +427,7 @@ msgid "Inbox Url"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_journal_type
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_edi_journal_type
 msgid "Invoicing Type"
 msgstr "Tipo de Facturación"
 
@@ -806,7 +801,7 @@ msgstr ""
 "configurados"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__received
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_edi_cfe_state__received
 msgid "Waiting response from DGI"
 msgstr "Esperando respuesta de la DGI"
 

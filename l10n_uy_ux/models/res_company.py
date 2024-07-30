@@ -31,9 +31,9 @@ class ResCompany(models.Model):
     def action_update_from_config(self):
         self.ensure_one()
         config = False
-        if self.l10n_uy_ucfe_env == 'production':
+        if self.l10n_uy_edi_ucfe_env == 'production':
             config = self.l10n_uy_ucfe_prod_env
-        elif self.l10n_uy_ucfe_env == 'testing':
+        elif self.l10n_uy_edi_ucfe_env == 'testing':
             config = self.l10n_uy_ucfe_test_env
 
         config = safe_eval(config or "{}")

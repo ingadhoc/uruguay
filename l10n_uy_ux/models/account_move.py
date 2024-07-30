@@ -18,6 +18,15 @@ class AccountMove(models.Model):
 
     _inherit = 'account.move'
 
+    l10n_uy_idreq = fields.Char(
+        'idReq', copy=False, readonly=True, groups="base.group_system",
+        help="Uruware Notification ID that lets us sync vendor bill data.")
+
+    l10n_uy_cfe_xml = fields.Text(
+        'XML CFE', copy=False, groups="base.group_system",
+        help="Technical field used to preview the XML content for botj customer invoices"
+        " before sending and for vendor bills")
+
     # This is needed to be able to save default values
     # TODO KZ hacer pr a 17 o master pidiendo que hagan este fix directamtne en el modulo de l10n_latam_base
     l10n_latam_document_type_id = fields.Many2one(change_default=True)
@@ -78,6 +87,7 @@ class AccountMove(models.Model):
         return res
 
     def _l10n_uy_edi_send(self):
+        # EXTEND l10n_uy_edi
         """ Si queremos permitir al usuario cargar una factura de Uruwuare post mortem en Odoo.
         Para que esto funcione tenemos estas opciones
 
@@ -88,11 +98,57 @@ class AccountMove(models.Model):
         # If the invoice was previosly validated in Uruware and need to be link to Odoo we check that the
         # l10n_uy_edi_cfe_uuid has been manually set and we consult to get the invoice information from Uruware
         # TODO KZ necesitamos adaptar el UUID para que pueda ser modificado
-        pre_validated_in_uruware = self.filtered(lambda x: x.l10n_uy_edi_cfe_uuid and not x.l10n_uy_cfe_state)
+        pre_validated_in_uruware = self.filtered(lambda x: x.l10n_uy_edi_cfe_uuid and not x.l10n_uy_edi_cfe_state)
         if pre_validated_in_uruware:
-            pre_validated_in_uruware.action_l10n_uy_get_uruware_cfe()
+            pre_validated_in_uruware.uy_ux_action_get_uruware_cfe()
 
         return super(AccountMove, self - pre_validated_in_uruware)._l10n_uy_edi_send()
+
+    def uy_ux_action_get_uruware_cfe(self):
+        """ 360: Consulta de estado de CFE: estado del comprobante en DGI,
+
+        Nos permite extraer la info del comprobante que fue emitido desde uruware
+        y que no esta en Odoo para asi quede la info de numero de documento tipo
+        de documento estado del comprobante. """
+        uy_moves = self.filtered(
+            lambda x: x.country_code == 'UY' and x.journal_id.type == 'sale'
+            and x.journal_id.l10n_uy_edi_type == 'electronic')
+        uy_docs = self.env['l10n_latam.document.type'].search([('country_id.code', '=', 'UY')])
+
+        for move in uy_moves:
+
+            if not move.l10n_uy_edi_cfe_uuid:
+                raise UserError(_('Necesita definir "Clave o UUID del CFE" para poder continuar'))
+            if move.l10n_uy_edi_cfe_state == 'error':
+                raise UserError(_('No se puede obtener la factura de un comprobante con error'))
+
+            move.l10n_uy_edi_document_id.unlink()
+            edi_doc = move.l10n_uy_edi_document_id._create_document(move)
+            move.l10n_uy_edi_document_id = edi_doc
+
+            result = edi_doc._ucfe_inbox("360", {"Uuid": edi_doc.uuid})
+            edi_doc._update_cfe_state(result)
+            response = result.get('response')
+            if response is not None:
+                uy_doc_code = response.findtext(".//{*}TipoCfe")
+                serie = response.findtext(".//{*}Serie")
+                doc_number = response.findtext(".//{*}NumeroCfe")
+                move.write({
+                    'l10n_latam_document_number': serie + '%07d' % int(doc_number),
+                    'l10n_latam_document_type_id': uy_docs.filtered(lambda x: x.code == uy_doc_code).id,
+                })
+                # TODO Improve add logic:
+                # 1. add information to the cfe xml
+                # 2. cfe another data
+                # 3. validation that is the same CFE
+
+    def uy_ux_action_uy_get_pdf(self):
+        """ Permite volver a generar el PDF cuando este aun no existe """
+        # TODO KZ revisar porque en si conviene que almacene tambien en el file.
+        # no estoy segura si lo esta haciendo
+        self.ensure_one()
+        if not self.invoice_pdf_report_file:
+            return super()._l10n_uy_edi_get_pdf()
 
     def l10n_uy_edi_action_update_dgi_state(self):
         # EXTEND l10n_uy_edi
@@ -174,11 +230,11 @@ class AccountMove(models.Model):
             self.l10n_uy_edi_error = (self.l10n_uy_edi_error or "") + msg
             self.message_post(body=msg)
 
-    def action_uy_validate_cfe(self):
+    def uy_ux_action_validate_cfe(self):
         """ Check CFE XML valid files: 350: Validación de estructura de CFE """
         self.ensure_one()
 
-        self.l10n_uy_edi_document_id.unlink(self)
+        self.l10n_uy_edi_document_id.unlink()
         edi_doc = self.l10n_uy_edi_document_id._create_document(self)
         self.l10n_uy_edi_document_id = edi_doc
 
@@ -205,7 +261,7 @@ class AccountMove(models.Model):
         for line in self._uy_get_cfe_lines():
             res |= self._uy_get_legends_recs('item', line)
 
-        self.l10n_uy_addenda_ids = res
+        self.l10n_uy_edi_addenda_ids = res
 
     def action_l10n_uy_addenda_preview(self):
         self.ensure_one()
@@ -239,7 +295,7 @@ class AccountMove(models.Model):
             'product.product': 'product'
         }
         context = {recordtype.get(record._name): record}
-        for rec in record.company_id.l10n_uy_addenda_ids.filtered(lambda x: x.type == tipo_leyenda and x.apply_on in ['all', self._name]):
+        for rec in record.company_id.l10n_uy_edi_addenda_ids.filtered(lambda x: x.type == tipo_leyenda and x.apply_on in ['all', self._name]):
             if bool(safe_eval.safe_eval(rec.condition, context)):
                 res |= rec
         return res
@@ -409,7 +465,7 @@ class AccountMove(models.Model):
         edi_doc = move.l10n_uy_edi_document_id._create_document(move)
         move.l10n_uy_edi_document_id = edi_doc
 
-        move._update_l10n_uy_cfe_state()
+        move._update_l10n_uy_edi_cfe_state()
         partner_vat_RUC = root.findtext('.//RUCEmisor')
         serieCfe = root.findtext('.//Serie')
         l10n_latam_document_number = root.findtext('.//Nro')
@@ -453,7 +509,7 @@ class AccountMove(models.Model):
     def l10n_uy_create_pdf_vendor_bill(self, invoice, req_data_pdf):
         """ The vendor bill pdf is created and syncronized through the Uruware notification request. """
         response_reporte_pdf = self.l10n_uy_edi_document_id._ucfe_query('ObtenerPdfCfeRecibido', req_data_pdf)
-        invoice.l10n_uy_cfe_pdf = self.env['ir.attachment'].create({
+        invoice.invoice_pdf_report_id = self.env['ir.attachment'].create({
             'name': (
                 invoice.l10n_latam_document_type_id.doc_code_prefix + ' '
                 + req_data_pdf.get('serieCfe')
@@ -475,9 +531,11 @@ class AccountMove(models.Model):
         # TODO test it
         # 600 - Consulta de Notificacion Disponible
         edi_doc = self.env['l10n_uy_edi.document']
-        for journal in self.env['account.journal'].search(
-                [('type', '=', 'purchase'), ('l10n_uy_type', '=', 'electronic'), ('country_code','=', 'UY'),
-                 ('company_id.l10n_uy_ucfe_get_vendor_bills', '=', True)]):
+        for journal in self.env['account.journal'].search([
+                ('type', '=', 'purchase'),
+                ('l10n_uy_edi_type', '=', 'electronic'),
+                ('country_code','=', 'UY'),
+                ('company_id.l10n_uy_ucfe_get_vendor_bills', '=', True)]):
             company = journal.company_id
             band = True
             # If there is notifications

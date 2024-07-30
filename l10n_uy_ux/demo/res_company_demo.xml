@@ -3,7 +3,7 @@
 
     <record id="l10n_uy.demo_company_uy" model="res.company">
         <field name='vat'>218435730016</field>
-        <field name='l10n_uy_branch_code'>8</field>
+        <field name='l10n_uy_edi_branch_code'>8</field>
     </record>
 
 </odoo>

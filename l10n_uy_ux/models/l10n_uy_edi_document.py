@@ -15,12 +15,6 @@ l10n_uy_edi_document.RESPONSE_CODE_TO_STATE.update({
 class L10nUyEdiDocument(models.Model):
     _inherit = 'l10n_uy_edi.document'
 
-    l10n_uy_idreq = fields.Char(
-        'idReq', copy=False, readonly=True, groups="base.group_system",
-        help="Uruware Notification ID that lets us sync vendor bill data.")
-
-    l10n_uy_cfe_xml = fields.Text('XML CFE', copy=False, groups="base.group_system")
-
     # Methods extend for l10n_uy_edi
 
     @api.model
@@ -116,14 +110,6 @@ class L10nUyEdiDocument(models.Model):
                     document=document_type.display_name))
             res = int(next_number)
         return res
-
-    def action_uy_get_pdf(self):
-        """ Permite volver a generar el PDF cuando este aun no existe """
-        # TODO KZ revisar porque en si conviene que almacene tambien en el file.
-        # no estoy segura si lo esta haciendo
-        self.ensure_one()
-        if not self.invoice_pdf_report_file:
-            return super()._l10n_uy_edi_get_pdf()
 
     # Methods related to vendor bill functionality
 

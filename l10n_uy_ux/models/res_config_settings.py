@@ -14,13 +14,15 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.l10n_uy_report_params', readonly=False
     )
 
-    @api.onchange('l10n_uy_ucfe_env')
+    l10n_uy_ucfe_get_vendor_bills = fields.Boolean(related='company_id.l10n_uy_ucfe_get_vendor_bills', readonly=False)
+
+    @api.onchange('l10n_uy_edi_ucfe_env')
     def uy_onchange_ufce_env(self):
         """ Update UCFE param with what we have when Environment change."""
 
-        if self.l10n_uy_ucfe_env == 'production':
+        if self.l10n_uy_edi_ucfe_env == 'production':
             config = self.company_id.l10n_uy_ucfe_prod_env
-        elif self.l10n_uy_ucfe_env == 'testing':
+        elif self.l10n_uy_edi_ucfe_env == 'testing':
             config = self.company_id.l10n_uy_ucfe_test_env
         else:
             config = False
@@ -45,9 +47,9 @@ class ResConfigSettings(models.TransientModel):
             'l10n_uy_ucfe_terminal_code': self.l10n_uy_ucfe_terminal_code or '',
         }
 
-        if self.l10n_uy_ucfe_env == 'production':
+        if self.l10n_uy_edi_ucfe_env == 'production':
             env_data.update({'l10n_uy_ucfe_prod_env': pprint.pformat(env_data)})
-        elif self.l10n_uy_ucfe_env == 'testing':
+        elif self.l10n_uy_edi_ucfe_env == 'testing':
             env_data.update({'l10n_uy_ucfe_test_env': pprint.pformat(env_data)})
 
         self.company_id.write(env_data)

@@ -4,8 +4,9 @@
     implemented so far: eTck|eFact|eFact_Exp|eRem
     to implement in future: eResg|eRem_Exp|eBoleta
     -->
-    <template id="cfe_template" inherit="l10n_uy_edi.cfe_template">
-        <InfoAdicional position="affter">
+
+    <template id="cfe_template" inherit_id="l10n_uy_edi.cfe_template">
+        <InfoAdicional position="after">
             <CompraID t-out="receptor['CompraID']"/>
         </InfoAdicional>
     </template>

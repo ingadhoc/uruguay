@@ -7,13 +7,13 @@
         <field name="inherit_id" ref="l10n_uy_edi.l10n_uy_edi_addenda_view_tree"/>
         <field name="arch" type="xml">
             <field name="content" position="after">
-                <field name="appy_on"/>
+                <field name="apply_on"/>
                 <field name="condition"/>
                 <field name="company_id"/>
                 <field name="active" widget="boolean_toggle"/>
             </field>
 
-            <field name="name" position="before"/>
+            <field name="name" position="before">
                 <field name="sequence" widget="handle"/>
             </field>
         </field>
@@ -24,7 +24,7 @@
         <field name="model">l10n_uy_edi.addenda</field>
         <field name="inherit_id" ref="l10n_uy_edi.l10n_uy_edi_addenda_view_form_only_item"/>
         <field name="arch" type="xml">
-            <field name="type" position="aftter">
+            <field name="type" position="after">
                 <field name="apply_on" readonly="1"/>
             </field>
         </field>
