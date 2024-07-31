@@ -5,7 +5,6 @@
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError
 from odoo.tools.zeep import Client
-from odoo.addons.l10n_uy_edi.models.res_company import UYTransport
 
 from dateutil.relativedelta import relativedelta
 import logging
@@ -42,20 +41,11 @@ class ResCompany(models.Model):
                 uy_companies.mapped('name')))
 
     @api.model
-    def _get_bcu_client(self, bcu_service, return_transport=False):
+    def _get_bcu_client(self, bcu_service):
         """ Get zeep client to connect to the webservice """
         # consultar cotizaciones
         wsdl = "https://cotizaciones.bcu.gub.uy/wscotizaciones/servlet/" + bcu_service + "/service.asmx?WSDL"
-
-        operation_timeout = timeout = 60
-        try:
-            transport = UYTransport(operation_timeout=operation_timeout, timeout=timeout)
-            client = Client(wsdl, transport=transport)
-        except Exception as error:
-            raise error
-
-        if return_transport:
-            return client, transport
+        client = Client(wsdl)
         return client
 
     def _parse_bcu_data(self, available_currencies):
@@ -89,7 +79,7 @@ class ResCompany(models.Model):
         response_data = []
 
         try:
-            _logger.log(25, "Connecting to BCU to update the currency rates for %s", available_currencies.mapped('name'))
+            _logger.log(25, "Connecting to BCU to update the currency ratesfor %s", available_currencies.mapped('name'))
             client = self._get_bcu_client('awsbcucotizaciones')
             factory = client.type_factory('ns0')
             Entrada = factory.wsbcucotizacionesin(Moneda=code_currencies, FechaDesde=yesterday, FechaHasta=yesterday, Grupo=0)
