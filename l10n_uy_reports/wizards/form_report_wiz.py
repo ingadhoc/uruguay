@@ -57,7 +57,7 @@ class FormReportWiz(models.TransientModel):
 
         if self.sudo().env['ir.module.module'].search([('name', '=', 'l10n_uy_edi')], limit=1).state \
            in ('installed', 'to install', 'to upgrade'):
-            domain += ['|', ('l10n_uy_cfe_state', 'in', ['accepted']), ('move_type', 'like', 'in_')]
+            domain += ['|', ('l10n_uy_edi_cfe_state', 'in', ['accepted']), ('move_type', 'like', 'in_')]
         return domain
 
     def _get_invoices(self):
@@ -126,11 +126,11 @@ class FormReportWiz(models.TransientModel):
         # TODO KZ: Agrupamos por RUT pero sin tener en cuenta si no fue enviado el receptor entonces no se debe tomar en cuenta para el total)
         # Ejemplo un e-tTicket con monto pequeño de monto total. de lado de Odoo esta registrado para el Partner ABC.
         # Pero al final esa factura se envia sin datos del receptor a Uruware y DGI y no e reporta a DGI no se tiene que
-        # informar. es por eso que debemos saltarlo aca. Intente consultado _l10n_uy_get_cfe_receptor
+        # informar. es por eso que debemos saltarlo aca. Intente consultado _uy_cfe_A_receptor
         # pero tenemos un problema. cuando se genera desde uruware no tenemos este dato. ver de mejorar
         data = {}
         for inv in invoices:
-            # temp = inv._l10n_uy_get_cfe_receptor()
+            # temp = inv._uy_cfe_A_receptor()
             # if not temp:
             #    continue
             if inv.partner_id.vat in data:
