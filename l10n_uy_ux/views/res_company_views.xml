@@ -8,11 +8,10 @@
         <field type="xml" name="arch">
             <notebook>
                 <page string="DGI / Uruware" name="dgi_uruwuare" groups="base.group_no_one">
-                    <label for="l10n_uy_ucfe_prod_env"/>
-                    <field name="l10n_uy_ucfe_prod_env" widget="ace"/>
-                    <label for="l10n_uy_ucfe_test_env"/>
-                    <field name="l10n_uy_ucfe_test_env" widget="ace"/>
-                    <button name="action_update_from_config" string="Reload params from config" type="object"/>
+                    <label for="l10n_uy_edi_ucfe_prod_env"/>
+                    <field name="l10n_uy_edi_ucfe_prod_env" widget="ace"/>
+                    <label for="l10n_uy_edi_ucfe_test_env"/>
+                    <field name="l10n_uy_edi_ucfe_test_env" widget="ace"/>
                 </page>
             </notebook>
         </field>
