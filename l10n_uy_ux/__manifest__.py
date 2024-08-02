@@ -10,7 +10,7 @@
     'version': "17.0.1.0.0",
     'depends': [
         'l10n_uy_edi',
-        'l10n_latam_check',
+        # 'l10n_latam_check',  Confirmar con Maru, creo que no seria necesario
     ],
     'data': [
         'data/ir_cron.xml',
