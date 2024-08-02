@@ -33,8 +33,10 @@
             </div> -->
 
             <field name="l10n_uy_edi_cfe_uuid" position="after">
+
+                <button name="uy_ux_action_get_uruware_cfe" type="object" string="Get Uruware Invoice" class="oe_link" colspan="2" invisible="state != 'draft' l10n_uy_edi_journal_type != 'manual'"/>
+
                 <div name="uy_buttons" colspan="2" groups="base.group_no_one" invisible="l10n_uy_edi_journal_type != 'electronic'">
-                    <button name="uy_ux_action_get_uruware_cfe" type="object" string="Get Uruware Invoice" class="oe_link" colspan="2" invisible="state != 'draft'" />
                     <!-- TODO KZ This one should be removed after we fix the problem with the print from menu -->
                     <button name="uy_ux_action_uy_get_pdf" type="object" string="(UY) Print Legal PDF" class="oe_inline oe_link" invisible="l10n_uy_edi_cfe_state not in ['received']" icon="fa-print" groups="base.group_no_one"/>
 

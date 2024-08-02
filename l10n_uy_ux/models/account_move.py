@@ -24,43 +24,59 @@ class AccountMove(models.Model):
 
     l10n_uy_cfe_xml = fields.Text(
         'XML CFE', copy=False, groups="base.group_system",
-        help="Technical field used to preview the XML content for botj customer invoices"
+        help="Technical field used to preview the XML content for both customer invoices"
         " before sending and for vendor bills")
 
+    l10n_latam_document_type_id = fields.Many2one(change_default=True)
     # This is needed to be able to save default values
     # TODO KZ hacer pr a 17 o master pidiendo que hagan este fix directamtne en el modulo de l10n_latam_base
-    l10n_latam_document_type_id = fields.Many2one(change_default=True)
 
-    # Extendendemos de otros modulos
+    # EXTENDS
 
     def _l10n_uy_edi_get_addenda(self):
         # EXTEND l10n_uy_edi
-        """ Agrega el campo referencia a la adenda """
+        """ Agrega el campo referencia compo parte de la adenda """
         self.ensure_one()
         res = super()._l10n_uy_edi_get_addenda()
         if self.ref:
             res += "\n\n" + _("Reference") + ": %s" % self.ref
         return res
 
-    def _l10n_uy_edi_check_moves(self):
+    def _l10n_uy_edi_check_move(self):
         # EXTEND l10n_uy_edi
-        """ valida que tanto el diario como las monedas esten bien configuradas antes de emitir
-        """
-        errors = super()._l10n_uy_edi_check_moves()
+        """ Validaciones previas a enviar a DGI que Odoo no nos acepto
 
-        uy_moves = self.filtered(lambda x: (x.company_id.country_code == 'UY' and x.l10n_latam_use_documents))
-        currency_names = uy_moves.currency_id.mapped('name') + uy_moves.company_id.currency_id.mapped('name')
+            - Que el diario este bien configurado antes de emitir
+            - Que las momendas esten bien configuradas
+            - Que los impuestos IVA 0 10 y 22 existan en la companñia
+        """
+        self.ensure_one()
+        errors = super()._l10n_uy_edi_check_move()
+
+        currency_names = self.currency_id.mapped('name') + self.company_id.currency_id.mapped('name')
         if not currency_names:
             errors.append(_("You need to configure the company currency"))
 
         if self.journal_id.type == 'sale' and self.journal_id.l10n_uy_edi_type not in ['electronic', 'manual']:
             errors.append(_('Missing uruguayan invoicing type on journal %s.', self.name))
 
+        # VAT Configuration
+        for company in self.company_id:
+            taxes = self.env["account.tax"].search([("company_id", "=", company.id), ("l10n_uy_tax_category", "=", "vat")])
+            tax_22 = taxes.filtered(lambda x: x.amount == 22)
+            tax_10 = taxes.filtered(lambda x: x.amount == 10)
+            tax_0 = taxes.filtered(lambda x: x.amount == 0)
+            if not tax_22 or not tax_10 or not tax_0:
+                errors.append(_(
+                    "We were not able to find one of the VAT taxes for company %(company_name)s:"
+                    "\n - 22% Sales VAT\n - 10% Sales VAT\n - Exempt Sales VAT", company_name=company.name))
+
         return errors
 
     def l10n_uy_edi_action_download_preview_xml(self):
         # EXTEND l10n_uy_edi
-        """ If not preview exist, create it and preview it in cfe field """
+        """ En odoo oficial solo permite descargar el preview del xml si estamos en demo mode o si ocurrio un error.
+        Aca extendemos para se pueda descargar en cualquier momento, Si no exsite el documento lo genera y lo descargar """
         if not self.l10n_uy_edi_document_id.attachment_id:
             xml_file = self._l10n_uy_edi_get_preview_xml()
             self.l10n_uy_cfe_xml = xml_file.datas
@@ -69,7 +85,10 @@ class AccountMove(models.Model):
 
     def _l10n_uy_edi_cfe_A_receptor(self):
         # EXTEND l10n_uy_edi
-        """ Agregamos campos que existen solo en la OCA """
+        """ Agregamos campos que existen en odoo modulo oficial y queremos enviar en el xml
+
+            * campo purchase_order_number de la OCA - A70 CompraID
+        """
         res = super()._l10n_uy_edi_cfe_A_receptor()
 
         if not self._is_uy_resguardo():
@@ -78,38 +97,58 @@ class AccountMove(models.Model):
 
     def _l10n_uy_edi_cfe_C_totals(self, tax_details):
         # EXTEND l10n_uy_edi
+        """ A130 Monto Total a Pagar (NO debe ser reportado si de tipo e-resguardo) """
         # TODO KZ mover esto a modulo e-resguardo una vez lo tengamos
-        """ Si somos resguardo entonces eliminamos el campo MntPagar """
-        res = super()._l10n_uy_edi_cfe_A_receptor()
-        # A130 Monto Total a Pagar (NO debe ser reportado si de tipo e-resguardo)
+        res = super()._l10n_uy_edi_cfe_A_receptor(tax_details)
         if self._is_uy_resguardo():
             res.pop('MntPagar')
         return res
 
-    def _l10n_uy_edi_send(self):
+    def l10n_uy_edi_action_update_dgi_state(self):
         # EXTEND l10n_uy_edi
-        """ Si queremos permitir al usuario cargar una factura de Uruwuare post mortem en Odoo.
-        Para que esto funcione tenemos estas opciones
+        """ Extendemos boton para que funcione tanto para facturas de cliente como proveedor """
 
-        1. hacer el campo uuid editable y stored en la factura, y que ahi pongan el valor que quieran
-        2. irnos por el approach odoo que es que generen un nuevo diario manual y que lo carguen ahi
-        3. approach de consuñtar el comprobamte emitido con ws y descargar la info del xml y auto popular
-           como hacemos con facturas proveedor """
-        # If the invoice was previosly validated in Uruware and need to be link to Odoo we check that the
-        # l10n_uy_edi_cfe_uuid has been manually set and we consult to get the invoice information from Uruware
-        # TODO KZ necesitamos adaptar el UUID para que pueda ser modificado
-        pre_validated_in_uruware = self.filtered(lambda x: x.l10n_uy_edi_cfe_uuid and not x.l10n_uy_edi_cfe_state)
-        if pre_validated_in_uruware:
-            pre_validated_in_uruware.uy_ux_action_get_uruware_cfe()
+        # Customer Invoices
+        sale_docs = self.filtered(lambda x: x.journal_id.type == 'sale')
+        super(AccountMove, sale_docs).l10n_uy_edi_action_update_dgi_state()
 
-        return super(AccountMove, self - pre_validated_in_uruware)._l10n_uy_edi_send()
+        # Vendor bills
+        vendor_docs = self.filtered(lambda x: x.journal_id.type != 'purchase')
+        for bill in vendor_docs:
+            document_number = re.search(r"([A-Z]*)([0-9]*)", bill.l10n_latam_document_number).groups()
+            result = bill.l10n_uy_edi_document_id._ucfe_inbox('650', {
+                'TipoCfe': bill.l10n_latam_document_type_id_code,
+                'Serie': document_number[0],
+                'NumeroCfe': document_number[1],
+                'RutEmisor': bill.partner_id.vat})
+
+            response = result.get('response')
+            if response is not None:
+                if notif := response.findtext(".//{*}TipoNotificacion"):
+                    bill.write({'l10n_uy_ucfe_notif': notif})
+            bill.l10n_uy_edi_document_id._update_cfe_state(result)
+
+    # New methods
 
     def uy_ux_action_get_uruware_cfe(self):
-        """ 360: Consulta de estado de CFE: estado del comprobante en DGI,
+        """ Boton visible en diario manual que permite con el dato del UUID cargar la factura creada en
+        Uruware postmorten en el Odoo (INBOX 360 - Consulta de estado de CFE).
 
-        Nos permite extraer la info del comprobante que fue emitido desde uruware
-        y que no esta en Odoo para asi quede la info de numero de documento tipo
-        de documento estado del comprobante. """
+        Los datos que sincroniza son
+
+            * numero de documento
+            * tipo de documento
+            * estado del comprobante
+        """
+        # TODO KZ: Implementar approach odoo (generen un nuevo diario manual) y carguen ahi el documento
+        #  2.1. hacer el campo uuid editable y stored en la factura, y que ahi pongan el valor que quieran
+        #  2.2. approach de consultar el comprobante emitido con ws y descargar la info del xml y auto popular
+        #    como hacemos con facturas proveedor
+        # TODO Improve add logic:
+        # 1. add information to the cfe xml
+        # 2. cfe another data
+        # 3. validation that is the same CFE
+
         uy_moves = self.filtered(
             lambda x: x.country_code == 'UY' and x.journal_id.type == 'sale'
             and x.journal_id.l10n_uy_edi_type == 'electronic')
@@ -119,8 +158,6 @@ class AccountMove(models.Model):
 
             if not move.l10n_uy_edi_cfe_uuid:
                 raise UserError(_('Necesita definir "Clave o UUID del CFE" para poder continuar'))
-            if move.l10n_uy_edi_cfe_state == 'error':
-                raise UserError(_('No se puede obtener la factura de un comprobante con error'))
 
             move.l10n_uy_edi_document_id.unlink()
             edi_doc = move.l10n_uy_edi_document_id._create_document(move)
@@ -137,57 +174,15 @@ class AccountMove(models.Model):
                     'l10n_latam_document_number': serie + '%07d' % int(doc_number),
                     'l10n_latam_document_type_id': uy_docs.filtered(lambda x: x.code == uy_doc_code).id,
                 })
-                # TODO Improve add logic:
-                # 1. add information to the cfe xml
-                # 2. cfe another data
-                # 3. validation that is the same CFE
 
     def uy_ux_action_uy_get_pdf(self):
-        """ Permite volver a generar el PDF cuando este aun no existe """
+        """ Permite volver a generar el PDF cuando no existe sea que hubo error
+        porque no se creo o alguien lo borro sin querer """
         # TODO KZ revisar porque en si conviene que almacene tambien en el file.
         # no estoy segura si lo esta haciendo
         self.ensure_one()
         if not self.invoice_pdf_report_file:
             return super()._l10n_uy_edi_get_pdf()
-
-    def l10n_uy_edi_action_update_dgi_state(self):
-        # EXTEND l10n_uy_edi
-        """ Para:
-        1. Facturas de cliente: evitamos puedan actualizar estado DGI si: no tiene UUID, esta en estado error, ya fue
-           previamente aceptada o rechadada
-        2. Facutras de proveedor: consultar el estado de factura de proveedor
-        """
-
-        # Customer Invoices
-        sale_docs = self.filtered(lambda x: x.journal_id.type == 'sale')
-        for move in sale_docs:
-            if not move.l10n_uy_edi_cfe_uuid:
-                raise UserError(_('Please return a "UUID CFE Key" in order to continue'))
-            if move.l10n_uy_edi_cfe_state == 'error':
-                raise UserError(_('You can not obtain the invoice with errors'))
-            if move.l10n_uy_edi_cfe_state != 'received':
-                raise UserError(_('You can not update the state of a accepted/rejected invoice'))
-        super(AccountMove, sale_docs).l10n_uy_edi_action_update_dgi_state()
-
-        # vendor bills
-        vendor_docs = self.filtered(lambda x: x.journal_id.type != 'purchase')
-        for bill in vendor_docs:
-            document_number = re.search(r"([A-Z]*)([0-9]*)", bill.l10n_latam_document_number).groups()
-            result = bill.l10n_uy_edi_document_id._ucfe_inbox('650', {
-                'TipoCfe': bill.l10n_latam_document_type_id_code,
-                'Serie': document_number[0],
-                'NumeroCfe': document_number[1],
-                'RutEmisor': bill.partner_id.vat})
-
-            response = result.get('response')
-            if response is not None:
-                if notif := response.findtext(".//{*}TipoNotificacion"):
-                    bill.write({'l10n_uy_ucfe_notif': notif})
-            bill.l10n_uy_edi_document_id._update_cfe_state(result)
-            # TODO Improve add logic:
-            # 1. add information to the cfe xml
-            # 2. cfe another data
-            # 3. validation that is the same CFE
 
     @api.depends('name')
     def _compute_l10n_latam_document_number(self):
@@ -301,7 +296,7 @@ class AccountMove(models.Model):
         return res
 
     @api.constrains('move_type', 'journal_id')
-    def _l10n_uy_ux_check_moves_use_documents(self):
+    def _uy_ux_check_moves_use_documents(self):
         """ Do not let to create not invoices entries in journals that use documents """
         # TODO simil to _check_moves_use_documents. integrate somehow
         not_invoices = self.filtered(
@@ -680,11 +675,12 @@ class AccountMove(models.Model):
                 domain_tax += [('tax_group_id.l10n_uy_vat_code', '=', 'vat_22')]
             price_unit = value.findtext(".//PrecioUnitario")
             tax_item = self.env['account.tax'].search(domain_tax, limit=1)
-            line_vals = {'move_type': invoice.l10n_latam_document_type_id._get_move_type(),
-                         # There are some taxes no implemented for Uruguay, so when move lines are created and if those ones have ind_fact not in 1, 2 or 3 then is concatenated the name of the tax not implemented with the name of the line.
-                         'name': value.findtext(".//NomItem") + (" (*%s)" % self._l10n_uy_get_tax_not_implemented_description(ind_fact) if ind_fact not in ['1', '2', '3'] else ""),
-                         'quantity': float(value.findtext(".//Cantidad")),
-                         'price_unit': float(price_unit) if ind_fact != '7' else -1*float(price_unit),
-                         'tax_ids': [(6, 0, tax_item.ids)] if ind_fact in ['1', '2', '3'] else []}
+            line_vals = {
+                'move_type': invoice.l10n_latam_document_type_id._get_move_type(),
+                # There are some taxes no implemented for Uruguay, so when move lines are created and if those ones have ind_fact not in 1, 2 or 3 then is concatenated the name of the tax not implemented with the name of the line.
+                'name': value.findtext(".//NomItem") + (" (*%s)" % self._l10n_uy_get_tax_not_implemented_description(ind_fact) if ind_fact not in ['1', '2', '3'] else ""),
+                'quantity': float(value.findtext(".//Cantidad")),
+                'price_unit': float(price_unit) if ind_fact != '7' else -1*float(price_unit),
+                'tax_ids': [(6, 0, tax_item.ids)] if ind_fact in ['1', '2', '3'] else []}
             line_ids.append((0, 0, line_vals))
         return line_ids

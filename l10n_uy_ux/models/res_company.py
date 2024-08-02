@@ -16,8 +16,8 @@ class ResCompany(models.Model):
 
     l10n_uy_ucfe_get_vendor_bills = fields.Boolean('Create vendor bills from Uruware', groups="base.group_system")
 
-    l10n_uy_ucfe_prod_env = fields.Text('Uruware Production Data', groups="base.group_system", default="{}")
-    l10n_uy_ucfe_test_env = fields.Text('Uruware Testing Data', groups="base.group_system", default="{}")
+    l10n_uy_edi_ucfe_prod_env = fields.Text('Uruware Production Data', groups="base.group_system", default="{}")
+    l10n_uy_edi_ucfe_test_env = fields.Text('Uruware Testing Data', groups="base.group_system", default="{}")
 
     l10n_uy_report_params = fields.Char()
 
@@ -28,33 +28,12 @@ class ResCompany(models.Model):
     l10n_uy_dgi_crt_fname = fields.Char('DGI Certificate name')
     l10n_uy_dgi_crt_pass = fields.Char('Private Password')
 
-    def action_update_from_config(self):
+    def uy_ux_action_update_from_config(self):
         self.ensure_one()
         config = False
         if self.l10n_uy_edi_ucfe_env == 'production':
-            config = self.l10n_uy_ucfe_prod_env
+            config = self.l10n_uy_edi_ucfe_prod_env
         elif self.l10n_uy_edi_ucfe_env == 'testing':
-            config = self.l10n_uy_ucfe_test_env
-
+            config = self.l10n_uy_edi_ucfe_test_env
         config = safe_eval(config or "{}")
         self.write(config)
-
-    def _l10n_uy_edi_get_client(self, url):
-        """ Overwrite completely to return transport with copy of the xml request/response"""
-        self.ensure_one()
-        self._l10n_uy_edi_is_connection_info_complete()
-        wsdl = url
-        if not wsdl.endswith('?wsdl'):
-            wsdl += '?wsdl'
-
-        try:
-            user_name_token = UsernameToken(self.l10n_uy_edi_ucfe_username, self.l10n_uy_edi_ucfe_password)
-            client = Client(wsdl, wsse=user_name_token)
-        except ConnectionError as error:
-            _logger.error(repr(error))
-            raise UserError(_(
-                'Unable to connect to Uruware. Check the next options and try again\n'
-                '\n1) Check your internet connection.'
-                '\n2) Uruware server could be temporarily down.'))
-
-        return client

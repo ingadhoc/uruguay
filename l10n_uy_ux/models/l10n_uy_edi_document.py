@@ -1,5 +1,6 @@
+import re
 
-from odoo import _, api, fields, models
+from odoo import _, api, field, models
 
 from odoo.exceptions import UserError
 from odoo.tools import safe_eval
@@ -15,7 +16,49 @@ l10n_uy_edi_document.RESPONSE_CODE_TO_STATE.update({
 class L10nUyEdiDocument(models.Model):
     _inherit = 'l10n_uy_edi.document'
 
+    # TODO KZ solo temporal mientras hago las pruebas
+    state = fields.Selection(readonly=False)
+
     # Methods extend for l10n_uy_edi
+
+    def _get_ws_url(self, ws_endpoint, company):
+        # EXTEND l10n_uy_edi
+        """ Si utiliza uruware por contrato externo. modificar para soportar las dos url,
+        una de testing y una de prod, asi no tiene que configurar el dato cada vez """
+        url = super()._get_ws_url(ws_endpoint, company)
+
+        if company.l10n_uy_edi_ucfe_env == "demo":
+            return url
+
+        inbox_param = self.env["ir.config_parameter"].sudo().get_param(
+            "l10n_uy_edi.l10n_uy_edi_ucfe_inbox_url" + company.l10n_uy_edi_ucfe_env)
+
+        query_param = self.env["ir.config_parameter"].sudo().get_param(
+                "l10n_uy_edi.l10n_uy_edi_ucfe_query_url" + company.l10n_uy_edi_ucfe_env)
+
+        if ws_endpoint == "inbox" and inbox_param:
+            url = inbox_param
+            pattern = "https://.*.ucfe.com.uy/inbox.*/cfeservice.svc"
+        elif ws_endpoint == "query" and query_param:
+            url = query_param
+            pattern = "https://.*.ucfe.com.uy/query.*/webservicesfe.svc"
+
+        print(" ----- url %s" % url)
+        return url if re.match(pattern, url, re.IGNORECASE) is not None else False
+
+    def action_update_dgi_state(self):
+        # EXTEND l10n_uy_edi
+        """ Permitimos actualizar estado solo si tenemos UUID y solo si esta en esperando respuesta.
+        si hay error no hay nada que consultar, y si fue aceptado rechazado ya no necesita ser actualizado """
+        for move in self:
+            if not move.l10n_uy_edi_cfe_uuid:
+                raise UserError(_('Please return a "UUID CFE Key" in order to continue'))
+            if move.l10n_uy_edi_cfe_state == 'error':
+                raise UserError(_('You can not obtain the invoice with errors'))
+            if move.l10n_uy_edi_cfe_state != 'received':
+                raise UserError(_('You can not update the state of a accepted/rejected invoice'))
+
+        super().action_update_dgi_state()
 
     @api.model
     def _is_connection_info_incomplete(self, company):

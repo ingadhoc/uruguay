@@ -2,25 +2,30 @@
    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
    :alt: License: AGPL-3
 
-============
-Uruguay - UX
-============
+==========
+Uruguay UX
+==========
 
-1. Aca agregamos adaptaciones y cosas que no han sido aceptadas por Odoo modulo oficial, pero que nos interesa la funcionalidad se mantenga para nuestros clientes.
+En este modulo agregamos:
 
-2. Padron DGI: Permite consultar los datos de un contacto en su odoo, si este es o no emisor electronico, y los datos de padron como asistente para que les permita llenar los datos del contacto de manera mas sencilla en su odoo.
+1. adaptaciones y cosas que no han sido aceptadas por Odoo modulo oficial, pero que nos interesa la funcionalidad se mantenga para nuestros clientes.
+2. Cosas que estamos agregando como beta a nuestros clientes, si va todo bien luego las pasamos a Odoo
+
+**Funcionalidades:**
+
+* Padron DGI: Permite consultar los datos de un contacto en su odoo, si este es o no emisor electronico, y los datos de padron como asistente para que les permita llenar los datos del contacto de manera mas sencilla en su odoo.
 
    * Boton para manualmente actualizar/checar estado de DGI de un comprobante
    * En ajustes tenemos campos para almacenar como data informativo el certificado DGI y clave asociada, asi tenerlo de respaldo para configurarlos en Uruware prod/test
 
-3. Para la representacion impresa legal de una factura electronica uruguaya la obtenemos desde Uruware con modulo oficial al validar la factura en DGI (no implementado aun como reporte en Odoo), pero tiene un par de problemas 1) si por alguna razon el pdf no se crea o se borra no tenemos opcion de recuperarlo de volver a attacharlo a la factura, 2) los botones de imprimir factura de odoo generan el reporte pdf de odoo y no el pdf legal, en este modulo siempre imprimimos el pdf legal
+* Para la representacion impresa legal de una factura electronica uruguaya la obtenemos desde Uruware con modulo oficial al validar la factura en DGI (no implementado aun como reporte en Odoo), pero tiene un par de problemas 1) si por alguna razon el pdf no se crea o se borra no tenemos opcion de recuperarlo de volver a attacharlo a la factura, 2) los botones de imprimir factura de odoo generan el reporte pdf de odoo y no el pdf legal, en este modulo siempre imprimimos el pdf legal
 
    1. accion imprimir factura y facturas sin pagos
    2. opcion boton enviar e imprimir
    3. envio automatico al validar la factura segun configuracion del diario
 
 
-4. Este módulo también permite conectarnos a Uruware para sincronizar automáticamente los comprobantes de proveedor recibidos en Uruware en el Odoo a través de una acción planificada (UY: Create vendor bills (sync from Uruware)) que se corre cada 10 minutos. Todos los comprobantes sincronizados son creados en estado "Borrador" con sus respectivos adjuntos: pdf legal y xml.
+* Facturas de Proveedor: permite conectarnos a Uruware para sincronizar automáticamente los comprobantes de proveedor recibidos en Uruware en el Odoo a través de una acción planificada (UY: Create vendor bills (sync from Uruware)) que se corre cada 10 minutos. Todos los comprobantes sincronizados son creados en estado "Borrador" con sus respectivos adjuntos: pdf legal y xml.
 
    IMPORTANTE: Siempre las facturas de proveedor son creadas en estado "Borrador" para que sean revisadas manualmente por el usuario que debe cotejar los datos de la factura de proveedor más los datos del pdf y cualquier otro mensaje detallando alguna observación o error en su mensajería.
 
