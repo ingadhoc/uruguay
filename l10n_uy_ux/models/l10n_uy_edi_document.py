@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, api, field, models
+from odoo import _, api, fields, models
 
 from odoo.exceptions import UserError
 from odoo.tools import safe_eval
@@ -14,7 +14,7 @@ l10n_uy_edi_document.RESPONSE_CODE_TO_STATE.update({
 
 
 class L10nUyEdiDocument(models.Model):
-    _inherit = 'l10n_uy_edi.document'
+    _inherit = "l10n_uy_edi.document"
 
     # TODO KZ solo temporal mientras hago las pruebas
     state = fields.Selection(readonly=False)
@@ -52,11 +52,11 @@ class L10nUyEdiDocument(models.Model):
         si hay error no hay nada que consultar, y si fue aceptado rechazado ya no necesita ser actualizado """
         for move in self:
             if not move.l10n_uy_edi_cfe_uuid:
-                raise UserError(_('Please return a "UUID CFE Key" in order to continue'))
-            if move.l10n_uy_edi_cfe_state == 'error':
-                raise UserError(_('You can not obtain the invoice with errors'))
-            if move.l10n_uy_edi_cfe_state != 'received':
-                raise UserError(_('You can not update the state of a accepted/rejected invoice'))
+                raise UserError(_("Please return a 'UUID CFE Key' in order to continue"))
+            if move.l10n_uy_edi_cfe_state == "error":
+                raise UserError(_("You can not obtain the invoice with errors"))
+            if move.l10n_uy_edi_cfe_state != "received":
+                raise UserError(_("You can not update the state of a accepted/rejected invoice"))
 
         super().action_update_dgi_state()
 
@@ -70,12 +70,12 @@ class L10nUyEdiDocument(models.Model):
             False if everything is ok,
             Message if there is a problem or something missing """
         res = super()._is_connection_info_incomplete(company)
-        inbox_url = self._get_ws_url('inbox', company)
-        query_url = self._get_ws_url('query', company)
+        inbox_url = self._get_ws_url("inbox", company)
+        query_url = self._get_ws_url("query", company)
 
         # Just in case they put production info in a testing environment by mistake
-        if company.l10n_uy_edi_ucfe_env == 'testing' and ('prod' in inbox_url or 'prod' in query_url):
-            res = (res or '') + _('Testing environment with production data. Please check/adjust the configuration')
+        if company.l10n_uy_edi_ucfe_env == "testing" and ("prod" in inbox_url or "prod" in query_url):
+            res = (res or "") + _("Testing environment with production data. Please check/adjust the configuration")
         return res
 
     def _get_report_params(self):
@@ -90,22 +90,22 @@ class L10nUyEdiDocument(models.Model):
         # de lineas que lleva la adenda, porque si es mayor que 6 lineas se corta
         addenda = self.move_id._l10n_uy_edi_get_addenda()
         if addenda and len(addenda) > 799:
-            report_params = [['adenda'], ['true']]
+            report_params = [["adenda"], ["true"]]
         else:
             # En caso de que el cliente eliga el reporte que quiere imprimir
-            report_params = safe_eval.safe_eval(self.company_id.l10n_uy_report_params or '[]')
+            report_params = safe_eval.safe_eval(self.company_id.l10n_uy_report_params or "[]")
 
         extra_params = {}
         if report_params:
             nombreParametros = report_params[0]
             valoresParametros = report_params[1]
-            versionPdf = 'ObtenerPdfConParametros'
+            versionPdf = "ObtenerPdfConParametros"
             extra_params.update({
-                'nombreParametros': nombreParametros,
-                'valoresParametros': valoresParametros,
+                "nombreParametros": nombreParametros,
+                "valoresParametros": valoresParametros,
             })
         else:
-            versionPdf = 'ObtenerPdf'
+            versionPdf = "ObtenerPdf"
 
         return versionPdf, extra_params
 
@@ -113,7 +113,7 @@ class L10nUyEdiDocument(models.Model):
         """ Agregamos el tag eResg. aun no lo usamos pero lo dejaamos disponible """
         self.ensure_one()
         if self._is_uy_resguardo():
-            return 'eResg'
+            return "eResg"
         return super()._get_cfe_tag()
 
     # def _l10n_uy_edi_check_invoices(self):
@@ -140,11 +140,11 @@ class L10nUyEdiDocument(models.Model):
         res = False
         if self.l10n_uy_edi_type == "electronic" and int(document_type.code) != 0 and int(document_type.code) < 200:
             result = self._ucfe_inbox("660", {"TipoCfe": document_type.code})
-            if errors := result.get('errors'):
+            if errors := result.get("errors"):
                 raise UserError(_(
                     "We were not able to get the info of the next invoice number: %(error)s", error=errors))
 
-        response = result.get('response')
+        response = result.get("response")
         if response is not None:
             next_number = response.findtext(".//{*}NumeroCfe", "")
             if not next_number:
@@ -159,7 +159,7 @@ class L10nUyEdiDocument(models.Model):
     # Metodos genericos que aun no se estarian usando mucho
 
     def _is_uy_resguardo(self):
-        return self.l10n_latam_document_type_id.code in ['182', '282']
+        return self.l10n_latam_document_type_id.code in ["182", "282"]
 
     def _l10n_uy_get_cfe_serie(self):
         """ Return dictionary with Serie CFE number.
@@ -170,7 +170,7 @@ class L10nUyEdiDocument(models.Model):
         cfe_code = int(self.l10n_latam_document_type_id.code)
         if cfe_code > 200:
             res.update({
-                'Serie': self.journal_id.code,
-                'NumeroCfe': self.journal_id.sequence_number_next,
+                "Serie": self.journal_id.code,
+                "NumeroCfe": self.journal_id.sequence_number_next,
             })
         return res

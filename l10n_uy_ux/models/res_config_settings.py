@@ -17,21 +17,22 @@ class ResConfigSettings(models.TransientModel):
 
     l10n_uy_ucfe_get_vendor_bills = fields.Boolean(related="company_id.l10n_uy_ucfe_get_vendor_bills", readonly=False)
 
-    @api.depends("l10n_uy_edi_ucfe_env")
+    @api.onchange("l10n_uy_edi_ucfe_env")
     def uy_ux_onchange_ufce_env(self):
         """ Update UCFE param with what we have when Environment change."""
 
         if self.l10n_uy_edi_ucfe_env == "production":
             config = self.company_id.l10n_uy_edi_ucfe_prod_env
-        elif self.l10n_uy_edi_ucfe_env == "testing':
+        elif self.l10n_uy_edi_ucfe_env == "testing":
             config = self.company_id.l10n_uy_edi_ucfe_test_env
-        elif self.l10n_uy_edi_ucfe_env == 'demo':
+        elif self.l10n_uy_edi_ucfe_env == "demo":
             config = "{}"
         else:
             config = False
 
         config = safe_eval(config or "{}")
-        uruware_fields = ["l10n_uy_edi_ucfe_password", "l10n_uy_edi_ucfe_commerce_code",
+        uruware_fields = [
+            "l10n_uy_edi_ucfe_password", "l10n_uy_edi_ucfe_commerce_code",
             "l10n_uy_edi_ucfe_terminal_code"]
         for ufce_field in uruware_fields:
             self[ufce_field] = config.get(ufce_field, "")

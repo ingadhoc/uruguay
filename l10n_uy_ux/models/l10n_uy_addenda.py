@@ -9,9 +9,9 @@ class L10nUyAddenda(models.Model):
     active = fields.Boolean(default=True)
     condition = fields.Char(default="False")
     apply_on = fields.Selection([
-        ('all', 'All CFE'),
-        ('account.move', 'Invoices and Tickets'),
+        ("all", "All CFE"),
+        ("account.move", "Invoices and Tickets"),
         # No implementado aun
-        ('account.move.line', 'Resguardos'),
-        ], required=True, default='account.move',
+        ("account.move.line", "Resguardos"),
+        ], required=True, default="account.move",
     )

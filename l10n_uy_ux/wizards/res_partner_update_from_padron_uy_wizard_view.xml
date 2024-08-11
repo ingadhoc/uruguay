@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <!-- the sequence of the configuration sub menu is 30 -->
-    <!-- <menuitem id='root_menu' name='Tools' parent='base.menu_base_partner' sequence="25"/> -->
+    <!-- <menuitem id="root_menu" name="Tools" parent="base.menu_base_partner" sequence="25"/> -->
 
     <record model="ir.actions.act_window" id="action_base_partner_update_from_padron_uy">
         <field name="name">Update Partners From DGI</field>
@@ -10,34 +10,34 @@
         <field name="target">new</field>
     </record>
 
-        <!-- <field name="context">{'active_test': False}</field> -->
+        <!-- <field name="context">{"active_test": False}</field> -->
 
-    <menuitem id='menu_base_partner_update_from_padron_uy'
-        action='action_base_partner_update_from_padron_uy'
-        groups='base.group_system'
-        parent='contacts.res_partner_menu_config'/>
+    <menuitem id="menu_base_partner_update_from_padron_uy"
+        action="action_base_partner_update_from_padron_uy"
+        groups="base.group_system"
+        parent="contacts.res_partner_menu_config"/>
 
-    <record model='ir.ui.view' id='view_base_partner_update_from_padron_uy_form'>
-        <field name='name'>res.partner.update.from.padron.uy.wizard.form</field>
-        <field name='model'>res.partner.update.from.padron.uy.wizard</field>
-        <field name='arch' type='xml'>
-            <form string='Update From DGI'>
+    <record model="ir.ui.view" id="view_base_partner_update_from_padron_uy_form">
+        <field name="name">res.partner.update.from.padron.uy.wizard.form</field>
+        <field name="model">res.partner.update.from.padron.uy.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Update From DGI">
                 <field name="state" invisible="1" />
                 <header>
-                    <button name='update_selection' string='Update Selection'
-                        class='oe_highlight'
-                        type='object'
+                    <button name="update_selection" string="Update Selection"
+                        class="oe_highlight"
+                        type="object"
                         invisible="state in ('option', 'finished')"/>
-                    <button name='next_cb' string='Skip these partner'
-                        type='object'  class='oe_link'
+                    <button name="next_cb" string="Skip these partner"
+                        type="object"  class="oe_link"
                         invisible="state != 'selection'"/>
-                    <button name='start_process_cb'
-                        string='Update with Manual Check'
-                        type='object'  class='oe_highlight'
+                    <button name="start_process_cb"
+                        string="Update with Manual Check"
+                        type="object"  class="oe_highlight"
                         invisible="state != 'option'"/>
-                    <button name='automatic_process_cb'
-                        string='Update Automatically'
-                        type='object' class='oe_highlight'
+                    <button name="automatic_process_cb"
+                        string="Update Automatically"
+                        type="object" class="oe_highlight"
                         confirm="Are you sure to execute the automatic update of your partners ?"
                         invisible="state != 'option'"/>
                     <span class="or_cancel" invisible="state == 'finished'">or
