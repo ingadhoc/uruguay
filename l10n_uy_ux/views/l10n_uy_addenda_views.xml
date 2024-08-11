@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
     <record id="l10n_uy_edi_addenda_view_tree" model="ir.ui.view">
@@ -42,7 +42,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="l10n_uy_edi.action_l10n_uy_edi_addenda">
-        <field name="context">{'active_test': False}</field>
+        <field name="context">{"active_test": False}</field>
     </record>
 
 
