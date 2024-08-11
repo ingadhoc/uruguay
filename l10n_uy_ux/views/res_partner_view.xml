@@ -17,7 +17,7 @@
                 <field name="fiscal_countries" invisible="1"/>
             </field>
             <field name="l10n_latam_identification_type_id" position="attributes">
-                <attribute name="domain">fiscal_countries and ['|', ('country_id', '=', False), ('country_id', 'in', fiscal_countries)] or []</attribute>
+                <attribute name="domain">fiscal_countries and ["|", ("country_id", "=", False), ("country_id", "in", fiscal_countries)] or []</attribute>
             </field>
 
         </field>
