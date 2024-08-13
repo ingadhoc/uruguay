@@ -6,7 +6,7 @@
     'sequence': 12,
     'author': 'Adhoc',
     'depends': [
-        'l10n_uy_edi',
+        'l10n_uy_ux',
         'stock_account',
         # 'sale_stock',
         ],

@@ -13,7 +13,6 @@ class L10nUyEdiDocument(models.Model):
     def _is_uy_remito_loc(self):
         return self.l10n_latam_document_type_id.code == '181'
 
-
     def _is_uy_remito_type_cfe(self):
         return self.l10n_latam_document_type_id.internal_type in ['stock_picking']
 
@@ -67,9 +66,6 @@ class L10nUyEdiDocument(models.Model):
 
     def _uy_cfe_B8_DscItem(self, line):
         """ B8 Descripcion Adicional del ítem. Maximo 1000 caracteres """
-        if self._is_uy_inv_type_cfe():
-            return super()._uy_cfe_B8_DscItem(line)
-
         self.ensure_one()
         res = []
         for rec in line.l10n_uy_edi_addenda_ids:
@@ -95,24 +91,6 @@ class L10nUyEdiDocument(models.Model):
         # A130 Monto Total a Pagar (NO debe ser reportado si de tipo remito)
         if self._is_uy_remito_type_cfe():
             res.pop('MntPagar')
-
-        return res
-
-    def _uy_cfe_C_totals(self):
-        self.ensure_one()
-        res = super()._uy_cfe_C_totals()
-
-        # A110 Tipo moneda transacción: Informar para todos menos para e-Rem loc
-        if self._is_uy_remito_loc():
-            res.pop('TpoMoneda')
-
-        # A124 Total Monto Total (NUM 17)
-        # - Si tipo de CFE= 124 (e-remito de exportación), Valor numérico de 15 enteros y 2 decimales:
-        # - sino, Valor numérico de 15 enteros y 2 decimales, ≥0 : C124 = SUM(C112:C118) + SUM(C121:C123)
-
-        # A111 Tipo de Cambio: Informar siempre que la moneda sea diferente al peso Uruguayo y no sea e-Rem Loc
-        if self._is_uy_remito_loc():
-            res.pop('TpoCambio')
 
         return res
 
