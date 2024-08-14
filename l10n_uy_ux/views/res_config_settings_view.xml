@@ -7,15 +7,15 @@
         <field name="inherit_id" ref="l10n_uy_edi.res_config_settings_view_form_inherit_l10n_uy_edi"/>
         <field name="arch" type="xml">
 
-            <setting id="uy_ucfe" position="inside">
-                <!-- Formato de reporte -->
-                <label for="l10n_uy_report_params" string="Parametros de reporte" class="col-lg-3 o_light_label"/>
-                <field name="l10n_uy_report_params"/>
-            </setting>
-
             <setting id="uy_ucfe" position="after">
 
-                <setting id="uy_dgi" string="DGI" company_dependent="1">
+                <!-- Formato de reporte -->
+                <setting id="uy_edi_report" string="Report's Parameters" company_dependent="1" help="By default (empty) will print the Uruware Standard PDF Report, If want to print a different format need to define it here (Example: addenda in second page, detail invoice lines, personalizated report)">
+                    <field name="l10n_uy_report_params" placeholder="[['report_name'], ['options']]"/>
+                </setting>
+
+                <!-- DGI Information  -->
+                <setting id="uy_dgi" string="DGI" company_dependent="1" help="Informative fields">
                     <div class="content-group">
                         <div class="row">
                             <field name="l10n_uy_dgi_crt_fname" invisible="1" force_save="1"/>
@@ -24,15 +24,13 @@
                         </div>
                         <div class="row">
                             <label for="l10n_uy_dgi_crt_pass" class="col-lg-3 o_light_label"/>
-                            <field name="l10n_uy_dgi_crt_pass" widget="password"/>
+                            <field name="l10n_uy_dgi_crt_pass" password="True"/>
                         </div>
                     </div>
                 </setting>
 
-                <setting id="uy_vendor_bills" string="Vendor Bills" company_dependent="1">
-                    <div class="content-group">
-                        <field name="l10n_uy_ucfe_get_vendor_bills"/>
-                    </div>
+                <setting id="uy_vendor_bills" string="Vendor Bills" company_dependent="1" help="Active this option to automatically syncronize the vendor bills to your Odoo">
+                    <field name="l10n_uy_ucfe_get_vendor_bills"/>
                 </setting>
 
             </setting>
