@@ -1193,12 +1193,10 @@ class L10nUyCfe(models.AbstractModel):
         if self._is_uy_inv_type_cfe() or self._is_uy_remito_type_cfe():
             if line.product_id:
                 return line.product_id.display_name[:80]
-            elif line.name:
-                return line.name[:80]
             else:
-                raise UserError(_('It is not allowed to post an invoice (id: %s) with one or more invoice lines without product and without label.' % line.move_id.id))
+                return '-'
 
-    def _uy_cfe_B8_DscItem(self, line, nomitem):
+    def _uy_cfe_B8_DscItem(self, line):
         """B8 Descripcion Adicional del ítem. Maximo 1000 caracteres
         """
         self.ensure_one()
@@ -1206,7 +1204,7 @@ class L10nUyCfe(models.AbstractModel):
         if line.product_id.l10n_uy_additional_info:
             res.append(line.product_id.l10n_uy_additional_info)
         if self._is_uy_inv_type_cfe():
-            if line.name and line.name != nomitem:
+            if line.name and line.name != line.product_id.display_name:
                 res.append(line.name)
         elif self._is_uy_remito_type_cfe():
             res.append(line.description_picking)
@@ -1310,7 +1308,7 @@ class L10nUyCfe(models.AbstractModel):
                              'DescuentoMonto': self._uy_cfe_B13_DescuentoMonto(line)
                             })
             item.update(self._uy_cfe_B11_PrecioUnitario(line, item.get('IndFact')))
-            item.update(self._uy_cfe_B8_DscItem(line, item.get('NomItem')))
+            item.update(self._uy_cfe_B8_DscItem(line))
             res.append(item)
 
         return res
