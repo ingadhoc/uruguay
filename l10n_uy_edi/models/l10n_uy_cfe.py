@@ -1435,13 +1435,13 @@ class L10nUyCfe(models.AbstractModel):
         # En caso de que el contenido de las adendas sea mayor a 799 caracteres, la adenda se imprimira en
         # la segunda pagina de forma automatica, caso contrario, el cliente podra elegir el tipo de reporte que quiera
         # Si no elige ningun tipo de reporte, se imprimira el default de uruware
+        report_params = safe_eval.safe_eval(self.company_id.l10n_uy_report_params or '[]')
         adenda = self._l10n_uy_get_cfe_adenda().get('Adenda')
-        if adenda and len(adenda) > 799:
-            report_params = [['adenda'],['true']]
-        else:
-            #En caso de que el cliente eliga el reporte que quiere imprimir
-            report_params = safe_eval.safe_eval(self.company_id.l10n_uy_report_params or '[]')
-
+        if adenda and len(adenda) > 799 and 'adenda' not in report_params[0]:
+            #En caso de que en los paramtros del sistma del cliente no este configurada
+            #la adenda en segunda pagina, si esta pasa los 799 caracteres la configuramos automaticamente
+            report_params[0].append('adenda')
+            report_params[1].append('true')
         return report_params
 
     def action_l10n_uy_get_pdf(self):
