@@ -8,6 +8,7 @@ from odoo.tools.zeep import Client
 from odoo.addons.l10n_uy_edi.models.res_company import UYTransport
 
 from dateutil.relativedelta import relativedelta
+from datetime import datetime
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -73,18 +74,17 @@ class ResCompany(models.Model):
         # code_currencies = [0]   # Todas las monedas
         # code_currencies = {'item': [2224, 500, 501]} # Argentino, y Argentino Billete
 
-        today = fields.Date.context_today(self.with_context(tz='America/Montevideo'))
-        last_date = self.env.company.get_bcu_last_date()
-        yesterday = (today - relativedelta(days=1))
-
+        #Siempre tomamos el today por el freeze que tenemos en res_currency
+        today = fields.Date.today(self)
+        #Cambiamos el formato para que nos acepte el factory.wsbcucotizacionesin
+        today = today.strftime('%Y-%m-%d')
+        today = datetime.strptime(today, '%Y-%m-%d').date()
+    
         # NOTA: Esto fue necesario agregarlo porque sino me saltaba este error al correr actualizar moneda con proveedor
         # BCU: ""Su moneda principal (UYU) no es soportada por este servicio de tasas de cambio. Favor de elegir otro.""
         # Si logramos un mejora manera de definir esto mejor, porque estamos creando la tasa de moneda UYU todos los
         # dias con tasa 1, y no tiene sentido :(
         res = {'UYU': (1.0, today)}
-
-        if last_date != yesterday:
-            return False
 
         response_data = []
 
@@ -92,7 +92,7 @@ class ResCompany(models.Model):
             _logger.log(25, "Connecting to BCU to update the currency rates for %s", available_currencies.mapped('name'))
             client = self._get_bcu_client('awsbcucotizaciones')
             factory = client.type_factory('ns0')
-            Entrada = factory.wsbcucotizacionesin(Moneda=code_currencies, FechaDesde=yesterday, FechaHasta=yesterday, Grupo=0)
+            Entrada = factory.wsbcucotizacionesin(Moneda=code_currencies, FechaDesde=today, FechaHasta=today, Grupo=0)
             response = client.service.Execute(Entrada)
             response_data = response.datoscotizaciones['datoscotizaciones.dato']
             if response.respuestastatus.codigoerror:

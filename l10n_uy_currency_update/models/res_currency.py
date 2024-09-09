@@ -1,6 +1,8 @@
 from odoo import _, fields, models
 from odoo.exceptions import UserError
 
+from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 
 class ResCurrency(models.Model):
 
@@ -9,9 +11,18 @@ class ResCurrency(models.Model):
     l10n_uy_bcu_code = fields.Integer('Código BCU', help='Este codigo idenfica cada moneda y permite extraer el valor de la tasa del Banco Central Uruguayo')
 
     def action_l10n_uy_get_bcu_rate(self):
-        rate, _date = self._l10n_uy_get_bcu_rate()
+
+        today = fields.Date.context_today(self.with_context(tz='America/Montevideo'))
         last_date = self.env.company.get_bcu_last_date()
-        raise UserError(_('Fecha Ultimo Cierre') + ': %s' % last_date + '\n' + _('Rate:') + ' %s' % rate)
+        yesterday = (today - relativedelta(days=1))
+
+        with freeze_time(yesterday) as frozen:
+            #En caso de que el dia lunes queramos traer las cotizaciones del viernes movemos la fecha
+            if last_date != yesterday:
+                frozen.move_to(last_date)
+
+            rate, _date = self._l10n_uy_get_bcu_rate()
+            raise UserError(_('Fecha Ultimo Cierre') + ': %s' % last_date + '\n' + _('Rate:') + ' %s' % rate)
 
     def _l10n_uy_get_bcu_rate(self):
         """ Return the date and rate for a given currency
