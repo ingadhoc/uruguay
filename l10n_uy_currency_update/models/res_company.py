@@ -84,7 +84,7 @@ class ResCompany(models.Model):
         res = {'UYU': (1.0, today)}
 
         if last_date != yesterday:
-            return False
+            yesterday = last_date
 
         response_data = []
 
