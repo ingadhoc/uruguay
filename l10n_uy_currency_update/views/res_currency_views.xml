@@ -7,12 +7,11 @@
         <field name="model">res.currency</field>
         <field name="arch" type="xml">
             <field name="name" position="after">
-            <field name="l10n_uy_have_bcu_code" invisible='True'/>
-            <label for="name"/>
-                <div>
+                <field name="l10n_uy_have_bcu_code" invisible='True'/>
+                <div colspan="2">
                     <button name="action_l10n_uy_get_bcu_rate" string="⇒ (UY) Mostrar ultima cotización BCU" invisible="not l10n_uy_have_bcu_code or is_current_company_currency" type="object" class="oe_link" help="Este boton permitira traer la última cotinzación de BCU para esta moneda."/>
                     <button name="action_get_available_currencies" invisible="l10n_uy_have_bcu_code" type="object" class="btn-link" string="⇒ (UY) Obtener info monedas disponibles"/>
-                </div>                
+                </div>
             </field>
         </field>
     </record>
