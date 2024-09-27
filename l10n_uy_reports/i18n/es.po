@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Juan José Scarafía <scarafia.juanjose@gmail.com>, 2024
+# Mariana Torres <mt@adhoc.com.ar>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-31 15:28+0000\n"
+"POT-Creation-Date: 2024-08-06 07:31+0000\n"
 "PO-Revision-Date: 2024-07-31 15:28+0000\n"
-"Last-Translator: Juan José Scarafía <scarafia.juanjose@gmail.com>, 2024\n"
+"Last-Translator: Mariana Torres <mt@adhoc.com.ar>, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/adhoc/teams/46451/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,14 +24,14 @@ msgstr ""
 #: model:ir.actions.act_window,name:l10n_uy_reports.action_form_report_wiz
 #: model:ir.ui.menu,name:l10n_uy_reports.form_report_wiz_menu
 msgid "(UY) Form Declarations"
-msgstr ""
+msgstr "(UY) Formulario de declaraciones"
 
 #. module: l10n_uy_reports
 #. odoo-python
 #: code:addons/l10n_uy_reports/models/l10n_uy_vat_book.py:0
 #, python-format
 msgid "All"
-msgstr ""
+msgstr "Todo"
 
 #. module: l10n_uy_reports
 #: model:ir.model.fields,help:l10n_uy_reports.field_account_uy_vat_line__other_taxes
@@ -73,12 +74,12 @@ msgstr ""
 #. module: l10n_uy_reports
 #: model:ir.model.fields,field_description:l10n_uy_reports.field_form_report_wiz__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #. module: l10n_uy_reports
 #: model:ir.model.fields,field_description:l10n_uy_reports.field_form_report_wiz__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creado en"
 
 #. module: l10n_uy_reports
 #: model:ir.model.fields,field_description:l10n_uy_reports.field_account_uy_vat_line__company_currency_id
@@ -88,12 +89,12 @@ msgstr "Moneda"
 #. module: l10n_uy_reports
 #: model:ir.model.fields.selection,name:l10n_uy_reports.selection__account_uy_vat_line__move_type__out_refund
 msgid "Customer Credit Note"
-msgstr ""
+msgstr "Nota de Crédito de cliente"
 
 #. module: l10n_uy_reports
 #: model:ir.model.fields.selection,name:l10n_uy_reports.selection__account_uy_vat_line__move_type__out_invoice
 msgid "Customer Invoice"
-msgstr ""
+msgstr "Factura de Cliente"
 
 #. module: l10n_uy_reports
 #: model:account.report.column,name:l10n_uy_reports.l10n_uy_vat_book_report_column_invoice_date
@@ -105,17 +106,17 @@ msgstr "Fecha"
 #. module: l10n_uy_reports
 #: model:ir.model.fields,field_description:l10n_uy_reports.field_form_report_wiz__date_from
 msgid "Date From"
-msgstr ""
+msgstr "Fecha Desde"
 
 #. module: l10n_uy_reports
 #: model:ir.model.fields,field_description:l10n_uy_reports.field_form_report_wiz__date_period
 msgid "Date Period"
-msgstr ""
+msgstr "Período"
 
 #. module: l10n_uy_reports
 #: model:ir.model.fields,field_description:l10n_uy_reports.field_form_report_wiz__date_to
 msgid "Date To"
-msgstr ""
+msgstr "Fecha Hasta"
 
 #. module: l10n_uy_reports
 #: model:ir.model.fields,field_description:l10n_uy_reports.field_account_uy_vat_line__display_name
@@ -138,27 +139,27 @@ msgstr "Asiento"
 #. module: l10n_uy_reports
 #: model:ir.model.fields,field_description:l10n_uy_reports.field_form_report_wiz__uy_form_id
 msgid "Form"
-msgstr ""
+msgstr "Formulario"
 
 #. module: l10n_uy_reports
 #: model:ir.model.fields.selection,name:l10n_uy_reports.selection__form_report_wiz__uy_form_id__2181
 msgid "Form 2181"
-msgstr ""
+msgstr "Formulario 2181"
 
 #. module: l10n_uy_reports
 #: model_terms:ir.ui.view,arch_db:l10n_uy_reports.view_form_report_wiz_form
 msgid "Generate Files"
-msgstr ""
+msgstr "Generar archivos"
 
 #. module: l10n_uy_reports
 #: model:ir.model,name:l10n_uy_reports.model_form_report_wiz
 msgid "Generate files for Uruguayan Declaration"
-msgstr ""
+msgstr "Generar archivos de Declaraciones Uruguayas"
 
 #. module: l10n_uy_reports
 #: model_terms:ir.ui.view,arch_db:l10n_uy_reports.view_form_report_wiz_form
 msgid "Get Files"
-msgstr ""
+msgstr "Obtener archivos"
 
 #. module: l10n_uy_reports
 #: model_terms:ir.ui.view,arch_db:l10n_uy_reports.view_account_uy_vat_line_search
@@ -184,17 +185,17 @@ msgstr "Diario"
 #. module: l10n_uy_reports
 #: model:ir.model.fields.selection,name:l10n_uy_reports.selection__account_uy_vat_line__move_type__entry
 msgid "Journal Entry"
-msgstr ""
+msgstr "Asiento contable"
 
 #. module: l10n_uy_reports
 #: model:ir.model.fields,field_description:l10n_uy_reports.field_form_report_wiz__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última actualización por"
 
 #. module: l10n_uy_reports
 #: model:ir.model.fields,field_description:l10n_uy_reports.field_form_report_wiz__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última actualización el"
 
 #. module: l10n_uy_reports
 #: model:ir.model.fields,field_description:l10n_uy_reports.field_account_uy_vat_line__move_name
@@ -204,17 +205,17 @@ msgstr "Nombre del Asiento"
 #. module: l10n_uy_reports
 #: model:ir.model.fields,field_description:l10n_uy_reports.field_account_uy_vat_line__move_type
 msgid "Move Type"
-msgstr ""
+msgstr "Tipo de movimiento"
 
 #. module: l10n_uy_reports
 #: model:account.report.column,name:l10n_uy_reports.l10n_uy_vat_book_report_column_partner_name
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 #. module: l10n_uy_reports
 #: model:account.report.column,name:l10n_uy_reports.l10n_uy_vat_book_report_column_not_taxed
 msgid "Not Taxed"
-msgstr ""
+msgstr "No Gravado"
 
 #. module: l10n_uy_reports
 #: model:ir.model.fields,help:l10n_uy_reports.field_account_uy_vat_line__not_taxed
@@ -267,7 +268,7 @@ msgstr "Apuntes contables publicados"
 #. module: l10n_uy_reports
 #: model:ir.model.fields.selection,name:l10n_uy_reports.selection__account_uy_vat_line__move_type__in_receipt
 msgid "Purchase Receipt"
-msgstr ""
+msgstr "Recibo de compra"
 
 #. module: l10n_uy_reports
 #: model_terms:ir.ui.view,arch_db:l10n_uy_reports.view_account_uy_vat_line_search
@@ -279,7 +280,7 @@ msgstr "IVA Compras"
 #: code:addons/l10n_uy_reports/models/l10n_uy_vat_book.py:0
 #, python-format
 msgid "Purchases"
-msgstr ""
+msgstr "Compras"
 
 #. module: l10n_uy_reports
 #: model:account.report.column,name:l10n_uy_reports.l10n_uy_vat_book_report_column_rut
@@ -289,12 +290,12 @@ msgstr ""
 #. module: l10n_uy_reports
 #: model:ir.model.fields,field_description:l10n_uy_reports.field_form_report_wiz__res_file
 msgid "Res File"
-msgstr ""
+msgstr "Archivo de respuesta"
 
 #. module: l10n_uy_reports
 #: model:ir.model.fields,field_description:l10n_uy_reports.field_form_report_wiz__res_filename
 msgid "Res Filename"
-msgstr ""
+msgstr "Nombre de archivo de respuesta"
 
 #. module: l10n_uy_reports
 #: model:ir.model.fields,field_description:l10n_uy_reports.field_account_uy_vat_line__rut
@@ -306,12 +307,12 @@ msgstr ""
 #: code:addons/l10n_uy_reports/models/l10n_uy_vat_book.py:0
 #, python-format
 msgid "Sales"
-msgstr ""
+msgstr "Ventas"
 
 #. module: l10n_uy_reports
 #: model:ir.model.fields.selection,name:l10n_uy_reports.selection__account_uy_vat_line__move_type__out_receipt
 msgid "Sales Receipt"
-msgstr ""
+msgstr "Recibo de ventas"
 
 #. module: l10n_uy_reports
 #: model_terms:ir.ui.view,arch_db:l10n_uy_reports.view_account_uy_vat_line_search
@@ -335,12 +336,12 @@ msgstr "Estado"
 #: code:addons/l10n_uy_reports/static/src/components/uruguayan_report/filter_tax_type.xml:0
 #, python-format
 msgid "Tax Type:"
-msgstr ""
+msgstr "Tipo de impuesto:"
 
 #. module: l10n_uy_reports
 #: model:account.report.column,name:l10n_uy_reports.l10n_uy_vat_book_report_column_taxed
 msgid "Taxed"
-msgstr ""
+msgstr "Gravado"
 
 #. module: l10n_uy_reports
 #. odoo-python
@@ -365,7 +366,7 @@ msgstr "Sin asentar"
 #. module: l10n_uy_reports
 #: model:ir.model,name:l10n_uy_reports.model_l10n_uy_tax_report_handler
 msgid "Uruguayan Report Custom Handler"
-msgstr ""
+msgstr "Gestor Personalizado de reporte uruguayo"
 
 #. module: l10n_uy_reports
 #: model:ir.ui.menu,name:l10n_uy_reports.account_reports_uy_statements_menu
@@ -375,7 +376,7 @@ msgstr "Informes Uruguayos"
 #. module: l10n_uy_reports
 #: model:account.report,name:l10n_uy_reports.l10n_uy_vat_book_report
 msgid "Uruguayan VAT book"
-msgstr ""
+msgstr "Libro de IVA Uruguayo"
 
 #. module: l10n_uy_reports
 #: model:account.report.column,name:l10n_uy_reports.l10n_uy_vat_book_report_column_vat_10
@@ -403,12 +404,12 @@ msgstr "Línea de IVA para análisis en localización uruguaya"
 #. module: l10n_uy_reports
 #: model:ir.model.fields.selection,name:l10n_uy_reports.selection__account_uy_vat_line__move_type__in_invoice
 msgid "Vendor Bill"
-msgstr ""
+msgstr "Factura de Proveedor"
 
 #. module: l10n_uy_reports
 #: model:ir.model.fields.selection,name:l10n_uy_reports.selection__account_uy_vat_line__move_type__in_refund
 msgid "Vendor Credit Note"
-msgstr ""
+msgstr "Nota de Crédito de Proveedor"
 
 #. module: l10n_uy_reports
 #: model_terms:ir.ui.view,arch_db:l10n_uy_reports.view_account_uy_vat_line_search

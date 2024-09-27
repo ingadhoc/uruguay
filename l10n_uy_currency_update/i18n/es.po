@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Juan José Scarafía <scarafia.juanjose@gmail.com>, 2024
+# Mariana Torres <mt@adhoc.com.ar>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-31 15:27+0000\n"
+"POT-Creation-Date: 2024-09-24 21:16+0000\n"
 "PO-Revision-Date: 2024-01-26 17:53+0000\n"
-"Last-Translator: Juan José Scarafía <scarafia.juanjose@gmail.com>, 2024\n"
+"Last-Translator: Mariana Torres <mt@adhoc.com.ar>, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/adhoc/teams/46451/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +30,7 @@ msgstr "Moneda"
 msgid ""
 "Este boton permitira traer la última cotinzación de BCU para esta moneda."
 msgstr ""
+"Este boton permitira traer la última cotización de BCU para esta moneda."
 
 #. module: l10n_uy_currency_update
 #. odoo-python
@@ -50,11 +52,13 @@ msgstr ""
 #, python-format
 msgid "No se encontro cotizacion para esta Moneda"
 msgstr ""
+"No se encontró cotización para esta Moneda\n"
+" "
 
 #. module: l10n_uy_currency_update
 #: model_terms:ir.ui.view,arch_db:l10n_uy_currency_update.view_currency_form
 msgid "⇒ (UY) Mostrar ultima cotización BCU"
-msgstr ""
+msgstr "⇒ (UY) Mostrar última cotización BCU "
 
 #. module: l10n_uy_currency_update
 #: model_terms:ir.ui.view,arch_db:l10n_uy_currency_update.view_currency_form
