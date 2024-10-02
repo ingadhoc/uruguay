@@ -10,7 +10,7 @@
             <sheet position="before">
                 <div class="alert alert-danger" role="alert" style="margin-bottom:0px;" attrs="{'invisible': ['|', '|', ('l10n_uy_journal_type', 'not in', ['electronic', 'contingency']), ('state', '!=', 'posted'), ('l10n_uy_cfe_pdf', '!=', False)]}"><bold>Esta factura esta validada pero le falta el PDF legal asociado, por favor intente re generarlo</bold>
                     <button name="action_l10n_uy_get_pdf" type="object" string="(UY) Reprint Legal PDF" class="oe_inline oe_link" attrs="{
-                    'invisible': ['|', ('l10n_uy_cfe_state', 'not in', ['received']), ('invoice_filter_type_domain', '=', 'purchase')]}" icon="fa-print"/>
+                    'invisible': ['|', ('l10n_uy_cfe_state', 'not in', ['received', 'accepted', 'rejected']), ('invoice_filter_type_domain', '=', 'purchase')]}" icon="fa-print"/>
                 </div>
                 <div class="alert alert-warning" role="alert" style="margin-bottom:0px;" attrs="{'invisible': ['|', '|', ('l10n_uy_journal_type', 'not in', ['electronic', 'contingency']), ('state', '!=', 'draft'), ('l10n_uy_cfe_pdf', '!=', False)]}"><bold>Esta factura aun no esta validada, asi que si intenta imprimir tendra un PDF no Legal</bold></div>
             </sheet>
