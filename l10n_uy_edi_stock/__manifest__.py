@@ -1,6 +1,6 @@
 {
     "name": """Uruguay - E-Remitos""",
-    'version': "16.0.1.1.0",
+    'version': "16.0.1.2.0",
     'category': 'Accounting/Localizations/EDI',
     'sequence': 12,
     'author': 'Adhoc',
