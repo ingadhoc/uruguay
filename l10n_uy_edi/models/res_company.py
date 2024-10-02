@@ -156,6 +156,10 @@ class ResCompany(models.Model):
         res = company._uy_get_client(company.l10n_uy_ucfe_query_url, return_transport=return_transport)
         client = res[0] if isinstance(res, tuple) else res
         transport = res[1] if isinstance(res, tuple) else False
+        if req_data.get('nombreParametros') and req_data.get('valoresParametros'):
+            ArrayOfstring = client.get_type('{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfstring')
+            req_data['nombreParametros'] = ArrayOfstring(req_data.get('nombreParametros'))
+            req_data['valoresParametros'] = ArrayOfstring(req_data.get('valoresParametros'))
         response = client.service[method](**req_data)
         return (response, transport) if return_transport else response
 

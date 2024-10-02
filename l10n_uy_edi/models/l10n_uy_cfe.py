@@ -1430,17 +1430,31 @@ class L10nUyCfe(models.AbstractModel):
         return res
 
     def _get_report_params(self):
-        # En caso de que el contenido de las adendas sea mayor a 799 caracteres, la adenda se imprimira en
-        # la segunda pagina de forma automatica, caso contrario, el cliente podra elegir el tipo de reporte que quiera
-        # Si no elige ningun tipo de reporte, se imprimira el default de uruware
-        adenda = self._l10n_uy_get_cfe_adenda().get('Adenda')
-        if adenda and len(adenda) > 799:
-            report_params = [['adenda'],['true']]
-        else:
-            #En caso de que el cliente eliga el reporte que quiere imprimir
-            report_params = safe_eval.safe_eval(self.company_id.l10n_uy_report_params or '[]')
+        """ Modificamos para que al generar el PDF no genere el formato standard sino lo genere tomando en cuenta
+        lo siguiente:
 
-        return report_params
+        1. En caso que el cliente tenga definido un reporte en los ajustes de sistema, sea porque tenga un reporte
+            personalizado o preferencia de imprimir algún otro formato,
+        2. En caso de que el comprobante tenga adendas con textos muy largos (mayor a 799 caracteres) si imprime
+            el formato standard va a hacer que salga cortada. en este caso si vemos que algun comprobante cumple
+            esta condición entonces la adenda  se imprimira en una pagina separada (adenda en segunda pagina -
+            es un formato disponible en uruware)
+        3.  En caso de que el documento sea un e-ticket o e-factura expo o sus respectivas NC y ND se fijara si
+                el partner de la factura tiene definido algun lenguaje != español: de ser asi imprime el reporte tanto en
+                español como en ingles (tambien es un formato disponible en uruware) """
+        adenda = self._l10n_uy_get_cfe_adenda().get('Adenda')
+        report_params = safe_eval.safe_eval(self.company_id.l10n_uy_report_params or '[]')
+        nombreParametros = report_params[0] if report_params else []
+        valoresParametros = report_params[1] if report_params else []
+        if adenda and len(adenda.splitlines()) >= 5 and 'adenda' not in nombreParametros:
+            nombreParametros.append('adenda')
+            valoresParametros.append('true')
+        if self.l10n_latam_document_type_id.code in ['101', '102', '103', '121', '122', '123'] and \
+            self.partner_id.lang and 'es' not in self.partner_id.lang:
+            nombreParametros.append('reporte')
+            valoresParametros.append('ingles')
+
+        return nombreParametros, valoresParametros
 
     def action_l10n_uy_get_pdf(self):
         """ Call query webservice to print pdf format of the CFE
@@ -1475,11 +1489,8 @@ class L10nUyCfe(models.AbstractModel):
                 'serieCfe': document_number[0],
                 'numeroCfe': document_number[1],
             }
-            report_params = self._get_report_params()
-
-            if report_params:
-                nombreParametros = report_params[0]
-                valoresParametros = report_params[1]
+            nombreParametros, valoresParametros = self._get_report_params()
+            if nombreParametros and valoresParametros:
                 versionPdf = 'ObtenerPdfConParametros'
                 req_data.update({
                     'nombreParametros': nombreParametros,
