@@ -16,7 +16,7 @@ Uruguay - Accounting Reports
 
 * Agrega la posibilidad de ver/exportar xls con el libro de IVA Compras/Ventas Uruguayo, esto en el menu "Tax Reports"
 * Agrega el menu Resumen de IVA para uruguay, reporte que se puee usar para analizar los datos de facturacióneed
-* Nuevo asistente que permite generar los archivos TXT para presentar el Formulario 2/181 (hasta el momento solo repota impuestos de iva compra/venta)
+* Nuevo asistente que permite generar los archivos TXT para presentar el Formulario 2/181 (hasta el momento solo repota impuestos de iva compra/venta). Instructivos: https://www.gub.uy/direccion-general-impositiva/comunicacion/publicaciones/instructivo-para-confeccion-presentacion-declaraciones-aplicacion-beta y https://www.gub.uy/direccion-general-impositiva/comunicacion/publicaciones/informacion-sobre-formulario-2181
 
 Installation
 ============
