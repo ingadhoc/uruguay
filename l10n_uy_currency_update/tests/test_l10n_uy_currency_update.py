@@ -2,46 +2,48 @@
 # For copyright and license notices, see __manifest__.py file in module root
 # directory
 ##############################################################################
-from odoo.tests import common
-from odoo import fields
+import datetime
 from unittest.mock import patch
 
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
-class TestL10nUyCurrencyUpdate(common.TransactionCase):
 
-    # TODO when running this test please update this values to the day rate.
-    # can use only rates of the last 30 days
+class TestL10nUyCurrencyUpdate(AccountTestInvoicingCommon):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls, chart_template_ref="uy"):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+        cls.UYU = cls.env.ref('base.UYU')
+        cls.UYI = cls.env.ref('base.UYI')
+        cls.ARS = cls.env.ref('base.ARS')
+        cls.USD = cls.env.ref('base.USD')
+        cls.EUR = cls.env.ref('base.EUR')
 
-        self.frozen_date = fields.Date.from_string('2022-03-17')
-        self.UYU_USD = 1.0 / 42.652
-        self.UYU_EUR = 1.0 / 46.923598
-        self.UYU_ARS = 1.0 / 0.389819
-        self.UYU_UYI = 1.0 / 5.2768
+        (cls.UYU + cls.UYI + cls.ARS + cls.USD + cls.EUR).active = True
 
-        super().setUp()
-
-        self.UYU = self.env.ref('base.UYU')
-        self.UYI = self.env.ref('base.UYI')
-        self.ARS = self.env.ref('base.ARS')
-        self.USD = self.env.ref('base.USD')
-        self.EUR = self.env.ref('base.EUR')
+        cls.utils_path = "odoo.addons.currency_rate_live.models.res_config_settings.ResCompany"
 
     def test_bcu_rates(self):
         """ When the base currency is UYU """
-        company = self.env.ref('l10n_uy_account.company_uy')
-        company.currency_id = self.UYU
-        self.env.company = company
+        self.assertEqual(self.USD.rate, 1.0)
+        self.assertEqual(self.EUR.rate, 1.0)
+        self.assertEqual(self.ARS.rate, 1.0)
+        self.assertEqual(self.UYI.rate, 1.0)
 
-        with patch.object(fields.Date, 'today', lambda *args, **kwargs: self.frozen_date), \
-             patch.object(fields.Date, 'context_today', lambda *args, **kwargs: self.frozen_date), \
-             patch.object(type(self.env['res.company']), 'get_bcu_last_date', lambda *args, **kwargs: fields.Date.subtract(self.frozen_date, days=1)):
+        test_date = datetime.date(2024, 9, 26)
+        mocked_res = {
+            'ARS': (28.57142857142857, test_date),
+            'EUR': (0.021456809662928324, test_date),
+            'USD': (0.023986567522187575, test_date),
+            'UYI': (0.16387263818560216, test_date),
+            'UYU': (1.0, test_date),
+        }
 
-            company.update_currency_rates()
+        with patch(f"{self.utils_path}._parse_bcu_data", return_value=mocked_res):
+            self.env.company.update_currency_rates()
 
-            self.assertEqual(self.UYU.rate, 1.0)
-            self.assertAlmostEqual(self.USD.rate, self.UYU_USD, places=3)
-            self.assertAlmostEqual(self.EUR.rate, self.UYU_EUR, places=3)
-            self.assertAlmostEqual(self.ARS.rate, self.UYU_ARS, places=3)
-            self.assertAlmostEqual(self.UYI.rate, self.UYU_UYI, places=3)
+        self.assertEqual(self.UYU.rate, 1.0)
+        self.assertAlmostEqual(self.USD.rate, 0.023986567522187575, places=16)
+        self.assertAlmostEqual(self.EUR.rate, 0.021456809662928324, places=16)
+        self.assertAlmostEqual(self.ARS.rate, 28.57142857142857, places=16)
+        self.assertAlmostEqual(self.UYI.rate, 0.16387263818560216, places=16)
