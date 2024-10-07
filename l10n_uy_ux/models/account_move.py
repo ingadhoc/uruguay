@@ -86,13 +86,10 @@ class AccountMove(models.Model):
     def _l10n_uy_edi_cfe_A_receptor(self):
         # EXTEND l10n_uy_edi
         """ Agregamos campos que existen en odoo modulo oficial y queremos enviar en el xml
-
-            * campo purchase_order_number de la OCA - A70 CompraID
         """
         res = super()._l10n_uy_edi_cfe_A_receptor()
-
-        if not self._is_uy_resguardo():
-            res.update(self._l10n_uy_ux_cfe_A70_CompraID())
+        if self._is_uy_resguardo():
+            res.pop("CompraID", False)
         return res
 
     def _l10n_uy_edi_cfe_C_totals(self, tax_details):
@@ -306,16 +303,6 @@ class AccountMove(models.Model):
             raise ValidationError(_(
                 "The selected Journal can't be used in this transaction, please select one that doesn't use documents"
                 " as these are just for Invoices."))
-
-    def _l10n_uy_ux_cfe_A70_CompraID(self):
-        """ Número que identifica la compra: número de pedido, número orden de compra etc.
-        LEN(50) Opcional para todos los tipos de documentos """
-        self.ensure_one()
-        res = False
-        if not self._is_uy_resguardo():
-            if "purchase_order_number" in "purchase_order_number" in self.env["account.move"].fields_get():
-                res = (self.purchase_order_number or "")[:50]
-        return {"CompraID": res or None}
 
     # TODO KZ esto lo usabamos para el tema de calcular autoamticamente las addendas, pero
     # no parece estar siendo usando, revisar si podemos borrar
