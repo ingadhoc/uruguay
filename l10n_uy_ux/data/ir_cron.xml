@@ -4,7 +4,6 @@
         <field name="name">UY: Create vendor bills (sync from Uruware)</field>
         <field name="interval_number">10</field>
         <field name="interval_type">minutes</field>
-        <field name="numbercall">-1</field>
         <field name="model_id" ref="model_account_move"/>
         <field name="state">code</field>
         <field name="code">model.cron_l10n_uy_get_vendor_bills()</field>
