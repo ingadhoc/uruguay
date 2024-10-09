@@ -1,5 +1,6 @@
-id,active
-l10n_uy_account.dc_e_remito_expo,False
-l10n_uy_account.dc_e_remito,True
-l10n_uy_account.dc_e_remito_de_exportación_contingencia,False
-l10n_uy_account.dc_ e_remito_contingencia,False
+"id","internal_type"
+"l10n_uy.dc_remito","stock_picking"
+"l10n_uy.dc_e_remito_expo","stock_picking"
+"l10n_uy.dc_e_remito","stock_picking"
+"l10n_uy.dc_e_remito_de_exportación_contingencia","stock_picking"
+"l10n_uy.dc_e_remito_contingencia","stock_picking"
