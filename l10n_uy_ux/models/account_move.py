@@ -110,7 +110,7 @@ class AccountMove(models.Model):
         super(AccountMove, sale_docs).l10n_uy_edi_action_update_dgi_state()
 
         # Vendor bills
-        vendor_docs = self.filtered(lambda x: x.journal_id.type != "purchase")
+        vendor_docs = self.filtered(lambda x: x.journal_id.type != "sale")
         for bill in vendor_docs:
             document_number = re.search(r"([A-Z]*)([0-9]*)", bill.l10n_latam_document_number).groups()
             result = bill.l10n_uy_edi_document_id._ucfe_inbox("650", {
@@ -441,9 +441,7 @@ class AccountMove(models.Model):
             "l10n_uy_cfe_xml": xml_string,
             "l10n_latam_document_type_id": doc.id,
             "journal_id": journal.id,
-            "l10n_uy_ucfe_state": response_610.Resp.EstadoEnDgiCfeRecibido,
-            "l10n_uy_ucfe_msg": response_610.Resp.MensajeRta,
-            })
+        })
         edi_doc = move.l10n_uy_edi_document_id._create_document(move)
         move.l10n_uy_edi_document_id = edi_doc
 
