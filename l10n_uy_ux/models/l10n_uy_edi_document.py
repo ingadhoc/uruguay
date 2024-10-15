@@ -154,8 +154,6 @@ class L10nUyEdiDocument(models.Model):
             res = int(next_number)
         return res
 
-    # Methods related to vendor bill functionality
-
     # Metodos genericos que aun no se estarian usando mucho
 
     def _is_uy_resguardo(self):

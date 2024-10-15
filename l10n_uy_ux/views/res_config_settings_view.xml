@@ -29,10 +29,6 @@
                     </div>
                 </setting>
 
-                <setting id="uy_vendor_bills" string="Vendor Bills" company_dependent="1" help="Active this option to automatically syncronize the vendor bills to your Odoo">
-                    <field name="l10n_uy_ucfe_get_vendor_bills"/>
-                </setting>
-
             </setting>
 
         </field>
