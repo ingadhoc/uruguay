@@ -1,9 +1,13 @@
 import re
+import logging
+
 
 from odoo import _, api, models
 
 from odoo.exceptions import UserError
 from odoo.tools import safe_eval
+
+_logger = logging.getLogger(__name__)
 
 
 class L10nUyEdiDocument(models.Model):
@@ -14,8 +18,10 @@ class L10nUyEdiDocument(models.Model):
 
     def _get_ws_url(self, ws_endpoint, company):
         # EXTEND l10n_uy_edi
-        """ Si utiliza uruware por contrato externo. modificar para soportar las dos url,
-        una de testing y una de prod, asi no tiene que configurar el dato cada vez """
+        """ Si utiliza uruware por Contrato Externo (no el de Odoo) da la posibilidad
+        de utilizar dos urls en system parametros, uno para test y otro para pod
+
+        Asi no tiene que configurar el dato cada vez que lo vayan a usar """
         url = super()._get_ws_url(ws_endpoint, company)
 
         if company.l10n_uy_edi_ucfe_env == "demo":
@@ -27,26 +33,29 @@ class L10nUyEdiDocument(models.Model):
         query_param = self.env["ir.config_parameter"].sudo().get_param(
                 "l10n_uy_edi.l10n_uy_edi_ucfe_query_url" + company.l10n_uy_edi_ucfe_env)
 
+        pattern = {
+            "inbox": "https://.*.ucfe.com.uy/inbox.*/cfeservice.svc",
+            "query": "https://.*.ucfe.com.uy/query.*/webservicesfe.svc",
+        }
         if ws_endpoint == "inbox" and inbox_param:
             url = inbox_param
-            pattern = "https://.*.ucfe.com.uy/inbox.*/cfeservice.svc"
         elif ws_endpoint == "query" and query_param:
             url = query_param
-            pattern = "https://.*.ucfe.com.uy/query.*/webservicesfe.svc"
+        else:
+            _logger.info("Using Odoo defaults values")
 
-        print(" ----- url %s" % url)
-        return url if re.match(pattern, url, re.IGNORECASE) is not None else False
+        return url if re.match(pattern[ws_endpoint], url, re.IGNORECASE) is not None else False
 
     def action_update_dgi_state(self):
         # EXTEND l10n_uy_edi
         """ Permitimos actualizar estado solo si tenemos UUID y solo si esta en esperando respuesta.
-        si hay error no hay nada que consultar, y si fue aceptado rechazado ya no necesita ser actualizado """
-        for move in self:
-            if not move.l10n_uy_edi_cfe_uuid:
+        Si hay error no hay nada que consultar, y si fue aceptado rechazado ya no necesita ser actualizado """
+        for doc in self:
+            if not doc.uuid:
                 raise UserError(_("Please return a 'UUID CFE Key' in order to continue"))
-            if move.l10n_uy_edi_cfe_state == "error":
+            if doc.state == "error":
                 raise UserError(_("You can not obtain the invoice with errors"))
-            if move.l10n_uy_edi_cfe_state != "received":
+            if doc.state != "received":
                 raise UserError(_("You can not update the state of a accepted/rejected invoice"))
 
         super().action_update_dgi_state()

@@ -69,24 +69,6 @@ class AccountMove(models.Model):
 
         return super().l10n_uy_edi_action_download_preview_xml()
 
-    def _l10n_uy_edi_cfe_A_receptor(self):
-        # EXTEND l10n_uy_edi
-        """ Agregamos campos que existen en odoo modulo oficial y queremos enviar en el xml
-        """
-        res = super()._l10n_uy_edi_cfe_A_receptor()
-        if self._is_uy_resguardo():
-            res.pop("CompraID", False)
-        return res
-
-    def _l10n_uy_edi_cfe_C_totals(self, tax_details):
-        # EXTEND l10n_uy_edi
-        """ A130 Monto Total a Pagar (NO debe ser reportado si de tipo e-resguardo) """
-        # TODO KZ mover esto a modulo e-resguardo una vez lo tengamos
-        res = super()._l10n_uy_edi_cfe_A_receptor(tax_details)
-        if self._is_uy_resguardo():
-            res.pop("MntPagar")
-        return res
-
     # New methods
 
     def uy_ux_action_get_uruware_cfe(self):
@@ -166,8 +148,6 @@ class AccountMove(models.Model):
                 name = name.split(" ")[-1]
             rec.l10n_latam_document_number = name
 
-    # def _l10n_uy_edi_cfe_F_reference(self):
-    #     # TODO KZ Not sure if FechaCFEref": 2015-01-31, shuould be inform
 
     # Nuevos metodos
 
@@ -285,6 +265,3 @@ class AccountMove(models.Model):
 
     # TODO KZ esto lo tendriamos que mantener para nuestros clientes que tiene el nombre largo como prefijo de
     # documento. capaz lo mejor seria hacer un script para poner todo como hace Odoo. Si hacemos eso este metodo se va
-
-    # def _uy_cfe_A41_RznSoc(self):
-    # TODO company register name?
