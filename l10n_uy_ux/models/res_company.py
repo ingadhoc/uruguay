@@ -14,8 +14,6 @@ class ResCompany(models.Model):
 
     _inherit = "res.company"
 
-    l10n_uy_ucfe_get_vendor_bills = fields.Boolean("Create vendor bills from Uruware", groups="base.group_system")
-
     l10n_uy_edi_ucfe_prod_env = fields.Text("Uruware Production Data", groups="base.group_system", default="{}")
     l10n_uy_edi_ucfe_test_env = fields.Text("Uruware Testing Data", groups="base.group_system", default="{}")
 
