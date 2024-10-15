@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_journal_form_inherit_l10n_uy_edi" model="ir.ui.view">
+        <field name="model">account.journal</field>
+        <field name="name">account.journal.form</field>
+        <field name="inherit_id" ref="l10n_uy_edi.view_account_journal_form_inherit_l10n_uy_edi"/>
+        <field name="arch" type="xml">
+            <field name="l10n_uy_edi_type" position="attributes">
+                <attribute name="invisible">country_code != "UY" or not l10n_latam_use_documents or type not in ["sale", "purchase"]</attribute>
+                <attribute name="required">country_code == "UY" and l10n_latam_use_documents and type in ["sale", "purchase"]</attribute>
+            </field>
+            <!-- TODO KZ llevar esto como fix en pr a modulo l10n_latam_invoice_document -->
+            <field name="refund_sequence" position="attributes">
+                <attribute name="invisible">type not in ["sale", "purchase"] or (l10n_latam_use_documents and country_code == "UY")</attribute>
+            </field>
+        </field>
+    </record>
+
+</odoo>

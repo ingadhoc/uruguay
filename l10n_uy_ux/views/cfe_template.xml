@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Posible xml tags:
+    implemented so far: eTck|eFact|eFact_Exp|eRem
+    to implement in future: eResg|eRem_Exp|eBoleta
+    -->
+
+</odoo>
