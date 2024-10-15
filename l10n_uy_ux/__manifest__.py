@@ -6,6 +6,7 @@
     "name": "Uruguay UX",
     "author": "ADHOC SA",
     "category": "Localization",
+    "countries": ["uy"],
     "license": "LGPL-3",
     "version": "17.0.1.0.0",
     "depends": [

@@ -1,14 +1,9 @@
-import base64
 import logging
-import re
-import xml.etree.ElementTree as ET
-from datetime import datetime
 
 from odoo import api, models, fields, _
 
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_compare, safe_eval
-from odoo.tools.misc import formatLang
+from odoo.tools import safe_eval
 
 
 _logger = logging.getLogger(__name__)
@@ -26,7 +21,7 @@ class AccountMove(models.Model):
 
     def _l10n_uy_edi_get_addenda(self):
         # EXTEND l10n_uy_edi
-        """ Agrega el campo referencia compo parte de la adenda """
+        """ Agrega el campo referencia como parte de la adenda """
         self.ensure_one()
         res = super()._l10n_uy_edi_get_addenda()
         if self.ref:

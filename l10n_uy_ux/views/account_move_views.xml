@@ -41,7 +41,6 @@
                     <button name="uy_ux_action_uy_get_pdf" type="object" string="(UY) Print Legal PDF" class="oe_inline oe_link" invisible="l10n_uy_edi_cfe_state not in ['received']" icon="fa-print" groups="base.group_no_one"/>
 
                 </div>
-                <field name="l10n_uy_idreq" invisible="invoice_filter_type_domain != 'purchase'"/>
             </field>
 
             <notebook position="inside">
@@ -62,13 +61,6 @@
                     <group string="CFE">
                         <button name="l10n_uy_edi_action_download_preview_xml" type="object" string="Preview" class="oe_inline oe_link" invisible="state != 'draft'"/>
                         <button name="uy_ux_action_validate_cfe" type="object" string="Validate" class="oe_inline oe_link" invisible="state != 'draft'"/>
-                        <button name="action_l10n_uy_update_fields" type="object" string="Update Fields"
-                            class="oe_inline oe_link" invisible="state != 'draft'"
-                            help="Read the XML and fill the fields of the invoice/bill with the xml values"
-                            confirm="Are you sure? this action will update the invoice information."/>
-
-                        <field name="l10n_uy_cfe_xml" nolabel="1" widget="ace"/>
-
                     </group>
 
                 </page>

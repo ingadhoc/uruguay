@@ -1,23 +1,14 @@
 import re
 
-from odoo import _, api, fields, models
+from odoo import _, api, models
 
 from odoo.exceptions import UserError
 from odoo.tools import safe_eval
-from odoo.addons.l10n_uy_edi.models import l10n_uy_edi_document
-
-
-# TODO KZ revisar que esto funcione bien
-l10n_uy_edi_document.RESPONSE_CODE_TO_STATE.update({
-    "25": "rejected",  # Rechazado por DGI (Facturas de Proveedor)
-})
 
 
 class L10nUyEdiDocument(models.Model):
-    _inherit = "l10n_uy_edi.document"
 
-    # TODO KZ solo temporal mientras hago las pruebas
-    state = fields.Selection(readonly=False)
+    _inherit = "l10n_uy_edi.document"
 
     # Methods extend for l10n_uy_edi
 
@@ -109,13 +100,6 @@ class L10nUyEdiDocument(models.Model):
 
         return versionPdf, extra_params
 
-    def _get_cfe_tag(self):
-        """ Agregamos el tag eResg. aun no lo usamos pero lo dejaamos disponible """
-        self.ensure_one()
-        if self._is_uy_resguardo():
-            return "eResg"
-        return super()._get_cfe_tag()
-
     # def _l10n_uy_edi_check_invoices(self):
     # We check that there is one and only one vat tax per line
     # TODO KZ this could change soon, waiting functional confirmation
@@ -152,23 +136,4 @@ class L10nUyEdiDocument(models.Model):
                     "You are not enabled to issue this document %(document)s, Please check your configuration settings",
                     document=document_type.display_name))
             res = int(next_number)
-        return res
-
-    # Metodos genericos que aun no se estarian usando mucho
-
-    def _is_uy_resguardo(self):
-        return self.l10n_latam_document_type_id.code in ["182", "282"]
-
-    def _l10n_uy_get_cfe_serie(self):
-        """ Return dictionary with Serie CFE number.
-        Si soy ticket de contingencia usar los valores que estan definidos en el Odoo
-
-        NOTE: In future need to be adapted for contigency records """
-        res = {}
-        cfe_code = int(self.l10n_latam_document_type_id.code)
-        if cfe_code > 200:
-            res.update({
-                "Serie": self.journal_id.code,
-                "NumeroCfe": self.journal_id.sequence_number_next,
-            })
         return res
