@@ -181,11 +181,6 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_edi_cfe_uuid
-msgid "Clave o UUID del CFE"
-msgstr ""
-
-#. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
 msgid "Close"
 msgstr ""
@@ -743,15 +738,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_ucfe_notif
 msgid "UCFE Tipo de Notificacion"
 msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields,help:l10n_uy_edi.field_account_move__l10n_uy_edi_cfe_uuid
-msgid ""
-"Unique identification per CFE in UCFE. Currently is formed by the "
-"concatenation of model name + record id"
-msgstr ""
-"Identificador único del CFE en el UFCE. Este esta formado por la "
-"contanación de el nombre del mdelo y el id del registro"
 
 #. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
