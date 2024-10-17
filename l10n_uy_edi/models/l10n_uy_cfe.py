@@ -637,18 +637,18 @@ class L10nUyCfe(models.AbstractModel):
         error = False
         invoice_date_due = False
         try:
-            partner_vat_RUC = root.findtext('.//RUCEmisor')
-            l10n_latam_document_number = root.findtext('.//Serie') + root.findtext('.//Nro').zfill(7)
+            partner_vat_RUC = root.find('.//{*}RUCEmisor').text
+            l10n_latam_document_number = root.find('.//{*}Serie').text + root.find('.//{*}Nro').text.zfill(7)
             date_format = '%Y-%m-%d'
-            invoice_date = datetime.strptime(root.findtext('.//FchEmis'), date_format).date()
-            fecha_vto = root.findtext('.//FchVenc')
+            invoice_date = datetime.strptime(root.find('.//{*}FchEmis').text, date_format).date()
+            fecha_vto = root.find('.//{*}FchVenc').text if root.find('.//{*}FchVenc') else False
             if fecha_vto:
                 invoice_date_due = datetime.strptime(fecha_vto, date_format).date()
-            fma_pago = root.findtext('.//FmaPago')
+            fma_pago = root.find('.//{*}FmaPago').text if root.find('.//{*}FmaPago') else False
             if fma_pago and fma_pago == '2':
                 invoice.l10n_uy_payment_type = 'credit'
-            invoice_currency = root.findtext('.//TpoMoneda')
-            cant_lineas = root.findtext('.//CantLinDet')
+            invoice_currency = root.find('.//{*}TpoMoneda').text
+            cant_lineas = root.find('.//{*}CantLinDet').text
             partner_id = self.env['res.partner'].search([('commercial_partner_id.vat', '=', partner_vat_RUC)], limit=1)
             # Si no existe el partner lo creamos
             if not partner_id:
@@ -668,6 +668,7 @@ class L10nUyCfe(models.AbstractModel):
                 # Process Invoice Lines. To iterate is used findall.
                 invoice_line_ids = root.findall('.//Item')
                 line_ids = self.l10n_uy_vendor_prepare_lines(company, invoice_line_ids, invoice)
+                import pdb; pdb.set_trace()
                 invoice.line_ids = line_ids
                 if len(invoice.invoice_line_ids) != int(cant_lineas):
                     error = _('The number of invoice lines %s (id:%d) is invalid') % (invoice.name, invoice.id)
@@ -677,7 +678,7 @@ class L10nUyCfe(models.AbstractModel):
             invoice.l10n_latam_document_number = l10n_latam_document_number
             self.env.cr.commit()
             invoice_amount_total = invoice.amount_total
-            xml_amount_total = float(root.findtext('.//MntPagar'))
+            xml_amount_total = float(root.find('.//{*}MntPagar').text)
             if float_compare(invoice_amount_total, xml_amount_total, precision_digits=invoice.currency_id.decimal_places):
                 invoice.message_post(
                     body=_('There is a difference between the invoice total amount in Odoo and the invoice XML. '
@@ -716,9 +717,9 @@ class L10nUyCfe(models.AbstractModel):
                                                     'l10n_uy_ucfe_msg': response_610.Resp.MensajeRta,
                                                     })
         invoice._update_l10n_uy_cfe_state()
-        partner_vat_RUC = root.findtext('.//RUCEmisor')
-        serieCfe = root.findtext('.//Serie')
-        l10n_latam_document_number = root.findtext('.//Nro')
+        partner_vat_RUC = root.find('.//{*}RUCEmisor').text
+        serieCfe = root.find('.//{*}Serie').text
+        l10n_latam_document_number = root.find('.//{*}Nro').text
 
         req_data_pdf = {'rut': company.vat,
                         'rutRecibido': partner_vat_RUC,
@@ -766,7 +767,7 @@ class L10nUyCfe(models.AbstractModel):
 
     def l10n_uy_get_cfe_document_type(self, root):
         """ :return: latam document type in Odoo that represented the XML CFE. """
-        l10n_latam_document_type_id = root.findtext('.//TipoCFE')
+        l10n_latam_document_type_id = root.find('.//{*}TipoCFE').text
         return self.env['l10n_latam.document.type'].search([('code', '=', l10n_latam_document_type_id), ('country_id.code', '=', 'UY')])
 
     def l10n_uy_get_l10n_uy_received_bills(self):
@@ -805,7 +806,7 @@ class L10nUyCfe(models.AbstractModel):
         xml_string = response_610.Resp.XmlCfeFirmado
         if not xml_string:
             raise UserError(_('There is no information to create the vendor bill in the notification %d consulted') % (l10n_uy_idreq))
-        return self.l10n_uy_vendor_prepare_cfe_xml(xml_string)
+        return xml_string
 
     def _l10n_uy_get_tax_not_implemented_description(self, ind_fact):
         """ There are some taxes no implemented for Uruguay, so when move lines are created and if those ones don`t have ind_fact (Indicador de facturación) 1, 2 or 3 then is concatenated the name of the tax not implemented with the name of the line.  """
@@ -889,18 +890,13 @@ class L10nUyCfe(models.AbstractModel):
         root = ET.fromstring(xml_string)
         return root
 
-    def l10n_uy_vendor_prepare_cfe_xml(self, xml_string):
-        """ Parse cfe xml so enable to create vendor bills. We don´t know which format of xml is received, so it is needed to clean the tags of the xml to make it readable by the library xml.etree.ElementTree .  """
-        xml_string = re.sub(r'\bns[A-Za-z0-9]*:', '', xml_string)
-        xml_string = re.sub(r'<eFact[^>]*>', '<eFact>', xml_string)
-        return re.sub(r'<CFE[^>]*>', '<CFE>', xml_string)
-
     def l10n_uy_vendor_prepare_lines(self, company, invoice_line_ids, invoice):
         """ Here are prepared the lines of vendor bills that are synchronized through the Uruware notification request. """
         line_ids = []
         for value in invoice_line_ids:
             domain_tax = [('country_code', '=', 'UY'), ('company_id', '=', company.id), ('type_tax_use', '=', 'purchase')]
-            ind_fact = value.findtext(".//IndFact")
+            import pdb; pdb.set_trace()
+            ind_fact = value.find('.//{*}IndFact').text
             if ind_fact == '1':
                 # Exento de IVA
                 domain_tax += [('tax_group_id.l10n_uy_vat_code', '=', 'vat_exempt')]
@@ -910,12 +906,12 @@ class L10nUyCfe(models.AbstractModel):
             elif ind_fact == '3':
                 # Gravado a Tasa Básica
                 domain_tax += [('tax_group_id.l10n_uy_vat_code', '=', 'vat_22')]
-            price_unit = value.findtext(".//PrecioUnitario")
+            price_unit = value.find('.//{*}PrecioUnitario').text
             tax_item = self.env['account.tax'].search(domain_tax, limit=1)
             line_vals = {'move_type': invoice.l10n_latam_document_type_id._get_move_type(),
                          # There are some taxes no implemented for Uruguay, so when move lines are created and if those ones have ind_fact not in 1, 2 or 3 then is concatenated the name of the tax not implemented with the name of the line.
-                         'name': value.findtext(".//NomItem") + (" (*%s)" % self._l10n_uy_get_tax_not_implemented_description(ind_fact) if ind_fact not in ['1', '2', '3'] else ""),
-                         'quantity': float(value.findtext(".//Cantidad")),
+                         'name': value.find('.//{*}NomItem').text + (" (*%s)" % self._l10n_uy_get_tax_not_implemented_description(ind_fact) if ind_fact not in ['1', '2', '3'] else ""),
+                         'quantity': float(value.find('.//{*}Cantidad').text),
                          'price_unit': float(price_unit) if ind_fact != '7' else -1*float(price_unit),
                          'tax_ids': [(6, 0, tax_item.ids)] if ind_fact in ['1', '2', '3'] else []}
             line_ids.append((0, 0, line_vals))
