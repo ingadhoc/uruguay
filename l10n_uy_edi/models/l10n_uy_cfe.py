@@ -1443,6 +1443,7 @@ class L10nUyCfe(models.AbstractModel):
             el partner de la factura tiene definido algun lenguaje != español: de ser asi imprime el reporte tanto en
             español como en ingles (tambien es un formato disponible en uruware)
         """
+        compatible_en = ['101', '102', '103', '121', '122', '123']
         adenda = self._l10n_uy_get_cfe_adenda().get('Adenda')
         report_params = safe_eval.safe_eval(self.company_id.l10n_uy_report_params or "[]")
         nombreParametros = report_params[0] if report_params else []
@@ -1450,10 +1451,13 @@ class L10nUyCfe(models.AbstractModel):
         if adenda and len(adenda.splitlines()) > 6 and 'adenda' not in nombreParametros:
             nombreParametros.append('adenda')
             valoresParametros.append('true')
-        if self.l10n_latam_document_type_id.code in ['101', '102', '103', '121', '122', '123'] and \
-            self.partner_id.lang and 'es' not in self.partner_id.lang:
-            nombreParametros.append('reporte')
-            valoresParametros.append('ingles')
+        if self.l10n_latam_document_type_id.code in compatible_en:
+            if self.partner_id.lang and 'es' not in self.partner_id.lang and 'ingles' not in valoresParametros:
+                nombreParametros.append('reporte')
+                valoresParametros.append('ingles')
+        elif 'ingles' in valoresParametros:
+            nombreParametros.remove('reporte')
+            valoresParametros.remove('ingles')
 
         return nombreParametros, valoresParametros
 
