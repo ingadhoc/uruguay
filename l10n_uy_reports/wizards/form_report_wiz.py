@@ -49,7 +49,7 @@ class FormReportWiz(models.TransientModel):
         """
         domain = [
             ('company_id', '=', self.company_id.id), ('state', '=', 'posted'),
-            ('date', '>=', self.date_from), ('date', '<', self.date_to),
+            ('date', '>=', self.date_from), ('date', '<=', self.date_to),
             ('partner_id.vat', '!=', False),
             ('l10n_latam_document_type_id.code', '!=', '0'),
             ('l10n_latam_document_type_id.code', '!=', False)
@@ -140,18 +140,23 @@ class FormReportWiz(models.TransientModel):
 
         for rut_partner, invoices in data.items():
             amount_total = {}
-            group_by_subtotal_values = list(inv.tax_totals.get('groups_by_subtotal').values())[0] if list(inv.tax_totals.get('groups_by_subtotal').values()) else []
             for inv in invoices:
+                group_by_subtotal_values = list(inv.tax_totals.get('groups_by_subtotal').values())[0] if list(inv.tax_totals.get('groups_by_subtotal').values()) else []
                 for item in group_by_subtotal_values:
                     tax_group_id = item.get('tax_group_id')
                     if tax_group_id in taxes_group_ids:
-                        inv_amount = item.get('tax_group_amount')
+                        # los comprobantes exentos tienen 0.0 en tax_group_amount, entonces tomamos tax_group_base_amount
+                        inv_amount = item.get('tax_group_amount') if not tax_group_id == self.env.ref('l10n_uy_account.tax_group_vat_exempt').id else item.get('tax_group_base_amount')
                         # No estaba ene especifcacion pero vimos via un ejemplo que los montos reportados siempre son en
                         # pesos. aun qu el comprobamte sea de otra moneda, es por eso que hacemos esta conversion
                         if inv.currency_id != UYU_currency:
-                            inv_amount = inv_amount * inv.l10n_uy_currency_rate
+                            inv_amount = inv_amount * (inv.l10n_uy_currency_rate or (inv.currency_id._convert(1.0, inv.company_id.currency_id, inv.company_id, inv.date, round=False)))
                         key = (tax_group_id, 'sale' if 'out_' in inv.move_type else 'purchase')
-                        amount_total[key] = amount_total.get(key, 0.0) + (amount_total.get(tax_group_id, 0.0)) + inv_amount
+                        sing = '+' if inv.move_type in ['out_invoice', 'in_invoice', 'out_receipt', 'in_receipt'] else '-'
+                        if sing == '+':
+                            amount_total[key] = amount_total.get(key, 0.0) + (amount_total.get(tax_group_id, 0.0)) + inv_amount
+                        else:
+                            amount_total[key] = amount_total.get(key, 0.0) + (amount_total.get(tax_group_id, 0.0)) - inv_amount
             for tax in amount_total:
 
                 if not tax_code.get(tax):
