@@ -1190,11 +1190,21 @@ class L10nUyCfe(models.AbstractModel):
         """B7 Nombre del ítem (producto o servicio). Maximo 80 caracteres
         """
         self.ensure_one()
+<<<<<<< HEAD
         if self._is_uy_inv_type_cfe() or self._is_uy_remito_type_cfe():
             if line.product_id:
                 return line.product_id.display_name[:80]
             else:
                 return '-'
+||||||| parent of e663681 (temp)
+        if self._is_uy_inv_type_cfe():
+            return line.product_id.display_name[:80]
+        if self._is_uy_remito_type_cfe():
+            return line.product_id.display_name[:80]
+=======
+        if self._is_uy_inv_type_cfe() or self._is_uy_remito_type_cfe():
+            return line.product_id.display_name[:80] if line.product_id else line.name or '-'
+>>>>>>> e663681 (temp)
 
     def _uy_cfe_B8_DscItem(self, line):
         """B8 Descripcion Adicional del ítem. Maximo 1000 caracteres
@@ -1204,7 +1214,13 @@ class L10nUyCfe(models.AbstractModel):
         if line.product_id.l10n_uy_additional_info:
             res.append(line.product_id.l10n_uy_additional_info)
         if self._is_uy_inv_type_cfe():
+<<<<<<< HEAD
             if line.name and line.name != line.product_id.display_name:
+||||||| parent of e663681 (temp)
+            if line.product_id.display_name != line.name:
+=======
+            if line.name and line.product_id and line.name != line.product_id.display_name:
+>>>>>>> e663681 (temp)
                 res.append(line.name)
         elif self._is_uy_remito_type_cfe():
             res.append(line.description_picking)
