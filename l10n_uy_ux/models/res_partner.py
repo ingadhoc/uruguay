@@ -150,9 +150,11 @@ class ResPartner(models.Model):
                     [("country_id", "in", countries.ids), ("is_vat", "=", True)], limit=1) or self.env.ref(
                         "l10n_latam_base.it_vat", raise_if_not_found=False)
 
+    # Do not remember
     @api.onchange("company_id")
     def compute_fiscal_countries(self):
-        """ Only used for """
+        """ Esto es usado en la vista para poder filtrar correctamente los tipos de documentos, En odoo oficial solo
+        puedes ver los tipos de documento  """
         for rec in self:
             rec.fiscal_countries = rec._get_countries()
 

@@ -19,15 +19,6 @@ class AccountMove(models.Model):
 
     # EXTENDS
 
-    def _l10n_uy_edi_get_addenda(self):
-        # EXTEND l10n_uy_edi
-        """ Agrega el campo referencia como parte de la adenda """
-        self.ensure_one()
-        res = super()._l10n_uy_edi_get_addenda()
-        if self.ref:
-            res += "\n\n" + _("Reference") + ": %s" % self.ref
-        return res
-
     def _l10n_uy_edi_check_move(self):
         # EXTEND l10n_uy_edi
         """ Validaciones previas a enviar a DGI que Odoo no nos acepto
@@ -39,8 +30,8 @@ class AccountMove(models.Model):
         self.ensure_one()
         errors = super()._l10n_uy_edi_check_move()
 
-        currency_names = self.currency_id.mapped("name") + self.company_id.currency_id.mapped("name")
-        if not currency_names:
+        # TODO KZ estaria bueno revisar que este acitva UYI? self.env.ref('base.UYI').active
+        if not self.company_id.currency_id:
             errors.append(_("You need to configure the company currency"))
 
         if self.journal_id.type == "sale" and self.journal_id.l10n_uy_edi_type not in ["electronic", "manual"]:
@@ -62,7 +53,8 @@ class AccountMove(models.Model):
     def l10n_uy_edi_action_download_preview_xml(self):
         # EXTEND l10n_uy_edi
         """ En odoo oficial solo permite descargar el preview del xml si estamos en demo mode o si ocurrio un error.
-        Aca extendemos para se pueda descargar en cualquier momento, Si no exsite el documento lo genera y lo descargar """
+        Aca extendemos para se pueda descargar en cualquier momento, Si no exsite el documento lo genera y lo descargar
+        """
         if not self.l10n_uy_edi_document_id.attachment_id:
             xml_file = self._l10n_uy_edi_get_preview_xml()
             self.l10n_uy_cfe_xml = xml_file.datas
@@ -148,7 +140,6 @@ class AccountMove(models.Model):
                 name = name.split(" ")[-1]
             rec.l10n_latam_document_number = name
 
-
     # Nuevos metodos
 
     def action_l10n_uy_get_pdf(self):
@@ -184,6 +175,8 @@ class AccountMove(models.Model):
                 self.l10n_uy_edi_error = _("Error al crear el XML del CFẸ\n\n %(errors)s", errors=response)
 
     def action_l10n_uy_remkark_default(self):
+        """ Revisamos leyedas que correspondan aplicar segun las condiciones de leyenda y defaults y las agregamos a
+        la factura con un boton """
         self.ensure_one()
         res = self.env["l10n_uy_edi.addenda"]
 
@@ -198,6 +191,7 @@ class AccountMove(models.Model):
         self.l10n_uy_edi_addenda_ids = res
 
     def action_l10n_uy_addenda_preview(self):
+        """ Boton que permite previsualizar las addendas que seran aplicadas en en este comprobante """
         self.ensure_one()
         raise UserError(self._uy_get_cfe_addenda())
 
@@ -214,8 +208,10 @@ class AccountMove(models.Model):
             if value:
                 B8_DscItem.append((line.display_name, value))
 
-        messge = "* Adenda\n%s\n\n* Info Adicional Doc\n%s\n\n* Info Adicional Emisor\n%s\n\n* Info Adicional Receptor\n%s\n\n * Info Adicional Items\n%s" % (
-            addenda, A16_InfoAdicionalDoc, A51_InfoAdicionalEmisor, A68_InfoAdicionalReceptor, "\n".join(str(item) for item in B8_DscItem))
+        messge = ("* Adenda\n%s\n\n* Info Adicional Doc\n%s\n\n* Info Adicional Emisor\n%s\n\n"
+                  "* Info Adicional Receptor\n%s\n\n * Info Adicional Items\n%s" % (
+                    addenda, A16_InfoAdicionalDoc, A51_InfoAdicionalEmisor, A68_InfoAdicionalReceptor,
+                    "\n".join(str(item) for item in B8_DscItem)))
 
         raise UserError(messge)
 

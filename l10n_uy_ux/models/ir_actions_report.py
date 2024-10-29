@@ -31,7 +31,8 @@ class IrActionsReport(models.Model):
 
         # If we have both, UY EDI invoices and other invoices we process them separately
         if invoices - uy_edi_invoices_w_legal_pdf:
-            collected_streams = super()._render_qweb_pdf_prepare_streams(report_ref, data, res_ids=(invoices - uy_edi_invoices_w_legal_pdf).ids)
+            collected_streams = super()._render_qweb_pdf_prepare_streams(
+                report_ref, data, res_ids=(invoices - uy_edi_invoices_w_legal_pdf).ids)
         else:
             collected_streams = OrderedDict()
 
