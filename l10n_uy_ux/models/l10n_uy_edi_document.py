@@ -63,8 +63,8 @@ class L10nUyEdiDocument(models.Model):
     @api.model
     def _is_connection_info_incomplete(self, company):
         # EXTEND l10n_uy_edi
-        """ Intenta mnadar mensaje de error de alerta si estas en ambiente de testing con datos
-        de produccion
+        """ Intenta mandar mensaje de error de alerta si estas en ambiente de testing con datos
+        de producción
 
         Return:
             False if everything is ok,
@@ -83,35 +83,30 @@ class L10nUyEdiDocument(models.Model):
         """ Odoo oficial solo imprime el reporte standard de uruware.
         Aca extendemos para que haga dos cosas:
 
-        1. Sirve para detectar si la adenda es muy grande automaticamente mandar a imprimir el reporte con adenda en hoja separada
-        2. Sirve para enviar un reporte pre definido por el cliente en la configuracion de Odoo en lugar de imprimir el reporte por defecto de Uruware
+        1. Sirve para detectar si la adenda es muy grande automaticamente mandar a imprimir el reporte con adenda en
+            hoja separada (si la adenda lleva > 6 lineas esto sucede)
+        2. Sirve para enviar un reporte pre definido por el cliente en la configuracion de Odoo en lugar de imprimir
+            el reporte por defecto de Uruware
+        3.  En caso de que el documento sea un e-ticket o e-factura expo o sus respectivas NC y ND se fijara si
+            el partner de la factura tiene definido algun lenguaje != español: de ser asi imprime el reporte tanto en
+            español como en ingles (tambien es un formato disponible en uruware)
         """
-        # TODO: Aca tenemos un problema estamos revisando longitud de caracteres, pero en realidad debemos revisar es cantidad
-        # de lineas que lleva la adenda, porque si es mayor que 6 lineas se corta
-        addenda = self.move_id._l10n_uy_edi_get_addenda()
-        if addenda and len(addenda) > 799:
-            report_params = [["adenda"], ["true"]]
-        else:
-            # En caso de que el cliente eliga el reporte que quiere imprimir
-            report_params = safe_eval.safe_eval(self.company_id.l10n_uy_report_params or "[]")
-
-        extra_params = {}
-        if report_params:
-            nombreParametros = report_params[0]
-            valoresParametros = report_params[1]
-            versionPdf = "ObtenerPdfConParametros"
-            extra_params.update({
-                "nombreParametros": nombreParametros,
-                "valoresParametros": valoresParametros,
-            })
-        else:
-            versionPdf = "ObtenerPdf"
-
-        return versionPdf, extra_params
-
-    # def _l10n_uy_edi_check_invoices(self):
-    # We check that there is one and only one vat tax per line
-    # TODO KZ this could change soon, waiting functional confirmation
+        compatible_en = ['101', '102', '103', '121', '122', '123']
+        adenda = self._l10n_uy_get_cfe_adenda().get('Adenda')
+        report_params = safe_eval.safe_eval(self.company_id.l10n_uy_report_params or "[]")
+        nombreParametros = report_params[0] if report_params else []
+        valoresParametros = report_params[1] if report_params else []
+        if adenda and len(adenda.splitlines()) > 6 and 'adenda' not in nombreParametros:
+            nombreParametros.append('adenda')
+            valoresParametros.append('true')
+        if self.l10n_latam_document_type_id.code in compatible_en:
+            if self.partner_id.lang and 'es' not in self.partner_id.lang and 'ingles' not in valoresParametros:
+                nombreParametros.append('reporte')
+                valoresParametros.append('ingles')
+        elif 'ingles' in valoresParametros:
+            nombreParametros.remove('reporte')
+            valoresParametros.remove('ingles')
+        return nombreParametros, valoresParametros
 
     # Metodos nuevos
 
