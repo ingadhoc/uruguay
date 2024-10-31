@@ -1,5 +1,4 @@
 import base64
-import json
 import logging
 from odoo import models, api, fields, _
 from odoo.exceptions import UserError
@@ -80,18 +79,20 @@ class FormReportWiz(models.TransientModel):
         return res
 
     def _get_form_2181_data(self):
-        """ Prepara the content of the file
+        """ 
+        Prepara the content of the file
 
         Este es un solo archivo TXT el cual contiene.
         En el Rubro 5 se ingresan agrupados por Identificación del contribuyente y número de línea
         correspondiente al concepto declarado e importe.
 
         Agrupado por partner, por periodo y fecha de factura la información de los impuestos generados
-
-        return the string with the lines of the file to write """
+        
+        Devuelve un string con las lineas de la carpeta a escribir
+        """
         lines = []
 
-        # Importante. aca este el archivo generado mezcla iva compras e iva ventas.
+        # Importante: el archivo generado mezcla iva compras e iva ventas.
         line_code = {
             self._search_tax(22.0, 'sale'): '502',  # 502 IVA Ventas Tasa Básica a Contribuyentes
             self._search_tax(10.0, 'sale'): '503',  # 503 IVA Ventas Tasa Mínima a Contribuyentes
@@ -142,24 +143,23 @@ class FormReportWiz(models.TransientModel):
         for rut_partner, invoices in data.items():
             amount_total = {}
             for inv in invoices:
-                group_by_subtotal_values = list(inv.tax_totals.get('groups_by_subtotal').values())[0] if list(inv.tax_totals.get('groups_by_subtotal').values()) else []
-                for item in group_by_subtotal_values:
-                    tax_group_id = item.get('tax_group_id')
-                    if tax_group_id in taxes_group_ids:
-                        # los comprobantes exentos tienen 0.0 en tax_group_amount, entonces tomamos tax_group_base_amount
-                        inv_amount = item.get('tax_group_amount') if not tax_group_id == self.env.ref('l10n_uy_account.tax_group_vat_exempt').id else item.get('tax_group_base_amount')
-                        # No estaba ene especifcacion pero vimos via un ejemplo que los montos reportados siempre son en
-                        # pesos. aun qu el comprobamte sea de otra moneda, es por eso que hacemos esta conversion
-                        if inv.currency_id != UYU_currency:
-                            inv_amount = inv_amount * (inv.l10n_uy_currency_rate or (inv.currency_id._convert(1.0, inv.company_id.currency_id, inv.company_id, inv.date, round=False)))
-                        key = (tax_group_id, 'sale' if 'out_' in inv.move_type else 'purchase')
-                        sing = '+' if inv.move_type in ['out_invoice', 'in_invoice', 'out_receipt', 'in_receipt'] else '-'
-                        if sing == '+':
-                            amount_total[key] = amount_total.get(key, 0.0) + (amount_total.get(tax_group_id, 0.0)) + inv_amount
-                        else:
-                            amount_total[key] = amount_total.get(key, 0.0) + (amount_total.get(tax_group_id, 0.0)) - inv_amount
-            for tax in amount_total:
+                subtotals = inv.tax_totals.get('subtotals', [])
+                currency_is_uyu = inv.currency_id == UYU_currency
+                is_sale = 'out_' in inv.move_type
+                sign = 1 if inv.move_type in ['out_invoice', 'in_invoice', 'out_receipt', 'in_receipt'] else -1
 
+                for item in subtotals:
+                    tax_group_ids = item.get('tax_groups', [])
+                    # No estaba ene especifcacion pero vimos via un ejemplo que los montos reportados siempre son en
+                    # pesos, aunque el comprobamte sea de otra moneda, es por eso que utilizamos el monto convertido
+                    tax_amount = item.get('tax_amount') if currency_is_uyu else item.get('tax_amount_currency')
+                    for tax_group_id in tax_group_ids:
+                        tax_id = tax_group_id['id']
+                        if tax_id in taxes_group_ids:
+                            key = (tax_id, 'sale' if is_sale else 'purchase')
+                            amount_total[key] = amount_total.get(key, 0.0) + (sign * tax_amount)
+
+            for tax in amount_total:
                 if not tax_code.get(tax):
                     continue
 
@@ -172,13 +172,13 @@ class FormReportWiz(models.TransientModel):
                 # Campo 2 - Formulario. Num 5
                 content_data += "{: 5d};".format(int(self.uy_form_id))
 
-                # Campo 3 - Período (AAAAMM) Num 6. Ejemplo: 200306
+                # Campo 3 - Período (AAAAMM) Num 6. Ejemplo: 202406
                 content_data += "{};".format(self.date_period)
 
                 # Campo 4 - RUT Informado. Num 12
                 content_data += rut_partner.zfill(12) + ";"
 
-                # Campo 5 - Factura AAAAMM Num 6. Ejemplo: 200305
+                # Campo 5 - Factura AAAAMM Num 6. Ejemplo: 202405
                 content_data += "{};".format(line.move_id.date.strftime("%Y%m"))
 
                 # Campo 6 - Línea del Rubro 5 del Formulario
@@ -199,7 +199,7 @@ class FormReportWiz(models.TransientModel):
         if self.company_id.country_id.code != 'UY':
             raise UserError(_("Solo puede generar este reporte para compañias Uruguayas"))
 
-        data = getattr(self, '_get_form_%s_data' % self.uy_form_id)()
+        data = getattr(self, '_get_form_%s_data' % self.uy_form_id)() if self.uy_form_id else None
         if data:
             self.res_filename = self.company_id.name[:4] + "Formulario2-181DGI_" + self.date_period[-2:] + self.date_period[:4] + ".txt"
             # TODO No sabemos realmente cual es el formato, solo tomamos de ejemplo el que genera uruware
