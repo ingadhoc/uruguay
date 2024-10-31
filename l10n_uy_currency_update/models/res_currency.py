@@ -10,7 +10,7 @@ class ResCurrency(models.Model):
 
     _inherit = "res.currency"
 
-    l10n_uy_have_bcu_code = fields.Boolean(store=False,compute='_compute_l10n_uy_bcu_have_code')
+    l10n_uy_have_bcu_code = fields.Boolean(compute='_compute_l10n_uy_bcu_have_code')
 
     def _compute_l10n_uy_bcu_have_code(self):
         """
@@ -21,25 +21,22 @@ class ResCurrency(models.Model):
         It does not return any value but updates the `l10n_uy_have_bcu_code` field in each record of the current model.
         This will help us hide the buttons in the view of l10n_uy_currency_update/views/res_currency_views.xml
         """
-        available_currencies = self.env['res.currency'].search([])
-        rate = self.env['res.company']._parse_bcu_data(available_currencies)
-        for rec in self:
-            if rec.name in rate.keys():
-                rec.l10n_uy_have_bcu_code = True
-                continue
-            rec.l10n_uy_have_bcu_code = False
+        available_currencies = self.env['res.company']._get_bcu_currencies_mapping()
+        # Remove the currency from the available currencies list to hide the button in the form view.
+        available_currencies.pop('UYI')
+        self.mapped(lambda x: x.update({'l10n_uy_have_bcu_code': x.name in available_currencies}))
 
     def action_l10n_uy_get_bcu_rate(self):
-        available_currencies = self.env['res.currency'].search([])
-        rate = self.env['res.company']._parse_bcu_data(available_currencies)
-        if self.name in rate:
+        self.ensure_one()
+        rate = self.env['res.company']._parse_bcu_data(self)
+        if rate:
             raise UserError(_('Fecha Ultimo Cierre: %s\nRate: %s' % (rate[self.name][1], rate[self.name][0])))
         else:
             raise UserError(_('No se encontro cotizacion para esta Moneda'))
 
     def action_get_available_currencies(self):
         """ Get the currency codes available in BCU
-        View specification in https://cotizaciones.bcu.gub.uy/wscotizaciones/servlet/awsbcumonedas/service.asmx?WSDL """
+        Specification in https://cotizaciones.bcu.gub.uy/wscotizaciones/servlet/awsbcumonedas/service.asmx?WSDL """
         self.ensure_one()
 
         wsdl = "https://cotizaciones.bcu.gub.uy/wscotizaciones/servlet/awsbcumonedas/service.asmx?WSDL"
@@ -65,6 +62,8 @@ class ResCurrency(models.Model):
             else:
                 not_configured.update({item.Codigo: item.Nombre})
 
-        message = "\n".join(["Código/ Moneda\n\n(Configuradas):"] + ["* %s - %s" % (key, value) for key, value in configured.items()])
-        message += "\n\n" + "\n".join(["(No configuradas)"] + ["* %s - %s" % (key, value) for key, value in not_configured.items()])
+        message = "\n".join(["Código/ Moneda\n\n(Configuradas):"] + \
+                            ["* %s - %s" % (key, value) for key, value in configured.items()])
+        message += "\n\n" + "\n".join(["(No configuradas)"] + \
+                                      ["* %s - %s" % (key, value) for key, value in not_configured.items()])
         raise UserError(message)

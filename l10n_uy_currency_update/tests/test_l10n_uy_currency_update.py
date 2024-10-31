@@ -11,8 +11,9 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 class TestL10nUyCurrencyUpdate(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref="uy"):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    @AccountTestInvoicingCommon.setup_chart_template('uy')
+    def setUpClass(cls):
+        super().setUpClass()
         cls.UYU = cls.env.ref('base.UYU')
         cls.UYI = cls.env.ref('base.UYI')
         cls.ARS = cls.env.ref('base.ARS')
