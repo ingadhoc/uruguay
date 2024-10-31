@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models, tools
+from odoo.tools import SQL
 
 
 class AccountUyVatLine(models.Model):
@@ -57,24 +58,26 @@ class AccountUyVatLine(models.Model):
         # we use tax_ids for base amount instead of tax_base_amount for two reasons:
         # * zero taxes do not create any aml line so we can't get base for them with tax_base_amount
         # * we use same method as in odoo tax report to avoid any possible discrepancy with the computed tax_base_amount
-        query, params = self._uy_vat_line_build_query()
-        sql = f"""CREATE or REPLACE VIEW account_uy_vat_line as ({query})"""
-        cr.execute(sql, params)
+        query = self._uy_vat_line_build_query()
+        sql = SQL("""CREATE or REPLACE VIEW account_uy_vat_line  as (%s)""", query)
+        cr.execute(sql)
 
     @api.model
-    def _uy_vat_line_build_query(self, tables='account_move_line', where_clause='', where_params=None,
+    def _uy_vat_line_build_query(self, table_references=None, search_condition=None,
                                  column_group_key='', tax_types=('sale', 'purchase')):
         """Returns the SQL Select query fetching account_move_lines info in order to build the pivot view for the VAT summary.
         This method is also meant to be used outside this model, which is the reason why it gives the opportunity to
         provide a few parameters, for which the defaults are used in this model.
 
         The query is used to build the VAT book report"""
-        if where_params is None:
-            where_params = []
+        if table_references is None:
+            table_references = SQL('account_move_line')
+        search_condition = SQL('AND (%s)', search_condition) if search_condition else SQL()
 
-        query = f"""
+        query = SQL(
+            """
                 SELECT
-                    %s AS column_group_key,
+                    %(column_group_key)s AS column_group_key,
                     account_move.id,
                     (CASE WHEN lit.l10n_uy_dgi_code = '2' THEN rp.vat ELSE NULL END) AS rut,
                     account_move.name as move_name,
@@ -98,7 +101,7 @@ class AccountUyVatLine(models.Model):
                     SUM(CASE WHEN nt.amount not in (22.0, 10.0, 0.0) AND nt.l10n_uy_tax_category = 'vat' THEN account_move_line.balance ELSE 0 END) AS other_taxes,
                     SUM(account_move_line.balance) AS total
                 FROM
-                    {tables}
+                    %(table_references)s
                     JOIN
                         account_move ON account_move_line.move_id = account_move.id
                     LEFT JOIN
@@ -116,11 +119,16 @@ class AccountUyVatLine(models.Model):
                     WHERE
                         (account_move_line.tax_line_id is not NULL OR bt.amount IN (22.0, 10.0, 0.0) AND bt.l10n_uy_tax_category = 'vat') AND
                         account_move.move_type IN ('out_invoice', 'in_invoice', 'out_refund', 'in_refund')
-                        AND (nt.type_tax_use in %s OR bt.type_tax_use in %s)
-                    {where_clause}
+                        AND (nt.type_tax_use in %(tax_types)s OR bt.type_tax_use in %(tax_types)s)
+                    %(search_condition)s
                 GROUP BY
                     account_move.id, rp.id, lit.id, tax_type
                 ORDER BY
-                    account_move.date, account_move.name"""
-
-        return query, [column_group_key, tax_types, tax_types, *where_params]
+                    account_move.invoice_date, account_move.name
+            """,
+            column_group_key=column_group_key,
+            table_references=table_references,
+            tax_types=tax_types,
+            search_condition=search_condition,
+        )
+        return query

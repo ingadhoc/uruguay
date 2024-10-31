@@ -14,7 +14,6 @@
         <field name="load_more_limit" eval="80"/>
         <field name="column_ids">
             <record id="l10n_uy_vat_book_report_column_invoice_date" model="account.report.column">
-                <!-- TODO revisar que realmente es el campo invoice_date y no el campo date -->
                 <field name="name">Date</field>
                 <field name="expression_label">date</field>
                 <field name="figure_type">date</field>
