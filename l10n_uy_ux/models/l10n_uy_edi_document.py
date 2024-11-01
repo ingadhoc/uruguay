@@ -16,36 +16,6 @@ class L10nUyEdiDocument(models.Model):
 
     # Methods extend for l10n_uy_edi
 
-    def _get_ws_url(self, ws_endpoint, company):
-        # EXTEND l10n_uy_edi
-        """ Si utiliza uruware por Contrato Externo (no el de Odoo) da la posibilidad
-        de utilizar dos urls en system parametros, uno para test y otro para pod
-
-        Asi no tiene que configurar el dato cada vez que lo vayan a usar """
-        url = super()._get_ws_url(ws_endpoint, company)
-
-        if company.l10n_uy_edi_ucfe_env == "demo":
-            return url
-
-        inbox_param = self.env["ir.config_parameter"].sudo().get_param(
-            "l10n_uy_edi.l10n_uy_edi_ucfe_inbox_url" + company.l10n_uy_edi_ucfe_env)
-
-        query_param = self.env["ir.config_parameter"].sudo().get_param(
-                "l10n_uy_edi.l10n_uy_edi_ucfe_query_url" + company.l10n_uy_edi_ucfe_env)
-
-        pattern = {
-            "inbox": "https://.*.ucfe.com.uy/inbox.*/cfeservice.svc",
-            "query": "https://.*.ucfe.com.uy/query.*/webservicesfe.svc",
-        }
-        if ws_endpoint == "inbox" and inbox_param:
-            url = inbox_param
-        elif ws_endpoint == "query" and query_param:
-            url = query_param
-        else:
-            _logger.info("Using Odoo defaults values")
-
-        return url if re.match(pattern[ws_endpoint], url, re.IGNORECASE) is not None else False
-
     def action_update_dgi_state(self):
         # EXTEND l10n_uy_edi
         """ Permitimos actualizar estado solo si tenemos UUID y solo si esta en esperando respuesta.
@@ -92,7 +62,7 @@ class L10nUyEdiDocument(models.Model):
             español como en ingles (tambien es un formato disponible en uruware)
         """
         compatible_en = ['101', '102', '103', '121', '122', '123']
-        adenda = self._l10n_uy_get_cfe_adenda().get('Adenda')
+        adenda = self._l10n_uy_edi_get_addenda()
         report_params = safe_eval.safe_eval(self.company_id.l10n_uy_report_params or "[]")
         nombreParametros = report_params[0] if report_params else []
         valoresParametros = report_params[1] if report_params else []

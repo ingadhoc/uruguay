@@ -3,6 +3,7 @@ import pprint
 import stdnum
 from stdnum.exceptions import InvalidLength, InvalidChecksum, InvalidFormat
 from xml.etree.ElementTree import fromstring, ElementTree
+from lxml import etree
 
 from odoo import _, api, fields, models
 
@@ -62,64 +63,69 @@ class ResPartner(models.Model):
         values = {}
 
         data_mapping = {
-            "street": ".//{DGI_Modernizacion_Consolidado}Calle_Nom",
+            "street": ".//{*}Calle_Nom",
 
-            "city": ".//{DGI_Modernizacion_Consolidado}Loc_Nom",
-            "zip": ".//{DGI_Modernizacion_Consolidado}Dom_Pst_Cod",
+            "city": ".//{*}Loc_Nom",
+            "zip": ".//{*}Dom_Pst_Cod",
             "phone":
-                ".//{DGI_Modernizacion_Consolidado}WS_Domicilio.WS_DomicilioItem.Contacto"
-                "[{DGI_Modernizacion_Consolidado}TipoCtt_Des='TELEFONO FIJO']/"
-                "{DGI_Modernizacion_Consolidado}DomCtt_Val",
+                ".//{*}WS_Domicilio.WS_DomicilioItem.Contacto"
+                "[{*}TipoCtt_Des='TELEFONO FIJO']/"
+                "{*}DomCtt_Val",
             "mobile":
-                ".//{DGI_Modernizacion_Consolidado}WS_Domicilio.WS_DomicilioItem.Contacto"
-                "[{DGI_Modernizacion_Consolidado}TipoCtt_Des='TELEFONO MOVIL']/"
-                "{DGI_Modernizacion_Consolidado}DomCtt_Val",
+                ".//{*}WS_Domicilio.WS_DomicilioItem.Contacto"
+                "[{*}TipoCtt_Des='TELEFONO MOVIL']/"
+                "{*}DomCtt_Val",
             "email":
-                ".//{DGI_Modernizacion_Consolidado}WS_Domicilio.WS_DomicilioItem.Contacto["
-                "{DGI_Modernizacion_Consolidado}TipoCtt_Des='CORREO ELECTRONICO']/"
-                "{DGI_Modernizacion_Consolidado}DomCtt_Val",
+                ".//{*}WS_Domicilio.WS_DomicilioItem.Contacto["
+                "{*}TipoCtt_Des='CORREO ELECTRONICO']/"
+                "{*}DomCtt_Val",
 
-            "name": ".//{DGI_Modernizacion_Consolidado}Denominacion",
-            "ref": ".//{DGI_Modernizacion_Consolidado}NombreFantasia",
-            "street2":  ".//{DGI_Modernizacion_Consolidado}Dom_Coment",
+            "name": ".//{*}Denominacion",
+            "ref": ".//{*}NombreFantasia",
+            "street2":  ".//{*}Dom_Coment",
 
             # TODO remove
-            "street_number": ".//{DGI_Modernizacion_Consolidado}Dom_Pta_Nro",
-            "state": ".//{DGI_Modernizacion_Consolidado}Dpto_Nom",
+            "street_number": ".//{*}Dom_Pta_Nro",
+            "state": ".//{*}Dpto_Nom",
         }
 
         # If partner has RUC
         edi_doc = self.env["l10n_uy_edi.document"]
         # TODO KZ need to ensure that use the proper company
         if self.l10n_latam_identification_type_id.l10n_uy_dgi_code == "2":
-            response = edi_doc._ucfe_inbox("640", {"RutEmisor": self.vat})
-            # TODO delete after finish the tests
-            _logger.info("response %s" % pprint.pformat(response))
+            result = edi_doc._ucfe_inbox("640", {"RutEmisor": self.vat})
+            if errors := result.get('errors'):
+                raise UserError(_("No se pudo conectar a DGI para extraer los datos %s". str(errors)))
+            if response := result.get('response'):
+                if response.findtext(".//{*}CodRta") == "00":
+                    # TODO ver detalle de los demas campos que podemos integrar en pagin 83 Manual de integración
+                    tree = etree.fromstring(response.findtext(".//{*}XmlCfeFirmado").encode('utf-8'))
 
-            if response.Resp.CodRta == "00":
-                # TODO ver detalle de los demas campos que podemos integrar en pagin 83 Manual de integración
-                tree = ElementTree(fromstring(response.Resp.XmlCfeFirmado))
+                    # TODO delete after finish the tests
+                    print(etree.tostring(tree, pretty_print=True))
 
-                values = {}
-                for odoo_field, mapping_value in data_mapping.items():
-                    val = tree.findtext(mapping_value)
-                    if val:
-                        values.update({odoo_field: val})
+                    values = {}
+                    for odoo_field, mapping_value in data_mapping.items():
+                        val = tree.findtext(mapping_value)
+                        if val:
+                            values.update({odoo_field: val})
 
-                state_name = values.pop("state")
-                state_id = state_name and self.env["res.country.state"].search(
-                    [("name", "=ilike", state_name)], limit=1)
+                    state_name = values.pop("state")
+                    state_id = state_name and self.env["res.country.state"].search(
+                        [("name", "=ilike", state_name)], limit=1)
 
-                values["state_id"] = state_id.id or False
-                if state_id:
-                    values["country_id"] = state_id.country_id.id
-                if "street" in values:
-                    values["street"] += " " + values.get("street_number")
-                # Este campo no existe en odoo base, asi que tenemos que
-                # removerlo siempre del values
-                values.pop("street_number")
-            else:
-                raise UserError(_("No se pudo conectar a DGI para extraer los datos"))
+                    values["state_id"] = state_id.id or False
+                    if state_id:
+                        values["country_id"] = state_id.country_id.id
+                    if "street" in values:
+                        values["street"] += " " + values.get("street_number")
+
+                    # Este campo no existe en odoo base, asi que tenemos que
+                    # removerlo siempre del values
+                    values.pop("street_number")
+                else:
+                    raise UserError(_(
+                        "Hubo un error en el response %s". str(etree.tostring(response, pretty_print=True))))
         else:
             raise UserError(_("Solo puede consultar si el partner tiene tipo de identificación RUT"))
 
