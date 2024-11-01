@@ -13,26 +13,25 @@ En este modulo agregamos:
 
 **Funcionalidades:**
 
-* Almacenar dato de conexion a Uruware de test y de producción. Odoo oficial solo permite tener configurado un dato, con este cambio almacenamos ambos datos, y el usuario o soporte solo necesita cambiar en ajustes la opción producción o testing sin tener que hacer
-configuraciones o modificaciones extra.
+* Almacenar dato de conexion a Uruware de test y de producción. Odoo oficial solo permite tener configurado un dato, con este cambio almacenamos ambos datos, y el usuario o soporte solo necesita cambiar en ajustes la opción producción o testing sin tener que hacer configuraciones o modificaciones extra.
 
 * Padron DGI: Permite consultar los datos de un contacto en su odoo, si este es o no emisor electronico, y los datos de padron como asistente para que les permita llenar los datos del contacto de manera mas sencilla en su odoo.
 
-   * Boton para manualmente actualizar/checar estado de DGI de un comprobante
-   * En ajustes tenemos campos para almacenar como data informativo el certificado DGI y clave asociada, asi tenerlo de respaldo para configurarlos en Uruware prod/test
+  * Boton para manualmente actualizar/checar estado de DGI de un comprobante
+  * En ajustes tenemos campos para almacenar como data informativo el certificado DGI y clave asociada, asi tenerlo de respaldo para configurarlos en Uruware prod/test
 
 * Para la representacion impresa legal de una factura electronica uruguaya la obtenemos desde Uruware con modulo oficial al validar la factura en DGI (no implementado aun como reporte en Odoo), pero tiene un par de problemas 1) si por alguna razon el pdf no se crea o se borra no tenemos opcion de recuperarlo de volver a attacharlo a la factura, 2) los botones de imprimir factura de odoo generan el reporte pdf de odoo y no el pdf legal, en este modulo siempre imprimimos el pdf legal
 
-   1. accion imprimir factura y facturas sin pagos
-   2. opcion boton enviar e imprimir
-   3. envio automatico al validar la factura segun configuracion del diario
+  1. accion imprimir factura y facturas sin pagos
+  2. opcion boton enviar e imprimir
+  3. envio automatico al validar la factura segun configuracion del diario
 
 * Extendemos para poder descargar el preview del xml, no solo si estamos en demo mode o si ocurrio un error, sino en cualquier momento. Si no exsite aun el documento lo genera y lo descargar
 
 * Agregar mas logica a las Addendas y Leyendas Obligatorias:
 
-   * Defaults del sistema: agrega un campo condicion el cual ayuda a aplicar la adenda al comprobante si es te cumple con dicha condición.
-   * Previsualizar: boton que permite ver como quedan antes de enviarlas.
+  * Defaults del sistema: agrega un campo condicion el cual ayuda a aplicar la adenda al comprobante si es te cumple con dicha condición.
+  * Previsualizar: boton que permite ver como quedan antes de enviarlas.
 
 * Permitir desde un diario de Ventas manual poder traer facturas creadas en Uruware.
 
