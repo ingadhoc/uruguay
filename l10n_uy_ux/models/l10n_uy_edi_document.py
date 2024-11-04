@@ -81,11 +81,12 @@ class L10nUyEdiDocument(models.Model):
     # Metodos nuevos
 
     def _get_dgi_last_invoice_number(self, document_type):
-        """ En este momento no lo usamos, en la version anterior lo usabamos para calcular la secuencia del proximo numero a usar.
-        Realmente no era necesario y ya no lo hacemos, sin embargo quedo aca implementado.
+        """ En este momento no lo usamos, en la version anterior lo usabamos para calcular la
+        secuencia del proximo numero a usar. Realmente no era necesario y ya no lo hacemos, sin embargo
+        quedo aca implementado.
 
-        El dia de mañana si quieremos un Consultar Comprobante de DGI podemos usar esto que ya esta implementado
-        ENDPOINT: 660 - Query to get next CFE number
+        El dia de mañana si quieremos un Consultar Comprobante de DGI podemos usar esto
+        660 - Query to get next CFE number
 
         NOTE: This method take into account regular CFE documents (code < 200),
         does not take into account contingency documents

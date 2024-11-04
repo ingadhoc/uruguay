@@ -1,0 +1,631 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_uy_ux
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-11-04 14:51+0000\n"
+"PO-Revision-Date: 2024-11-04 14:51+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_partner_form
+msgid "(UY) Is Electronic Issuer?"
+msgstr "(UY) Es Emisor Electrónico?"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
+msgid "(UY) Print Legal PDF"
+msgstr "(UY) Imprimir PDF Legal"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
+msgid "(UY) Reprint Legal PDF"
+msgstr "(UY) Re Imprimir PDF Legal"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_partner_form
+msgid "(UY) Update From DGI"
+msgstr "(UY) Actualizar dede DGI"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
+msgid "<span>Preview: </span>"
+msgstr "<span>Previsualización: </span>"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_l10n_uy_edi_addenda__active
+msgid "Active"
+msgstr "Activo"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
+msgid "Addendas"
+msgstr "Adendas"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
+msgid "Addendas and Disclosures"
+msgstr "Adendas y Leyendas"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields.selection,name:l10n_uy_ux.selection__l10n_uy_edi_addenda__apply_on__all
+msgid "All CFE"
+msgstr "Todos los CFE"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_l10n_uy_edi_addenda__apply_on
+msgid "Apply On"
+msgstr "Aplica en"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
+msgid "Are you sure to execute the automatic update of your partners ?"
+msgstr "Estas seguro de ejectuar la actualización automática de tus contactos ?"
+
+#. module: l10n_uy_ux
+#: model:ir.actions.act_window,name:l10n_uy_ux.action_partner_update
+msgid "Automatic Update from DGI"
+msgstr "Actualización Automática desde DGI"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.res_config_settings_view_form_inherit_l10n_uy_edi
+msgid ""
+"By default (empty) will print the Uruware Standard PDF Report, If want to "
+"print a different format need to define it here (Example: addenda in second "
+"page, detail invoice lines, personalizated report)"
+msgstr ""
+"Por defecto (vacío) se imprimirá el Informe PDF Estándar de Uruware. Si desea "
+"imprimir en un formato diferente, deberá definirlo aquí (Ejemplo: adendas en la segunda"
+" página, líneas de factura detalladas, informe personalizado)"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
+msgid "CFE"
+msgstr ""
+
+#. module: l10n_uy_ux
+#: model:ir.model,name:l10n_uy_ux.model_l10n_uy_edi_addenda
+msgid "CFE Addenda / Disclosure"
+msgstr "Adenda / Leyendas CFE"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.res_config_settings_view_form_inherit_l10n_uy_edi
+msgid "Certificate"
+msgstr "Certificado"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
+msgid "Close"
+msgstr "Cerrar"
+
+#. module: l10n_uy_ux
+#: model:ir.model,name:l10n_uy_ux.model_res_company
+msgid "Companies"
+msgstr "Empresas"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_l10n_uy_edi_addenda__condition
+msgid "Condition"
+msgstr "Condición"
+
+#. module: l10n_uy_ux
+#: model:ir.model,name:l10n_uy_ux.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: l10n_uy_ux
+#: model:ir.model,name:l10n_uy_ux.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,help:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__title_case
+msgid "Converts retreived text fields to Title Case."
+msgstr "Convierte los campos de texto recuperados a Titulo Caso"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__create_uid
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__create_date
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.res_config_settings_view_form_inherit_l10n_uy_edi
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
+msgid "DGI"
+msgstr ""
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_company_form
+msgid "DGI / Uruware"
+msgstr ""
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_company__l10n_uy_dgi_crt
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_config_settings__l10n_uy_dgi_crt
+msgid "DGI Certificate"
+msgstr "Certificado DGI"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_company__l10n_uy_dgi_crt_fname
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_config_settings__l10n_uy_dgi_crt_fname
+msgid "DGI Certificate name"
+msgstr "Nombre del certificado DGI"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__display_name
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_account_bank_statement_line__l10n_latam_document_type_id
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_account_move__l10n_latam_document_type_id
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_account_payment__l10n_latam_document_type_id
+msgid "Document Type"
+msgstr "Tipo de Documento"
+
+#. module: l10n_uy_ux
+#: model:ir.model,name:l10n_uy_ux.model_l10n_uy_edi_document
+msgid "Electronic Fiscal Document (CFE - UY)"
+msgstr "Documento Fiscal Electrónico (CFE - UY)"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+#, python-format
+msgid "Error creating CFẸ XML"
+msgstr ""
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+#, python-format
+msgid ""
+"Error creating CFẸ XML\n"
+"\n"
+" %(errors)s"
+msgstr ""
+"Error al crear el XML del CFẸ\n"
+"\n"
+" %(errors)s"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+#, python-format
+msgid "Error getting the PDF file: %s"
+msgstr "Error al obtener el archivo PDF: %s"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/res_partner.py:0
+#, python-format
+msgid "It is an electronic issuer"
+msgstr "Es un emisor electrónico"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
+msgid ""
+"This invoice is not yet validated, so if you try to print it you will get a not Legal PDF"
+msgstr ""
+"Esta factura aun no esta validada, asi que si intenta imprimir tendra un PDF no Legal"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
+msgid ""
+"This invoice is validated but it is missing the associated legal PDF, please "
+"try to regenerate it"
+msgstr ""
+"Esta factura esta validada pero le falta el PDF legal asociado, por favor "
+"intente re generarlo"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__field
+msgid "Field"
+msgstr "Campo"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__field_ids
+msgid "Fields"
+msgstr "Campos"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__field_to_update_ids
+msgid "Fields To Update"
+msgstr "Campos a Actualizar"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields.selection,name:l10n_uy_ux.selection__res_partner_update_from_padron_uy_wizard__state__finished
+msgid "Finished"
+msgstr "Finalizada"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner__fiscal_countries
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_users__fiscal_countries
+msgid "Fiscal Countries"
+msgstr "Paises Fiscales"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
+msgid "Get Defaults"
+msgstr "Obtener valores por defecto"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
+msgid "Get Uruware Invoice"
+msgstr "Obtener factura de Uruware"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.res_config_settings_view_form_inherit_l10n_uy_edi
+msgid ""
+"Here need to upload the file with the Digital Certificate to operate in DGI"
+msgstr ""
+"Aquí se debe cargar el archivo con el Certificado Digital para operar en DGI"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/res_partner.py:0
+#, python-format
+msgid "There was an error in the response %s"
+msgstr "Hubo un error en el response %s"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__id
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
+msgid "Info/Disclosures"
+msgstr "Info/Leyendas"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.res_config_settings_view_form_inherit_l10n_uy_edi
+msgid "Informative fields"
+msgstr "Campo informativo"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields.selection,name:l10n_uy_ux.selection__l10n_uy_edi_addenda__apply_on__account_move
+msgid "Invoices and Tickets"
+msgstr "Facturas y Tickets"
+
+#. module: l10n_uy_ux
+#: model:ir.model,name:l10n_uy_ux.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_company__l10n_uy_report_params
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_config_settings__l10n_uy_report_params
+msgid "L10N Uy Report Params"
+msgstr ""
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__write_uid
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__write_date
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: l10n_uy_ux
+#: model:ir.model,name:l10n_uy_ux.model_l10n_latam_document_type
+msgid "Latam Document Type"
+msgstr "Tipo de Documento Latam"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+#, python-format
+msgid "Missing uruguayan invoicing type on journal %s."
+msgstr "Falta tipo de facturación uruguaya en el diario %s."
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/res_partner.py:0
+#, python-format
+msgid "It is NOT an electronic issuer"
+msgstr "NO es un emisor electrónico"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+#, python-format
+msgid "You need to define 'CFE Key or UUID' in order to continue"
+msgstr "Necesita definir 'Clave o UUID del CFE' para poder continuar"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__new_value
+msgid "New Value"
+msgstr "Nuevo Valor"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/wizards/res_partner_update_from_padron_uy_wizard.py:0
+#, python-format
+msgid "No partner with RUT was found to update"
+msgstr "No se encontró ningún partner con RUT para actualizar"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/res_partner.py:0
+#, python-format
+msgid "Could not connect to DGI to extract data %s"
+msgstr "No se pudo conectar a DGI para extraer los datos %s"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__old_value
+msgid "Old Value"
+msgstr "Valor Anterior"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
+msgid ""
+"Only Partners with RUT/RUC are going to be updated.<br/>\n"
+"                        Select the list of fields you want to update."
+msgstr ""
+"Solo se actualizarán los contactos con RUT/RUC.<br/>\n"
+"                        Seleccione la lista de campos que desea actualizar."
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,help:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__field_to_update_ids
+msgid "Only this fields are going to be retrieved and updated"
+msgstr "Solo éstos campos serán recuperarán y actualizados"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields.selection,name:l10n_uy_ux.selection__res_partner_update_from_padron_uy_wizard__state__option
+msgid "Option"
+msgstr "Opción"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__partner_id
+msgid "Partner"
+msgstr "Contacto"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__partner_ids
+msgid "Partners"
+msgstr "Contactos"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/l10n_uy_edi_document.py:0
+#, python-format
+msgid "Please return a 'UUID CFE Key' in order to continue"
+msgstr "Por favor, devuelva una 'Clave CFE UUID' para continuar"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
+msgid "Preview"
+msgstr "Previsualización"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_company__l10n_uy_dgi_crt_pass
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_config_settings__l10n_uy_dgi_crt_pass
+msgid "Private Password"
+msgstr "Contraseña Privada"
+
+#. module: l10n_uy_ux
+#: model:ir.model,name:l10n_uy_ux.model_ir_actions_report
+msgid "Report Action"
+msgstr "Reportar acción"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.res_config_settings_view_form_inherit_l10n_uy_edi
+msgid "Report's Parameters"
+msgstr "Parámetros de Reporte"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields.selection,name:l10n_uy_ux.selection__res_partner_update_from_padron_uy_wizard__state__selection
+msgid "Selection"
+msgstr "Selección"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_l10n_uy_edi_addenda__sequence
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
+msgid "Skip these partner"
+msgstr "Omitir estos contactos"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/res_partner.py:0
+#: code:addons/l10n_uy_ux/models/res_partner.py:0
+#, python-format
+msgid "You can only check if the partner has a RUT identification type"
+msgstr "Solo puede consultar si el partner tiene tipo de identificación RUT"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__state
+msgid "State"
+msgstr "Estado"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/l10n_uy_edi_document.py:0
+#, python-format
+msgid ""
+"Testing environment with production data. Please check/adjust the "
+"configuration"
+msgstr ""
+"Entorno de prueba con datos de producción. Por favor, verifique/ajuste la "
+"configuración"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+#, python-format
+msgid ""
+"The selected Journal can't be used in this transaction, please select one "
+"that doesn't use documents as these are just for Invoices."
+msgstr ""
+"El diario seleccionado no se puede utilizar en esta transacción, seleccione uno "
+"que no utilice documentos, ya que estos son solo para facturas".
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
+msgid "There are no more partners to update for this request..."
+msgstr "No hay más contactos para actualizar para esta solicitud..."
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,help:l10n_uy_ux.field_res_company__l10n_uy_dgi_crt
+#: model:ir.model.fields,help:l10n_uy_ux.field_res_config_settings__l10n_uy_dgi_crt
+msgid ""
+"This certificate lets us connect to DGI to validate electronic invoice. "
+"Please upload here the DGI certificate in PEM format."
+msgstr ""
+"Este certificado nos permite conectarnos con la DGI para validar la factura electrónica".
+"Por favor cargue aquí el certificado de la DGI en formato PEM".
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__title_case
+msgid "Title Case"
+msgstr "Título Caso"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
+msgid "Update Automatically"
+msgstr "Actualización Automática"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
+msgid "Update From DGI"
+msgstr "Actualización desde DGI"
+
+#. module: l10n_uy_ux
+#: model:ir.actions.act_window,name:l10n_uy_ux.action_base_partner_update_from_padron_uy
+#: model:ir.ui.menu,name:l10n_uy_ux.menu_base_partner_update_from_padron_uy
+msgid "Update Partners From DGI"
+msgstr "Actualización de contactos de DGI"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
+msgid "Update Selection"
+msgstr "Actualizar selección"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
+msgid "Update with Manual Check"
+msgstr "Actualización con comprobación manual"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_company__l10n_uy_edi_ucfe_prod_env
+msgid "Uruware Production Data"
+msgstr "Datos de Producción Uruware"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_company__l10n_uy_edi_ucfe_test_env
+msgid "Uruware Testing Data"
+msgstr "Datos de Prueba Uruware"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
+msgid "Validate"
+msgstr "Validar"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+#, python-format
+msgid ""
+"We were not able to find one of the VAT taxes for company %(company_name)s:\n"
+" - 22% Sales VAT\n"
+" - 10% Sales VAT\n"
+" - Exempt Sales VAT"
+msgstr ""
+"No pudimos encontrar uno de los impuestos de IVA para la empresa %(company_name)s:\n"
+" - IVA Ventas 22%\n"
+" - IVA Ventas 10%\n"
+" - IVA Ventas Exento"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/l10n_uy_edi_document.py:0
+#, python-format
+msgid "We were not able to get the info of the next invoice number: %(error)s"
+msgstr "No pudimos obtener la información del siguiente número de factura: %(error)s"
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__wizard_id
+msgid "Wizard"
+msgstr "Asistente"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/l10n_uy_edi_document.py:0
+#, python-format
+msgid ""
+"You are not enabled to issue this document %(document)s, Please check your "
+"configuration settings"
+msgstr ""
+"No está habilitado para emitir este documento %(document)s, verifique su "
+"configuración"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/l10n_uy_edi_document.py:0
+#, python-format
+msgid "You can not obtain the invoice with errors"
+msgstr "No se puede obtener la factura con errores"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/l10n_uy_edi_document.py:0
+#, python-format
+msgid "You can not update the state of a accepted/rejected invoice"
+msgstr "No se puede actualizar el estado de una factura aceptada/rechazada"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+#, python-format
+msgid "You need to configure the company currency"
+msgstr "Necesita configurar la moneda de la empresa"
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.res_config_settings_view_form_inherit_l10n_uy_edi
+msgid "[['report_name'], ['options']]"
+msgstr ""
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
+msgid "or"
+msgstr "o"
+
+#. module: l10n_uy_ux
+#: model:ir.model,name:l10n_uy_ux.model_res_partner_update_from_padron_uy_field
+msgid "res.partner.update.from.padron.uy.field"
+msgstr ""
+
+#. module: l10n_uy_ux
+#: model:ir.model,name:l10n_uy_ux.model_res_partner_update_from_padron_uy_wizard
+msgid "res.partner.update.from.padron.uy.wizard"
+msgstr ""
