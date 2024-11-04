@@ -17,6 +17,9 @@ class AccountMove(models.Model):
     # This is needed to be able to save default values
     # TODO KZ hacer pr a 17 o master pidiendo que hagan este fix directamtne en el modulo de l10n_latam_base
 
+    l10n_uy_cfe_xml = fields.Text("Technical field to preview the xml")
+    manual_uruware_invoice = fields.Char()
+
     # EXTENDS
 
     def _l10n_uy_edi_check_move(self):
@@ -50,18 +53,19 @@ class AccountMove(models.Model):
 
         return errors
 
-    def l10n_uy_edi_action_download_preview_xml(self):
-        # EXTEND l10n_uy_edi
-        """ En odoo oficial solo permite descargar el preview del xml si estamos en demo mode o si ocurrio un error.
-        Aca extendemos para se pueda descargar en cualquier momento, Si no exsite el documento lo genera y lo descargar
-        """
-        if not self.l10n_uy_edi_document_id.attachment_id:
-            xml_file = self._l10n_uy_edi_get_preview_xml()
-            self.l10n_uy_cfe_xml = xml_file.datas
-
-        return super().l10n_uy_edi_action_download_preview_xml()
-
     # New methods
+
+    def uy_ux_action_preview_xml(self):
+        """ En odoo oficial solo permite descargar el preview del xml si estamos en demo mode o si ocurrio un error.
+        Este es un nuevo boton preview que permite pre visualizar el contenido del xml en cualquier momento, incluso
+        cuando la factura aun esta en borrador
+        """
+        not_invoice_dat = not self.invoice_date
+        if not_invoice_dat:
+            self.invoice_date = fields.Date.today()
+        self.l10n_uy_cfe_xml = self._l10n_uy_edi_get_xml_content().encode()
+        if not_invoice_dat:
+            self.invoice_date = False
 
     def uy_ux_action_get_uruware_cfe(self):
         """ Boton visible en diario manual que permite con el dato del UUID cargar la factura creada en
@@ -84,18 +88,17 @@ class AccountMove(models.Model):
 
         uy_moves = self.filtered(
             lambda x: x.country_code == "UY" and x.journal_id.type == "sale"
-            and x.journal_id.l10n_uy_edi_type == "electronic")
+            and x.journal_id.l10n_uy_edi_type == "manual")
         uy_docs = self.env["l10n_latam.document.type"].search([("country_id.code", "=", "UY")])
 
         for move in uy_moves:
-
-            if not move.l10n_uy_edi_cfe_uuid:
+            if not move.manual_uruware_invoice:
                 raise UserError(_("You need to define 'CFE Key or UUID' in order to continue"))
-
-            move.l10n_uy_edi_document_id.unlink()
-            edi_doc = move.l10n_uy_edi_document_id._create_document(move)
+            edi_doc = self.env['l10n_uy_edi.document'].create({
+                "move_id": move.id,
+                "uuid": self.manual_uruware_invoice,
+            })
             move.l10n_uy_edi_document_id = edi_doc
-
             result = edi_doc._ucfe_inbox("360", {"Uuid": edi_doc.uuid})
             edi_doc._update_cfe_state(result)
             response = result.get("response")
@@ -115,7 +118,21 @@ class AccountMove(models.Model):
         # no estoy segura si lo esta haciendo
         self.ensure_one()
         if not self.invoice_pdf_report_file:
-            return super()._l10n_uy_edi_get_pdf()
+            res = {}
+            result = self.l10n_uy_edi_document_id._get_pdf()
+
+            if file_content := result.get("file_content"):
+                pdf_file = self.env["ir.attachment"].create({
+                    "res_model": "account.move",
+                    "res_id": self.id,
+                    "res_field": "invoice_pdf_report_file",
+                    "name": (self.name or _("INV")).replace("/", "_") + ".pdf",
+                    "type": "binary",
+                    "datas": file_content,
+                })
+                res["pdf_file"] = pdf_file
+
+            return res
 
     @api.depends("name")
     def _compute_l10n_latam_document_number(self):
@@ -160,7 +177,10 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         self.l10n_uy_edi_document_id.unlink()
-        edi_doc = self.l10n_uy_edi_document_id._create_document(self)
+        edi_doc = self.env['l10n_uy_edi.document'].create({
+            "move_id": self.id,
+            "uuid": self.env['l10n_uy_edi.document']._get_uuid(self),
+        })
         self.l10n_uy_edi_document_id = edi_doc
 
         result = edi_doc._ucfe_inbox("350", {"CfeXmlOTexto": self.l10n_uy_cfe_xml})
@@ -171,8 +191,10 @@ class AccountMove(models.Model):
                 edi_doc._update_cfe_state(result)
                 edi_doc.message = _("Error creating CFẸ XML") + "\n\n" + edi_doc.message
                 # response.Resp.CodRta  30 o 31,   01, 12, 96, 99, ? ?
-                # response.Resp.MensajeRta
-                self.l10n_uy_edi_error = _("Error creating CFẸ XML\n\n %(errors)s", errors=response)
+                raise UserError(_("Error creating CFẸ XML\n\n %(errors)s",
+                                errors=response.findtext(".//{*}MensajeRta")))
+
+        raise UserError(_("XML Valido"))
 
     def action_l10n_uy_remkark_default(self):
         """ Revisamos leyedas que correspondan aplicar segun las condiciones de leyenda y defaults y las agregamos a
@@ -193,19 +215,20 @@ class AccountMove(models.Model):
     def action_l10n_uy_addenda_preview(self):
         """ Boton que permite previsualizar las addendas que seran aplicadas en en este comprobante """
         self.ensure_one()
-        raise UserError(self._uy_get_cfe_addenda())
+        raise UserError(self._l10n_uy_edi_get_addenda())
 
     def action_l10n_uy_mandatory_legend(self):
         self.ensure_one()
-        addenda = self._uy_get_cfe_addenda()
-        A16_InfoAdicionalDoc = self._uy_cfe_A16_InfoAdicionalDoc().get("InfoAdicionalDoc")
-        A51_InfoAdicionalEmisor = self._uy_cfe_A51_InfoAdicionalEmisor().get("InfoAdicionalEmisor")
-        A68_InfoAdicionalReceptor = self._uy_cfe_A68_InfoAdicional().get("InfoAdicional")
+        addenda = self._l10n_uy_edi_get_addenda()
+        edi_model = self.env["l10n_uy_edi.document"]
+        A16_InfoAdicionalDoc = edi_model._get_legends("cfe_doc", self)
+        A51_InfoAdicionalEmisor = edi_model._get_legends("issuer", self)
+        A68_InfoAdicionalReceptor = edi_model._get_legends("receiver", self)
         B8_DscItem = []
         for line in self.invoice_line_ids.filtered(lambda x: x.display_type == "product"):
-            value = self._uy_cfe_B8_DscItem(line).get("DscItem")
+            value = self._l10n_uy_edi_get_line_desc(line)
             if value:
-                B8_DscItem.append((line.display_name, value))
+                B8_DscItem.append("* line (%s) : %s" % (line.display_name, value))
 
         messge = ("* Adenda\n%s\n\n* Info Adicional Doc\n%s\n\n* Info Adicional Emisor\n%s\n\n"
                   "* Info Adicional Receptor\n%s\n\n * Info Adicional Items\n%s" % (
