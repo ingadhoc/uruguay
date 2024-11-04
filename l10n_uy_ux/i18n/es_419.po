@@ -488,7 +488,7 @@ msgid ""
 "that doesn't use documents as these are just for Invoices."
 msgstr ""
 "El diario seleccionado no se puede utilizar en esta transacción, seleccione uno "
-"que no utilice documentos, ya que estos son solo para facturas".
+"que no utilice documentos, ya que estos son solo para facturas."
 
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
@@ -502,8 +502,8 @@ msgid ""
 "This certificate lets us connect to DGI to validate electronic invoice. "
 "Please upload here the DGI certificate in PEM format."
 msgstr ""
-"Este certificado nos permite conectarnos con la DGI para validar la factura electrónica".
-"Por favor cargue aquí el certificado de la DGI en formato PEM".
+"Este certificado nos permite conectarnos con la DGI para validar la factura electrónica. "
+"Por favor cargue aquí el certificado de la DGI en formato PEM."
 
 #. module: l10n_uy_ux
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__title_case

@@ -62,7 +62,7 @@ class L10nUyEdiDocument(models.Model):
             español como en ingles (tambien es un formato disponible en uruware)
         """
         compatible_en = ['101', '102', '103', '121', '122', '123']
-        adenda = self._l10n_uy_edi_get_addenda()
+        adenda = self.move_id._l10n_uy_edi_get_addenda()
         report_params = safe_eval.safe_eval(self.company_id.l10n_uy_report_params or "[]")
         nombreParametros = report_params[0] if report_params else []
         valoresParametros = report_params[1] if report_params else []
@@ -76,7 +76,10 @@ class L10nUyEdiDocument(models.Model):
         elif 'ingles' in valoresParametros:
             nombreParametros.remove('reporte')
             valoresParametros.remove('ingles')
-        return nombreParametros, valoresParametros
+
+        if nombreParametros and valoresParametros:
+            return "ObtenerPdfConParametros", [nombreParametros, valoresParametros]
+        return super()._get_report_params()
 
     # Metodos nuevos
 
