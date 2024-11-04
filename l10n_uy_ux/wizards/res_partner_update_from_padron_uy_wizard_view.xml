@@ -54,7 +54,7 @@
                         type="action"/> -->
                     </group>
                     <p class="oe_grey" invisible="state not in ('option')">
-                        Only Partners with cuit are going to be updated.<br/>
+                        Only Partners with RUT/RUC are going to be updated.<br/>
                         Select the list of fields you want to update.
                     </p>
                     <group invisible="state not in ('option',)">

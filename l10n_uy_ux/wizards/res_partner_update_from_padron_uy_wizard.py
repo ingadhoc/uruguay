@@ -39,7 +39,7 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
         if (context.get("active_model") == "res.partner" and context.get("active_ids")):
             partners = self.get_partners()
             if not partners:
-                raise UserError(_("No se encontró ningún partner con RUT para actualizar"))
+                raise UserError(_("No partner with RUT was found to update"))
             elif len(partners) == 1:
                 res["state"] = "selection"
                 res["partner_id"] = partners[0].id
@@ -100,7 +100,7 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
         "res_partner_update_fields_uy",
         "update_id", "field_id",
         string="Fields To Update",
-        help="Only this fields are going to be retrived and updated",
+        help="Only this fields are going to be retrieved and updated",
         default=get_fields,
         domain=_get_domain,
         required=True,

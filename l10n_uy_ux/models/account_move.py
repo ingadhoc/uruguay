@@ -90,7 +90,7 @@ class AccountMove(models.Model):
         for move in uy_moves:
 
             if not move.l10n_uy_edi_cfe_uuid:
-                raise UserError(_("Necesita definir 'Clave o UUID del CFE' para poder continuar"))
+                raise UserError(_("You need to define 'CFE Key or UUID' in order to continue"))
 
             move.l10n_uy_edi_document_id.unlink()
             edi_doc = move.l10n_uy_edi_document_id._create_document(move)
@@ -169,10 +169,10 @@ class AccountMove(models.Model):
             cod_rta = response.findtext(".//{*}CodRta")
             if cod_rta != "00":
                 edi_doc._update_cfe_state(result)
-                edi_doc.message = _("Error al crear el XML del CFẸ") + "\n\n" + edi_doc.message
+                edi_doc.message = _("Error creating CFẸ XML") + "\n\n" + edi_doc.message
                 # response.Resp.CodRta  30 o 31,   01, 12, 96, 99, ? ?
                 # response.Resp.MensajeRta
-                self.l10n_uy_edi_error = _("Error al crear el XML del CFẸ\n\n %(errors)s", errors=response)
+                self.l10n_uy_edi_error = _("Error creating CFẸ XML\n\n %(errors)s", errors=response)
 
     def action_l10n_uy_remkark_default(self):
         """ Revisamos leyedas que correspondan aplicar segun las condiciones de leyenda y defaults y las agregamos a
@@ -185,7 +185,7 @@ class AccountMove(models.Model):
         res |= self._uy_get_legends_recs("emisor", self)
         res |= self._uy_get_legends_recs("receiver", self)
 
-        for line in self._uy_get_cfe_lines():
+        for line in self.invoice_line_ids.filtered(lambda x: x.display_type == "product"):
             res |= self._uy_get_legends_recs("item", line)
 
         self.l10n_uy_edi_addenda_ids = res
@@ -202,8 +202,7 @@ class AccountMove(models.Model):
         A51_InfoAdicionalEmisor = self._uy_cfe_A51_InfoAdicionalEmisor().get("InfoAdicionalEmisor")
         A68_InfoAdicionalReceptor = self._uy_cfe_A68_InfoAdicional().get("InfoAdicional")
         B8_DscItem = []
-        lines = self._uy_get_cfe_lines()
-        for line in lines:
+        for line in self.invoice_line_ids.filtered(lambda x: x.display_type == "product"):
             value = self._uy_cfe_B8_DscItem(line).get("DscItem")
             if value:
                 B8_DscItem.append((line.display_name, value))
