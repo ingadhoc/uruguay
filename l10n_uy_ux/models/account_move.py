@@ -30,7 +30,6 @@ class AccountMove(models.Model):
             - Que las momendas esten bien configuradas
             - Que los impuestos IVA 0 10 y 22 existan en la companñia
         """
-        self.ensure_one()
         errors = super()._l10n_uy_edi_check_move()
 
         # TODO KZ estaria bueno revisar que este acitva UYI? self.env.ref('base.UYI').active
