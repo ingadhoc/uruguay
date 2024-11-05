@@ -78,7 +78,8 @@ class L10nUyEdiDocument(models.Model):
             valoresParametros.remove('ingles')
 
         if nombreParametros and valoresParametros:
-            return "ObtenerPdfConParametros", [nombreParametros, valoresParametros]
+            return "ObtenerPdfConParametros", {
+                'nombreParametros': nombreParametros, 'valoresParametros': valoresParametros}
         return super()._get_report_params()
 
     # Metodos nuevos
