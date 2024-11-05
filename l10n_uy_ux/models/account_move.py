@@ -229,8 +229,11 @@ class AccountMove(models.Model):
             if value:
                 B8_DscItem.append("* line (%s) : %s" % (line.display_name, value))
 
-        messge = ("* Adenda\n%s\n\n* Info Adicional Doc\n%s\n\n* Info Adicional Emisor\n%s\n\n"
-                  "* Info Adicional Receptor\n%s\n\n * Info Adicional Items\n%s" % (
+        messge = ("* Adenda\n%s\n\n*"
+                  "* Info Adicional Doc\n%s\n\n*"
+                  "* Info Adicional Emisor\n%s\n\n"
+                  "* Info Adicional Receptor\n%s\n\n"
+                  "* Info Adicional Items\n%s" % (
                     addenda, A16_InfoAdicionalDoc, A51_InfoAdicionalEmisor, A68_InfoAdicionalReceptor,
                     "\n".join(str(item) for item in B8_DscItem)))
 
