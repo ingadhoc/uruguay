@@ -15,7 +15,8 @@ class AccountMove(models.Model):
 
     l10n_latam_document_type_id = fields.Many2one(change_default=True)
     # This is needed to be able to save default values
-    # TODO KZ hacer pr a 17 o master pidiendo que hagan este fix directamtne en el modulo de l10n_latam_base
+    # TODO KZ hacer pr a 17 o master pidiendo que hagan este fix directamtne
+    # en el modulo de l10n_latam_invoice_document
 
     l10n_uy_cfe_xml = fields.Text("Technical field to preview the xml")
     manual_uruware_invoice = fields.Char()
@@ -39,16 +40,16 @@ class AccountMove(models.Model):
         if self.journal_id.type == "sale" and self.journal_id.l10n_uy_edi_type not in ["electronic", "manual"]:
             errors.append(_("Missing uruguayan invoicing type on journal %s.", self.name))
 
-        # VAT Configuration
-        for company in self.company_id:
-            taxes = self.env["account.tax"].search([("company_id", "=", company.id), ("l10n_uy_tax_category", "=", "vat")])
-            tax_22 = taxes.filtered(lambda x: x.amount == 22)
-            tax_10 = taxes.filtered(lambda x: x.amount == 10)
-            tax_0 = taxes.filtered(lambda x: x.amount == 0)
-            if not tax_22 or not tax_10 or not tax_0:
-                errors.append(_(
-                    "We were not able to find one of the VAT taxes for company %(company_name)s:"
-                    "\n - 22% Sales VAT\n - 10% Sales VAT\n - Exempt Sales VAT", company_name=company.name))
+        # # VAT Configuration
+        # for company in self.company_id:
+        #     taxes = self.env["account.tax"].search([("company_id", "=", company.id), ("l10n_uy_tax_category", "=", "vat")])
+        #     tax_22 = taxes.filtered(lambda x: x.amount == 22)
+        #     tax_10 = taxes.filtered(lambda x: x.amount == 10)
+        #     tax_0 = taxes.filtered(lambda x: x.amount == 0)
+        #     if not tax_22 or not tax_10 or not tax_0:
+        #         errors.append(_(
+        #             "We were not able to find one of the VAT taxes for company %(company_name)s:"
+        #             "\n - 22% Sales VAT\n - 10% Sales VAT\n - Exempt Sales VAT", company_name=company.name))
 
         return errors
 
@@ -56,25 +57,33 @@ class AccountMove(models.Model):
 
     def uy_ux_action_preview_xml(self):
         """ En odoo oficial solo permite descargar el preview del xml si estamos en demo mode o si ocurrio un error.
+
         Este es un nuevo boton preview que permite pre visualizar el contenido del xml en cualquier momento, incluso
-        cuando la factura aun esta en borrador
-        """
-        not_invoice_dat = not self.invoice_date
-        if not_invoice_dat:
+        cuando la factura aun esta en estado borrador.
+
+        NOTA: Para que pueda funcionar necesitamos tener definido la fecha de factura porque sino el xml falla, por eso
+        en este metodo temporalmente asignamos la fecha de factura a la de hoy y luego la borramos para que quede la
+        factura tal cual estaba """
+        not_invoice_date = not self.invoice_date
+        if not_invoice_date:
             self.invoice_date = fields.Date.today()
         self.l10n_uy_cfe_xml = self._l10n_uy_edi_get_xml_content().encode()
-        if not_invoice_dat:
+        if not_invoice_date:
             self.invoice_date = False
 
     def uy_ux_action_get_uruware_cfe(self):
         """ Boton visible en diario manual que permite con el dato del UUID cargar la factura creada en
-        Uruware postmorten en el Odoo (INBOX 360 - Consulta de estado de CFE).
+        Uruware postmorten en el Odoo
+
+        (INBOX 360 - Consulta de estado de CFE).
 
         Los datos que sincroniza son
 
             * numero de documento
             * tipo de documento
             * estado del comprobante
+            - crea el EDI document
+            - agregar el pdf de la factura
         """
         # TODO KZ: Implementar approach odoo (generen un nuevo diario manual) y carguen ahi el documento
         #  2.1. hacer el campo uuid editable y stored en la factura, y que ahi pongan el valor que quieran
@@ -109,9 +118,10 @@ class AccountMove(models.Model):
                     "l10n_latam_document_number": serie + "%07d" % int(doc_number),
                     "l10n_latam_document_type_id": uy_docs.filtered(lambda x: x.code == uy_doc_code).id,
                 })
+                move.uy_ux_action_uy_get_pdf()
 
     def uy_ux_action_uy_get_pdf(self):
-        """ Permite volver a generar el PDF cuando no existe sea que hubo error
+        """ Permite volver a generar el PDF cuando no existe, sea que hubo error
         porque no se creo o alguien lo borro sin querer """
         # TODO KZ revisar porque en si conviene que almacene tambien en el file.
         # no estoy segura si lo esta haciendo
@@ -172,7 +182,12 @@ class AccountMove(models.Model):
             self.message_post(body=msg)
 
     def uy_ux_action_validate_cfe(self):
-        """ Check CFE XML valid files: 350: Validación de estructura de CFE """
+        """ Check CFE XML valid files: 350: Validación de estructura de CFE
+
+        To make the validation of the CFE and connect to uwaure we need to have a EDI document
+        For that reason if we have one we delete it and create a new one with the result of
+        the validation, since we are raising and the end of the method then the edi document
+        is rolled back """
         self.ensure_one()
 
         self.l10n_uy_edi_document_id.unlink()
@@ -216,7 +231,8 @@ class AccountMove(models.Model):
         self.ensure_one()
         raise UserError(self._l10n_uy_edi_get_addenda())
 
-    def action_l10n_uy_mandatory_legend(self):
+    def uy_ux_action_mandatory_legend(self):
+        """Return Pop up with the preview of the mandatory legends that will be inform """
         self.ensure_one()
         addenda = self._l10n_uy_edi_get_addenda()
         edi_model = self.env["l10n_uy_edi.document"]
@@ -285,3 +301,12 @@ class AccountMove(models.Model):
 
     # TODO KZ esto lo tendriamos que mantener para nuestros clientes que tiene el nombre largo como prefijo de
     # documento. capaz lo mejor seria hacer un script para poner todo como hace Odoo. Si hacemos eso este metodo se va
+
+    def _is_manual_document_number(self):
+        # EXTEND l10n_uy_edi
+        """ If we want to Get Uruware Invoice from manual journal then the document number
+        should not be manual, will be added when syncronizing the data  """
+        if self.country_code == 'UY' and self.journal_id.type == 'sale' and \
+           self.journal_id.l10n_uy_edi_type == 'manual' and self.manual_uruware_invoice:
+            return False
+        return super()._is_manual_document_number()

@@ -1,5 +1,7 @@
 from collections import OrderedDict
+
 from odoo import models
+
 from odoo.tools import pdf
 
 

@@ -1,6 +1,7 @@
 import pprint
 
 from odoo import api, models, fields
+
 from odoo.tools.safe_eval import safe_eval
 
 

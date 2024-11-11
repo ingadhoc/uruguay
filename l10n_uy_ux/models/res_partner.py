@@ -1,8 +1,5 @@
 import logging
-import pprint
-import stdnum
 from stdnum.exceptions import InvalidLength, InvalidChecksum, InvalidFormat
-from xml.etree.ElementTree import fromstring, ElementTree
 from lxml import etree
 
 from odoo import _, api, fields, models
@@ -163,13 +160,6 @@ class ResPartner(models.Model):
         puedes ver los tipos de documento  """
         for rec in self:
             rec.fiscal_countries = rec._get_countries()
-
-    @api.onchange("vat",  "l10n_latam_identification_type_id")
-    def _l10n_uy_edi_onchange_document_number(self):
-        """ Show warning to the user when editing the vat number """
-        msg = self._l10n_uy_edi_identification_validation()
-        if msg:
-            return {"warning": {"title": "Warning", "message": msg, "type": "notification"}}
 
     """ TODO KZ despues que se mezcle el pr de check vat, agregar esto
     def check_vat(self, vat):
