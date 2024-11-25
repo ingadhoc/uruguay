@@ -7,14 +7,13 @@
     'author': 'ADHOC SA',
     'category': 'Localization',
     'license': 'LGPL-3',
-    'version': "16.0.1.4.0",
+    'version': "16.0.1.5.0",
     'depends': [
         'l10n_latam_invoice_document',
         'l10n_latam_base',
 
         # TODO move it to l10n_uy_ux once we have it?
         'l10n_latam_check',
-        'account_withholding',
     ],
     'data': [
         'data/l10n_latam.document.type.csv',
