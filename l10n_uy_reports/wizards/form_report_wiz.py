@@ -48,18 +48,30 @@ class FormReportWiz(models.TransientModel):
 
             * Solo debemos tomar en cuenta los cfe que tengan un partner con numero de identificacion, los que no no tenemos
               que tomarlos en cuenta ni enviar nada.
-            * Solo tomar en cuenta los aceptados, el resto no
         """
         self.ensure_one()
         domain = [
             ('company_id', '=', self.company_id.id), ('state', '=', 'posted'),
-            '|', ('l10n_uy_cfe_state', 'in', ['accepted']), ('move_type', 'like', 'in_'),
             ('date', '>=', self.date_from), ('date', '<', self.date_to),
             ('partner_id.vat', '!=', False),
             ('l10n_latam_document_type_id.code', '!=', '0'),
             ('l10n_latam_document_type_id.code', '!=', False)
         ]
         res = self.env['account.move'].search(domain, order='invoice_date asc, name asc, id asc')
+
+        # Solo tomar en cuenta los comprobantes aceptados por DGI, si hay comprobantes que estan en estado posteado en
+        # Odoo y que estan en estado DGI rechazado o cancelado no debemos informarlos en el formulario, solo debemos
+        # informar aquellos cuyo estado haya sido aceptado por DGI. Le avisamos al cliente con un warning asi pueda
+        # revisar y aplicar las acciones necesarias sobre esos comprobantes.
+        not_accepted = res.filtered(lambda x: x.l10n_uy_cfe_state != 'accepted')
+        if not_accepted:
+            raise UserError(_(
+                'No se puede generar el formulario ya que tiene facturas validadas en Odoo que no estan aceptadas por'
+                'DGI') + '.\n -' + '\n - '.join(not_accepted.mapped('display_name')))
+
+        # TODO KZ pending revision de lado de producto: aca tenemos que ver si tambien tomamos en cuenta o no los
+        # comprobantes aceptados/rechazados comercialmente por el receptor del documento.
+
         return res
 
     def _search_tax(self, tax_name, tax_type):
