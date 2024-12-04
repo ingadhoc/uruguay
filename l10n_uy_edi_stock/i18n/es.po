@@ -1,0 +1,265 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_uy_edi_stock
+# 
+# Translators:
+# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-10-07 18:22+0000\n"
+"PO-Revision-Date: 2023-05-09 19:22+0000\n"
+"Last-Translator: Juan José Scarafía <scarafia.juanjose@gmail.com>, 2024\n"
+"Language-Team: Spanish (https://app.transifex.com/adhoc/teams/46451/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_cfe_partner_status
+msgid ""
+"\n"
+"    Status of sending the CFE to the partner:\n"
+"    - Not sent: the CFE has not been sent to the partner but it has sent to DGI.\n"
+"    - Sent: The CFE has been sent to the partner."
+msgstr ""
+"    Estado del CFE enviado al receptor:\n"
+"    - No enviado: El CFE no ha sido enviado al receptor pero fue enviado a la DGI.\n"
+"    - Enviado: El CFE fue enviado al receptor."
+
+#. module: l10n_uy_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
+msgid "(UY) Consult DGI State"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
+msgid "(UY) Enviar a DGI"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
+msgid "(UY) Print Legal PDF"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_cfe_pdf
+msgid "CFE PDF Representation"
+msgstr "CFE Representación impresa PDF"
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_cfe_partner_status
+msgid "CFE Partner Status"
+msgstr "CFE Estado Receptor"
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_cfe_state
+msgid "CFE Status"
+msgstr "CFE Estatus"
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_cfe_file
+msgid "CFE XML file"
+msgstr "CFE archivo xml"
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_is_cfe
+msgid ""
+"Campo tecnico para saber si es un comprobante electronico o no y usarlo en "
+"la vista para mostrar o requerir ciertos campos. por los momentos lo estamos"
+" usando solo para remitos pero podemos extenderlo para otros modelos"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_cfe_uuid
+msgid "Clave o UUID del CFE"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
+msgid "DGI"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_dgi_barcode
+msgid "DGI Barcode"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_dgi_xml_request
+msgid "DGI XML Request"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_dgi_xml_response
+msgid "DGI XML Response"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
+msgid "Datos para generar el CFE"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
+msgid "Detail"
+msgstr "Detalle"
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_latam_document_number
+msgid "Document Number (UY)"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_latam_document_type_id
+msgid "Document Type (UY)"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_cfe_sale_mod
+#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_cfe_transport_route
+msgid ""
+"Este campo debe enviarse cuando se reporta un CFE de tipo e-Facutra de "
+"Exportación o su e-Remito"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_cfe_state
+msgid "If 'ERROR: Related to UCFE' please check details of 'UCFE State'"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_place_of_delivery
+msgid ""
+"Indicación de donde s entrega la mercadería o se presta el servicio "
+"(Dirección, Sucursal, Puerto, etc,)"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_additional_info
+msgid "Info. adicional del comprobante"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_additional_info
+msgid "Información adicional del comprobante"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_latam_available_document_type_ids
+msgid "L10N Latam Available Document Type"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_is_cfe
+msgid "L10N Uy Is Cfe"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_place_of_delivery
+msgid "Lugar de entrega"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_cfe_sale_mod
+msgid "Modalidad de Venta"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
+msgid "Obtener Remito creado en Uruware"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
+msgid "Resultados del CFE"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model,name:l10n_uy_edi_stock.model_stock_picking
+msgid "Transfer"
+msgstr "Traslado"
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_transfer_of_goods
+msgid "Traslados de Bienes"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields.selection,name:l10n_uy_edi_stock.selection__stock_picking__l10n_uy_transfer_of_goods__2
+msgid "Traslados internos"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
+msgid "UCFE"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_ucfe_msg
+msgid "UCFE Mensaje de Respuesta"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_ucfe_state
+msgid "UCFE State"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_ucfe_notif
+msgid "UCFE Tipo de Notificacion"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_cfe_uuid
+msgid ""
+"Unique identification per CFE in UCFE. Currently is formed by the "
+"concatenation of model name + record id"
+msgstr ""
+"Identificador único del CFE en el UFCE. Este esta formado por la contanación"
+" de el nombre del mdelo y el id del registro"
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_idreq
+msgid "Uruware Notification ID that lets us sync vendor bill data."
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
+msgid "Validate CFE XML"
+msgstr "Validar XML CFE"
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields.selection,name:l10n_uy_edi_stock.selection__stock_picking__l10n_uy_transfer_of_goods__1
+msgid "Venta"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_cfe_transport_route
+msgid "Vía de Transporte"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_cfe_xml
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
+msgid "XML CFE"
+msgstr "CFE XML"
+
+#. module: l10n_uy_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
+msgid "XML Request"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
+msgid "XML Response"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_idreq
+msgid "idReq"
+msgstr ""

@@ -3,15 +3,15 @@
 # 	* l10n_uy_account
 # 
 # Translators:
-# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2023
+# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-18 12:26+0000\n"
+"POT-Creation-Date: 2024-11-29 13:24+0000\n"
 "PO-Revision-Date: 2023-04-25 20:42+0000\n"
-"Last-Translator: Juan José Scarafía <scarafia.juanjose@gmail.com>, 2023\n"
+"Last-Translator: Juan José Scarafía <scarafia.juanjose@gmail.com>, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/adhoc/teams/46451/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +22,7 @@ msgstr ""
 #. module: l10n_uy_account
 #: model:ir.model,name:l10n_uy_account.model_account_chart_template
 msgid "Account Chart Template"
-msgstr "Plantilla de Plan de Cuentas"
+msgstr "Plantilla de plan contable"
 
 #. module: l10n_uy_account
 #: model:ir.model.fields,field_description:l10n_uy_account.field_l10n_uy_adenda__active
@@ -141,11 +141,6 @@ msgid "Currency Rate (UY)"
 msgstr "Tasa de Cambio"
 
 #. module: l10n_uy_account
-#: model:ir.model.fields,field_description:l10n_uy_account.field_res_company__l10n_uy_dgi_house_code
-msgid "Código Casa Principal/Sucursal"
-msgstr ""
-
-#. module: l10n_uy_account
 #: model:ir.ui.menu,name:l10n_uy_account.menu_dgi_config
 msgid "DGI"
 msgstr ""
@@ -154,6 +149,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_uy_account.field_l10n_latam_identification_type__l10n_uy_dgi_code
 msgid "DGI Code"
 msgstr "Código DGI"
+
+#. module: l10n_uy_account
+#: model:ir.model.fields,field_description:l10n_uy_account.field_res_company__l10n_uy_dgi_house_code
+msgid "DGI House Code"
+msgstr "Código Casa Principal/Sucursal"
 
 #. module: l10n_uy_account
 #: model:l10n_latam.identification.type,name:l10n_uy_account.it_dni
@@ -179,17 +179,6 @@ msgstr "Electrónica"
 #. module: l10n_uy_account
 #: model:ir.model.fields.selection,name:l10n_uy_account.selection__l10n_uy_adenda__legend_type__emisor
 msgid "Emisor"
-msgstr ""
-
-#. module: l10n_uy_account
-#: model:ir.model.fields,help:l10n_uy_account.field_res_company__l10n_uy_dgi_house_code
-msgid ""
-"Este valor es parte del XML cuando se envia el CFE. Campo 47 (Emisor/CdgDGISucur)\n"
-"Para obtener ese datos podrias seguir los siguientes datos:\n"
-"1. Ingresar a la pagina de servicios en linea de DGI.\n"
-"2. Seleccionar la opción Registro único tributario -> Consulta de datos (es un link del menú de la derecha).\n"
-"3. Seleccionar Consulta de Datos Registrales -> Consulta de Datos de Entidades.\n"
-"4. Se abre un PDF. El dato aparece en Domicilio Fiscal -> Número de Local"
 msgstr ""
 
 #. module: l10n_uy_account
@@ -415,6 +404,14 @@ msgstr ""
 #, python-format
 msgid "The validation digit is not valid for \"%s\""
 msgstr ""
+
+#. module: l10n_uy_account
+#: model:ir.model.fields,help:l10n_uy_account.field_res_company__l10n_uy_dgi_house_code
+msgid ""
+"This value is used when the CFE xml is sent (Field 47: Emisor/CdgDGISucur)"
+msgstr ""
+"Este valor es parte del XML cuando se envia el CFE (Campo 47: "
+"Emisor/CdgDGISucur)"
 
 #. module: l10n_uy_account
 #: model:ir.model.fields,field_description:l10n_uy_account.field_l10n_uy_adenda__legend_type

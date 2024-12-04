@@ -1,22 +1,40 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* l10n_uy_edi
-#
+# 
+# Translators:
+# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0+e\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-14 06:37+0000\n"
-"PO-Revision-Date: 2021-04-14 06:37+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2024-10-31 13:17+0000\n"
+"PO-Revision-Date: 2023-05-09 19:23+0000\n"
+"Last-Translator: Juan José Scarafía <scarafia.juanjose@gmail.com>, 2024\n"
+"Language-Team: Spanish (https://app.transifex.com/adhoc/teams/46451/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Language: es\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"NOTA: Esto es requerido ya que el e-Ticket supera el monto minimo.\n"
+"Monto minimo = 5.000 * Unidad Indexada Uruguaya (>%s)"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_cfe_partner_status
 #: model:ir.model.fields,help:l10n_uy_edi.field_account_move__l10n_uy_cfe_partner_status
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_payment__l10n_uy_cfe_partner_status
+#: model:ir.model.fields,help:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_cfe_partner_status
 msgid ""
 "\n"
 "    Status of sending the CFE to the partner:\n"
@@ -28,6 +46,7 @@ msgstr ""
 "    - Enviado: El CFE fue enviado al receptor."
 
 #. module: l10n_uy_edi
+#. odoo-python
 #: code:addons/l10n_uy_edi/models/account_tax.py:0
 #, python-format
 msgid ""
@@ -38,120 +57,100 @@ msgid ""
 msgstr ""
 
 #. module: l10n_uy_edi
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_move_form
+msgid "(UY) Consult DGI State"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_partner_form
+msgid "(UY) Is Electronic Issuer?"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_move_form
+msgid "(UY) Reprint Legal PDF"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_partner_form
+msgid "(UY) Update From DGI"
+msgstr ""
+
+#. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__00
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__00
 msgid "00 - Petición aceptada y procesada"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__00
-msgid "00 - aceptado por DGI"
-msgstr ""
-
-#. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__01
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__01
 msgid "01 - Petición denegada"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__03
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__03
 msgid "03 - Comercio inválido"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__05
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__05
 msgid "05 - CFE rechazado por DGI"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__05
-msgid "05 - rechazado por DGI"
-msgstr ""
-
-#. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__06
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__06
 msgid "06 - CFE observado por DGI"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__06
-msgid "06 - observado por DGI"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__10
-msgid "10 - aceptado por DGI pero no se pudo ejecutar la consulta QR"
-msgstr ""
-
-#. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__11
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__11
 msgid "11 - CFE aceptado por UCFE, en espera de respuesta de DGI"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__11
-msgid ""
-"11 - UCFE no pudo consultar a DGI (puede intentar volver a ejecutar la "
-"consulta con la función 650 – Consulta a DGI por CFE recibido)"
-msgstr ""
-
-#. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__12
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__12
 msgid "12 - Requerimiento inválido"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__15
-msgid "15 - rechazado por DGI pero no se pudo ejecutar la consulta QR"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__16
-msgid "16 - observado por DGI pero no se pudo ejecutar la consulta QR"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__20
-msgid ""
-"20 - aceptado por DGI pero la consulta QR indica que hay diferencias con el "
-"CFE recibido"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__25
-msgid ""
-"25 - rechazado por DGI pero la consulta QR indica que hay diferencias con el"
-" CFE recibido"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_dgi_state__26
-msgid ""
-"26 - observado por DGI pero la consulta QR indica que hay diferencias con el"
-" CFE recibido"
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__25
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__25
+msgid "25 - Rechazado por DGI"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__30
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__30
 msgid "30 - Error en formato"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__31
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__31
 msgid "31 - Error en formato de CFE"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__89
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__89
 msgid "89 - Terminal inválida"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__96
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__96
 msgid "96 - Error en sistema"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__99
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__99
 msgid "99 - Sesión no iniciada"
 msgstr ""
 
@@ -159,129 +158,190 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">DGI</span>\n"
-"                            <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
+"                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
-"<span class=\"o_form_label\">DGI</span>\n"
-"                            <span class=\"fa fa-lg fa-building-o\" title=\"Los valores establecidos aquí son específicos de la empresa.\" groups=\"base.group_multi_company\"/>"
+
+#. module: l10n_uy_edi
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Formato de reporte</span>\n"
+"                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
 
 #. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">UCFE Web Services</span>\n"
-"                            <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
+"                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
-"<span class=\"o_form_label\">UCFE Web Services</span>\n"
-"                            <span class=\"fa fa-lg fa-building-o\" title=\"Los valores establecidos aquí son específicos de la empresa.\" groups=\"base.group_multi_company\"/>"
+
+#. module: l10n_uy_edi
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Vendor Bills</span>\n"
+"                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/res_company.py:0
+#, python-format
+msgid ""
+"Ambiente de Testing pero con datos de producción, por favor revisa/ajusta la"
+" configuración"
+msgstr ""
 
 #. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
 msgid "Are you sure to execute the automatic update of your partners ?"
-msgstr "Estas seguro que quiere ejecutar la actualización automática del contacto ?"
+msgstr ""
+"Estas seguro que quiere ejecutar la actualización automática del contacto ?"
+
+#. module: l10n_uy_edi
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_move_form
+msgid "Are you sure? this action will update the invoice information."
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.actions.act_window,name:l10n_uy_edi.action_partner_update
+msgid "Automatic Update from DGI"
+msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__15
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__15
 msgid "Aviso de CFE emitido aceptado por DGI"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__16
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__16
 msgid "Aviso de CFE emitido aceptado por el receptor electrónico"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__5
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__5
 msgid "Aviso de CFE emitido rechazado por DGI"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__6
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__6
 msgid "Aviso de CFE emitido rechazado por el receptor electrónico"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__7
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__7
 msgid "Aviso de CFE recibido"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__9
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__9
 msgid "Aviso de aceptación comercial de un CFE recibido"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__10
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__10
 msgid "Aviso de aceptación comercial de un CFE recibido en la gestión UCFE"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__8
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__8
 msgid "Aviso de anulación de CFE recibido"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__11
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__11
 msgid "Aviso de que se ha emitido un CFE"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__12
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__12
 msgid "Aviso de que se ha emitido un CFE en la gestión UCFE"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__13
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__13
 msgid "Aviso de rechazo comercial de un CFE recibido"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__14
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__14
 msgid "Aviso de rechazo comercial de un CFE recibido en la gestión UCFE"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__18
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__18
 msgid "Aviso que a un CFE emitido se le removió una etiqueta"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__17
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__17
 msgid "Aviso que a un CFE emitido se lo ha etiquetado"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__20
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__20
 msgid "Aviso que a un CFE recibido se le removió una etiqueta"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__19
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__19
 msgid "Aviso que a un CFE recibido se lo ha etiquetado"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_transport_route__2
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_transport_route__2
 msgid "Aéreo"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_sale_mod__4
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_sale_mod__4
 msgid "Bienes propios a exclaves aduaneros"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__accepted
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_state__accepted
 msgid "CFE Accepted by DGI"
 msgstr "CFE Aceptado por la DGI"
 
 #. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_cfe_pdf
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_cfe_pdf
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_payment__l10n_uy_cfe_pdf
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_cfe_pdf
 msgid "CFE PDF Representation"
 msgstr "CFE Representación impresa PDF"
 
 #. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_cfe_partner_status
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_cfe_partner_status
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_payment__l10n_uy_cfe_partner_status
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_cfe_partner_status
 msgid "CFE Partner Status"
 msgstr "CFE Estado Receptor"
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__rejected
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_state__rejected
+msgid "CFE Rejected by DGI"
+msgstr "ERROR: CFE Rechazo por la DGI"
 
 #. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_account_invoice_filter
@@ -289,14 +349,31 @@ msgid "CFE State"
 msgstr "CFE Estado"
 
 #. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_cfe_state
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_cfe_state
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_payment__l10n_uy_cfe_state
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_cfe_state
 msgid "CFE Status"
 msgstr "CFE Estatus"
 
 #. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_cfe_file
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_cfe_file
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_payment__l10n_uy_cfe_file
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_cfe_file
 msgid "CFE XML file"
 msgstr "CFE archivo xml"
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_is_cfe
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_move__l10n_uy_is_cfe
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_payment__l10n_uy_is_cfe
+#: model:ir.model.fields,help:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_is_cfe
+msgid ""
+"Campo tecnico para saber si es un comprobante electronico o no y usarlo en "
+"la vista para mostrar o requerir ciertos campos. por los momentos lo estamos"
+" usando solo para remitos pero podemos extenderlo para otros modelos"
+msgstr ""
 
 #. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
@@ -304,16 +381,20 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_cfe_uuid
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_cfe_uuid
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_payment__l10n_uy_cfe_uuid
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_cfe_uuid
 msgid "Clave o UUID del CFE"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
 msgid "Close"
-msgstr ""
+msgstr "Cerrar"
 
 #. module: l10n_uy_edi
+#. odoo-python
 #: code:addons/l10n_uy_edi/models/ucfe_errors.py:0
 #, python-format
 msgid "Codigo Respuesta"
@@ -330,17 +411,24 @@ msgid "Companies"
 msgstr "Compañías"
 
 #. module: l10n_uy_edi
-#: model:ir.model,name:l10n_uy_edi.model_res_config_settings
-msgid "Config Settings"
-msgstr "Configurar Ajustes"
+#: model:ir.model,name:l10n_uy_edi.model_l10n_uy_cfe
+msgid "Comprobante Fiscal Electrónico (UY)"
+msgstr ""
 
 #. module: l10n_uy_edi
+#: model:ir.model,name:l10n_uy_edi.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: l10n_uy_edi
+#. odoo-python
 #: code:addons/l10n_uy_edi/models/res_company.py:0
 #, python-format
 msgid "Connection is not working. This is what we get %s"
 msgstr "La conexión no esta funcionando. Esto es lo que recibimos %s"
 
 #. module: l10n_uy_edi
+#. odoo-python
 #: code:addons/l10n_uy_edi/models/res_config_settings.py:0
 #, python-format
 msgid "Connection problems, this is what we get %s"
@@ -348,13 +436,15 @@ msgstr "Problemas de conexión, esto es lo que recibimos %s"
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_sale_mod__2
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_sale_mod__2
 msgid "Consignación"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_move_form
-msgid "Consult DGI State"
-msgstr "Consultar Estado en la DGI"
+#: model:ir.actions.server,name:l10n_uy_edi.ir_cron_get_ucfe_notif_ir_actions_server
+#: model:ir.cron,cron_name:l10n_uy_edi.ir_cron_get_ucfe_notif
+msgid "Consult DGI State of Waiting CFE"
+msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.actions.server,name:l10n_uy_edi.action_get_ucfe_notif
@@ -368,31 +458,32 @@ msgid "Contact"
 msgstr "Contacto"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,help:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__title_case
+#: model:ir.model.fields,help:l10n_uy_edi.field_res_partner_update_from_padron_uy_wizard__title_case
 msgid "Converts retreived text fields to Title Case."
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_res_config_settings__l10n_uy_country_code
-msgid "Country Code"
+msgid "Country Code (UY)"
 msgstr "Código País"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field__create_uid
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__create_uid
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_company__l10n_uy_ucfe_get_vendor_bills
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_config_settings__l10n_uy_ucfe_get_vendor_bills
+msgid "Create vendor bills from Uruware"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_field__create_uid
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_wizard__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field__create_date
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__create_date
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_field__create_date
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_wizard__create_date
 msgid "Created on"
-msgstr ""
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_currency_rate
-msgid "Currency Rate"
-msgstr "Tasa de Cambio"
+msgstr "Creado el"
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_res_company__l10n_uy_dgi_house_code
@@ -406,6 +497,7 @@ msgid "Código Sucursal"
 msgstr ""
 
 #. module: l10n_uy_edi
+#. odoo-python
 #: code:addons/l10n_uy_edi/models/ucfe_errors.py:0
 #, python-format
 msgid "Código de error de la solicitud"
@@ -417,7 +509,15 @@ msgid "DGI"
 msgstr ""
 
 #. module: l10n_uy_edi
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_company_form
+msgid "DGI / Uruware"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_dgi_barcode
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_dgi_barcode
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_payment__l10n_uy_dgi_barcode
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_dgi_barcode
 msgid "DGI Barcode"
 msgstr ""
 
@@ -434,19 +534,53 @@ msgid "DGI Certificate name"
 msgstr "Nombre Certificado DGI"
 
 #. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_dgi_xml_request
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_dgi_xml_request
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_payment__l10n_uy_dgi_xml_request
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_dgi_xml_request
 msgid "DGI XML Request"
 msgstr ""
 
 #. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_dgi_xml_response
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_dgi_xml_response
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_payment__l10n_uy_dgi_xml_response
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_dgi_xml_response
 msgid "DGI XML Response"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/account_move.py:0
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
 #, python-format
-msgid "Debe configurar la dirección, ciudad, provincia y pais del receptor"
+msgid ""
+"Debe configurar al menos la dirección y ciudad del receptor para poder "
+"enviar este e-Remito"
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid ""
+"Debe configurar el RUT emisor para poder emitir este documento (RUC en la "
+"compañia)"
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid "Debe configurar la moneda de la compañía"
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid ""
+"Debe indicar un tipo de documento Uruguayo para poder facturar a este "
+"cliente"
 msgstr ""
 
 #. module: l10n_uy_edi
@@ -460,70 +594,126 @@ msgid "Digital Certificate"
 msgstr "Certificado Digital"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field__display_name
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__display_name
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_field__display_name
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_wizard__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nombre mostrado"
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_bank_statement_line__l10n_latam_document_type_id
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_latam_document_type_id
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_payment__l10n_latam_document_type_id
+msgid "Document Type"
+msgstr "Tipo de Documento"
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__draft_cfe
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_state__draft_cfe
 msgid "Draft CFE"
 msgstr "CFE Borrador"
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/account_move.py:0
-#, python-format
-msgid ""
-"E-ticket needs these values because that total amount > 5.000 * Unidad "
-"Indexada Uruguaya"
-msgstr ""
-"E-ticket necesita estos valores porque el monto total > 5.000 * Unidad "
-"Indexada Uruguaya"
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__rejected
-msgid "ERROR: CFE Rejected by DGI"
-msgstr "ERROR: CFE Rechazo por la DGI"
-
-#. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__xml_error
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_state__xml_error
 msgid "ERROR: CFE XML not valid"
 msgstr "ERROR: CFE XML no valido"
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__connection_error
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_state__connection_error
 msgid "ERROR: Connection to UCFE"
 msgstr "ERROR: Conección a la UCFE"
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/account_move.py:0
-#, python-format
-msgid "ERROR: esto es lo que recibimos %s"
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__ucfe_error
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_state__ucfe_error
+msgid "ERROR: Related to UCFE"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_partner_form
-msgid "Electronic Issuer?"
-msgstr "Es Emisor Electrónico?"
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid ""
+"ERROR: This is what we receive when requesting notification data (610) %s"
+msgstr ""
 
 #. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid "ERROR: the notification could not be dismissed %s"
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"El comprobante que estas anexando como referencia no es un comprobante "
+"valido para DGI(aceptado)"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_company__l10n_uy_ucfe_env
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_config_settings__l10n_uy_ucfe_env
+msgid "Environment"
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
 #: code:addons/l10n_uy_edi/models/res_partner.py:0
 #, python-format
 msgid "Es un emisor electrónico"
 msgstr ""
 
 #. module: l10n_uy_edi
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_move_form
+msgid ""
+"Esta factura aun no esta validada, asi que si intenta imprimir tendra un PDF"
+" no Legal"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_move_form
+msgid ""
+"Esta factura esta validada pero le falta el PDF legal asociado, por favor "
+"intente re generarlo"
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid "Esta moneda no existe en la tabla de monedas de la DGI %s"
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
 #: code:addons/l10n_uy_edi/models/ucfe_errors.py:0
 #, python-format
 msgid "Estado en DGI"
 msgstr ""
 
 #. module: l10n_uy_edi
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_cfe_sale_mod
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_cfe_transport_route
 #: model:ir.model.fields,help:l10n_uy_edi.field_account_move__l10n_uy_cfe_sale_mod
 #: model:ir.model.fields,help:l10n_uy_edi.field_account_move__l10n_uy_cfe_transport_route
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_payment__l10n_uy_cfe_sale_mod
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_payment__l10n_uy_cfe_transport_route
+#: model:ir.model.fields,help:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_cfe_sale_mod
+#: model:ir.model.fields,help:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_cfe_transport_route
 msgid ""
 "Este campo debe enviarse cuando se reporta un CFE de tipo e-Facutra de "
-"Exportación"
+"Exportación o su e-Remito"
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid "Este tipo de comprobante aun no ha sido implementado"
 msgstr ""
 
 #. module: l10n_uy_edi
@@ -539,29 +729,42 @@ msgid ""
 msgstr ""
 
 #. module: l10n_uy_edi
+#. odoo-python
 #: code:addons/l10n_uy_edi/models/res_config_settings.py:0
 #, python-format
 msgid "Everything is ok!"
 msgstr "Todo esta bien!"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field__field
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid "FchEmis: No implementado para este tipo de CFE"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_field__field
 msgid "Field"
-msgstr ""
+msgstr "Campo"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__field_ids
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_wizard__field_ids
 msgid "Fields"
-msgstr ""
+msgstr "Campos"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__field_to_update_ids
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_wizard__field_to_update_ids
 msgid "Fields To Update"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__res.partner.update.from.padron.uy.wizard__state__finished
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__res_partner_update_from_padron_uy_wizard__state__finished
 msgid "Finished"
+msgstr "Finalizado"
+
+#. module: l10n_uy_edi
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_move_form
+msgid "Get Uruware Invoice"
 msgstr ""
 
 #. module: l10n_uy_edi
@@ -569,16 +772,26 @@ msgstr ""
 msgid ""
 "Here need to upload the file with the Digital Certificate to operate in DGI"
 msgstr ""
-"Acá necesita subir el archivo con el Certificado Digital para operar en la DGI"
+"Acá necesita subir el archivo con el Certificado Digital para operar en la "
+"DGI"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field__id
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__id
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_field__id
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_wizard__id
 msgid "ID"
+msgstr "ID (identificación)"
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_cfe_state
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_move__l10n_uy_cfe_state
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_payment__l10n_uy_cfe_state
+#: model:ir.model.fields,help:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_cfe_state
+msgid "If 'ERROR: Related to UCFE' please check details of 'UCFE State'"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/account_move.py:0
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
 #, python-format
 msgid ""
 "In order to create the CFE document first need to complete your company data:\n"
@@ -593,7 +806,64 @@ msgid "Inbox Url"
 msgstr ""
 
 #. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid "IndFact no implementado en Odoo %s"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_place_of_delivery
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_move__l10n_uy_place_of_delivery
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_payment__l10n_uy_place_of_delivery
+#: model:ir.model.fields,help:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_place_of_delivery
+msgid ""
+"Indicación de donde s entrega la mercadería o se presta el servicio "
+"(Dirección, Sucursal, Puerto, etc,)"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_additional_info
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_additional_info
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_payment__l10n_uy_additional_info
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_additional_info
+msgid "Info. adicional del comprobante"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_product_product__l10n_uy_additional_info
+msgid "Info. adicional del item"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner__l10n_uy_additional_info
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_users__l10n_uy_additional_info
+msgid "Info. adicional del receptor"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_additional_info
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_move__l10n_uy_additional_info
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_payment__l10n_uy_additional_info
+#: model:ir.model.fields,help:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_additional_info
+msgid "Información adicional del comprobante"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,help:l10n_uy_edi.field_product_product__l10n_uy_additional_info
+msgid "Información adicional del item"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,help:l10n_uy_edi.field_res_partner__l10n_uy_additional_info
+#: model:ir.model.fields,help:l10n_uy_edi.field_res_users__l10n_uy_additional_info
+msgid "Información adicional del receptor"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_journal_type
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_journal_type
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_payment__l10n_uy_journal_type
 msgid "Invoicing Type"
 msgstr "Tipo de Facturación"
 
@@ -604,94 +874,164 @@ msgstr "Diario"
 
 #. module: l10n_uy_edi
 #: model:ir.model,name:l10n_uy_edi.model_account_move
-msgid "Journal Entries"
-msgstr "Asientos contables"
+msgid "Journal Entry"
+msgstr "Asiento contable"
 
 #. module: l10n_uy_edi
-#: model:ir.model,name:l10n_uy_edi.model_account_move_line
-msgid "Journal Item"
-msgstr "Apunte contable"
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_is_cfe
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_is_cfe
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_payment__l10n_uy_is_cfe
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_is_cfe
+msgid "L10N Uy Is Cfe"
+msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field____last_update
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard____last_update
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_company__l10n_uy_report_params
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_config_settings__l10n_uy_report_params
+msgid "L10N Uy Report Params"
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"Las facturas de Contingencia aun no están implementadas en el Odoo, para "
+"crear facturas de contingencia por favor generarla directamente desde al "
+"Uruware y luego cargar en el Odoo"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_field____last_update
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_wizard____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Última modificación el"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field__write_uid
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__write_uid
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_field__write_uid
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_wizard__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última actualización por"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field__write_date
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__write_date
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_field__write_date
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_wizard__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última actualización en"
 
 #. module: l10n_uy_edi
 #: model:ir.model,name:l10n_uy_edi.model_l10n_latam_document_type
 msgid "Latam Document Type"
-msgstr "Tipo de Documento"
+msgstr "Tipo de Documento Latam"
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_place_of_delivery
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_place_of_delivery
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_payment__l10n_uy_place_of_delivery
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_place_of_delivery
+msgid "Lugar de entrega"
+msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_transport_route__1
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_transport_route__1
 msgid "Marítimo"
 msgstr ""
 
 #. module: l10n_uy_edi
+#. odoo-python
 #: code:addons/l10n_uy_edi/models/ucfe_errors.py:0
 #, python-format
 msgid "Mensaje código de error"
 msgstr ""
 
 #. module: l10n_uy_edi
+#. odoo-python
 #: code:addons/l10n_uy_edi/models/ucfe_errors.py:0
 #, python-format
 msgid "Mensaje de Respuesta"
 msgstr ""
 
 #. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_cfe_sale_mod
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_cfe_sale_mod
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_payment__l10n_uy_cfe_sale_mod
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_cfe_sale_mod
 msgid "Modalidad de Venta"
 msgstr ""
 
 #. module: l10n_uy_edi
+#: model:account.incoterms,name:l10n_uy_edi.incoterm_NA
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_transport_route__8
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_transport_route__8
 msgid "N/A"
 msgstr ""
 
 #. module: l10n_uy_edi
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.report_invoice_document
+msgid "NO ES DOCUMENTO LEGAL"
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
 #: code:addons/l10n_uy_edi/models/res_partner.py:0
 #, python-format
 msgid "NO es un emisor electrónico"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field__new_value
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid ""
+"Necesita completar los datos del receptor: dirección, ciudad, provincia, "
+"pais del receptor y número de identificación"
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid "Necesita definir \"Clave o UUID del CFE\" para poder continuar"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_field__new_value
 msgid "New Value"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/account_move.py:0
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
 #, python-format
-msgid "No hay notificaciones disponibles en el UCFE"
+msgid "No esta implementado el e-Remito Exportación"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/wizards/res.partner.update.from.padron.uy.wizard.py:0
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid ""
+"No esta implementado usar indicador de facturación 8.  corresponde a un ítem"
+" a rebajar de otro remito ya emitido"
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/wizards/res_partner_update_from_padron_uy_wizard.py:0
 #, python-format
 msgid "No se encontró ningún partner con RUT para actualizar"
 msgstr ""
 
 #. module: l10n_uy_edi
+#. odoo-python
 #: code:addons/l10n_uy_edi/models/res_partner.py:0
 #, python-format
 msgid "No se pudo conectar a DGI para extraer los datos"
 msgstr ""
 
 #. module: l10n_uy_edi
+#. odoo-python
 #: code:addons/l10n_uy_edi/models/account_tax.py:0
 #, python-format
 msgid ""
@@ -699,35 +1039,85 @@ msgid ""
 msgstr ""
 
 #. module: l10n_uy_edi
+#. odoo-python
 #: code:addons/l10n_uy_edi/models/ucfe_errors.py:0
 #, python-format
 msgid "No se pudo interpretar el requerimiento recibido"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/account_move.py:0
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
 #, python-format
 msgid "No se pudo procesar la aceptación/rechazo comerncial"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/account_move.py:0
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid ""
+"No se puede emitir la factura ya que la longitud del campo es mayor que la permitida. \n"
+"Revisa si tienes leyendas/adendas automaticas que esten afectando. \n"
+"\n"
+" * nombre del campo: %s (%s) \n"
+" * contenido: (%s)\n"
+" %s"
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
 #, python-format
 msgid "No se puede imprimir la representación Legal de este documento"
 msgstr ""
 
 #. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid "No se puede obtener la factura de un comprobante con error"
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/account_journal.py:0
+#, python-format
+msgid ""
+"No tiene habilitado para emitir dicho documento, por favor revisar "
+"configuración de "
+msgstr ""
+
+#. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_partner_status__not_sent
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_partner_status__not_sent
 msgid "Not Sent"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__not_apply
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_state__not_apply
 msgid "Not apply - Not a CFE"
 msgstr "No Aplica - No es un CFE"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field__old_value
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid "Not implemented found related cfe for"
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid ""
+"Not valid Currency Rate, need to be greather that 0 in order to be accepted "
+"by DGI"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_field__old_value
 msgid "Old Value"
 msgstr ""
 
@@ -739,27 +1129,37 @@ msgid ""
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,help:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__field_to_update_ids
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid "Only customer invoices can be issued to DGI."
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,help:l10n_uy_edi.field_res_partner_update_from_padron_uy_wizard__field_to_update_ids
 msgid "Only this fields are going to be retrived and updated"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__res.partner.update.from.padron.uy.wizard__state__option
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__res_partner_update_from_padron_uy_wizard__state__option
 msgid "Option"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_sale_mod__99
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_sale_mod__99
 msgid "Otras transacciones"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_transport_route__9
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_transport_route__9
 msgid "Otro"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/account_move.py:0
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
 #, python-format
 msgid ""
 "Para reportar factura de exportación debe indicar el incoterm "
@@ -767,7 +1167,8 @@ msgid ""
 msgstr ""
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/account_move.py:0
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
 #, python-format
 msgid ""
 "Para reportar facturas de exportación debe indicar la Modalidad de Venta "
@@ -775,7 +1176,8 @@ msgid ""
 msgstr ""
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/account_move.py:0
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
 #, python-format
 msgid ""
 "Para reportar facturas de exportación debe indicar la Via de Transporte "
@@ -783,41 +1185,68 @@ msgid ""
 msgstr ""
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/account_move.py:0
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
 #, python-format
 msgid "Para validar una ND/NC debe informar el Documento de Origen"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__partner_id
-msgid "Partner"
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid ""
+"Para validar una ND/NC debe informar el Documento de Origen y este debe ser "
+"también electrónico"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__partner_ids
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.res_config_settings_view_form
+msgid "Parametros de reporte"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_wizard__partner_id
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_wizard__partner_ids
 msgid "Partners"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.res_config_settings_view_form
 msgid "Password"
+msgstr "Contraseña"
+
+#. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/res_company.py:0
+#, python-format
+msgid "Please complete the ucfe data to test the connection on company %s"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/res_company.py:0
-#, python-format
-msgid "Please complete the ucfe data to test the connection"
-msgstr "Por favor complete la data ucfe para hacer la prueba de conección"
-
-#. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_sale_mod__3
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_sale_mod__3
 msgid "Precio Revisable"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_move_form
-msgid "Reprint legal pdf Legal PDF"
-msgstr "Reimprimir PDF legal"
+msgid "Preview"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model,name:l10n_uy_edi.model_product_product
+msgid "Product Variant"
+msgstr "Variante de producto"
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__res_company__l10n_uy_ucfe_env__production
+msgid "Production"
+msgstr ""
 
 #. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.res_config_settings_view_form
@@ -825,51 +1254,75 @@ msgid "Query Url"
 msgstr ""
 
 #. module: l10n_uy_edi
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_move_form
+msgid ""
+"Read the XML and fill the fields of the invoice/bill with the xml values"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_company_form
+msgid "Reload params from config"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model,name:l10n_uy_edi.model_ir_actions_report
+msgid "Report Action"
+msgstr "Acción de informe"
+
+#. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_sale_mod__1
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_sale_mod__1
 msgid "Régimen General"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_sale_mod__90
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_sale_mod__90
 msgid "Régimen general- exportación de servicios"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__res.partner.update.from.padron.uy.wizard__state__selection
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__res_partner_update_from_padron_uy_wizard__state__selection
 msgid "Selection"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_partner_status__sent
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_partner_status__sent
 msgid "Sent"
 msgstr "Enviadp"
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/account_move.py:0
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
 #, python-format
 msgid "Set a valid RUT in your company"
 msgstr "Agregue un RUT valido en su compañía"
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/account_move.py:0
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
 #, python-format
 msgid "Set your company House Code"
 msgstr "Agregue el Codigo de Sucursal de su compañía"
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/account_move.py:0
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
 #, python-format
 msgid "Set your company RUT"
 msgstr "Agregue RUT a su compañía"
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/account_move.py:0
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
 #, python-format
 msgid "Set your company city"
 msgstr "Agregue Ciudad a su compañía"
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/account_move.py:0
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
 #, python-format
 msgid "Set your company state"
 msgstr "Agregue Estado/Provincia a su compañía"
@@ -880,6 +1333,7 @@ msgid "Skip these partner"
 msgstr ""
 
 #. module: l10n_uy_edi
+#. odoo-python
 #: code:addons/l10n_uy_edi/models/res_partner.py:0
 #: code:addons/l10n_uy_edi/models/res_partner.py:0
 #, python-format
@@ -887,19 +1341,21 @@ msgid "Solo puede consultar si el partner tiene tipo de identificación RUT"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__state
-msgid "State"
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid "Solo se puede calcular el Indice de Factura por cada linea"
 msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_wizard__state
+msgid "State"
+msgstr "Estado"
 
 #. module: l10n_uy_edi
 #: model:ir.model,name:l10n_uy_edi.model_account_tax
 msgid "Tax"
 msgstr "Impuesto"
-
-#. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_cfe_dgi_state
-msgid "Technical Field: CFE DGI State from UFCE"
-msgstr "Campo Tecnico: CFE Estado DGI desde UFCE"
 
 #. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.res_config_settings_view_form
@@ -908,7 +1364,13 @@ msgstr "Código Terminal"
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_transport_route__3
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_transport_route__3
 msgid "Terrestre"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__res_company__l10n_uy_ucfe_env__testing
+msgid "Testing"
 msgstr ""
 
 #. module: l10n_uy_edi
@@ -919,35 +1381,80 @@ msgid ""
 msgstr ""
 
 #. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid "The currency %s does not exists in Odoo."
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid "The currency %s is not Active. Please active it to continue."
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid "The number of invoice lines %s (id:%d) is invalid"
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid "The operation can not be done. This %s has been already sent to UCFE"
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid "The operation can not be done. This %s is accepted by DGI."
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid "The partner of the CFE need to have a Uruguayan Identification Type"
+msgstr ""
+
+#. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
 msgid "There are no more partners to update for this request..."
 msgstr ""
 
 #. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid ""
+"There is a difference between the invoice total amount in Odoo and the "
+"invoice XML. Odoo: %.2f  XML: %.2f . <strong>Warning:</strong> The total "
+"amount of the XML is %s and the total amount calculated by Odoo is %s. "
+"Typically this is caused by additional lines in the detail or by "
+"unidentified taxes or by rounding method configuration or by invoices with "
+"tax included, please check if a manual correction is needed."
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid ""
+"There is no information to create the vendor bill in the notification %d "
+"consulted"
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
 #: code:addons/l10n_uy_edi/models/res_company.py:0
 #, python-format
 msgid "There was a problem with the connection, this is what we get: "
 msgstr ""
-
-#. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/account_move.py:0
-#, python-format
-msgid ""
-"This %s has been already sent to UCFE. It cannot be cancelled. You can only "
-"click Consult DGI State to update."
-msgstr ""
-"Este %s ya ha sido enviado al UCFE. No puede ser cancelado. Solo puedes "
-" dar click en Consultar estado DGI para actualizar."
-
-#. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/account_move.py:0
-#, python-format
-msgid ""
-"This %s is accepted by DGI. It cannot be cancelled. Instead you should "
-"revert it."
-msgstr ""
-"Este %s ha sido aceptado por la DGI. No puede ser cancelado. En su lugar deberías  "
-"revertirlo."
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields,help:l10n_uy_edi.field_res_company__l10n_uy_dgi_crt
@@ -956,24 +1463,38 @@ msgid ""
 "This certificate lets us connect to DGI to validate electronic invoice. "
 "Please upload here the DGI certificate in PEM format."
 msgstr ""
-"Este certificado nos permite conectarnos a la DGI para validar comprobantes electrónicas. "
-"Por favor suba el certificado en formato PEM."
+"Este certificado nos permite conectarnos a la DGI para validar comprobantes "
+"electrónicas. Por favor suba el certificado en formato PEM."
 
 #. module: l10n_uy_edi
+#. odoo-python
 #: code:addons/l10n_uy_edi/models/ucfe_errors.py:0
 #, python-format
 msgid "Tipo Mensaje"
 msgstr ""
 
 #. module: l10n_uy_edi
+#. odoo-python
 #: code:addons/l10n_uy_edi/models/ucfe_errors.py:0
 #, python-format
 msgid "Tipo Notificacion"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.wizard__title_case
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_wizard__title_case
 msgid "Title Case"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_journal_type
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_move__l10n_uy_journal_type
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_payment__l10n_uy_journal_type
+msgid ""
+"Type of journals that can be used for Uruguayan companies:\n"
+"* Manual: You can generate any document type (electronic or traditional) entering the document number manually. This is usefull if you have electronic documents created using external systems and then you want to upload the documents to Odoo. Similar to Argentinean Online Invoice type.\n"
+"* Preprinted: For traditional invoicing using a pre printed tradicional documents (the ones with code 0).\n"
+"* Electronic: To generate electronic documents via web service to DGI using UCFE Uruware provider service.\n"
+"* Contingency: To generate documents to be send post morten via web service (when electronic is not working).\n"
 msgstr ""
 
 #. module: l10n_uy_edi
@@ -982,28 +1503,46 @@ msgid "UCFE"
 msgstr ""
 
 #. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_ucfe_msg
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_ucfe_msg
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_payment__l10n_uy_ucfe_msg
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_ucfe_msg
 msgid "UCFE Mensaje de Respuesta"
 msgstr ""
 
 #. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_ucfe_state
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_ucfe_state
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_payment__l10n_uy_ucfe_state
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_ucfe_state
 msgid "UCFE State"
 msgstr ""
 
 #. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_ucfe_notif
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_ucfe_notif
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_payment__l10n_uy_ucfe_notif
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_ucfe_notif
 msgid "UCFE Tipo de Notificacion"
 msgstr ""
 
 #. module: l10n_uy_edi
+#: model:ir.actions.server,name:l10n_uy_edi.ir_cron_get_vendor_bills_received_ir_actions_server
+#: model:ir.cron,cron_name:l10n_uy_edi.ir_cron_get_vendor_bills_received
+msgid "UY: Create vendor bills (sync from Uruware)"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_cfe_uuid
 #: model:ir.model.fields,help:l10n_uy_edi.field_account_move__l10n_uy_cfe_uuid
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_payment__l10n_uy_cfe_uuid
+#: model:ir.model.fields,help:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_cfe_uuid
 msgid ""
 "Unique identification per CFE in UCFE. Currently is formed by the "
 "concatenation of model name + record id"
 msgstr ""
-"Identificador único del CFE en el UFCE. Este esta formado por la "
-"contanación de el nombre del mdelo y el id del registro"
+"Identificador único del CFE en el UFCE. Este esta formado por la contanación"
+" de el nombre del mdelo y el id del registro"
 
 #. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
@@ -1011,8 +1550,12 @@ msgid "Update Automatically"
 msgstr ""
 
 #. module: l10n_uy_edi
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_move_form
+msgid "Update Fields"
+msgstr ""
+
+#. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_partner_form
 msgid "Update From DGI"
 msgstr "Actualizar desde DGI"
 
@@ -1050,9 +1593,22 @@ msgid "Uruware Inbox URL"
 msgstr ""
 
 #. module: l10n_uy_edi
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_idreq
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_move__l10n_uy_idreq
+#: model:ir.model.fields,help:l10n_uy_edi.field_account_payment__l10n_uy_idreq
+#: model:ir.model.fields,help:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_idreq
+msgid "Uruware Notification ID that lets us sync vendor bill data."
+msgstr ""
+
+#. module: l10n_uy_edi
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_res_company__l10n_uy_ucfe_password
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_res_config_settings__l10n_uy_ucfe_password
 msgid "Uruware Password"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_company__l10n_uy_ucfe_prod_env
+msgid "Uruware Production Data"
 msgstr ""
 
 #. module: l10n_uy_edi
@@ -1068,9 +1624,23 @@ msgid "Uruware Terminal code"
 msgstr ""
 
 #. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_company__l10n_uy_ucfe_test_env
+msgid "Uruware Testing Data"
+msgstr ""
+
+#. module: l10n_uy_edi
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_res_company__l10n_uy_ucfe_user
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_res_config_settings__l10n_uy_ucfe_user
 msgid "Uruware User"
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/res_company.py:0
+#, python-format
+msgid ""
+"Uruware/DGI environment not configured for company \"%s\", please check "
+"accounting settings"
 msgstr ""
 
 #. module: l10n_uy_edi
@@ -1080,11 +1650,12 @@ msgstr ""
 
 #. module: l10n_uy_edi
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_move_form
-msgid "Validate CFE XML"
-msgstr "Validar XML CFE"
+msgid "Validate"
+msgstr "Validar"
 
 #. module: l10n_uy_edi
-#: code:addons/l10n_uy_edi/models/account_move.py:0
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
 #, python-format
 msgid ""
 "Validated locally because is not Uruware parameters are not properly "
@@ -1094,22 +1665,52 @@ msgstr ""
 "configurados"
 
 #. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_cfe_transport_route
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_cfe_transport_route
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_payment__l10n_uy_cfe_transport_route
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_cfe_transport_route
 msgid "Vía de Transporte"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__received
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_state__received
 msgid "Waiting response from DGI"
 msgstr "Esperando respuesta de la DGI"
 
 #. module: l10n_uy_edi
-#: model:ir.model.fields,field_description:l10n_uy_edi.field_res.partner.update.from.padron.uy.field__wizard_id
-msgid "Wizard"
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"We found an error when cleaning the information from the invoice: id: %s."
 msgstr ""
 
 #. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid "We found an error when dismissing the notification: id: %s . Error: %s"
+msgstr ""
+
+#. module: l10n_uy_edi
+#. odoo-python
+#: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
+#, python-format
+msgid ""
+"We found an error when loading information in this invoice %s (id: %d) %s"
+msgstr ""
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_res_partner_update_from_padron_uy_field__wizard_id
+msgid "Wizard"
+msgstr "Asistente"
+
+#. module: l10n_uy_edi
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_cfe_xml
 #: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_cfe_xml
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_payment__l10n_uy_cfe_xml
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_cfe_xml
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_move_form
 msgid "XML CFE"
 msgstr "CFE XML"
@@ -1125,17 +1726,25 @@ msgid "XML Response"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
-msgid "or"
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_bank_statement_line__l10n_uy_idreq
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_move__l10n_uy_idreq
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_account_payment__l10n_uy_idreq
+#: model:ir.model.fields,field_description:l10n_uy_edi.field_l10n_uy_cfe__l10n_uy_idreq
+msgid "idReq"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model,name:l10n_uy_edi.model_res.partner.update.from.padron.uy.field
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi.view_base_partner_update_from_padron_uy_form
+msgid "or"
+msgstr "o"
+
+#. module: l10n_uy_edi
+#: model:ir.model,name:l10n_uy_edi.model_res_partner_update_from_padron_uy_field
 msgid "res.partner.update.from.padron.uy.field"
 msgstr ""
 
 #. module: l10n_uy_edi
-#: model:ir.model,name:l10n_uy_edi.model_res.partner.update.from.padron.uy.wizard
+#: model:ir.model,name:l10n_uy_edi.model_res_partner_update_from_padron_uy_wizard
 msgid "res.partner.update.from.padron.uy.wizard"
 msgstr ""
 
