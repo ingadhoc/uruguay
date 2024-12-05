@@ -28,9 +28,13 @@ class ResCurrency(models.Model):
 
     def action_l10n_uy_get_bcu_rate(self):
         self.ensure_one()
+        wsdl = "https://cotizaciones.bcu.gub.uy/wscotizaciones/servlet/%s/service.asmx?WSDL"
+        date_api_client = Client(wsdl % 'awsultimocierre')
+        last_closing_date = date_api_client.service.Execute()
         rate = self.env['res.company']._parse_bcu_data(self)
+
         if rate:
-            raise UserError(_('Fecha Ultimo Cierre: %s\nRate: %s' % (rate[self.name][1], rate[self.name][0])))
+            raise UserError(_('Fecha Ultimo Cierre: %s\nRate: %s' % (last_closing_date, 1 / rate[self.name][0])))
         else:
             raise UserError(_('No se encontro cotizacion para esta Moneda'))
 
