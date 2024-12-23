@@ -12,8 +12,9 @@
                 <button name="%(action_partner_update)d" string="(UY) Update From DGI" class="oe_link oe_inline" type="action" invisible="l10n_latam_identification_type_id != %(l10n_uy.it_rut)d or vat == False"/>
             </xpath>
 
-            <!-- TODO KZ: Patch to resolve problem added in l10n_latam_base module. If you think is Ok we can move it that module in a separate PR -->
+            <!-- TODO KZ: Patch to resolve problem added in l10n_latam_base module. If you think is Ok we can move it that module in a separate PR. -->
             <field name="l10n_latam_identification_type_id" position="before">
+                <!-- we need this field invisible because we used in an onchange -->
                 <field name="fiscal_countries" invisible="1"/>
             </field>
             <field name="l10n_latam_identification_type_id" position="attributes">

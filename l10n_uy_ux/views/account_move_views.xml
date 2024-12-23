@@ -12,7 +12,6 @@
             </field>
 
             <sheet position="before">
-                <field name="l10n_uy_edi_journal_type" invisible="1"/>
                 <div class="alert alert-danger" role="alert" style="margin-bottom:0px;"
                     invisible="l10n_uy_edi_journal_type != 'electronic' or state != 'posted' or invoice_pdf_report_id">
                         <bold>This invoice is validated but it is missing the associated legal PDF, please try to regenerate it</bold>
@@ -25,12 +24,6 @@
                     invisible="l10n_uy_edi_journal_type != 'electronic' or state != 'draft' or invoice_pdf_report_id">
                         <bold>This invoice is not yet validated, so if you try to print it you will get a not Legal PDF</bold></div>
             </sheet>
-
-            <!-- TODO need to find a way to hide computed_currency_rate field, this one is added in l10n_ar_ux, so.. maybe we should add it in another base
-            ux module. to be re used. Meanwhile we do not show l10n_uy_currency_rate -->
-            <!--  <div name="currency" position="inside">
-                <field name="l10n_uy_currency_rate" attrs="{"invisible": ["|", "|", ("l10n_uy_currency_rate", "=", False), ("l10n_uy_currency_rate", "=", 0.0), ("l10n_uy_currency_rate", "=", 1.0)]}"/>
-            </div> -->
 
             <field name="l10n_uy_edi_cfe_uuid" position="after">
 
@@ -49,12 +42,12 @@
                     <separator string="Addendas and Disclosures"/>
                     <button name="action_l10n_uy_remkark_default" type="object" string="Get Defaults"/>
                     <field name="l10n_uy_edi_addenda_ids">
-                        <tree string="Addendas">
+                        <list string="Addendas">
                             <field name="type"/>
                             <field name="name"/>
                             <field name="content"/>
                             <field name="condition" optional="hide"/>
-                        </tree>
+                        </list>
                     </field>
                     <span>Preview: </span>
                     <button name="action_l10n_uy_addenda_preview" type="object" string="Addendas"/>
