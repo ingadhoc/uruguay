@@ -1,6 +1,6 @@
 import logging
 
-from odoo import models, api, fields, _
+from odoo import models, api, fields
 
 from ast import literal_eval
 from odoo.exceptions import UserError
@@ -42,7 +42,7 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
         if (context.get("active_model") == "res.partner" and context.get("active_ids")):
             partners = self.get_partners()
             if not partners:
-                raise UserError(_("No partner with RUT was found to update"))
+                raise UserError(self.env._("No partner with RUT was found to update"))
             elif len(partners) == 1:
                 res["state"] = "selection"
                 res["partner_id"] = partners[0].id

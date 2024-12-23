@@ -1,8 +1,7 @@
 import logging
-from stdnum.exceptions import InvalidLength, InvalidChecksum, InvalidFormat
 from lxml import etree
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 from odoo.exceptions import UserError
 
@@ -36,7 +35,7 @@ class ResPartner(models.Model):
                     "tag": "display_notification",
                     "params": {
                         "type": "info",
-                        "message": _("It is an electronic issuer"),
+                        "message": self.env._("It is an electronic issuer"),
                         "next": {"type": "ir.actions.act_window_close"},
                     }
                 }
@@ -46,12 +45,12 @@ class ResPartner(models.Model):
                     "tag": "display_notification",
                     "params": {
                         "type": "danger",
-                        "message": _("It is NOT an electronic issuer"),
+                        "message": self.env._("It is NOT an electronic issuer"),
                         "next": {"type": "ir.actions.act_window_close"},
                     }
                 }
         else:
-            raise UserError(_("You can only check if the partner has a RUT identification type"))
+            raise UserError(self.env._("You can only check if the partner has a RUT identification type"))
 
     def action_l10n_uy_get_data_from_dgi(self):
         """ 640 - Consulta a DGI por datos de RUT """
@@ -92,7 +91,7 @@ class ResPartner(models.Model):
         if self.l10n_latam_identification_type_id.l10n_uy_dgi_code == "2":
             result = edi_doc._ucfe_inbox("640", {"RutEmisor": self.vat})
             if errors := result.get('errors'):
-                raise UserError(_("Could not connect to DGI to extract data %s". str(errors)))
+                raise UserError(self.env._("Could not connect to DGI to extract data %s". str(errors)))
             if response := result.get('response'):
                 if response.findtext(".//{*}CodRta") == "00":
                     # TODO ver detalle de los demas campos que podemos integrar en pagin 83 Manual de integración
@@ -121,10 +120,10 @@ class ResPartner(models.Model):
                     # removerlo siempre del values
                     values.pop("street_number")
                 else:
-                    raise UserError(_(
+                    raise UserError(self.env._(
                         "There was an error in the response %s". str(etree.tostring(response, pretty_print=True))))
         else:
-            raise UserError(_("You can only check if the partner has a RUT identification type"))
+            raise UserError(self.env._("You can only check if the partner has a RUT identification type"))
 
         return values
 
@@ -183,11 +182,11 @@ class ResPartner(models.Model):
         except ImportError:
             _logger.warning("Urugayan RUT/RUC can not be validated (missing stnum lib)")
         except InvalidChecksum:
-            msg = _("The validation digit is not valid")
+            msg = self.env._("The validation digit is not valid")
         except InvalidLength:
-            msg = _("Invalid length")
+            msg = self.env._("Invalid length")
         except InvalidFormat:
-            msg = _("Only numbers allowed")
+            msg = self.env._("Only numbers allowed")
 
         return msg
     """

@@ -1,6 +1,6 @@
 import logging
 
-from odoo import _, api, models
+from odoo import api, models
 
 from odoo.exceptions import UserError
 from odoo.tools import safe_eval
@@ -20,11 +20,11 @@ class L10nUyEdiDocument(models.Model):
         Si hay error no hay nada que consultar, y si fue aceptado rechazado ya no necesita ser actualizado """
         for doc in self:
             if not doc.uuid:
-                raise UserError(_("Please return a 'UUID CFE Key' in order to continue"))
+                raise UserError(self.env._("Please return a 'UUID CFE Key' in order to continue"))
             if doc.state == "error":
-                raise UserError(_("You can not obtain the invoice with errors"))
+                raise UserError(self.env._("You can not obtain the invoice with errors"))
             if doc.state != "received":
-                raise UserError(_("You can not update the state of a accepted/rejected invoice"))
+                raise UserError(self.env._("You can not update the state of a accepted/rejected invoice"))
 
         super().action_update_dgi_state()
 
@@ -43,7 +43,7 @@ class L10nUyEdiDocument(models.Model):
 
         # Just in case they put production info in a testing environment by mistake
         if company.l10n_uy_edi_ucfe_env == "testing" and ("prod" in inbox_url or "prod" in query_url):
-            res = (res or "") + _("Testing environment with production data. Please check/adjust the configuration")
+            res = (res or "") + self.env._("Testing environment with production data. Please check/adjust the configuration")
         return res
 
     def _get_report_params(self):
@@ -103,14 +103,14 @@ class L10nUyEdiDocument(models.Model):
         if int(document_type.code) != 0 and int(document_type.code) < 200:
             result = self._ucfe_inbox("660", {"TipoCfe": document_type.code})
             if errors := result.get("errors"):
-                raise UserError(_(
+                raise UserError(self.env._(
                     "We were not able to get the info of the next invoice number: %(error)s", error=errors))
 
             response = result.get("response")
             if response is not None:
                 next_number = response.findtext(".//{*}NumeroCfe", "")
                 if not next_number:
-                    raise UserError(_(
+                    raise UserError(self.env._(
                         "You are not enabled to issue this document %(document)s, Please check your configuration settings",
                         document=document_type.display_name))
                 res = int(next_number)

@@ -22,6 +22,7 @@
         <field name="model">res.partner.update.from.padron.uy.wizard</field>
         <field name="arch" type="xml">
             <form string="Update From DGI">
+                <!-- We need this field in view because an onchange -->
                 <field name="state" invisible="1" />
                 <header>
                     <button name="update_selection" string="Update Selection"
@@ -64,11 +65,11 @@
                     <group invisible="state in ('option', 'finished')" colspan="1">
                         <field name="partner_id" required="state == 'selection'"/>
                         <field name="field_ids" nolabel="1" colspan="2">
-                            <tree create="false">
+                            <list create="false">
                                 <field name="field"/>
                                 <field name="old_value"/>
                                 <field name="new_value"/>
-                            </tree>
+                            </list>
                         </field>
                     </group>
                 </sheet>

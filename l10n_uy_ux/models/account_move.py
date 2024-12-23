@@ -1,6 +1,6 @@
 import logging
 
-from odoo import api, models, fields, _
+from odoo import api, models, fields
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import safe_eval
@@ -35,10 +35,10 @@ class AccountMove(models.Model):
 
         # TODO KZ estaria bueno revisar que este acitva UYI? self.env.ref('base.UYI').active
         if not self.company_id.currency_id:
-            errors.append(_("You need to configure the company currency"))
+            errors.append(self.env._("You need to configure the company currency"))
 
         if self.journal_id.type == "sale" and self.journal_id.l10n_uy_edi_type not in ["electronic", "manual"]:
-            errors.append(_("Missing uruguayan invoicing type on journal %s.", self.name))
+            errors.append(self.env._("Missing uruguayan invoicing type on journal %s.", self.name))
 
         # # VAT Configuration
         # for company in self.company_id:
@@ -47,7 +47,7 @@ class AccountMove(models.Model):
         #     tax_10 = taxes.filtered(lambda x: x.amount == 10)
         #     tax_0 = taxes.filtered(lambda x: x.amount == 0)
         #     if not tax_22 or not tax_10 or not tax_0:
-        #         errors.append(_(
+        #         errors.append(self.env._(
         #             "We were not able to find one of the VAT taxes for company %(company_name)s:"
         #             "\n - 22% Sales VAT\n - 10% Sales VAT\n - Exempt Sales VAT", company_name=company.name))
 
@@ -101,7 +101,7 @@ class AccountMove(models.Model):
 
         for move in uy_moves:
             if not move.manual_uruware_invoice:
-                raise UserError(_("You need to define 'CFE Key or UUID' in order to continue"))
+                raise UserError(self.env._("You need to define 'CFE Key or UUID' in order to continue"))
             edi_doc = self.env['l10n_uy_edi.document'].create({
                 "move_id": move.id,
                 "uuid": self.manual_uruware_invoice,
@@ -135,7 +135,7 @@ class AccountMove(models.Model):
                     "res_model": "account.move",
                     "res_id": self.id,
                     "res_field": "invoice_pdf_report_file",
-                    "name": (self.name or _("INV")).replace("/", "_") + ".pdf",
+                    "name": (self.name or self.env._("INV")).replace("/", "_") + ".pdf",
                     "type": "binary",
                     "datas": file_content,
                 })
@@ -177,7 +177,7 @@ class AccountMove(models.Model):
             pdf_file.register_as_main_attachment(force=True)
             self.invalidate_recordset(fnames=["invoice_pdf_report_id", "invoice_pdf_report_file"])
         if errors := pdf_result.get("errors"):
-            msg = _("Error getting the PDF file: %s", errors)
+            msg = self.env._("Error getting the PDF file: %s", errors)
             self.l10n_uy_edi_error = (self.l10n_uy_edi_error or "") + msg
             self.message_post(body=msg)
 
@@ -203,12 +203,12 @@ class AccountMove(models.Model):
             cod_rta = response.findtext(".//{*}CodRta")
             if cod_rta != "00":
                 edi_doc._update_cfe_state(result)
-                edi_doc.message = _("Error creating CFẸ XML") + "\n\n" + edi_doc.message
+                edi_doc.message = self.env._("Error creating CFẸ XML") + "\n\n" + edi_doc.message
                 # response.Resp.CodRta  30 o 31,   01, 12, 96, 99, ? ?
-                raise UserError(_("Error creating CFẸ XML\n\n %(errors)s",
+                raise UserError(self.env._("Error creating CFẸ XML\n\n %(errors)s",
                                 errors=response.findtext(".//{*}MensajeRta")))
 
-        raise UserError(_("XML Valido"))
+        raise UserError(self.env._("XML Valido"))
 
     def action_l10n_uy_remkark_default(self):
         """ Revisamos leyedas que correspondan aplicar segun las condiciones de leyenda y defaults y las agregamos a
@@ -278,7 +278,7 @@ class AccountMove(models.Model):
             lambda x: x.company_id.country_id.code == "UY" and x.journal_id.type in ["sale", "purchase"] and
             x.l10n_latam_use_documents and not x.is_invoice())
         if not_invoices:
-            raise ValidationError(_(
+            raise ValidationError(self.env._(
                 "The selected Journal can't be used in this transaction, please select one that doesn't use documents"
                 " as these are just for Invoices."))
 

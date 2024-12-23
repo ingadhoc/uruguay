@@ -18,6 +18,7 @@
                 <setting id="uy_dgi" string="DGI" company_dependent="1" help="Informative fields">
                     <div class="content-group">
                         <div class="row">
+                            <!-- We need this to be able to save correctly the file name -->
                             <field name="l10n_uy_dgi_crt_fname" invisible="1" force_save="1"/>
                             <label for="l10n_uy_dgi_crt" string="Certificate" class="col-lg-3 o_light_label"/>
                             <field name="l10n_uy_dgi_crt" widget="binary" filename="l10n_uy_dgi_crt_fname" help="Here need to upload the file with the Digital Certificate to operate in DGI"/>
