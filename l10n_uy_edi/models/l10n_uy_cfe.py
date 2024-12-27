@@ -4,6 +4,7 @@ import logging
 import base64
 import stdnum.uy
 import re
+import unicodedata
 import xml.etree.ElementTree as ET
 
 from odoo import _, fields, models, api
@@ -612,7 +613,7 @@ class L10nUyCfe(models.AbstractModel):
             adenda += "\n\n%s" % html2plaintext(self[fieldname])
 
         if adenda:
-            return {'Adenda': adenda.strip()}
+            return {'Adenda': self._l10n_uy_edi_clean_non_ascii_chars(adenda.strip())}
         return {}
 
     def _l10n_uy_get_cfe_serie(self):
@@ -1631,3 +1632,13 @@ class L10nUyCfe(models.AbstractModel):
             # TODO comprobar. este devolvera un campo clave llamado UUID que permite identificar el comprobante, si es enviando dos vence sno genera otro CFE firmado
 
         return response
+
+    ####################################################
+    # HELPERS
+    ####################################################
+
+    def _l10n_uy_edi_clean_non_ascii_chars(self, text):
+        """Deletes non-ASCII characters from strings."""
+        if isinstance(text, str):
+            return ''.join(char for char in text if (ord(char) <= 127) or unicodedata.category(char) == 'Ll' or unicodedata.category(char) == 'Lu')
+        return text 
