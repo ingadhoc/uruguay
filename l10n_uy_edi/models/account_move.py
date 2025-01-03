@@ -105,8 +105,6 @@ class AccountMove(models.Model):
             res = self.reversed_entry_id
         elif self.l10n_latam_document_type_id.internal_type == 'debit_note':
             res = self.debit_origin_id
-        if res and res.l10n_uy_cfe_state != 'accepted':
-            raise UserError(_('El comprobante que estas anexando como referencia no es un comprobante valido para DGI(aceptado)'))
         return res
 
     def _is_uy_cfe(self):
