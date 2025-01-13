@@ -120,9 +120,11 @@ class ResPartner(models.Model):
                     # Este campo no existe en odoo base, asi que tenemos que
                     # removerlo siempre del values
                     values.pop("street_number")
+                elif response.findtext(".//{*}CodRta") == "01":
+                    raise UserError(_("%s. Si está en un ambiente de testing, usted puede consultar los siguientes RUTs: "
+                                      "219999830019, 219999820013, 219000090011", response.findtext(".//{*}MensajeRta")))
                 else:
-                    raise UserError(_(
-                        "There was an error in the response %s". str(etree.tostring(response, pretty_print=True))))
+                    raise UserError(_("There was an error in the response %s", etree.tostring(response, pretty_print=True)))
         else:
             raise UserError(_("You can only check if the partner has a RUT identification type"))
 
