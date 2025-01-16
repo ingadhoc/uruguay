@@ -18,7 +18,6 @@ class ResPartner(models.Model):
         """ Return True/False if the partner is an electronic issuer or not
         630 - Consulta si un RUT es emisor electronico """
         self.ensure_one()
-        company = self.company_id or self.env.company
         # TODO KZ need to ensure that use the proper company
         edi_doc = self.env["l10n_uy_edi.document"]
         if self.l10n_latam_identification_type_id.l10n_uy_dgi_code == "2":
@@ -55,7 +54,6 @@ class ResPartner(models.Model):
     def action_l10n_uy_get_data_from_dgi(self):
         """ 640 - Consulta a DGI por datos de RUT """
         self.ensure_one()
-        company = self.company_id or self.env.company
         values = {}
 
         data_mapping = {
