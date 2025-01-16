@@ -12,7 +12,7 @@ class ResPartner(models.Model):
 
     _inherit = "res.partner"
 
-    fiscal_countries = fields.Many2many("res.country", compute="compute_fiscal_countries")
+    fiscal_countries = fields.Many2many("res.country", compute="_compute_fiscal_countries")
 
     def action_l10n_uy_is_electronic_issuer(self):
         """ Return True/False if the partner is an electronic issuer or not
@@ -154,7 +154,7 @@ class ResPartner(models.Model):
 
     # Do not remember
     @api.onchange("company_id")
-    def compute_fiscal_countries(self):
+    def _compute_fiscal_countries(self):
         """ Esto es usado en la vista para poder filtrar correctamente los tipos de documentos, En odoo oficial solo
         puedes ver los tipos de documento  """
         for rec in self:
