@@ -3,15 +3,15 @@
 # 	* l10n_uy_ux
 # 
 # Translators:
-# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2024
+# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-28 14:21+0000\n"
+"POT-Creation-Date: 2025-01-15 16:06+0000\n"
 "PO-Revision-Date: 2024-11-15 12:31+0000\n"
-"Last-Translator: Juan José Scarafía <scarafia.juanjose@gmail.com>, 2024\n"
+"Last-Translator: Juan José Scarafía <scarafia.juanjose@gmail.com>, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/adhoc/teams/46451/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,6 +75,11 @@ msgid "Are you sure to execute the automatic update of your partners ?"
 msgstr ""
 
 #. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_account_journal__l10n_uy_edi_send_print
+msgid "Auto pop up Send and Print"
+msgstr ""
+
+#. module: l10n_uy_ux
 #: model:ir.actions.act_window,name:l10n_uy_ux.action_partner_update
 msgid "Automatic Update from DGI"
 msgstr ""
@@ -105,6 +110,14 @@ msgstr ""
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.res_config_settings_view_form_inherit_l10n_uy_edi
 msgid "Certificate"
+msgstr ""
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,help:l10n_uy_ux.field_account_journal__l10n_uy_edi_send_print
+msgid ""
+"Check this box to automatically open the Send and Print wizard after "
+"confirming your invoice. This will help ensure you don't forget to generate "
+"and send the required CFE (electronic tax document) to the government."
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -304,6 +317,11 @@ msgstr ""
 #, python-format
 msgid "It is an electronic issuer"
 msgstr ""
+
+#. module: l10n_uy_ux
+#: model:ir.model,name:l10n_uy_ux.model_account_journal
+msgid "Journal"
+msgstr "Diario"
 
 #. module: l10n_uy_ux
 #: model:ir.model,name:l10n_uy_ux.model_account_move
