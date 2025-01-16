@@ -34,7 +34,7 @@ class ResCurrency(models.Model):
         rate = self.env['res.company']._parse_bcu_data(self)
 
         if rate:
-            raise UserError(_('Fecha Ultimo Cierre: %s\nRate: %s' % (last_closing_date, 1 / rate[self.name][0])))
+            raise UserError(_('Fecha Ultimo Cierre: %s\nRate: %s') % (last_closing_date, 1 / rate[self.name][0]))
         else:
             raise UserError(_('No se encontro cotizacion para esta Moneda'))
 
