@@ -38,7 +38,7 @@ class AccountUyVatLine(models.Model):
     not_taxed = fields.Monetary(
         readonly=True, string='Not taxed/ex', help='Not Taxed / Exempt. All lines that have does not have VAT', currency_field='company_currency_id')
     other_taxes = fields.Monetary(
-        readonly=True, string='Other Taxes', help='All the taxes tat ar not VAT taxes or iibb perceptions and that'
+        readonly=True, help='All the taxes tat ar not VAT taxes or iibb perceptions and that'
         ' are realted to documents that have VAT', currency_field='company_currency_id')
     total = fields.Monetary(readonly=True, currency_field='company_currency_id')
     state = fields.Selection([('draft', 'Unposted'), ('posted', 'Posted')], 'Status', readonly=True)
