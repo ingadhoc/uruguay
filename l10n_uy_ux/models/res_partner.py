@@ -160,33 +160,32 @@ class ResPartner(models.Model):
         for rec in self:
             rec.fiscal_countries = rec._get_countries()
 
-    """ TODO KZ despues que se mezcle el pr de check vat, agregar esto
-    def check_vat(self, vat):
-        # NOTE by the moment we include the RUT (VAT UY) validation also here because we extend the messages errors to be
-        # more friendly to the user. In a future when Odoo improve the base_vat message errors  we can change
-        # this method and use the base_vat.check_vat_uy method instead.
-        valid = super().check_vat_uy()
-        if not valid and vat:
-            self._l10n_uy_edi_check_ruc_rut(vat)
-        return valid
+    # TODO KZ despues que se mezcle el pr de check vat, agregar esto
+    # def check_vat(self, vat):
+    #     # NOTE by the moment we include the RUT (VAT UY) validation also here because we extend the messages errors to be
+    #     # more friendly to the user. In a future when Odoo improve the base_vat message errors  we can change
+    #     # this method and use the base_vat.check_vat_uy method instead.
+    #     valid = super().check_vat_uy()
+    #     if not valid and vat:
+    #         self._l10n_uy_edi_check_ruc_rut(vat)
+    #     return valid
 
-    @api.model
-    def _l10n_uy_edi_check_ruc_rut(self, vat):
-        # Check if the VAT is valid.
-        # Return: False if valid vat number, a msg containing the error if not
-        # NOTE: This method is only to add more info to the error
-        # TODO this will not work we need to improved to properly show message error
-        msg = False
-        try:
-            stdnum.util.get_cc_module("uy", "rut").validate(vat)
-        except ImportError:
-            _logger.warning("Urugayan RUT/RUC can not be validated (missing stnum lib)")
-        except InvalidChecksum:
-            msg = self.env._("The validation digit is not valid")
-        except InvalidLength:
-            msg = self.env._("Invalid length")
-        except InvalidFormat:
-            msg = self.env._("Only numbers allowed")
+    # @api.model
+    # def _l10n_uy_edi_check_ruc_rut(self, vat):
+    #     # Check if the VAT is valid.
+    #     # Return: False if valid vat number, a msg containing the error if not
+    #     # NOTE: This method is only to add more info to the error
+    #     # TODO this will not work we need to improved to properly show message error
+    #     msg = False
+    #     try:
+    #         stdnum.util.get_cc_module("uy", "rut").validate(vat)
+    #     except ImportError:
+    #         _logger.warning("Urugayan RUT/RUC can not be validated (missing stnum lib)")
+    #     except InvalidChecksum:
+    #         msg = self.env._("The validation digit is not valid")
+    #     except InvalidLength:
+    #         msg = self.env._("Invalid length")
+    #     except InvalidFormat:
+    #         msg = self.env._("Only numbers allowed")
 
-        return msg
-    """
+    #     return msg
