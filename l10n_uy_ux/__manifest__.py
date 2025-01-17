@@ -13,6 +13,7 @@
         "l10n_uy_edi",
     ],
     "data": [
+        "data/l10n_latam.document.type.csv",
         "wizards/res_partner_update_from_padron_uy_wizard_view.xml",
         "views/account_journal_views.xml",
         "views/account_move_views.xml",
