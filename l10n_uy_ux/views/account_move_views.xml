@@ -13,16 +13,15 @@
 
             <sheet position="before">
                 <div class="alert alert-danger" role="alert" style="margin-bottom:0px;"
-                    invisible="l10n_uy_edi_journal_type != 'electronic' or state != 'posted' or invoice_pdf_report_id">
+                    invisible="not (l10n_uy_edi_journal_type == 'electronic' and l10n_uy_edi_cfe_state in ['received', 'accepted', 'rejected'] and not invoice_pdf_report_id)">
                         <bold>This invoice is validated but it is missing the associated legal PDF, please try to regenerate it</bold>
                     <button name="action_l10n_uy_get_pdf" type="object" string="(UY) Reprint Legal PDF"
                         class="oe_inline oe_link" icon="fa-print"
-                        invisible="l10n_uy_edi_cfe_state != 'received' or invoice_filter_type_domain == 'purchase'"
                     />
                 </div>
                 <div class="alert alert-warning" role="alert" style="margin-bottom:0px;"
-                    invisible="l10n_uy_edi_journal_type != 'electronic' or state != 'draft' or invoice_pdf_report_id">
-                        <bold>This invoice is not yet validated, so if you try to print it you will get a not Legal PDF</bold></div>
+                    invisible="not (l10n_uy_edi_journal_type == 'electronic' and l10n_uy_edi_cfe_state not in ['received', 'accepted', 'rejected'] and not invoice_pdf_report_id)">
+                        <bold>This CFE (Electronic Document) is not created yet, so if you try to print it you will get a not Legal PDF</bold></div>
             </sheet>
 
             <field name="l10n_uy_edi_cfe_uuid" position="after">
