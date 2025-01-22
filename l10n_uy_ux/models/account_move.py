@@ -171,7 +171,20 @@ class AccountMove(models.Model):
     def action_l10n_uy_get_pdf(self):
         """ boton que permite descargar nuevamente el pdf de uruware y adjuntarlo a odoo """
         self.ensure_one()
-        pdf_result = self._l10n_uy_edi_get_pdf()
+
+        # Si estamos intentado forzar el volver a crear el PDF y estamos en ambiente DEMO simplemente generamos
+        # el reporte no legal (asi no intenta conectarse a Uruware y salta error)
+        if self.company_id.l10n_uy_edi_ucfe_env == "demo":
+            self.env['account.move.send'].with_context(active_model='account.move', active_ids=self.ids).create({
+                'checkbox_send_mail': False, 'checkbox_download': True}).action_send_and_print()
+            pdf_result = {"pdf_file": self.env["ir.attachment"].search([
+                ("res_model", "=", "account.move"),
+                ("res_id", "=", self.id),
+                ("res_field", "=", "invoice_pdf_report_file")
+            ])}
+        else:
+            pdf_result = self._l10n_uy_edi_get_pdf()
+
         if pdf_file := pdf_result.get("pdf_file"):
             # make sure latest PDF shows to the right of the chatter
             pdf_file.register_as_main_attachment(force=True)
