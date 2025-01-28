@@ -8,7 +8,7 @@
     "category": "Localization",
     "countries": ["uy"],
     "license": "LGPL-3",
-    "version": "17.0.1.3.0",
+    "version": "17.0.1.4.0",
     "depends": [
         "l10n_uy_edi",
     ],
@@ -25,6 +25,7 @@
     ],
     "demo": [
         "demo/res_company_demo.xml",
+        "demo/res_partner_demo.xml",
     ],
     "installable": True,
     "auto_install": ["l10n_uy_edi"],
