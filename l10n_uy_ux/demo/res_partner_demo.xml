@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_partner_padron_dgi" model="res.partner">
+        <field name="name">Test Padron DGI</field>
+        <field name="l10n_latam_identification_type_id" ref="l10n_uy.it_rut"/>
+        <field name="company_id" ref="base.demo_company_uy"/>
+    </record>
+
+    <record id="res_partner_padron_dgi_1" model="res.partner">
+        <field name="name">Test Padron 1: Ejemplo para actualizar datos</field>
+        <field name="ref">Test Padron 1: Ejemplo para actualizar datos</field>
+        <field name="l10n_latam_identification_type_id" ref="l10n_uy.it_rut"/>
+        <field name="vat">219000090011</field>
+        <field name="parent_id" ref="res_partner_padron_dgi"/>
+        <field name="company_id" ref="base.demo_company_uy"/>
+        <field name="is_company" eval="True"/>
+    </record>
+
+    <record id="res_partner_padron_dgi_2" model="res.partner">
+        <field name="name">Test Padron 2: Ejemplo para actualizar datos</field>
+        <field name="ref">Test Padron 2: Ejemplo para actualizar datos</field>
+        <field name="l10n_latam_identification_type_id" ref="l10n_uy.it_rut"/>
+        <field name="vat">219999820013</field>
+        <field name="parent_id" ref="res_partner_padron_dgi"/>
+        <field name="company_id" ref="base.demo_company_uy"/>
+        <field name="is_company" eval="True"/>
+    </record>
+
+    <function model="res.partner" name="write">
+        <value model="res.partner" eval="obj().search([('vat', '=', '219999830019'), ('company_id', '=', ref('base.demo_company_uy'))]).ids"/>
+        <value eval="{
+            'name': 'Test Padron 3 - Ejemplo para actualizar datos',
+            'l10n_latam_identification_type_id': ref('l10n_uy.it_rut'),
+            'vat': '219999830019',
+            'is_company': True,
+            'parent_id': ref('res_partner_padron_dgi')}"/>
+    </function>
+
+</odoo>
