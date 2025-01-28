@@ -56,7 +56,7 @@ class ResPartner(models.Model):
     def action_l10n_uy_get_data_from_dgi(self):
         """ 640 - Consulta a DGI por datos de RUT """
         self.ensure_one()
-        company = self.company_id or self.env.company
+        company = self.company_id or self.env.companies.filtered(lambda x: x.country_id.code == 'UY')[:1]
         values = {}
 
         data_mapping = {
@@ -90,6 +90,9 @@ class ResPartner(models.Model):
         edi_doc = self.env["l10n_uy_edi.document"]
         # TODO KZ need to ensure that use the proper company
         if self.l10n_latam_identification_type_id.l10n_uy_dgi_code == "2":
+            if company.l10n_uy_edi_ucfe_env == 'demo':
+                raise UserError(_("UCFE enviroment is on demo. Please set a "
+                                "testing enviroment to be able to connect to DGI."))
             result = edi_doc._ucfe_inbox("640", {"RutEmisor": self.vat})
             if errors := result.get('errors'):
                 raise UserError(_("Could not connect to DGI to extract data %s". str(errors)))
