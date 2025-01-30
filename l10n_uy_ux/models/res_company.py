@@ -17,9 +17,8 @@ class ResCompany(models.Model):
 
     l10n_uy_report_params = fields.Char()
 
-    # DGI informative files
-    l10n_uy_dgi_crt = fields.Binary(
-        "DGI Certificate", groups="base.group_system", help="This certificate lets us"
-        " connect to DGI to validate electronic invoice. Please upload here the DGI certificate in PEM format.")
-    l10n_uy_dgi_crt_fname = fields.Char("DGI Certificate name")
-    l10n_uy_dgi_crt_pass = fields.Char("Private Password")
+    # DGI informative fields.
+    l10n_uy_dgi_crt_id = fields.Many2one(
+        "certificate.certificate", "DGI Certificate", groups="base.group_system",
+        help="This certificate lets us connect to DGI to validate electronic invoice."
+        " Please upload here the DGI certificate in PEM format and its password.")
