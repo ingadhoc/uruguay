@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from . import account_journal
 from . import account_move
+from . import certificate_certificate
 from . import ir_actions_report
 from . import l10n_latam_document_type
 from . import l10n_uy_addenda

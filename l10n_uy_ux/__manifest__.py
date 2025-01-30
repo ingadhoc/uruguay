@@ -11,6 +11,7 @@
     "version": "18.0.1.2.0",
     "depends": [
         "l10n_uy_edi",
+        "certificate",
     ],
     "data": [
         "data/l10n_latam.document.type.csv",

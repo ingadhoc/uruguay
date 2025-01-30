@@ -186,12 +186,6 @@ msgid "DGI Certificate"
 msgstr ""
 
 #. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_company__l10n_uy_dgi_crt_fname
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_config_settings__l10n_uy_dgi_crt_fname
-msgid "DGI Certificate name"
-msgstr ""
-
-#. module: l10n_uy_ux
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__display_name
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__display_name
 msgid "Display Name"
@@ -407,12 +401,6 @@ msgstr ""
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
 msgid "Preview"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_company__l10n_uy_dgi_crt_pass
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_config_settings__l10n_uy_dgi_crt_pass
-msgid "Private Password"
 msgstr ""
 
 #. module: l10n_uy_ux

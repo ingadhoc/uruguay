@@ -160,16 +160,10 @@ msgid "DGI / Uruware"
 msgstr ""
 
 #. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_company__l10n_uy_dgi_crt
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_config_settings__l10n_uy_dgi_crt
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_company__l10n_uy_dgi_crt_id
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_config_settings__l10n_uy_dgi_crt_id
 msgid "DGI Certificate"
 msgstr "Certificado DGI"
-
-#. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_company__l10n_uy_dgi_crt_fname
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_config_settings__l10n_uy_dgi_crt_fname
-msgid "DGI Certificate name"
-msgstr "Nombre del certificado DGI"
 
 #. module: l10n_uy_ux
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__display_name
@@ -425,12 +419,6 @@ msgid "Preview"
 msgstr "Previsualización"
 
 #. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_company__l10n_uy_dgi_crt_pass
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_config_settings__l10n_uy_dgi_crt_pass
-msgid "Private Password"
-msgstr "Contraseña Privada"
-
-#. module: l10n_uy_ux
 #: model:ir.model,name:l10n_uy_ux.model_ir_actions_report
 msgid "Report Action"
 msgstr "Reportar acción"
@@ -496,8 +484,8 @@ msgid "There are no more partners to update for this request..."
 msgstr "No hay más contactos para actualizar para esta solicitud..."
 
 #. module: l10n_uy_ux
-#: model:ir.model.fields,help:l10n_uy_ux.field_res_company__l10n_uy_dgi_crt
-#: model:ir.model.fields,help:l10n_uy_ux.field_res_config_settings__l10n_uy_dgi_crt
+#: model:ir.model.fields,help:l10n_uy_ux.field_res_company__l10n_uy_dgi_crt_id
+#: model:ir.model.fields,help:l10n_uy_ux.field_res_config_settings__l10n_uy_dgi_crt_id
 msgid ""
 "This certificate lets us connect to DGI to validate electronic invoice. "
 "Please upload here the DGI certificate in PEM format."
