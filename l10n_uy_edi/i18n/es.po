@@ -3,15 +3,15 @@
 # 	* l10n_uy_edi
 # 
 # Translators:
-# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2024
+# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-31 13:17+0000\n"
+"POT-Creation-Date: 2025-01-27 01:29+0000\n"
 "PO-Revision-Date: 2023-05-09 19:23+0000\n"
-"Last-Translator: Juan José Scarafía <scarafia.juanjose@gmail.com>, 2024\n"
+"Last-Translator: Juan José Scarafía <scarafia.juanjose@gmail.com>, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/adhoc/teams/46451/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,78 +79,91 @@ msgstr ""
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__00
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__00
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_state__00
 msgid "00 - Petición aceptada y procesada"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__01
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__01
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_state__01
 msgid "01 - Petición denegada"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__03
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__03
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_state__03
 msgid "03 - Comercio inválido"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__05
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__05
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_state__05
 msgid "05 - CFE rechazado por DGI"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__06
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__06
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_state__06
 msgid "06 - CFE observado por DGI"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__11
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__11
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_state__11
 msgid "11 - CFE aceptado por UCFE, en espera de respuesta de DGI"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__12
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__12
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_state__12
 msgid "12 - Requerimiento inválido"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__25
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__25
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_state__25
 msgid "25 - Rechazado por DGI"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__30
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__30
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_state__30
 msgid "30 - Error en formato"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__31
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__31
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_state__31
 msgid "31 - Error en formato de CFE"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__89
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__89
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_state__89
 msgid "89 - Terminal inválida"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__96
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__96
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_state__96
 msgid "96 - Error en sistema"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_state__99
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_state__99
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_state__99
 msgid "99 - Sesión no iniciada"
 msgstr ""
 
@@ -210,114 +223,133 @@ msgstr ""
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__15
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__15
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_notif__15
 msgid "Aviso de CFE emitido aceptado por DGI"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__16
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__16
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_notif__16
 msgid "Aviso de CFE emitido aceptado por el receptor electrónico"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__5
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__5
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_notif__5
 msgid "Aviso de CFE emitido rechazado por DGI"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__6
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__6
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_notif__6
 msgid "Aviso de CFE emitido rechazado por el receptor electrónico"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__7
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__7
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_notif__7
 msgid "Aviso de CFE recibido"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__9
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__9
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_notif__9
 msgid "Aviso de aceptación comercial de un CFE recibido"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__10
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__10
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_notif__10
 msgid "Aviso de aceptación comercial de un CFE recibido en la gestión UCFE"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__8
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__8
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_notif__8
 msgid "Aviso de anulación de CFE recibido"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__11
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__11
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_notif__11
 msgid "Aviso de que se ha emitido un CFE"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__12
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__12
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_notif__12
 msgid "Aviso de que se ha emitido un CFE en la gestión UCFE"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__13
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__13
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_notif__13
 msgid "Aviso de rechazo comercial de un CFE recibido"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__14
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__14
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_notif__14
 msgid "Aviso de rechazo comercial de un CFE recibido en la gestión UCFE"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__18
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__18
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_notif__18
 msgid "Aviso que a un CFE emitido se le removió una etiqueta"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__17
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__17
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_notif__17
 msgid "Aviso que a un CFE emitido se lo ha etiquetado"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__20
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__20
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_notif__20
 msgid "Aviso que a un CFE recibido se le removió una etiqueta"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_ucfe_notif__19
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_ucfe_notif__19
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_ucfe_notif__19
 msgid "Aviso que a un CFE recibido se lo ha etiquetado"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_transport_route__2
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_transport_route__2
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_cfe_transport_route__2
 msgid "Aéreo"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_sale_mod__4
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_sale_mod__4
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_cfe_sale_mod__4
 msgid "Bienes propios a exclaves aduaneros"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__accepted
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_state__accepted
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_cfe_state__accepted
 msgid "CFE Accepted by DGI"
 msgstr "CFE Aceptado por la DGI"
 
@@ -340,6 +372,7 @@ msgstr "CFE Estado Receptor"
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__rejected
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_state__rejected
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_cfe_state__rejected
 msgid "CFE Rejected by DGI"
 msgstr "ERROR: CFE Rechazo por la DGI"
 
@@ -437,6 +470,7 @@ msgstr "Problemas de conexión, esto es lo que recibimos %s"
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_sale_mod__2
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_sale_mod__2
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_cfe_sale_mod__2
 msgid "Consignación"
 msgstr ""
 
@@ -609,24 +643,28 @@ msgstr "Tipo de Documento"
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__draft_cfe
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_state__draft_cfe
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_cfe_state__draft_cfe
 msgid "Draft CFE"
 msgstr "CFE Borrador"
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__xml_error
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_state__xml_error
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_cfe_state__xml_error
 msgid "ERROR: CFE XML not valid"
 msgstr "ERROR: CFE XML no valido"
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__connection_error
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_state__connection_error
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_cfe_state__connection_error
 msgid "ERROR: Connection to UCFE"
 msgstr "ERROR: Conección a la UCFE"
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__ucfe_error
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_state__ucfe_error
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_cfe_state__ucfe_error
 msgid "ERROR: Related to UCFE"
 msgstr ""
 
@@ -643,15 +681,6 @@ msgstr ""
 #: code:addons/l10n_uy_edi/models/l10n_uy_cfe.py:0
 #, python-format
 msgid "ERROR: the notification could not be dismissed %s"
-msgstr ""
-
-#. module: l10n_uy_edi
-#. odoo-python
-#: code:addons/l10n_uy_edi/models/account_move.py:0
-#, python-format
-msgid ""
-"El comprobante que estas anexando como referencia no es un comprobante "
-"valido para DGI(aceptado)"
 msgstr ""
 
 #. module: l10n_uy_edi
@@ -727,6 +756,8 @@ msgid ""
 "3. Seleccionar Consulta de Datos Registrales -> Consulta de Datos de Entidades.\n"
 "4. Se abre un PDF. El dato aparece en Domicilio Fiscal -> Número de Local"
 msgstr ""
+"Este valor es parte del XML cuando se envia el CFE (Campo 47: "
+"Emisor/CdgDGISucur)"
 
 #. module: l10n_uy_edi
 #. odoo-python
@@ -935,6 +966,7 @@ msgstr ""
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_transport_route__1
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_transport_route__1
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_cfe_transport_route__1
 msgid "Marítimo"
 msgstr ""
 
@@ -964,6 +996,7 @@ msgstr ""
 #: model:account.incoterms,name:l10n_uy_edi.incoterm_NA
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_transport_route__8
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_transport_route__8
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_cfe_transport_route__8
 msgid "N/A"
 msgstr ""
 
@@ -1091,12 +1124,14 @@ msgstr ""
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_partner_status__not_sent
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_partner_status__not_sent
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_cfe_partner_status__not_sent
 msgid "Not Sent"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__not_apply
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_state__not_apply
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_cfe_state__not_apply
 msgid "Not apply - Not a CFE"
 msgstr "No Aplica - No es un CFE"
 
@@ -1148,12 +1183,14 @@ msgstr ""
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_sale_mod__99
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_sale_mod__99
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_cfe_sale_mod__99
 msgid "Otras transacciones"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_transport_route__9
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_transport_route__9
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_cfe_transport_route__9
 msgid "Otro"
 msgstr ""
 
@@ -1230,6 +1267,7 @@ msgstr ""
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_sale_mod__3
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_sale_mod__3
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_cfe_sale_mod__3
 msgid "Precio Revisable"
 msgstr ""
 
@@ -1272,12 +1310,14 @@ msgstr "Acción de informe"
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_sale_mod__1
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_sale_mod__1
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_cfe_sale_mod__1
 msgid "Régimen General"
 msgstr ""
 
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_sale_mod__90
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_sale_mod__90
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_cfe_sale_mod__90
 msgid "Régimen general- exportación de servicios"
 msgstr ""
 
@@ -1289,6 +1329,7 @@ msgstr ""
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_partner_status__sent
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_partner_status__sent
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_cfe_partner_status__sent
 msgid "Sent"
 msgstr "Enviadp"
 
@@ -1365,6 +1406,7 @@ msgstr "Código Terminal"
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_transport_route__3
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_transport_route__3
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_cfe_transport_route__3
 msgid "Terrestre"
 msgstr ""
 
@@ -1675,6 +1717,7 @@ msgstr ""
 #. module: l10n_uy_edi
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__account_move__l10n_uy_cfe_state__received
 #: model:ir.model.fields.selection,name:l10n_uy_edi.selection__l10n_uy_cfe__l10n_uy_cfe_state__received
+#: model:ir.model.fields.selection,name:l10n_uy_edi.selection__stock_picking__l10n_uy_cfe_state__received
 msgid "Waiting response from DGI"
 msgstr "Esperando respuesta de la DGI"
 
