@@ -1,16 +1,13 @@
 import logging
 
-from odoo import api, models, fields
-
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import safe_eval
-
 
 _logger = logging.getLogger(__name__)
 
 
 class AccountMove(models.Model):
-
     _inherit = "account.move"
 
     l10n_latam_document_type_id = fields.Many2one(change_default=True)
@@ -25,11 +22,11 @@ class AccountMove(models.Model):
 
     def _l10n_uy_edi_check_move(self):
         # EXTEND l10n_uy_edi
-        """ Validaciones previas a enviar a DGI que Odoo no nos acepto
+        """Validaciones previas a enviar a DGI que Odoo no nos acepto
 
-            - Que el diario este bien configurado antes de emitir
-            - Que las momendas esten bien configuradas
-            - Que los impuestos IVA 0 10 y 22 existan en la companñia
+        - Que el diario este bien configurado antes de emitir
+        - Que las momendas esten bien configuradas
+        - Que los impuestos IVA 0 10 y 22 existan en la companñia
         """
         errors = super()._l10n_uy_edi_check_move()
 
@@ -56,14 +53,14 @@ class AccountMove(models.Model):
     # New methods
 
     def uy_ux_action_preview_xml(self):
-        """ En odoo oficial solo permite descargar el preview del xml si estamos en demo mode o si ocurrio un error.
+        """En odoo oficial solo permite descargar el preview del xml si estamos en demo mode o si ocurrio un error.
 
         Este es un nuevo boton preview que permite pre visualizar el contenido del xml en cualquier momento, incluso
         cuando la factura aun esta en estado borrador.
 
         NOTA: Para que pueda funcionar necesitamos tener definido la fecha de factura porque sino el xml falla, por eso
         en este metodo temporalmente asignamos la fecha de factura a la de hoy y luego la borramos para que quede la
-        factura tal cual estaba """
+        factura tal cual estaba"""
         not_invoice_date = not self.invoice_date
         if not_invoice_date:
             self.invoice_date = fields.Date.today()
@@ -72,7 +69,7 @@ class AccountMove(models.Model):
             self.invoice_date = False
 
     def uy_ux_action_get_uruware_cfe(self):
-        """ Boton visible en diario manual que permite con el dato del UUID cargar la factura creada en
+        """Boton visible en diario manual que permite con el dato del UUID cargar la factura creada en
         Uruware postmorten en el Odoo
 
         (INBOX 360 - Consulta de estado de CFE).
@@ -95,17 +92,21 @@ class AccountMove(models.Model):
         # 3. validation that is the same CFE
 
         uy_moves = self.filtered(
-            lambda x: x.country_code == "UY" and x.journal_id.type == "sale"
-            and x.journal_id.l10n_uy_edi_type == "manual")
+            lambda x: x.country_code == "UY"
+            and x.journal_id.type == "sale"
+            and x.journal_id.l10n_uy_edi_type == "manual"
+        )
         uy_docs = self.env["l10n_latam.document.type"].search([("country_id.code", "=", "UY")])
 
         for move in uy_moves:
             if not move.manual_uruware_invoice:
                 raise UserError(self.env._("You need to define 'CFE Key or UUID' in order to continue"))
-            edi_doc = self.env['l10n_uy_edi.document'].create({
-                "move_id": move.id,
-                "uuid": self.manual_uruware_invoice,
-            })
+            edi_doc = self.env["l10n_uy_edi.document"].create(
+                {
+                    "move_id": move.id,
+                    "uuid": self.manual_uruware_invoice,
+                }
+            )
             move.l10n_uy_edi_document_id = edi_doc
             result = edi_doc._ucfe_inbox("360", {"Uuid": edi_doc.uuid})
             edi_doc._update_cfe_state(result)
@@ -114,15 +115,17 @@ class AccountMove(models.Model):
                 uy_doc_code = response.findtext(".//{*}TipoCfe")
                 serie = response.findtext(".//{*}Serie")
                 doc_number = response.findtext(".//{*}NumeroCfe")
-                move.write({
-                    "l10n_latam_document_number": serie + "%07d" % int(doc_number),
-                    "l10n_latam_document_type_id": uy_docs.filtered(lambda x: x.code == uy_doc_code).id,
-                })
+                move.write(
+                    {
+                        "l10n_latam_document_number": serie + "%07d" % int(doc_number),
+                        "l10n_latam_document_type_id": uy_docs.filtered(lambda x: x.code == uy_doc_code).id,
+                    }
+                )
                 move.uy_ux_action_uy_get_pdf()
 
     def uy_ux_action_uy_get_pdf(self):
-        """ Permite volver a generar el PDF cuando no existe, sea que hubo error
-        porque no se creo o alguien lo borro sin querer """
+        """Permite volver a generar el PDF cuando no existe, sea que hubo error
+        porque no se creo o alguien lo borro sin querer"""
         # TODO KZ revisar porque en si conviene que almacene tambien en el file.
         # no estoy segura si lo esta haciendo
         self.ensure_one()
@@ -131,14 +134,16 @@ class AccountMove(models.Model):
             result = self.l10n_uy_edi_document_id._get_pdf()
 
             if file_content := result.get("file_content"):
-                pdf_file = self.env["ir.attachment"].create({
-                    "res_model": "account.move",
-                    "res_id": self.id,
-                    "res_field": "invoice_pdf_report_file",
-                    "name": (self.name or self.env._("INV")).replace("/", "_") + ".pdf",
-                    "type": "binary",
-                    "datas": file_content,
-                })
+                pdf_file = self.env["ir.attachment"].create(
+                    {
+                        "res_model": "account.move",
+                        "res_id": self.id,
+                        "res_field": "invoice_pdf_report_file",
+                        "name": (self.name or self.env._("INV")).replace("/", "_") + ".pdf",
+                        "type": "binary",
+                        "datas": file_content,
+                    }
+                )
                 res["pdf_file"] = pdf_file
 
             return res
@@ -169,18 +174,22 @@ class AccountMove(models.Model):
     # Nuevos metodos
 
     def action_l10n_uy_get_pdf(self):
-        """ boton que permite descargar nuevamente el pdf de uruware y adjuntarlo a odoo """
+        """boton que permite descargar nuevamente el pdf de uruware y adjuntarlo a odoo"""
         self.ensure_one()
 
         # Si estamos intentado forzar el volver a crear el PDF y estamos en ambiente DEMO simplemente generamos
         # el reporte no legal (asi no intenta conectarse a Uruware y salta error)
         if self.company_id.l10n_uy_edi_ucfe_env == "demo":
-            self.env['account.move.send.wizard'].create({"move_id": self.id}).action_send_and_print()
-            pdf_result = {"pdf_file": self.env["ir.attachment"].search([
-                ("res_model", "=", "account.move"),
-                ("res_id", "=", self.id),
-                ("res_field", "=", "invoice_pdf_report_file")
-            ])}
+            self.env["account.move.send.wizard"].create({"move_id": self.id}).action_send_and_print()
+            pdf_result = {
+                "pdf_file": self.env["ir.attachment"].search(
+                    [
+                        ("res_model", "=", "account.move"),
+                        ("res_id", "=", self.id),
+                        ("res_field", "=", "invoice_pdf_report_file"),
+                    ]
+                )
+            }
         else:
             pdf_result = self._l10n_uy_edi_get_pdf()
 
@@ -194,19 +203,21 @@ class AccountMove(models.Model):
             self.message_post(body=msg)
 
     def uy_ux_action_validate_cfe(self):
-        """ Check CFE XML valid files: 350: Validación de estructura de CFE
+        """Check CFE XML valid files: 350: Validación de estructura de CFE
 
         To make the validation of the CFE and connect to uwaure we need to have a EDI document
         For that reason if we have one we delete it and create a new one with the result of
         the validation, since we are raising and the end of the method then the edi document
-        is rolled back """
+        is rolled back"""
         self.ensure_one()
 
         self.l10n_uy_edi_document_id.unlink()
-        edi_doc = self.env['l10n_uy_edi.document'].create({
-            "move_id": self.id,
-            "uuid": self.env['l10n_uy_edi.document']._get_uuid(self),
-        })
+        edi_doc = self.env["l10n_uy_edi.document"].create(
+            {
+                "move_id": self.id,
+                "uuid": self.env["l10n_uy_edi.document"]._get_uuid(self),
+            }
+        )
         self.l10n_uy_edi_document_id = edi_doc
 
         result = edi_doc._ucfe_inbox("350", {"CfeXmlOTexto": self.l10n_uy_cfe_xml})
@@ -217,14 +228,15 @@ class AccountMove(models.Model):
                 edi_doc._update_cfe_state(result)
                 edi_doc.message = self.env._("Error creating CFẸ XML") + "\n\n" + edi_doc.message
                 # response.Resp.CodRta  30 o 31,   01, 12, 96, 99, ? ?
-                raise UserError(self.env._("Error creating CFẸ XML\n\n %(errors)s",
-                                errors=response.findtext(".//{*}MensajeRta")))
+                raise UserError(
+                    self.env._("Error creating CFẸ XML\n\n %(errors)s", errors=response.findtext(".//{*}MensajeRta"))
+                )
 
         raise UserError(self.env._("XML Valido"))
 
     def action_l10n_uy_remkark_default(self):
-        """ Revisamos leyedas que correspondan aplicar segun las condiciones de leyenda y defaults y las agregamos a
-        la factura con un boton """
+        """Revisamos leyedas que correspondan aplicar segun las condiciones de leyenda y defaults y las agregamos a
+        la factura con un boton"""
         self.ensure_one()
         res = self.env["l10n_uy_edi.addenda"]
 
@@ -239,12 +251,12 @@ class AccountMove(models.Model):
         self.l10n_uy_edi_addenda_ids = res
 
     def action_l10n_uy_addenda_preview(self):
-        """ Boton que permite previsualizar las addendas que seran aplicadas en en este comprobante """
+        """Boton que permite previsualizar las addendas que seran aplicadas en en este comprobante"""
         self.ensure_one()
         raise UserError(self._l10n_uy_edi_get_addenda())
 
     def uy_ux_action_mandatory_legend(self):
-        """Return Pop up with the preview of the mandatory legends that will be inform """
+        """Return Pop up with the preview of the mandatory legends that will be inform"""
         self.ensure_one()
         addenda = self._l10n_uy_edi_get_addenda()
         edi_model = self.env["l10n_uy_edi.document"]
@@ -257,48 +269,63 @@ class AccountMove(models.Model):
             if value:
                 B8_DscItem.append("* line (%s) : %s" % (line.display_name, value))
 
-        messge = ("* Adenda\n%s\n\n*"
-                  "* Info Adicional Doc\n%s\n\n*"
-                  "* Info Adicional Emisor\n%s\n\n"
-                  "* Info Adicional Receptor\n%s\n\n"
-                  "* Info Adicional Items\n%s" % (
-                    addenda, A16_InfoAdicionalDoc, A51_InfoAdicionalEmisor, A68_InfoAdicionalReceptor,
-                    "\n".join(str(item) for item in B8_DscItem)))
+        messge = (
+            "* Adenda\n%s\n\n*"
+            "* Info Adicional Doc\n%s\n\n*"
+            "* Info Adicional Emisor\n%s\n\n"
+            "* Info Adicional Receptor\n%s\n\n"
+            "* Info Adicional Items\n%s"
+            % (
+                addenda,
+                A16_InfoAdicionalDoc,
+                A51_InfoAdicionalEmisor,
+                A68_InfoAdicionalReceptor,
+                "\n".join(str(item) for item in B8_DscItem),
+            )
+        )
 
         raise UserError(messge)
 
     def _uy_get_legends_recs(self, tipo_leyenda, record):
-        """ copy of  _uy_get_legends but return browseables """
+        """copy of  _uy_get_legends but return browseables"""
         res = self.env["l10n_uy_edi.addenda"]
         recordtype = {
             "account.move": "inv",
             "stock.picking": "picking",
             "account.move.line": "aml",
-            "product.product": "product"
+            "product.product": "product",
         }
         context = {recordtype.get(record._name): record}
-        for rec in record.company_id.l10n_uy_edi_addenda_ids.filtered(lambda x: x.type == tipo_leyenda and x.apply_on in ["all", self._name]):
+        for rec in record.company_id.l10n_uy_edi_addenda_ids.filtered(
+            lambda x: x.type == tipo_leyenda and x.apply_on in ["all", self._name]
+        ):
             if bool(safe_eval.safe_eval(rec.condition, context)):
                 res |= rec
         return res
 
     @api.constrains("move_type", "journal_id")
     def _uy_ux_check_moves_use_documents(self):
-        """ Do not let to create not invoices entries in journals that use documents """
+        """Do not let to create not invoices entries in journals that use documents"""
         # TODO simil to _check_moves_use_documents. integrate somehow
         not_invoices = self.filtered(
-            lambda x: x.company_id.country_id.code == "UY" and x.journal_id.type in ["sale", "purchase"] and
-            x.l10n_latam_use_documents and not x.is_invoice())
+            lambda x: x.company_id.country_id.code == "UY"
+            and x.journal_id.type in ["sale", "purchase"]
+            and x.l10n_latam_use_documents
+            and not x.is_invoice()
+        )
         if not_invoices:
-            raise ValidationError(self.env._(
-                "The selected Journal can't be used in this transaction, please select one that doesn't use documents"
-                " as these are just for Invoices."))
+            raise ValidationError(
+                self.env._(
+                    "The selected Journal can't be used in this transaction, please select one that doesn't use documents"
+                    " as these are just for Invoices."
+                )
+            )
 
     # TODO KZ esto lo usabamos para el tema de calcular autoamticamente las addendas, pero
     # no parece estar siendo usando, revisar si podemos borrar
     @api.model
     def is_zona_franca(self):
-        """ NOTE: Need to improve the way to identify the fiscal position """
+        """NOTE: Need to improve the way to identify the fiscal position"""
         return bool(self.fiscal_position_id and "zona franca" in self.fiscal_position_id.name.lower())
 
     # TODO KZ esto era necesario en AR para eliminar facturas de proveedor, revisar si sigue siendo ver de agregar
@@ -316,9 +343,13 @@ class AccountMove(models.Model):
 
     def _is_manual_document_number(self):
         # EXTEND l10n_uy_edi
-        """ If we want to Get Uruware Invoice from manual journal then the document number
-        should not be manual, will be added when syncronizing the data  """
-        if self.country_code == 'UY' and self.journal_id.type == 'sale' and \
-           self.journal_id.l10n_uy_edi_type == 'manual' and self.manual_uruware_invoice:
+        """If we want to Get Uruware Invoice from manual journal then the document number
+        should not be manual, will be added when syncronizing the data"""
+        if (
+            self.country_code == "UY"
+            and self.journal_id.type == "sale"
+            and self.journal_id.l10n_uy_edi_type == "manual"
+            and self.manual_uruware_invoice
+        ):
             return False
         return super()._is_manual_document_number()

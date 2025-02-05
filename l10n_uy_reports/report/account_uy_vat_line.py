@@ -4,49 +4,59 @@ from odoo.tools import SQL
 
 
 class AccountUyVatLine(models.Model):
-    """ Base model for new Uruguayan VAT reports. The idea is that this lines have all the necessary data and which any
+    """Base model for new Uruguayan VAT reports. The idea is that this lines have all the necessary data and which any
     changes in odoo, this ones will be taken for this cube and then no changes will be nedeed in the reports that use
     this lines. A line is created for each accountring entry that is affected by VAT tax.
 
     Basically which it does is covert the accounting entries into columns depending of the information of the taxes and
-    add some other fields """
+    add some other fields"""
 
     _name = "account.uy.vat.line"
     _description = "VAT line for Analysis in Uruguayan Localization"
     _auto = False
-    _order = 'invoice_date asc, move_name asc, id asc'
+    _order = "invoice_date asc, move_name asc, id asc"
 
-    document_type_id = fields.Many2one('l10n_latam.document.type', 'Document Type', readonly=True)
+    document_type_id = fields.Many2one("l10n_latam.document.type", "Document Type", readonly=True)
     date = fields.Date(readonly=True)
     invoice_date = fields.Date(readonly=True)
     rut = fields.Char(readonly=True)
     partner_name = fields.Char(readonly=True)
     move_name = fields.Char(readonly=True)
-    move_type = fields.Selection(selection=[
-            ('entry', 'Journal Entry'),
-            ('out_invoice', 'Customer Invoice'),
-            ('out_refund', 'Customer Credit Note'),
-            ('in_invoice', 'Vendor Bill'),
-            ('in_refund', 'Vendor Credit Note'),
-            ('out_receipt', 'Sales Receipt'),
-            ('in_receipt', 'Purchase Receipt'),
-        ], readonly=True)
-    base_22 = fields.Monetary(readonly=True, string='Base 22%', currency_field='company_currency_id')
-    vat_22 = fields.Monetary(readonly=True, string='VAT 22%', currency_field='company_currency_id')
-    base_10 = fields.Monetary(readonly=True, string='Base 10%', currency_field='company_currency_id')
-    vat_10 = fields.Monetary(readonly=True, string='VAT 10%', currency_field='company_currency_id')
+    move_type = fields.Selection(
+        selection=[
+            ("entry", "Journal Entry"),
+            ("out_invoice", "Customer Invoice"),
+            ("out_refund", "Customer Credit Note"),
+            ("in_invoice", "Vendor Bill"),
+            ("in_refund", "Vendor Credit Note"),
+            ("out_receipt", "Sales Receipt"),
+            ("in_receipt", "Purchase Receipt"),
+        ],
+        readonly=True,
+    )
+    base_22 = fields.Monetary(readonly=True, string="Base 22%", currency_field="company_currency_id")
+    vat_22 = fields.Monetary(readonly=True, string="VAT 22%", currency_field="company_currency_id")
+    base_10 = fields.Monetary(readonly=True, string="Base 10%", currency_field="company_currency_id")
+    vat_10 = fields.Monetary(readonly=True, string="VAT 10%", currency_field="company_currency_id")
     not_taxed = fields.Monetary(
-        readonly=True, string='Not taxed/ex', help='Not Taxed / Exempt. All lines that have does not have VAT', currency_field='company_currency_id')
+        readonly=True,
+        string="Not taxed/ex",
+        help="Not Taxed / Exempt. All lines that have does not have VAT",
+        currency_field="company_currency_id",
+    )
     other_taxes = fields.Monetary(
-        readonly=True, help='All the taxes tat ar not VAT taxes or iibb perceptions and that'
-        ' are realted to documents that have VAT', currency_field='company_currency_id')
-    total = fields.Monetary(readonly=True, currency_field='company_currency_id')
-    state = fields.Selection([('draft', 'Unposted'), ('posted', 'Posted')], 'Status', readonly=True)
-    journal_id = fields.Many2one('account.journal', 'Journal', readonly=True, auto_join=True)
-    partner_id = fields.Many2one('res.partner', 'Partner', readonly=True, auto_join=True)
-    company_id = fields.Many2one('res.company', 'Company', readonly=True, auto_join=True)
-    company_currency_id = fields.Many2one(related='company_id.currency_id', readonly=True)
-    move_id = fields.Many2one('account.move', string='Entry', auto_join=True)
+        readonly=True,
+        help="All the taxes tat ar not VAT taxes or iibb perceptions and that"
+        " are realted to documents that have VAT",
+        currency_field="company_currency_id",
+    )
+    total = fields.Monetary(readonly=True, currency_field="company_currency_id")
+    state = fields.Selection([("draft", "Unposted"), ("posted", "Posted")], "Status", readonly=True)
+    journal_id = fields.Many2one("account.journal", "Journal", readonly=True, auto_join=True)
+    partner_id = fields.Many2one("res.partner", "Partner", readonly=True, auto_join=True)
+    company_id = fields.Many2one("res.company", "Company", readonly=True, auto_join=True)
+    company_currency_id = fields.Many2one(related="company_id.currency_id", readonly=True)
+    move_id = fields.Many2one("account.move", string="Entry", auto_join=True)
 
     def open_journal_entry(self):
         self.ensure_one()
@@ -63,16 +73,17 @@ class AccountUyVatLine(models.Model):
         cr.execute(sql)
 
     @api.model
-    def _uy_vat_line_build_query(self, table_references=None, search_condition=None,
-                                 column_group_key='', tax_types=('sale', 'purchase')):
+    def _uy_vat_line_build_query(
+        self, table_references=None, search_condition=None, column_group_key="", tax_types=("sale", "purchase")
+    ):
         """Returns the SQL Select query fetching account_move_lines info in order to build the pivot view for the VAT summary.
         This method is also meant to be used outside this model, which is the reason why it gives the opportunity to
         provide a few parameters, for which the defaults are used in this model.
 
         The query is used to build the VAT book report"""
         if table_references is None:
-            table_references = SQL('account_move_line')
-        search_condition = SQL('AND (%s)', search_condition) if search_condition else SQL()
+            table_references = SQL("account_move_line")
+        search_condition = SQL("AND (%s)", search_condition) if search_condition else SQL()
 
         query = SQL(
             """

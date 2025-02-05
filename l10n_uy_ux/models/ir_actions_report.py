@@ -1,7 +1,6 @@
 from collections import OrderedDict
 
 from odoo import models
-
 from odoo.tools import pdf
 
 
@@ -9,10 +8,10 @@ class IrActionsReport(models.Model):
     _inherit = "ir.actions.report"
 
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
-        """ Similar approach to vendor bills (print original bill), but in this case we use
+        """Similar approach to vendor bills (print original bill), but in this case we use
         the original pdf that was added when creating the EDI invoice. We avoid to use the
         Odoo pdf and we try to get the PDF from uruware. This helps if someone delete the
-        pdf by mistake """
+        pdf by mistake"""
 
         # If we are not printing the invoice report then we continue as it is
         invoice_reports = ["account.report_invoice", "account.report_invoice_with_payments"]
@@ -34,7 +33,8 @@ class IrActionsReport(models.Model):
         # If we have both, UY EDI invoices and other invoices we process them separately
         if invoices - uy_edi_invoices_w_legal_pdf:
             collected_streams = super()._render_qweb_pdf_prepare_streams(
-                report_ref, data, res_ids=(invoices - uy_edi_invoices_w_legal_pdf).ids)
+                report_ref, data, res_ids=(invoices - uy_edi_invoices_w_legal_pdf).ids
+            )
         else:
             collected_streams = OrderedDict()
 

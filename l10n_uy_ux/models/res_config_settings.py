@@ -1,12 +1,10 @@
 import pprint
 
-from odoo import api, models, fields
-
+from odoo import api, fields, models
 from odoo.tools.safe_eval import safe_eval
 
 
 class ResConfigSettings(models.TransientModel):
-
     _inherit = "res.config.settings"
 
     l10n_uy_dgi_crt_id = fields.Many2one(related="company_id.l10n_uy_dgi_crt_id", readonly=False)
@@ -14,7 +12,7 @@ class ResConfigSettings(models.TransientModel):
 
     @api.onchange("l10n_uy_edi_ucfe_env")
     def uy_ux_onchange_ufce_env(self):
-        """ Update UCFE param with what we have when Environment change."""
+        """Update UCFE param with what we have when Environment change."""
 
         if self.l10n_uy_edi_ucfe_env == "production":
             config = self.company_id.l10n_uy_edi_ucfe_prod_env
@@ -27,8 +25,10 @@ class ResConfigSettings(models.TransientModel):
 
         config = safe_eval(config or "{}")
         uruware_fields = [
-            "l10n_uy_edi_ucfe_password", "l10n_uy_edi_ucfe_commerce_code",
-            "l10n_uy_edi_ucfe_terminal_code"]
+            "l10n_uy_edi_ucfe_password",
+            "l10n_uy_edi_ucfe_commerce_code",
+            "l10n_uy_edi_ucfe_terminal_code",
+        ]
         for ufce_field in uruware_fields:
             self[ufce_field] = config.get(ufce_field, "")
 
@@ -37,7 +37,7 @@ class ResConfigSettings(models.TransientModel):
         self.uy_ux_update_saved_param_data()
 
     def uy_ux_update_saved_param_data(self):
-        """ If any of the ucfe params change then update the env_data values of the current selected environment """
+        """If any of the ucfe params change then update the env_data values of the current selected environment"""
         env_data = {
             "l10n_uy_edi_ucfe_password": self.l10n_uy_edi_ucfe_password or "",
             "l10n_uy_edi_ucfe_commerce_code": self.l10n_uy_edi_ucfe_commerce_code or "",
