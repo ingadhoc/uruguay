@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-17 18:41+0000\n"
+"POT-Creation-Date: 2025-02-05 11:59+0000\n"
 "PO-Revision-Date: 2024-12-30 19:19+0000\n"
 "Last-Translator: Juan José Scarafía <scarafia.juanjose@gmail.com>, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/adhoc/teams/46451/es/)\n"
@@ -18,6 +18,14 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/res_partner.py:0
+msgid ""
+"%s. Si está en un ambiente de testing, usted puede consultar los siguientes "
+"RUTs: 219999830019, 219999820013, 219000090011"
+msgstr ""
 
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_partner_form
@@ -108,9 +116,10 @@ msgid "Cancel"
 msgstr ""
 
 #. module: l10n_uy_ux
+#: model:ir.model,name:l10n_uy_ux.model_certificate_certificate
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.res_config_settings_view_form_inherit_l10n_uy_edi
 msgid "Certificate"
-msgstr ""
+msgstr "Certificado"
 
 #. module: l10n_uy_ux
 #: model:ir.model.fields,help:l10n_uy_ux.field_account_journal__l10n_uy_edi_send_print
@@ -180,8 +189,8 @@ msgid "DGI / Uruware"
 msgstr ""
 
 #. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_company__l10n_uy_dgi_crt
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_config_settings__l10n_uy_dgi_crt
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_company__l10n_uy_dgi_crt_id
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_config_settings__l10n_uy_dgi_crt_id
 msgid "DGI Certificate"
 msgstr ""
 
@@ -257,12 +266,6 @@ msgstr ""
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
 msgid "Get Uruware Invoice"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.res_config_settings_view_form_inherit_l10n_uy_edi
-msgid ""
-"Here need to upload the file with the Digital Certificate to operate in DGI"
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -399,6 +402,12 @@ msgid "Please return a 'UUID CFE Key' in order to continue"
 msgstr ""
 
 #. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/certificate_certificate.py:0
+msgid "Please set the Certificate Password"
+msgstr ""
+
+#. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
 msgid "Preview"
 msgstr ""
@@ -467,18 +476,18 @@ msgid "There was an error in the response %s"
 msgstr ""
 
 #. module: l10n_uy_ux
-#: model:ir.model.fields,help:l10n_uy_ux.field_res_company__l10n_uy_dgi_crt
-#: model:ir.model.fields,help:l10n_uy_ux.field_res_config_settings__l10n_uy_dgi_crt
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
 msgid ""
-"This certificate lets us connect to DGI to validate electronic invoice. "
-"Please upload here the DGI certificate in PEM format."
+"This CFE (Electronic Document) is not created yet, so if you try to print it"
+" you will get a not Legal PDF"
 msgstr ""
 
 #. module: l10n_uy_ux
-#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
+#: model:ir.model.fields,help:l10n_uy_ux.field_res_company__l10n_uy_dgi_crt_id
+#: model:ir.model.fields,help:l10n_uy_ux.field_res_config_settings__l10n_uy_dgi_crt_id
 msgid ""
-"This invoice is not yet validated, so if you try to print it you will get a "
-"not Legal PDF"
+"This certificate lets us connect to DGI to validate electronic invoice. "
+"Please upload here the DGI certificate in PEM format and its password."
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -517,6 +526,11 @@ msgstr ""
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
 msgid "Update with Manual Check"
+msgstr ""
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.res_config_settings_view_form_inherit_l10n_uy_edi
+msgid "Uplad Certificate and Password"
 msgstr ""
 
 #. module: l10n_uy_ux
