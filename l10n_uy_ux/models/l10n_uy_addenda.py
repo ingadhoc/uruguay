@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import fields, models
 
 
 class L10nUyAddenda(models.Model):
@@ -8,8 +8,11 @@ class L10nUyAddenda(models.Model):
     sequence = fields.Integer()
     active = fields.Boolean(default=True)
     condition = fields.Char(default="False")
-    apply_on = fields.Selection([
-        ("all", "All CFE"),
-        ("account.move", "Invoices and Tickets"),
-        ], required=True, default="account.move",
+    apply_on = fields.Selection(
+        [
+            ("all", "All CFE"),
+            ("account.move", "Invoices and Tickets"),
+        ],
+        required=True,
+        default="account.move",
     )

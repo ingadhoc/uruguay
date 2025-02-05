@@ -1,4 +1,4 @@
-from odoo import api, models, fields
+from odoo import api, fields, models
 
 
 class AccountJournal(models.Model):
@@ -12,7 +12,7 @@ class AccountJournal(models.Model):
         Set Auto pop up Send and Print default value to True for electronic sales journals
         """
         for journal in self:
-            if journal.country_code == 'UY' and journal.type == 'sale' and journal.l10n_uy_edi_type == "electronic":
+            if journal.country_code == "UY" and journal.type == "sale" and journal.l10n_uy_edi_type == "electronic":
                 journal.l10n_uy_edi_send_print = True
             else:
                 journal.l10n_uy_edi_send_print = False

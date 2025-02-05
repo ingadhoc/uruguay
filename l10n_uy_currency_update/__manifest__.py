@@ -18,22 +18,22 @@
 #
 ##############################################################################
 {
-    'name': 'Uruguayan Currency Rate Update',
-    'version': "18.0.1.1.0",
-    'countries': ['uy'],
-    'category': 'Localization/Uruguay',
-    'sequence': 14,
-    'author': 'ADHOC SA',
-    'website': 'www.adhoc.com.ar',
-    'license': 'AGPL-3',
-    'depends': [
-        'currency_rate_live',
-        'l10n_uy',
+    "name": "Uruguayan Currency Rate Update",
+    "version": "18.0.1.1.0",
+    "countries": ["uy"],
+    "category": "Localization/Uruguay",
+    "sequence": 14,
+    "author": "ADHOC SA",
+    "website": "www.adhoc.com.ar",
+    "license": "AGPL-3",
+    "depends": [
+        "currency_rate_live",
+        "l10n_uy",
     ],
-    'data': [
-        'views/res_currency_views.xml',
+    "data": [
+        "views/res_currency_views.xml",
     ],
-    'installable': True,
-    'auto_install': True,
-    'application': False,
+    "installable": True,
+    "auto_install": True,
+    "application": False,
 }

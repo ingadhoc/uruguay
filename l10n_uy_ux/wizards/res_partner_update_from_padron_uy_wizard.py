@@ -1,8 +1,7 @@
 import logging
-
-from odoo import models, api, fields
-
 from ast import literal_eval
+
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -10,7 +9,6 @@ _logger = logging.getLogger(__name__)
 
 # TODO this code used also for 13.0 new generic module
 class ResPartnerUpdate(models.TransientModel):
-
     # TODO rename model
     _name = "res.partner.update.from.padron.uy.field"
     _description = "res.partner.update.from.padron.uy.field"
@@ -22,7 +20,6 @@ class ResPartnerUpdate(models.TransientModel):
 
 
 class ResPartnerUpdateFromPadronWizard(models.TransientModel):
-
     _name = "res.partner.update.from.padron.uy.wizard"
     _description = "res.partner.update.from.padron.uy.wizard"
 
@@ -39,7 +36,7 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
     def default_get(self, fields):
         res = super().default_get(fields)
         context = self._context
-        if (context.get("active_model") == "res.partner" and context.get("active_ids")):
+        if context.get("active_model") == "res.partner" and context.get("active_ids"):
             partners = self.get_partners()
             if not partners:
                 raise UserError(self.env._("No partner with RUT was found to update"))
@@ -78,11 +75,11 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
     def get_fields(self):
         return self.env["ir.model.fields"].search(self._get_domain())
 
-    state = fields.Selection([
-        ("option", "Option"),
-        ("selection", "Selection"),
-        ("finished", "Finished")],
-        readonly=True, required=True, default="option",
+    state = fields.Selection(
+        [("option", "Option"), ("selection", "Selection"), ("finished", "Finished")],
+        readonly=True,
+        required=True,
+        default="option",
     )
     field_ids = fields.One2many(
         "res.partner.update.from.padron.uy.field",
@@ -92,7 +89,8 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
     partner_ids = fields.Many2many(
         "res.partner",
         "partner_update_from_padron_uy_rel",
-        "update_id", "partner_id",
+        "update_id",
+        "partner_id",
         string="Partners",
         default=get_partners,
     )
@@ -101,7 +99,8 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
     field_to_update_ids = fields.Many2many(
         "ir.model.fields",
         "res_partner_update_fields_uy",
-        "update_id", "field_id",
+        "update_id",
+        "field_id",
         string="Fields To Update",
         help="Only this fields are going to be retrieved and updated",
         default=get_fields,
@@ -129,8 +128,7 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
                     old_value = old_value.ids
                 elif key in ("state_id", "country_id"):
                     old_value = old_value.id
-                if new_value and key in fields_names and \
-                        old_value != new_value:
+                if new_value and key in fields_names and old_value != new_value:
                     line_vals = {
                         "wizard_id": self.id,
                         "field": key,
@@ -210,6 +208,6 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
         }
 
     def start_process_cb(self):
-        """ Start the process. """
+        """Start the process."""
         self.ensure_one()
         return self._next_screen()

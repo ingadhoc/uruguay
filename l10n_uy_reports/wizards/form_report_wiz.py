@@ -1,85 +1,100 @@
 import base64
 import logging
-from odoo import models, api, fields, _
+
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
 
 class FormReportWiz(models.TransientModel):
+    _name = "form.report.wiz"
+    _description = "Generate files for Uruguayan Declaration"
 
-    _name = 'form.report.wiz'
-    _description = 'Generate files for Uruguayan Declaration'
-
-    company_id = fields.Many2one('res.company')
+    company_id = fields.Many2one("res.company")
     date_from = fields.Date()
     date_to = fields.Date()
     date_period = fields.Char(compute="_compute_date_period")
-    uy_form_id = fields.Selection([('2181', 'Form 2181')], 'Form', default="2181")
+    uy_form_id = fields.Selection([("2181", "Form 2181")], "Form", default="2181")
     res_file = fields.Binary()
     res_filename = fields.Char()
 
     @api.model
     def default_get(self, list_fields):
         res = super().default_get(list_fields)
-        if not res.get('company_id'):
+        if not res.get("company_id"):
             last_month = fields.Date.subtract(fields.Date.today(), months=1)
-            res['company_id'] = self.env.company.id
-            res['date_from'] = fields.Date.start_of(last_month, 'month')
-            res['date_to'] = fields.Date.end_of(last_month, 'month')
+            res["company_id"] = self.env.company.id
+            res["date_from"] = fields.Date.start_of(last_month, "month")
+            res["date_to"] = fields.Date.end_of(last_month, "month")
         return res
 
-    @api.depends('date_to', 'date_from')
+    @api.depends("date_to", "date_from")
     def _compute_date_period(self):
         for rec in self:
             rec.date_period = rec.date_to.strftime("%Y%m")
 
-    @api.onchange('date_to', 'date_from')
+    @api.onchange("date_to", "date_from")
     def _onchange_dates(self):
-        """ Fix the date to and end to dates given by the user """
+        """Fix the date to and end to dates given by the user"""
         init_of_month = fields.Date.start_of(self.date_from, "month")
         end_of_month = fields.Date.end_of(self.date_from, "month")
         self.date_from = init_of_month
         self.date_to = end_of_month
 
     def _get_invoices_domain(self):
-        """ Devuelve el dominio a utilizar para obtener las facturas que seran
+        """Devuelve el dominio a utilizar para obtener las facturas que seran
         mostradas en el archivo del formulario.
         """
         domain = [
-            ('company_id', '=', self.company_id.id), ('state', '=', 'posted'),
-            ('date', '>=', self.date_from), ('date', '<=', self.date_to),
-            ('partner_id.vat', '!=', False),
-            ('l10n_latam_document_type_id.code', '!=', '0'),
-            ('l10n_latam_document_type_id.code', '!=', False),
-            ('l10n_latam_document_type_id.code', 'not in', ['121', '122', '123', '124', '221', '222', '223', '224'])
+            ("company_id", "=", self.company_id.id),
+            ("state", "=", "posted"),
+            ("date", ">=", self.date_from),
+            ("date", "<=", self.date_to),
+            ("partner_id.vat", "!=", False),
+            ("l10n_latam_document_type_id.code", "!=", "0"),
+            ("l10n_latam_document_type_id.code", "!=", False),
+            ("l10n_latam_document_type_id.code", "not in", ["121", "122", "123", "124", "221", "222", "223", "224"]),
         ]
 
-        if self.sudo().env['ir.module.module'].search([('name', '=', 'l10n_uy_edi')], limit=1).state \
-           in ('installed', 'to install', 'to upgrade'):
-            domain += ['|', ('l10n_uy_edi_cfe_state', 'in', ['accepted']), ('move_type', 'like', 'in_')]
+        if self.sudo().env["ir.module.module"].search([("name", "=", "l10n_uy_edi")], limit=1).state in (
+            "installed",
+            "to install",
+            "to upgrade",
+        ):
+            domain += ["|", ("l10n_uy_edi_cfe_state", "in", ["accepted"]), ("move_type", "like", "in_")]
         return domain
 
     def _get_invoices(self):
-        """ Both customer and vendor bills
+        """Both customer and vendor bills
 
-            * Solo debemos tomar en cuenta los cfe que tengan un partner con numero de identificacion, los que no no tenemos
-              que tomarlos en cuenta ni enviar nada.
-            * Solo tomar en cuenta los aceptados, el resto no
+        * Solo debemos tomar en cuenta los cfe que tengan un partner con numero de identificacion, los que no no tenemos
+          que tomarlos en cuenta ni enviar nada.
+        * Solo tomar en cuenta los aceptados, el resto no
         """
         self.ensure_one()
         domain = self._get_invoices_domain()
-        res = self.env['account.move'].search(domain, order='invoice_date asc, name asc, id asc')
+        res = self.env["account.move"].search(domain, order="invoice_date asc, name asc, id asc")
         return res
 
     def _search_tax(self, tax_amount, tax_type):
-        res = self.env['account.tax'].with_context(active_test=False).search([
-            ('type_tax_use', '=', tax_type), ('company_id', '=', self.company_id.id),
-            ('amount', '=', tax_amount), ('l10n_uy_tax_category', '=', 'vat')], limit=1)
+        res = (
+            self.env["account.tax"]
+            .with_context(active_test=False)
+            .search(
+                [
+                    ("type_tax_use", "=", tax_type),
+                    ("company_id", "=", self.company_id.id),
+                    ("amount", "=", tax_amount),
+                    ("l10n_uy_tax_category", "=", "vat"),
+                ],
+                limit=1,
+            )
+        )
         return res
 
     def _get_form_2181_data(self):
-        """ 
+        """
         Prepara the content of the file
 
         Este es un solo archivo TXT el cual contiene.
@@ -87,35 +102,35 @@ class FormReportWiz(models.TransientModel):
         correspondiente al concepto declarado e importe.
 
         Agrupado por partner, por periodo y fecha de factura la información de los impuestos generados
-        
+
         Devuelve un string con las lineas de la carpeta a escribir
         """
         lines = []
 
         # Importante: el archivo generado mezcla iva compras e iva ventas.
         line_code = {
-            self._search_tax(22.0, 'sale'): '502',  # 502 IVA Ventas Tasa Básica a Contribuyentes
-            self._search_tax(10.0, 'sale'): '503',  # 503 IVA Ventas Tasa Mínima a Contribuyentes
-            self._search_tax(0.0, 'purchase'): '504',  # Compras Plaza Exentas de IVA
-            self._search_tax(22.0, 'purchase'): '505',  # 505 IVA Compras Plaza Tasa Básica
-            self._search_tax(10.0, 'purchase'): '506',  # 506 IVA Compras Plaza Tasa Mínima
+            self._search_tax(22.0, "sale"): "502",  # 502 IVA Ventas Tasa Básica a Contribuyentes
+            self._search_tax(10.0, "sale"): "503",  # 503 IVA Ventas Tasa Mínima a Contribuyentes
+            self._search_tax(0.0, "purchase"): "504",  # Compras Plaza Exentas de IVA
+            self._search_tax(22.0, "purchase"): "505",  # 505 IVA Compras Plaza Tasa Básica
+            self._search_tax(10.0, "purchase"): "506",  # 506 IVA Compras Plaza Tasa Mínima
         }
         # Estos dos parece que tambien van pero no tenemos un impuestos para colocarlo
         # ("507", "507	- IVA Ventas tasa 10% a Contribuyentes"),
         # ("508", "508	- IVA Compras Plaza Tasa 10%"),
 
         taxes_raw = list(line_code.keys())
-        taxes = self.env['account.tax']
+        taxes = self.env["account.tax"]
         for item in taxes_raw:
             taxes |= item
 
         tax_code = {}
-        taxes_group_ids = taxes.mapped('tax_group_id').ids
+        taxes_group_ids = taxes.mapped("tax_group_id").ids
         for tax in taxes:
             tax_code[(tax.tax_group_id.id, tax.type_tax_use)] = line_code.get(tax)
 
         invoices = self._get_invoices()
-        UYU_currency = self.env.ref('base.UYU')
+        UYU_currency = self.env.ref("base.UYU")
 
         # Revisando que todos los impuestos esten bien configurados
         error = ""
@@ -143,20 +158,20 @@ class FormReportWiz(models.TransientModel):
         for rut_partner, invoices in data.items():
             amount_total = {}
             for inv in invoices:
-                subtotals = inv.tax_totals.get('subtotals', [])
+                subtotals = inv.tax_totals.get("subtotals", [])
                 currency_is_uyu = inv.currency_id == UYU_currency
-                is_sale = 'out_' in inv.move_type
-                sign = 1 if inv.move_type in ['out_invoice', 'in_invoice', 'out_receipt', 'in_receipt'] else -1
+                is_sale = "out_" in inv.move_type
+                sign = 1 if inv.move_type in ["out_invoice", "in_invoice", "out_receipt", "in_receipt"] else -1
 
                 for item in subtotals:
-                    tax_group_ids = item.get('tax_groups', [])
+                    tax_group_ids = item.get("tax_groups", [])
                     # No estaba ene especifcacion pero vimos via un ejemplo que los montos reportados siempre son en
                     # pesos, aunque el comprobamte sea de otra moneda, es por eso que utilizamos el monto convertido
-                    tax_amount = item.get('tax_amount') if currency_is_uyu else item.get('tax_amount_currency')
+                    tax_amount = item.get("tax_amount") if currency_is_uyu else item.get("tax_amount_currency")
                     for tax_group_id in tax_group_ids:
-                        tax_id = tax_group_id['id']
+                        tax_id = tax_group_id["id"]
                         if tax_id in taxes_group_ids:
-                            key = (tax_id, 'sale' if is_sale else 'purchase')
+                            key = (tax_id, "sale" if is_sale else "purchase")
                             amount_total[key] = amount_total.get(key, 0.0) + (sign * tax_amount)
 
             for tax in amount_total:
@@ -167,13 +182,13 @@ class FormReportWiz(models.TransientModel):
                 if self.company_id.vat:
                     content_data = self.company_id.vat.zfill(12) + ";"
                 else:
-                    raise UserError(_('Configure un numero de vat para su compañia'))
+                    raise UserError(_("Configure un numero de vat para su compañia"))
 
                 # Campo 2 - Formulario. Num 5
-                content_data += "{: 5d};".format(int(self.uy_form_id))
+                content_data += f"{int(self.uy_form_id): 5d};"
 
                 # Campo 3 - Período (AAAAMM) Num 6. Ejemplo: 202406
-                content_data += "{};".format(self.date_period)
+                content_data += f"{self.date_period};"
 
                 # Campo 4 - RUT Informado. Num 12
                 content_data += rut_partner.zfill(12) + ";"
@@ -182,37 +197,39 @@ class FormReportWiz(models.TransientModel):
                 content_data += "{};".format(line.move_id.date.strftime("%Y%m"))
 
                 # Campo 6 - Línea del Rubro 5 del Formulario
-                content_data += "{};".format(tax_code.get(tax))
+                content_data += f"{tax_code.get(tax)};"
 
                 # Campo 7 - Importe. Num 12. Ejemplo: 2750 ó -2750
-                content_data += "{0:>015.2f};".format(amount_total.get(tax))
+                content_data += f"{amount_total.get(tax):>015.2f};"
 
                 lines.append(content_data)
 
-        res = '\n'.join(lines)
+        res = "\n".join(lines)
         return res
 
     def action_get_files(self):
-        """ Button that will generate the files for the selected options given"""
+        """Button that will generate the files for the selected options given"""
         self.ensure_one()
 
-        if self.company_id.country_id.code != 'UY':
+        if self.company_id.country_id.code != "UY":
             raise UserError(_("Solo puede generar este reporte para compañias Uruguayas"))
 
-        data = getattr(self, '_get_form_%s_data' % self.uy_form_id)() if self.uy_form_id else None
+        data = getattr(self, "_get_form_%s_data" % self.uy_form_id)() if self.uy_form_id else None
         if data:
-            self.res_filename = self.company_id.name[:4] + "Formulario2-181DGI_" + self.date_period[-2:] + self.date_period[:4] + ".txt"
+            self.res_filename = (
+                self.company_id.name[:4] + "Formulario2-181DGI_" + self.date_period[-2:] + self.date_period[:4] + ".txt"
+            )
             # TODO No sabemos realmente cual es el formato, solo tomamos de ejemplo el que genera uruware
             # Ejemplo SumiFormulario2-181DGI_10_2022.txt ver de mejorarlo del periodo
-            self.res_file = base64.encodebytes(data.encode('ISO-8859-1'))
+            self.res_file = base64.encodebytes(data.encode("ISO-8859-1"))
         else:
             self.res_filename = "Ningun archivo fue generado"
             self.res_file = False
 
         return {
-            'type': 'ir.actions.act_window',
-            'res_model': self._name,
-            'res_id': self.id,
-            'view_mode': 'form',
-            'target': 'new',
+            "type": "ir.actions.act_window",
+            "res_model": self._name,
+            "res_id": self.id,
+            "view_mode": "form",
+            "target": "new",
         }

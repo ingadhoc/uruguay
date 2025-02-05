@@ -1,7 +1,6 @@
 import logging
 
 from odoo import api, models
-
 from odoo.exceptions import UserError
 from odoo.tools import safe_eval
 
@@ -9,15 +8,14 @@ _logger = logging.getLogger(__name__)
 
 
 class L10nUyEdiDocument(models.Model):
-
     _inherit = "l10n_uy_edi.document"
 
     # Methods extend for l10n_uy_edi
 
     def action_update_dgi_state(self):
         # EXTEND l10n_uy_edi
-        """ Permitimos actualizar estado solo si tenemos UUID y solo si esta en esperando respuesta.
-        Si hay error no hay nada que consultar, y si fue aceptado rechazado ya no necesita ser actualizado """
+        """Permitimos actualizar estado solo si tenemos UUID y solo si esta en esperando respuesta.
+        Si hay error no hay nada que consultar, y si fue aceptado rechazado ya no necesita ser actualizado"""
         for doc in self:
             if not doc.uuid:
                 raise UserError(self.env._("Please return a 'UUID CFE Key' in order to continue"))
@@ -31,24 +29,26 @@ class L10nUyEdiDocument(models.Model):
     @api.model
     def _is_connection_info_incomplete(self, company):
         # EXTEND l10n_uy_edi
-        """ Intenta mandar mensaje de error de alerta si estas en ambiente de testing con datos
+        """Intenta mandar mensaje de error de alerta si estas en ambiente de testing con datos
         de producción
 
         Return:
             False if everything is ok,
-            Message if there is a problem or something missing """
+            Message if there is a problem or something missing"""
         res = super()._is_connection_info_incomplete(company)
         inbox_url = self._get_ws_url("inbox", company)
         query_url = self._get_ws_url("query", company)
 
         # Just in case they put production info in a testing environment by mistake
         if company.l10n_uy_edi_ucfe_env == "testing" and ("prod" in inbox_url or "prod" in query_url):
-            res = (res or "") + self.env._("Testing environment with production data. Please check/adjust the configuration")
+            res = (res or "") + self.env._(
+                "Testing environment with production data. Please check/adjust the configuration"
+            )
         return res
 
     def _get_report_params(self):
         # EXTEND l10n_uy_edi
-        """ Odoo oficial solo imprime el reporte standard de uruware.
+        """Odoo oficial solo imprime el reporte standard de uruware.
         Aca extendemos para que haga dos cosas:
 
         1. Sirve para detectar si la adenda es muy grande automaticamente mandar a imprimir el reporte con adenda en
@@ -59,31 +59,33 @@ class L10nUyEdiDocument(models.Model):
             el partner de la factura tiene definido algun lenguaje != español: de ser asi imprime el reporte tanto en
             español como en ingles (tambien es un formato disponible en uruware)
         """
-        compatible_en = ['101', '102', '103', '121', '122', '123']
+        compatible_en = ["101", "102", "103", "121", "122", "123"]
         adenda = self.move_id._l10n_uy_edi_get_addenda()
         report_params = safe_eval.safe_eval(self.company_id.l10n_uy_report_params or "[]")
         nombreParametros = report_params[0] if report_params else []
         valoresParametros = report_params[1] if report_params else []
-        if adenda and len(adenda.splitlines()) > 6 and 'adenda' not in nombreParametros:
-            nombreParametros.append('adenda')
-            valoresParametros.append('true')
+        if adenda and len(adenda.splitlines()) > 6 and "adenda" not in nombreParametros:
+            nombreParametros.append("adenda")
+            valoresParametros.append("true")
         if self.l10n_latam_document_type_id.code in compatible_en:
-            if self.partner_id.lang and 'es' not in self.partner_id.lang and 'ingles' not in valoresParametros:
-                nombreParametros.append('reporte')
-                valoresParametros.append('ingles')
-        elif 'ingles' in valoresParametros:
-            nombreParametros.remove('reporte')
-            valoresParametros.remove('ingles')
+            if self.partner_id.lang and "es" not in self.partner_id.lang and "ingles" not in valoresParametros:
+                nombreParametros.append("reporte")
+                valoresParametros.append("ingles")
+        elif "ingles" in valoresParametros:
+            nombreParametros.remove("reporte")
+            valoresParametros.remove("ingles")
 
         if nombreParametros and valoresParametros:
             return "ObtenerPdfConParametros", {
-                'nombreParametros': nombreParametros, 'valoresParametros': valoresParametros}
+                "nombreParametros": nombreParametros,
+                "valoresParametros": valoresParametros,
+            }
         return super()._get_report_params()
 
     # Metodos nuevos
 
     def ux_uy_get_last_invoice_number(self, document_type):
-        """ Cuando la persona no tiene configurado para emitir el docuemnto en uruware deberia de saltarle
+        """Cuando la persona no tiene configurado para emitir el docuemnto en uruware deberia de saltarle
         este error. Necesitamos ver si lo agregamos a los check_moves
 
         El dia de mañana si quieremos un Consultar Comprobante de DGI podemos usar esto
@@ -103,15 +105,19 @@ class L10nUyEdiDocument(models.Model):
         if int(document_type.code) != 0 and int(document_type.code) < 200:
             result = self._ucfe_inbox("660", {"TipoCfe": document_type.code})
             if errors := result.get("errors"):
-                raise UserError(self.env._(
-                    "We were not able to get the info of the next invoice number: %(error)s", error=errors))
+                raise UserError(
+                    self.env._("We were not able to get the info of the next invoice number: %(error)s", error=errors)
+                )
 
             response = result.get("response")
             if response is not None:
                 next_number = response.findtext(".//{*}NumeroCfe", "")
                 if not next_number:
-                    raise UserError(self.env._(
-                        "You are not enabled to issue this document %(document)s, Please check your configuration settings",
-                        document=document_type.display_name))
+                    raise UserError(
+                        self.env._(
+                            "You are not enabled to issue this document %(document)s, Please check your configuration settings",
+                            document=document_type.display_name,
+                        )
+                    )
                 res = int(next_number)
         return res
