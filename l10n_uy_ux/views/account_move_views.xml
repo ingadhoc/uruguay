@@ -7,6 +7,10 @@
         <field name="inherit_id" ref="l10n_uy_edi.view_move_form_inherit_l10n_uy_edi"/>
         <field name="arch" type="xml">
 
+            <header position="inside">
+                <button name="action_l10n_uy_update_fields" type="object" string="(UY)Update Invoice With XML data" invisible="invoice_filter_type_domain != 'purchase' and l10n_uy_edi_journal_type != 'electronic'" help="Read the XML and fill the fields of the invoice/bill with the xml values" confirm="Are you sure? this action will update the invoice information."/>
+            </header>
+
             <field name="l10n_uy_edi_addenda_ids" position="attributes">
                 <attribute name="context">{"default_type": "item", "default_apply_on": "account.move", "form_view_ref": "l10n_uy_edi.l10n_uy_edi_addenda_view_form_only_item"}</attribute>
             </field>
