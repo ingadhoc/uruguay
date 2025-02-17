@@ -361,8 +361,7 @@ class AccountMove(models.Model):
         """Sync with Uruware and complete vendor bill information."""
         self.ensure_one()
         self.clear_l10n_uy_invoice_fields()
-        # también puede ser base64.b64decode(self.l10n_uy_edi_document_id.attachment_file)
-        xml = base64.b64decode(self.l10n_uy_edi_xml_attachment_id.datas)
+        xml = base64.b64decode(self.l10n_uy_edi_xml_attachment_id.datas or self.attachment_ids.datas)
         self._l10n_uy_edi_complete_cfe_from_xml(self, etree.fromstring(xml))
 
     def clear_l10n_uy_invoice_fields(self):
