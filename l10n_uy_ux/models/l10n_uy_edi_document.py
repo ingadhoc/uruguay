@@ -48,39 +48,44 @@ class L10nUyEdiDocument(models.Model):
 
     def _get_report_params(self):
         # EXTEND l10n_uy_edi
-        """Odoo oficial solo imprime el reporte standard de uruware.
-        Aca extendemos para que haga dos cosas:
-
-        1. Sirve para detectar si la adenda es muy grande automaticamente mandar a imprimir el reporte con adenda en
-            hoja separada (si la adenda lleva > 6 lineas esto sucede)
-        2. Sirve para enviar un reporte pre definido por el cliente en la configuracion de Odoo en lugar de imprimir
-            el reporte por defecto de Uruware
-        3.  En caso de que el documento sea un e-ticket o e-factura expo o sus respectivas NC y ND se fijara si
-            el partner de la factura tiene definido algun lenguaje != español: de ser asi imprime el reporte tanto en
-            español como en ingles (tambien es un formato disponible en uruware)
         """
-        compatible_en = ["101", "102", "103", "121", "122", "123"]
-        adenda = self.move_id._l10n_uy_edi_get_addenda()
-        report_params = safe_eval.safe_eval(self.company_id.l10n_uy_report_params or "[]")
-        nombreParametros = report_params[0] if report_params else []
-        valoresParametros = report_params[1] if report_params else []
-        if adenda and len(adenda.splitlines()) > 6 and "adenda" not in nombreParametros:
-            nombreParametros.append("adenda")
-            valoresParametros.append("true")
-        if self.l10n_latam_document_type_id.code in compatible_en:
-            if self.partner_id.lang and "es" not in self.partner_id.lang and "ingles" not in valoresParametros:
-                nombreParametros.append("reporte")
-                valoresParametros.append("ingles")
-        elif "ingles" in valoresParametros:
-            nombreParametros.remove("reporte")
-            valoresParametros.remove("ingles")
+        En Odoo oficial se imprime el reporte PDF en inglés sólo cuando el partner no es uruguayo,
+        y la adenda en hoja separada siempre que supere las 6 líneas, teniendo un máximo de 140
+        caracteres por línea.
+        Extendemos para que los usuarios puedan definir el formato de reporte a utilizar, en casos
+        diferentes a los que contempla Odoo oficial.
+        """
+        endpoint, params = super()._get_report_params()
+        user_report_params = safe_eval.safe_eval(self.company_id.l10n_uy_report_params or "[]")
 
-        if nombreParametros and valoresParametros:
-            return "ObtenerPdfConParametros", {
-                "nombreParametros": nombreParametros,
-                "valoresParametros": valoresParametros,
-            }
-        return super()._get_report_params()
+        available_doc_codes = (
+            self.env.ref("l10n_uy.dc_e_ticket")
+            | self.env.ref("l10n_uy.dc_cn_e_ticket")
+            | self.env.ref("l10n_uy.dc_dn_e_ticket")
+            | self.env.ref("l10n_uy.dc_e_inv_exp")
+            | self.env.ref("l10n_uy.dc_cn_e_inv_exp")
+            | self.env.ref("l10n_uy.dc_dn_e_inv_exp")
+        ).mapped("code")
+        if user_report_params:
+            if "Parametros" not in endpoint:
+                endpoint += "ConParametros"
+                params = {
+                    "nombreParametros": {"string": []},
+                    "valoresParametros": {"string": []},
+                }
+            # Si el usuario definió separar la adenda, lo agregamos a los parámetros
+            if "adenda" in user_report_params[0]:
+                params["nombreParametros"]["string"].append("adenda")
+                params["valoresParametros"]["string"].append("true")
+            # Si el usuario definió un idioma, lo agregamos a los parámetros
+            if "ingles" in user_report_params[1] and self.l10n_latam_document_type_id.code in available_doc_codes:
+                params["nombreParametros"]["string"].append("reporte")
+                params["valoresParametros"]["string"].append("ingles")
+            if "secundario" in user_report_params[1]:
+                params["nombreParametros"]["string"].append("reporte")
+                params["valoresParametros"]["string"].append("secundario")
+
+        return endpoint, params
 
     # Metodos nuevos
 
