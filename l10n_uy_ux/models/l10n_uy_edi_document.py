@@ -77,8 +77,8 @@ class L10nUyEdiDocument(models.Model):
 
         if nombreParametros and valoresParametros:
             return "ObtenerPdfConParametros", {
-                "nombreParametros": nombreParametros,
-                "valoresParametros": valoresParametros,
+                "nombreParametros": {"string": nombreParametros},
+                "valoresParametros": {"string": valoresParametros},
             }
         return super()._get_report_params()
 
