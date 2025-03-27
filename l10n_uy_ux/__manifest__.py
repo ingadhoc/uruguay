@@ -8,7 +8,7 @@
     "category": "Localization",
     "countries": ["uy"],
     "license": "LGPL-3",
-    "version": "17.0.1.5.0",
+    "version": "17.0.1.6.0",
     "depends": [
         "l10n_uy_edi",
     ],
@@ -23,7 +23,6 @@
         "views/res_partner_view.xml",
         "views/l10n_uy_addenda_views.xml",
         "security/ir.model.access.csv",
-        "data/ir_cron.xml",
     ],
     "demo": [
         "demo/res_company_demo.xml",
