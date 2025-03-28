@@ -16,7 +16,7 @@ class L10nUyEdiDocument(models.Model):
         # EXTEND l10n_uy_edi
         """Permitimos actualizar estado solo si tenemos UUID y solo si esta en esperando respuesta.
         Si hay error no hay nada que consultar, y si fue aceptado rechazado ya no necesita ser actualizado"""
-        for doc in self:
+        for doc in self.filtered(lambda x: x.move_id.move_type not in ["in_invoice", "in_refund"]):
             if not doc.uuid:
                 raise UserError(self.env._("Please return a 'UUID CFE Key' in order to continue"))
             if doc.state == "error":

@@ -1,5 +1,7 @@
+import base64
 import logging
 
+from lxml import etree
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import safe_eval
@@ -303,7 +305,7 @@ class AccountMove(models.Model):
                 res |= rec
         return res
 
-    @api.constrains("move_type", "journal_id")
+    @api.constrains("move_type", "journal_id", "name")
     def _uy_ux_check_moves_use_documents(self):
         """Do not let to create not invoices entries in journals that use documents"""
         # TODO simil to _check_moves_use_documents. integrate somehow
@@ -312,6 +314,7 @@ class AccountMove(models.Model):
             and x.journal_id.type in ["sale", "purchase"]
             and x.l10n_latam_use_documents
             and not x.is_invoice()
+            and x.name not in ["/", False]
         )
         if not_invoices:
             raise ValidationError(
@@ -353,3 +356,29 @@ class AccountMove(models.Model):
         ):
             return False
         return super()._is_manual_document_number()
+
+    def action_l10n_uy_update_fields(self):
+        """Sync with Uruware and complete vendor bill information."""
+        self.ensure_one()
+        self.clear_l10n_uy_invoice_fields()
+        # también puede ser base64.b64decode(self.l10n_uy_edi_document_id.attachment_file)
+        xml = base64.b64decode(self.l10n_uy_edi_xml_attachment_id.datas)
+        self._l10n_uy_edi_complete_cfe_from_xml(self, etree.fromstring(xml))
+
+    def clear_l10n_uy_invoice_fields(self):
+        """When click the button "Update fields" in the vendor bill form view, firstly is neccessary to clean the
+        invoices lines, the partner, the invoices date due and the payment type and if there is an error then is posted
+        the message of the error in the invoice chatter."""
+        error = False
+        try:
+            self = self.filtered(lambda x: x.invoice_filter_type_domain == "purchase").with_context(dynamic_unlink=True)
+            self.line_ids.unlink()
+            self.partner_id = False
+            self.invoice_date_due = False
+        except Exception as exp:
+            error = exp
+            self.env.cr.rollback()
+        if error:
+            msg = self.env._("We found an error when cleaning the information from the invoice: id: %s." % (str(error)))
+            _logger.warning(msg)
+            self.message_post(body=msg)
