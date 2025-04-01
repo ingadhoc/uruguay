@@ -351,3 +351,8 @@ class AccountMove(models.Model):
             msg = _("We found an error when cleaning the information from the invoice: id: %s." % (str(error)))
             _logger.warning(msg)
             self.message_post(body=msg)
+
+    def _l10n_uy_edi_update_xml_and_pdf_file(self, response):
+        # TODO improve. Not sure why but this needed. if not then the compute not stored fields are not set
+        self.l10n_uy_edi_document_id._compute_from_origin()
+        return super()._l10n_uy_edi_update_xml_and_pdf_file(response)

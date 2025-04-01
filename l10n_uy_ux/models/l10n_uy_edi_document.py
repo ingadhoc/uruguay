@@ -1,6 +1,6 @@
 import logging
 
-from odoo import _, api, models
+from odoo import _, api, fields, models
 
 from odoo.exceptions import UserError
 from odoo.tools import safe_eval
@@ -12,7 +12,39 @@ class L10nUyEdiDocument(models.Model):
 
     _inherit = "l10n_uy_edi.document"
 
-    # Methods extend for l10n_uy_edi
+    # TODO Copy from PR of WH. remove generic reference fields and methos when merged in odoo core (18.0 or maybe 19.0)
+    res_model = fields.Char("Origin Model Name", required=True, index=True)
+    res_id = fields.Many2oneReference("Origin Model Id", index=True, model_field="res_model", required=True)
+    reference = fields.Char(compute="_compute_reference", readonly=True)
+    l10n_latam_document_type_id = fields.Many2one("l10n_latam.document.type", "Document Type", related=False, compute="_compute_from_origin", )
+    l10n_latam_document_number = fields.Char(related=False, compute="_compute_from_origin")
+    company_id = fields.Many2one("res.company", related=False, compute="_compute_from_origin")
+    partner_id = fields.Many2one("res.partner", related=False, compute="_compute_from_origin")
+
+    @api.depends("res_model", "res_id")
+    def _compute_reference(self):
+        for res in self:
+            res.reference = "%s,%s" % (res.res_model, res.res_id)
+
+    def _compute_from_origin(self):
+        for res in self:
+            origin_field = self._get_source_model_field(res.res_model)
+            res.l10n_latam_document_number = res[origin_field].l10n_latam_document_number
+            res.l10n_latam_document_type_id = res[origin_field].l10n_latam_document_type_id
+            res.company_id = res[origin_field].company_id
+            res.partner_id = res[origin_field].partner_id
+
+    def _get_source_model_field(self, res_model=None):
+        if res_model == "account.move":
+            return "move_id"
+        return None
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'move_id' in vals:
+                vals.update({'res_model': 'account.move', 'res_id': vals.get('move_id')})
+        return super().create(vals_list)
 
     def action_update_dgi_state(self):
         # EXTEND l10n_uy_edi
