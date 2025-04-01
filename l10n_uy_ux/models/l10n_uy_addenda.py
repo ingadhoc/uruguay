@@ -11,5 +11,5 @@ class L10nUyAddenda(models.Model):
     apply_on = fields.Selection([
         ("all", "All CFE"),
         ("account.move", "Invoices and Tickets"),
-        ], required=True, default="account.move",
+        ], default="account.move",
     )
