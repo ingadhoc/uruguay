@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-05 11:59+0000\n"
+"POT-Creation-Date: 2025-04-02 11:35+0000\n"
 "PO-Revision-Date: 2024-12-30 19:19+0000\n"
 "Last-Translator: Juan José Scarafía <scarafia.juanjose@gmail.com>, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/adhoc/teams/46451/es/)\n"
@@ -49,6 +49,11 @@ msgstr ""
 
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
+msgid "(UY)Update Invoice With XML data"
+msgstr ""
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
 msgid "<span>Preview: </span>"
 msgstr ""
 
@@ -80,6 +85,11 @@ msgstr ""
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
 msgid "Are you sure to execute the automatic update of your partners ?"
+msgstr ""
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
+msgid "Are you sure? this action will update the invoice information."
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -338,7 +348,7 @@ msgstr ""
 #. module: l10n_uy_ux
 #: model:ir.model,name:l10n_uy_ux.model_l10n_latam_document_type
 msgid "Latam Document Type"
-msgstr "Tipo de Documento Latam"
+msgstr "Tipo de documento Latam"
 
 #. module: l10n_uy_ux
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_account_bank_statement_line__manual_uruware_invoice
@@ -410,6 +420,12 @@ msgstr ""
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
 msgid "Preview"
+msgstr ""
+
+#. module: l10n_uy_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
+msgid ""
+"Read the XML and fill the fields of the invoice/bill with the xml values"
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -503,6 +519,14 @@ msgid "Title Case"
 msgstr ""
 
 #. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/res_partner.py:0
+msgid ""
+"UCFE enviroment is on demo. Please set a testing enviroment to be able to "
+"connect to DGI."
+msgstr ""
+
+#. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
 msgid "Update Automatically"
 msgstr ""
@@ -551,6 +575,13 @@ msgstr ""
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
 msgid "Validate"
+msgstr ""
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+msgid ""
+"We found an error when cleaning the information from the invoice: id: %s."
 msgstr ""
 
 #. module: l10n_uy_ux
