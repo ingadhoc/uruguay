@@ -2,7 +2,7 @@ import base64
 import logging
 
 from lxml import etree
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import safe_eval
 
@@ -360,8 +360,10 @@ class AccountMove(models.Model):
     def action_l10n_uy_update_fields(self):
         """Sync with Uruware and complete vendor bill information."""
         self.ensure_one()
-        self.clear_l10n_uy_invoice_fields()
-        # también puede ser base64.b64decode(self.l10n_uy_edi_document_id.attachment_file)
+        if self.l10n_uy_edi_xml_attachment_id:
+            self.clear_l10n_uy_invoice_fields()
+        else:
+            raise UserError(_("It is not possible to update the move because there is no xml file."))
         xml = base64.b64decode(self.l10n_uy_edi_xml_attachment_id.datas)
         self._l10n_uy_edi_complete_cfe_from_xml(self, etree.fromstring(xml))
 
