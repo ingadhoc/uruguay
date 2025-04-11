@@ -221,7 +221,7 @@ class L10nUyCfe(models.AbstractModel):
             rec.write(values)
             rec._update_l10n_uy_cfe_state()
         # vendor bills
-        for rec in self.filtered(lambda x: x.journal_id.type != 'sale'):
+        for rec in self.filtered(lambda x: x.journal_id.type != 'sale' and x.l10n_latam_document_number):
             document_number = re.search(r"([A-Z]*)([0-9]*)", rec.l10n_latam_document_number).groups()
             response = rec.company_id._l10n_uy_ucfe_inbox_operation('650', {'TipoCfe': rec.l10n_latam_document_type_id_code, 'Serie': document_number[0], 'NumeroCfe': document_number[1], 'RutEmisor': rec.partner_id.vat})
             values = {
