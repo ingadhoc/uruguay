@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="l10n_uy_edi_withholding_document_view_form" model="ir.ui.view">
+        <field name="name">l10n_uy_edi.document.view.form</field>
+        <field name="model">l10n_uy_edi.document</field>
+        <field name="inherit_id" ref="l10n_uy_ux.l10n_uy_ux_document_view_form"/>
+        <field name="arch" type="xml">
+            <field name="move_id" position="after">
+                <field name="picking_id" invisible="not picking_id"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
