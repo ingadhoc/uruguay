@@ -22,3 +22,14 @@ def post_init_hook(env):
                 "l10n_uy_edi_ucfe_terminal_code": company.l10n_uy_edi_ucfe_terminal_code,
                 "l10n_uy_edi_ucfe_commerce_code": company.l10n_uy_edi_ucfe_commerce_code,
             })
+
+    logger.info("Forzamos llenar nuevos campos requeridos res_model/res_id")
+    moves_to_fix = env["l10n_uy_edi.document"].search([("res_model", "=", False), ("move_id", "!=", False)])
+    for edi in moves_to_fix:
+        edi.res_model = "account.move"
+        edi.res_id = edi.move_id.id
+
+    logger.info("Si quedan EDI docs sin res_model/move_id y tienen errores los borraromos")
+    edi_to_delete = env["l10n_uy_edi.document"].search([
+        ("res_model", "=", False), ("move_id", "=", False), ("state", "=", "error")])
+    edi_to_delete.sudo().unlink()
