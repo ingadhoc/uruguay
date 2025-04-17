@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-14 18:57+0000\n"
+"POT-Creation-Date: 2025-04-17 12:30+0000\n"
 "PO-Revision-Date: 2025-04-14 18:57+0000\n"
 "Last-Translator: Juan José Scarafía <scarafia.juanjose@gmail.com>, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/adhoc/teams/46451/es/)\n"
@@ -52,6 +52,10 @@ msgid ""
 "identify the kind of document we are working with. (not only related to "
 "account.move, could be for documents of other models like stock.picking)"
 msgstr ""
+"Análogo a odoo account.move.move_type pero con más opciones que permiten "
+"identificar el tipo de documento con el que estamos trabajando. (no sólo "
+"relacionado con account.move, podría ser para documentos de otros modelos "
+"como stock.picking)"
 
 #. module: l10n_uy_edi_stock
 #: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_l10n_uy_edi_addenda__apply_on
@@ -154,7 +158,7 @@ msgstr ""
 #. module: l10n_uy_edi_stock
 #: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_l10n_latam_document_type__internal_type
 msgid "Internal Type"
-msgstr ""
+msgstr "Tipo interno"
 
 #. module: l10n_uy_edi_stock
 #: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_cfe_uuid
