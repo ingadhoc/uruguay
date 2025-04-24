@@ -8,13 +8,7 @@
     "category": "Localization",
     "countries": ["uy"],
     "license": "LGPL-3",
-<<<<<<< HEAD
     "version": "18.0.1.5.0",
-||||||| parent of d770ac2 (temp)
-    "version": "17.0.1.7.0",
-=======
-    "version": "17.0.1.8.0",
->>>>>>> d770ac2 (temp)
     "depends": [
         "l10n_uy_edi",
         "certificate",
