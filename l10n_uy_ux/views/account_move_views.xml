@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
 
             <header position="inside">
-                <button name="action_l10n_uy_update_fields" type="object" string="(UY)Update Invoice With XML data" invisible="invoice_filter_type_domain != 'purchase' and l10n_uy_edi_journal_type != 'electronic' and not l10n_uy_edi_cfe_uuid" help="Read the XML and fill the fields of the invoice/bill with the xml values" confirm="Are you sure? this action will update the invoice information."/>
+                <button name="action_l10n_uy_update_fields" type="object" string="(UY)Update Invoice With XML data" invisible="invoice_filter_type_domain != 'purchase' or not l10n_uy_edi_document_id" help="Read the XML and fill the fields of the invoice/bill with the xml values" confirm="Are you sure? this action will update the invoice information."/>
             </header>
 
             <field name="l10n_uy_edi_addenda_ids" position="attributes">
