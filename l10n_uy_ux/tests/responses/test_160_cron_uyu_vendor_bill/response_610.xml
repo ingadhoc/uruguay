@@ -1,0 +1,55 @@
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+    <s:Header>
+        <o:Security xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" s:mustUnderstand="1">
+            <u:Timestamp u:Id="_0">
+                <u:Created>2025-04-28T18:10:40.729Z</u:Created>
+                <u:Expires>2025-04-28T18:15:40.729Z</u:Expires>
+            </u:Timestamp>
+        </o:Security>
+    </s:Header>
+    <s:Body>
+        <InvokeResponse xmlns="http://www.uruware.com/ucfe/inbox/webservice">
+            <InvokeResult xmlns:a="http://schemas.datacontract.org/2004/07/Uruware.Ucfe.Inbox.WebService"
+                xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+                <a:ErrorCode>0</a:ErrorCode>
+                <a:ErrorMessage i:nil="true"/>
+                <a:Resp>
+                    <Adenda>&lt;efac:adenda xmlns:efac="http://www.antel.com.uy/eFact"&gt;&lt;efac:value&gt;6946506&lt;/efac:value&gt;&lt;efac:cdg&gt;100&lt;/efac:cdg&gt;&lt;efac:description&gt;CONTRATO&lt;/efac:description&gt;&lt;/efac:adenda&gt;&lt;efac:adenda xmlns:efac="http://www.antel.com.uy/eFact"&gt;&lt;efac:value&gt;95265271&lt;/efac:value&gt;&lt;efac:cdg&gt;101&lt;/efac:cdg&gt;&lt;efac:description&gt;MOVIL&lt;/efac:description&gt;&lt;/efac:adenda&gt;&lt;efac:adenda xmlns:efac="http://www.antel.com.uy/eFact"&gt;&lt;efac:value&gt;404662&lt;/efac:value&gt;&lt;efac:cdg&gt;102&lt;/efac:cdg&gt;&lt;efac:description&gt;CLIENTE&lt;/efac:description&gt;&lt;/efac:adenda&gt;&lt;efac:adenda xmlns:efac="http://www.antel.com.uy/eFact"&gt;&lt;efac:value&gt;EMP45 CL&lt;/efac:value&gt;&lt;efac:cdg&gt;103&lt;/efac:cdg&gt;&lt;efac:description&gt;PLAN COMERCIAL&lt;/efac:description&gt;&lt;/efac:adenda&gt;&lt;efac:adenda xmlns:efac="http://www.antel.com.uy/eFact"&gt;&lt;efac:value&gt;2025-02-24&lt;/efac:value&gt;&lt;efac:cdg&gt;104&lt;/efac:cdg&gt;&lt;efac:description&gt;PROXIMO VENCIMIENTO&lt;/efac:description&gt;&lt;/efac:adenda&gt;&lt;efac:adenda xmlns:efac="http://www.antel.com.uy/eFact"&gt;&lt;efac:value&gt;81111F 8041963202412010000000000000000000000000001106946506000101700&lt;/efac:value&gt;&lt;efac:cdg&gt;781&lt;/efac:cdg&gt;&lt;efac:description&gt;CODIGO DE BARRA&lt;/efac:description&gt;&lt;/efac:adenda&gt;&lt;efac:adenda xmlns:efac="http://www.antel.com.uy/eFact"&gt;&lt;efac:value&gt;GLADIL SA&lt;/efac:value&gt;&lt;efac:cdg&gt;999&lt;/efac:cdg&gt;&lt;efac:description&gt;Usuario Servicio&lt;/efac:description&gt;&lt;/efac:adenda&gt;&lt;efac:adenda xmlns:efac="http://www.antel.com.uy/eFact"&gt;&lt;efac:value&gt;132&lt;/efac:value&gt;&lt;efac:cdg&gt;998&lt;/efac:cdg&gt;&lt;efac:description&gt;Nro Cuenta M&#243;vil&lt;/efac:description&gt;&lt;/efac:adenda&gt;</Adenda>
+                    <CaeNroDesde i:nil="true"/>
+                    <CaeNroHasta i:nil="true"/>
+                    <Certificado i:nil="true"/>
+                    <CertificadoParaFirmarCfe i:nil="true"/>
+                    <ClaveCertificadoFirma i:nil="true"/>
+                    <CodComercio>GLADIL-3</CodComercio>
+                    <CodRta>00</CodRta>
+                    <CodTerminal>FC-3</CodTerminal>
+                    <CodigoSeguridad i:nil="true"/>
+                    <DatosQr i:nil="true"/>
+                    <EstadoEnDgiCfeRecibido>11</EstadoEnDgiCfeRecibido>
+                    <EstadoSituacion i:nil="true"/>
+                    <Etiquetas i:nil="true"/>
+                    <FechaFirma i:nil="true"/>
+                    <FechaReq i:nil="true"/>
+                    <HoraReq i:nil="true"/>
+                    <IdCae i:nil="true"/>
+                    <IdReq i:nil="true"/>
+                    <ImagenQr i:nil="true"/>
+                    <MensajeRta i:nil="true"/>
+                    <NumeroCfe>8041963</NumeroCfe>
+                    <RangoDesde i:nil="true"/>
+                    <RangoHasta i:nil="true"/>
+                    <RutEmisor>219999830019</RutEmisor>
+                    <Serie>F</Serie>
+                    <TipoCfe>111</TipoCfe>
+                    <TipoMensaje>611</TipoMensaje>
+                    <TipoNotificacion>7</TipoNotificacion>
+                    <Uuid>45250d9a-fe9b-495a-b748-0aa2246aa0ac</Uuid>
+                    <VencimientoCae i:nil="true"/>
+                    <XmlCfeFirmado>&lt;CFE version="1.0" xmlns="http://cfe.dgi.gub.uy" xmlns:xd="http://www.w3.org/2000/09/xmldsig#"&gt;\n  &lt;eFact&gt;\n    &lt;TmstFirma&gt;2025-01-13T22:40:53-03:00&lt;/TmstFirma&gt;\n    &lt;Encabezado&gt;\n      &lt;IdDoc&gt;\n        &lt;TipoCFE&gt;111&lt;/TipoCFE&gt;\n        &lt;Serie&gt;F&lt;/Serie&gt;\n        &lt;Nro&gt;8041963&lt;/Nro&gt;\n        &lt;FchEmis&gt;2024-12-31&lt;/FchEmis&gt;\n        &lt;PeriodoDesde&gt;2024-12-01&lt;/PeriodoDesde&gt;\n        &lt;PeriodoHasta&gt;2024-12-31&lt;/PeriodoHasta&gt;\n        &lt;FmaPago&gt;2&lt;/FmaPago&gt;\n        &lt;FchVenc&gt;2025-01-24&lt;/FchVenc&gt;\n      &lt;/IdDoc&gt;\n      &lt;Emisor&gt;\n        &lt;RUCEmisor&gt;219999830019&lt;/RUCEmisor&gt;\n        &lt;RznSoc&gt;Administraci&#243;n Nacional de Telecomunicaciones&lt;/RznSoc&gt;\n        &lt;NomComercial&gt;ANTEL&lt;/NomComercial&gt;\n        &lt;GiroEmis&gt;Telecomunicaciones&lt;/GiroEmis&gt;\n        &lt;Telefono&gt;29280000&lt;/Telefono&gt;\n        &lt;CorreoEmisor&gt;Tributacion@antel.com.uy&lt;/CorreoEmisor&gt;\n        &lt;EmiSucursal /&gt;\n        &lt;CdgDGISucur&gt;1&lt;/CdgDGISucur&gt;\n        &lt;DomFiscal&gt;Guatemala 1075 (11800)&lt;/DomFiscal&gt;\n        &lt;Ciudad&gt;Montevideo&lt;/Ciudad&gt;\n        &lt;Departamento&gt;Montevideo&lt;/Departamento&gt;\n      &lt;/Emisor&gt;\n      &lt;Receptor&gt;\n        &lt;TipoDocRecep&gt;2&lt;/TipoDocRecep&gt;\n        &lt;CodPaisRecep&gt;UY&lt;/CodPaisRecep&gt;\n        &lt;DocRecep&gt;214944900014&lt;/DocRecep&gt;\n        &lt;RznSocRecep&gt;GLADIL SA&lt;/RznSocRecep&gt;\n        &lt;DirRecep&gt;CANELONES 1983&lt;/DirRecep&gt;\n        &lt;CiudadRecep&gt;MONTEVIDEO&lt;/CiudadRecep&gt;\n      &lt;/Receptor&gt;\n      &lt;Totales&gt;\n        &lt;TpoMoneda&gt;UYU&lt;/TpoMoneda&gt;\n        &lt;TpoCambio&gt;1.00&lt;/TpoCambio&gt;\n        &lt;MntNoGrv&gt;0.00&lt;/MntNoGrv&gt;\n        &lt;MntNetoIVATasaBasica&gt;0.00&lt;/MntNetoIVATasaBasica&gt;\n        &lt;MntIVATasaBasica&gt;0.00&lt;/MntIVATasaBasica&gt;\n        &lt;MntTotal&gt;0.00&lt;/MntTotal&gt;\n        &lt;CantLinDet&gt;1&lt;/CantLinDet&gt;\n        &lt;MontoNF&gt;0.00&lt;/MontoNF&gt;\n        &lt;MntPagar&gt;0.00&lt;/MntPagar&gt;\n      &lt;/Totales&gt;\n    &lt;/Encabezado&gt;\n    &lt;Detalle&gt;\n      &lt;Item&gt;\n        &lt;NroLinDet&gt;1&lt;/NroLinDet&gt;\n        &lt;IndFact&gt;3&lt;/IndFact&gt;\n        &lt;NomItem&gt;SERVICIOS DE TELECOMUNICACIONES GRAVADOS&lt;/NomItem&gt;\n        &lt;DscItem&gt;MOVIL&lt;/DscItem&gt;\n        &lt;Cantidad&gt;1&lt;/Cantidad&gt;\n        &lt;UniMed&gt;N/A&lt;/UniMed&gt;\n        &lt;PrecioUnitario&gt;81.97&lt;/PrecioUnitario&gt;\n        &lt;MontoItem&gt;0.00&lt;/MontoItem&gt;\n      &lt;/Item&gt;\n    &lt;/Detalle&gt;\n    &lt;CAEData&gt;\n      &lt;CAE_ID&gt;90232103815&lt;/CAE_ID&gt;\n      &lt;DNro&gt;7606001&lt;/DNro&gt;\n      &lt;HNro&gt;8606000&lt;/HNro&gt;\n      &lt;FecVenc&gt;2025-11-14&lt;/FecVenc&gt;\n    &lt;/CAEData&gt;\n  &lt;/eFact&gt;\n  \n&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#"&gt;&lt;ds:SignedInfo&gt;&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" /&gt;&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /&gt;&lt;ds:Reference URI=""&gt;&lt;ds:Transforms&gt;&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /&gt;&lt;ds:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" /&gt;&lt;/ds:Transforms&gt;&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /&gt;&lt;ds:DigestValue&gt;___ignore___&lt;/ds:DigestValue&gt;&lt;/ds:Reference&gt;&lt;/ds:SignedInfo&gt;&lt;ds:SignatureValue&gt;___ignore___&lt;/ds:SignatureValue&gt;&lt;ds:KeyInfo&gt;&lt;ds:X509Data&gt;&lt;ds:X509IssuerSerial&gt;&lt;ds:X509IssuerName&gt;___ignore___&lt;/ds:X509IssuerName&gt;&lt;ds:X509SerialNumber&gt;___ignore___&lt;/ds:X509SerialNumber&gt;&lt;/ds:X509IssuerSerial&gt;&lt;/ds:X509Data&gt;&lt;/ds:KeyInfo&gt;&lt;/ds:Signature&gt;&lt;/CFE&gt;</XmlCfeFirmado>
+                </a:Resp>
+                <a:RespEnc i:nil="true"/>
+            </InvokeResult>
+        </InvokeResponse>
+    </s:Body>
+</s:Envelope>

@@ -1,10 +1,6 @@
-import logging
-
 from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.tools import safe_eval
-
-_logger = logging.getLogger(__name__)
 
 
 class L10nUyEdiDocument(models.Model):
@@ -121,3 +117,58 @@ class L10nUyEdiDocument(models.Model):
                     )
                 res = int(next_number)
         return res
+
+    def _get_partner_from_xml(self, xml_tree, partner_vat_RUC):
+        """Search partner or create partner from vendor bill XML data if the partner does not already exist in Odoo."""
+        # Get partner as Odoo usually do
+        partner_retrieved = self.env["res.partner"]._retrieve_partner(vat=partner_vat_RUC, company=self.company_id)
+        # Fixing problem creating vendor bill if the partner payable accoun't does not match vendor bill currency
+        # We search for a partner with the same vat an also with the same currency or without it.
+        cfe_currency = (
+            self.env["res.currency"]
+            .with_context(active_test=False)
+            .search([("name", "=", xml_tree.findtext(".//{*}TpoMoneda"))], limit=1)
+        )
+        partner = False
+        if (
+            partner_retrieved
+            and partner_retrieved.property_account_payable_id.currency_id
+            and partner_retrieved.property_account_payable_id.currency_id != cfe_currency
+        ):
+            domain = [
+                ("vat", "=", partner_vat_RUC),
+                *self.env["res.partner"]._check_company_domain(self.company_id or self.env.company),
+                ("company_id", "!=", False),
+            ]
+            # Search with same currency
+            partner = self.env["res.partner"].search(
+                domain + [("property_account_payable_id.currency_id", "=", cfe_currency.id)]
+            )
+            # Seearch without currency
+            partner = partner or self.env["res.partner"].search(
+                domain
+                + [
+                    "|",
+                    ("property_account_payable_id", "=", False),
+                    ("property_account_payable_id.currency_id", "=", False),
+                ]
+            )
+        state_id = self.env["res.country.state"].search(
+            [("name", "ilike", xml_tree.findtext(".//{*}Departamento"))], limit=1
+        )
+        return (
+            partner
+            or partner_retrieved
+            or self.env["res.partner"].create(
+                {
+                    "name": xml_tree.findtext(".//{*}RznSoc"),
+                    "vat": partner_vat_RUC,
+                    "city": xml_tree.findtext(".//{*}Ciudad"),
+                    "street": xml_tree.findtext(".//{*}DomFiscal"),
+                    "state_id": state_id.id if state_id else None,
+                    "country_id": state_id.country_id.id if state_id else None,
+                    "l10n_latam_identification_type_id": self.env.ref("l10n_uy.it_rut").id,
+                    "is_company": True,
+                }
+            )
+        )
