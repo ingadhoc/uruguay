@@ -11,7 +11,7 @@
 
                 <!-- Formato de reporte -->
                 <setting id="uy_edi_report" string="Report's Parameters" company_dependent="1" help="By default (empty) will print the Uruware Standard PDF Report, If want to print a different format need to define it here (Example: addenda in second page, detail invoice lines, personalizated report)">
-                    <field name="l10n_uy_report_params" placeholder="[['report_name'], ['options']]"/>
+                    <field name="l10n_uy_report_params" placeholder="[['nombreparam1', 'nombreparam2'], ['valorparam1', 'valorparam2']]"/>
                 </setting>
 
                 <!-- DGI Information  -->
