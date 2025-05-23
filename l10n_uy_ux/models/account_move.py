@@ -334,7 +334,7 @@ class AccountMove(models.Model):
         else:
             raise UserError(_("It is not possible to update the move because there is no xml file."))
         xml = base64.b64decode(self.l10n_uy_edi_xml_attachment_id.datas)
-        self._l10n_uy_edi_complete_cfe_from_xml(self, etree.fromstring(xml))
+        self._l10n_uy_edi_complete_cfe_from_xml(etree.fromstring(xml))
 
     def clear_l10n_uy_invoice_fields(self):
         """ When click the button "Update fields" in the vendor bill form view, firstly is neccessary to clean the
