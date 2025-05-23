@@ -17,6 +17,7 @@ class StockPicking(models.Model):
         string="Traslados de Bienes",
     )
 
+<<<<<<< HEAD
     def name_get(self):
         """Display: 'Stock Picking Internal Sequence : Remito (if defined)'"""
         res = []
@@ -30,6 +31,58 @@ class StockPicking(models.Model):
                 name = rec.name
             res.append((rec.id, name))
         return res
+||||||| parent of 376bdea (temp)
+    # Compute methods
+
+    @api.onchange("l10n_uy_transfer_of_goods")
+    def onchange_transfer_of_goods(self):
+        if self.l10n_uy_transfer_of_goods:
+            self.l10n_latam_document_type_id = self.l10n_latam_available_document_type_ids.filtered(
+                lambda x: x.code == "181")  # e-Delivery Guide Document
+        else:
+            self.l10n_latam_document_type_id = False
+
+    @api.depends('l10n_latam_document_number')
+    def _compute_display_name(self):
+        """ Display: 'Stock Picking Internal Sequence : Delivery Guide Number (if defined)' """
+        super()._compute_display_name()
+        for picking in self.filtered(lambda x: x.l10n_latam_document_number):
+            picking.display_name = picking.name + ": (%s %s)" % (
+                picking.l10n_latam_document_type_id.doc_code_prefix, picking.l10n_latam_document_number)
+
+    def _compute_l10n_uy_is_cfe(self):
+        self.l10n_uy_is_cfe = False
+        if self.country_code == 'UY' and \
+            self.picking_type_code == 'outgoing' and \
+                self.l10n_latam_document_type_id.code in ['124', '181', '224', '281']:
+            self.l10n_uy_is_cfe = True
+=======
+    # Compute methods
+
+    @api.onchange("l10n_uy_transfer_of_goods")
+    def onchange_transfer_of_goods(self):
+        if self.l10n_uy_transfer_of_goods:
+            self.l10n_latam_document_type_id = self.l10n_latam_available_document_type_ids.filtered(
+                lambda x: x.code == "181")  # e-Delivery Guide Document
+        else:
+            self.l10n_latam_document_type_id = False
+
+    @api.depends('l10n_latam_document_number')
+    def _compute_display_name(self):
+        """ Display: 'Stock Picking Internal Sequence : Delivery Guide Number (if defined)' """
+        super()._compute_display_name()
+        for picking in self.filtered(lambda x: x.l10n_latam_document_number):
+            picking.display_name = picking.name + ": (%s %s)" % (
+                picking.l10n_latam_document_type_id.doc_code_prefix, picking.l10n_latam_document_number)
+
+    def _compute_l10n_uy_is_cfe(self):
+        for rec in self:
+            rec.l10n_uy_is_cfe = False
+            if rec.country_code == 'UY' and \
+                rec.picking_type_code == 'outgoing' and \
+                    rec.l10n_latam_document_type_id.code in ['124', '181', '224', '281']:
+                rec.l10n_uy_is_cfe = True
+>>>>>>> 376bdea (temp)
 
     @api.depends("partner_id", "company_id", "picking_type_code")
     def _compute_l10n_latam_available_document_types(self):
