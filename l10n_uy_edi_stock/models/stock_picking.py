@@ -361,11 +361,11 @@ class StockPicking(models.Model):
 
     def _uy_get_cfe_lines(self):
         self.ensure_one()
-        # En si cuando queda validado el remito siempre usa move_line_ids
-        # move_ids_without_package	Stock moves not in package (stock.move)
-        # move_line_ids	Operations (stock.move.line)
-        # move_line_ids_without_package	Operations without package (stock.move.line)
-        return self.move_ids_without_package
+        # Cuando está validado el remito siempre usa move_line_ids
+        # Usamos move_ids_without_package para Stock moves "not in package" (stock.move)
+        # move_line_ids	para Operations (stock.move.line)
+        # move_line_ids_without_package	para Operations "without package" (stock.move.line)
+        return self.move_line_ids
 
     def _l10n_uy_stock_get_xml_content(self):
         """ Create the CFE xml structure and validate it
