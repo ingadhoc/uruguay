@@ -91,7 +91,7 @@ class ResPartner(models.Model):
                     tree = etree.fromstring(response.findtext(".//{*}XmlCfeFirmado").encode("utf-8"))
 
                     # TODO delete after finish the tests
-                    _logger(etree.tostring(tree, pretty_print=True))
+                    _logger.info(etree.tostring(tree, pretty_print=True))
 
                     values = {}
                     for odoo_field, mapping_value in data_mapping.items():
