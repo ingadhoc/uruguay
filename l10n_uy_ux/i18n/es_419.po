@@ -33,7 +33,7 @@ msgstr "(UY) Re Imprimir PDF Legal"
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_partner_form
 msgid "(UY) Update From DGI"
-msgstr "(UY) Actualizar dede DGI"
+msgstr "(UY) Actualizar desde DGI"
 
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
