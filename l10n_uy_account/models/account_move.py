@@ -148,7 +148,7 @@ class AccountMove(models.Model):
         res = super()._get_last_sequence(relaxed=relaxed, with_prefix=with_prefix, lock=lock)
         if self.country_code == 'UY' and self.l10n_latam_use_documents and res \
            and self.l10n_latam_document_type_id.doc_code_prefix not in res:
-            res = self._uy_get_formatted_sequence(number=res.split()[-1])
+            res = self._uy_get_formatted_sequence(number=int(res.split()[-1]))
         return res
 
     def _get_last_sequence_domain(self, relaxed=False):
