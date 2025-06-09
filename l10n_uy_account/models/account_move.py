@@ -1,4 +1,4 @@
-from odoo import api, models, fields, _
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -147,7 +147,7 @@ class AccountMove(models.Model):
         """ If use share sequences we need to recompute the sequence to add the proper document code prefix """
         res = super()._get_last_sequence(relaxed=relaxed, with_prefix=with_prefix, lock=lock)
         if self.country_code == 'UY' and self.l10n_latam_use_documents and res \
-           and self.l10n_latam_document_type_id.doc_code_prefix not in res:
+           and self.l10n_latam_document_type_id.doc_code_prefix not in res and self.move_type in ['out_invoice', 'out_refund']:
             res = self._uy_get_formatted_sequence(number=res.split()[-1])
         return res
 
