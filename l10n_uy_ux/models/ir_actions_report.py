@@ -39,7 +39,7 @@ class IrActionsReport(models.Model):
             collected_streams = OrderedDict()
 
         for invoice in uy_edi_invoices_w_legal_pdf:
-            original_attachment = invoice.invoice_pdf_report_file
+            original_attachment = invoice.invoice_pdf_report_id
             stream = pdf.to_pdf_stream(original_attachment)
             collected_streams[invoice.id] = {
                 "stream": stream,
