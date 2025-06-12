@@ -6,6 +6,7 @@ import stdnum.uy
 import re
 import unicodedata
 import xml.etree.ElementTree as ET
+from lxml import etree
 
 from odoo import _, fields, models, api
 from odoo.exceptions import UserError
@@ -13,7 +14,7 @@ from odoo.tools.safe_eval import safe_eval
 from odoo.tools.float_utils import float_repr
 from odoo.tools import float_compare
 from odoo.tools.misc import formatLang
-from odoo.tools import format_amount, safe_eval, html2plaintext
+from odoo.tools import format_amount, safe_eval, html2plaintext, cleanup_xml_node
 from . import ucfe_errors
 
 
@@ -1172,8 +1173,9 @@ class L10nUyCfe(models.AbstractModel):
         cfe = self.env['ir.qweb']._render('l10n_uy_edi.cfe_template', values)
         cfe = cfe.unescape()
         cfe = '\n'.join([item for item in cfe.split('\n') if item.strip()])
-
-        return {'cfe_str': cfe}
+        return {
+            'cfe_str': etree.tostring(cleanup_xml_node(cfe), xml_declaration=True, encoding='UTF-8').decode("utf-8"),
+        }
 
     def _uy_get_cfe_lines(self):
         self.ensure_one()
