@@ -185,7 +185,7 @@ class FormReportWiz(models.TransientModel):
                     raise UserError(_("Configure un numero de vat para su compañia"))
 
                 # Campo 2 - Formulario. Num 5
-                content_data += f"{int(self.uy_form_id): 5d};"
+                content_data += f"{int(self.uy_form_id):05d};"
 
                 # Campo 3 - Período (AAAAMM) Num 6. Ejemplo: 202406
                 content_data += f"{self.date_period};"
@@ -200,7 +200,8 @@ class FormReportWiz(models.TransientModel):
                 content_data += f"{tax_code.get(tax)};"
 
                 # Campo 7 - Importe. Num 12. Ejemplo: 2750 ó -2750
-                content_data += f"{amount_total.get(tax):>015.2f};"
+                amount = int(round(amount_total.get(tax, 0)))
+                content_data += f"{amount};"
 
                 lines.append(content_data)
 
