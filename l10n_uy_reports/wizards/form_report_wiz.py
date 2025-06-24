@@ -166,7 +166,7 @@ class FormReportWiz(models.TransientModel):
                 content_data = self.company_id.vat.zfill(12) + ";"
 
                 # Campo 2 - Formulario. Num 5
-                content_data += "{: 5d};".format(int(self.uy_form_id))
+                content_data += "{:05d};".format(int(self.uy_form_id))
 
                 # Campo 3 - Período (AAAAMM) Num 6. Ejemplo: 200306
                 content_data += "{};".format(self.date_period)
@@ -181,7 +181,8 @@ class FormReportWiz(models.TransientModel):
                 content_data += "{};".format(tax_code.get(tax))
 
                 # Campo 7 - Importe. Num 12. Ejemplo: 2750 ó -2750
-                content_data += "{0:>015.2f};".format(amount_total.get(tax))
+                amount = int(round(amount_total.get(tax, 0)))
+                content_data += "{};".format(amount)
 
                 lines.append(content_data)
 
