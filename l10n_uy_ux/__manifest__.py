@@ -8,7 +8,7 @@
     "category": "Localization",
     "countries": ["uy"],
     "license": "LGPL-3",
-    "version": "18.0.1.8.0",
+    "version": "18.0.1.9.0",
     "depends": [
         "l10n_uy_edi",
         "certificate",
@@ -23,6 +23,7 @@
         "views/res_config_settings_view.xml",
         "views/res_partner_view.xml",
         "views/l10n_uy_addenda_views.xml",
+        "views/l10n_uy_edi_document_views.xml",
         "security/ir.model.access.csv",
     ],
     "demo": [

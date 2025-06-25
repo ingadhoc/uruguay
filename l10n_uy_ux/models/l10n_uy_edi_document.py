@@ -1,14 +1,42 @@
-import logging
-
-from odoo import api, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import safe_eval
-
-_logger = logging.getLogger(__name__)
 
 
 class L10nUyEdiDocument(models.Model):
     _inherit = "l10n_uy_edi.document"
+
+    l10n_latam_document_type_id = fields.Many2one(
+        "l10n_latam.document.type", "Document Type", related=False, compute="_compute_from_origin"
+    )
+    l10n_latam_document_number = fields.Char(related=False, compute="_compute_from_origin")
+    company_id = fields.Many2one("res.company", related=False, compute="_compute_from_origin")
+    partner_id = fields.Many2one("res.partner", related=False, compute="_compute_from_origin")
+
+    def _get_origin_record(self):
+        self.ensure_one()
+        return self.move_id
+
+    def _compute_from_origin(self):
+        for res in self:
+            origin = res._get_origin_record()
+            res.l10n_latam_document_number = origin.l10n_latam_document_number
+            res.l10n_latam_document_type_id = origin.l10n_latam_document_type_id
+            res.company_id = origin.company_id
+            res.partner_id = origin.partner_id
+
+    @api.depends("l10n_latam_document_type_id", "l10n_latam_document_number")
+    def _compute_display_name(self):
+        """Before the edi documents where only moves, now we can have pickings and make relation between them, so
+        better to show the doc type to easily identify the document
+
+        Display nam: DocumentType prefix + CFE Number (Serie + Number)"""
+        super()._compute_display_name()
+        for cfe in self.filtered(lambda x: x.l10n_latam_document_number and x.l10n_latam_document_type_id):
+            cfe.display_name = "%s %s" % (
+                cfe.l10n_latam_document_type_id.doc_code_prefix,
+                cfe.l10n_latam_document_number,
+            )
 
     # Methods extend for l10n_uy_edi
 
