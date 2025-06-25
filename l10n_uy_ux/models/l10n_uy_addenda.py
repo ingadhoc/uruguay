@@ -13,6 +13,5 @@ class L10nUyAddenda(models.Model):
             ("all", "All CFE"),
             ("account.move", "Invoices and Tickets"),
         ],
-        required=True,
         default="account.move",
     )

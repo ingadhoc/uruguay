@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="l10n_uy_ux_document_view_form" model="ir.ui.view">
+        <field name="name">l10n_uy_edi.document.view.form</field>
+        <field name="model">l10n_uy_edi.document</field>
+        <field name="inherit_id" ref="l10n_uy_edi.l10n_uy_edi_document_view_form"/>
+        <field name="arch" type="xml">
+            <field name="move_id" position="attributes">
+                <attribute name="invisible">not move_id</attribute>
+            </field>
+        </field>
+    </record>
+
+</odoo>
