@@ -358,3 +358,15 @@ class AccountMove(models.Model):
         # TODO improve. Not sure why but this needed. if not then the compute not stored fields are not set
         self.l10n_uy_edi_document_id._compute_from_origin()
         return super()._l10n_uy_edi_update_xml_and_pdf_file(response)
+
+    def _l10n_uy_edi_cfe_A_receptor(self):
+        # EXTENDS: l10n_uy_edi
+        """ If sale_require_purchase_order_number OCA module is installed we change the value of the CompraID tag.
+        The purchase order number to send to DGI will be extract from purchase_order_number field instead of ref field
+        defined in odoo core """
+        res = super()._l10n_uy_edi_cfe_A_receptor()
+        oca_module_installed = self.env["ir.module.module"].sudo().search([
+            ("name", "=", "sale_require_purchase_order_number"), ("state", "in", ["installed", "to upgrade"])])
+        if oca_module_installed and self.company_id.l10n_uy_edi_ucfe_env != "demo":
+            res["CompraID"] = self.purchase_order_number and self.purchase_order_number[:50] or None
+        return res
