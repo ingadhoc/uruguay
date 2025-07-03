@@ -1051,7 +1051,7 @@ class L10nUyCfe(models.AbstractModel):
             tax_vat_22, tax_vat_10, tax_vat_exempt = self.env['account.tax']._l10n_uy_get_taxes(self.company_id)
 
             amount_field = 'amount_currency'
-            tax_line_exempt = self.line_ids.filtered(lambda x: tax_vat_exempt in x.tax_ids)
+            tax_line_exempt = self.line_ids.filtered(lambda x: tax_vat_exempt & x.tax_ids)
             if tax_line_exempt and not self.is_expo_cfe():
                 res.update({
                     'MntNoGrv': float_repr(abs(sum(tax_line_exempt.mapped(amount_field))), 2),  # A112 Total Monto - No Gravado
@@ -1059,9 +1059,9 @@ class L10nUyCfe(models.AbstractModel):
 
             # NOTA: todos los montos a informar deben ir en la moneda del comprobante no en pesos uruguayos, es por eso que
             # usamos price_subtotal en lugar de otro campo
-            tax_line_basica = self.line_ids.filtered(lambda x: tax_vat_22 in x.tax_line_id)
+            tax_line_basica = self.line_ids.filtered(lambda x: tax_vat_22 & x.tax_line_id)
             if tax_line_basica:
-                base_imp = sum(self.invoice_line_ids.filtered(lambda x: tax_vat_22 in x.tax_ids).mapped(amount_field))
+                base_imp = sum(self.invoice_line_ids.filtered(lambda x: tax_vat_22 & x.tax_ids).mapped(amount_field))
                 res.update({
                     # A117 Total Monto Neto - IVA Tasa Basica
                     'MntNetoIVATasaBasica': float_repr(abs(base_imp), 2),
@@ -1072,9 +1072,9 @@ class L10nUyCfe(models.AbstractModel):
                     'MntIVATasaBasica': float_repr(abs(tax_line_basica[amount_field]), 2),
                 })
 
-            tax_line_minima = self.line_ids.filtered(lambda x: tax_vat_10 in x.tax_line_id)
+            tax_line_minima = self.line_ids.filtered(lambda x: tax_vat_10 & x.tax_line_id)
             if tax_line_minima:
-                base_imp = sum(self.invoice_line_ids.filtered(lambda x: tax_vat_10 in x.tax_ids).mapped(amount_field))
+                base_imp = sum(self.invoice_line_ids.filtered(lambda x: tax_vat_10 & x.tax_ids).mapped(amount_field))
                 res.update({
                     # A-C116 Total Monto Neto - IVA Tasa Minima
                     'MntNetoIvaTasaMin': float_repr(abs(base_imp), 2),
@@ -1376,29 +1376,14 @@ class L10nUyCfe(models.AbstractModel):
             else:
                 vat_taxes = self.env['account.tax']._l10n_uy_get_taxes(self.company_id)
                 tax_vat_22, tax_vat_10, tax_vat_exempt = vat_taxes
-                value = {
-                    tax_vat_exempt.id: 1,   # 1: Exento de IVA
-                    tax_vat_10.id: 2,       # 2: Gravado a Tasa Mínima
-                    tax_vat_22.id: 3,       # 3: Gravado a Tasa Básica
 
-                    # Another cases for future
-                    # 4: Gravado a Otra Tasa/IVA sobre fictos
-                    # 5: Entrega Gratuita. Por ejemplo docenas de trece
-                    # 6: Producto o servicio no facturable. No existe validación, excepto si A-C20= 1, B-C4=6 o 7.
-                    # 7: Producto o servicio no facturable negativo. . No existe validación, excepto si A-C20= 1, B-C4=6 o 7.
-                    # 8: Sólo para remitos: Ítem a rebajar en e-remitos y en e- remitos de exportación. En área de referencia se debe indicar el N° de remito que ajusta
-                    # 9: Sólo para resguardos: Ítem a anular en resguardos. En área de referencia se debe indicar el N° de resguardo que anular
-                    # 11: Impuesto percibido
-                    # 12: IVA en suspenso
-                    # 13: Sólo para e-Boleta de entrada y sus notas de corrección: Ítem vendido por un no contribuyente (valida que A-C60≠2)
-                    # 14: Sólo para e-Boleta de entrada y sus notas de corrección: Ítem vendido por un contribuyente IVA mínimo, Monotributo o Monotributo MIDES (valida que A-C60=2)
-                    # 15: Sólo para e-Boleta de entrada y sus notas de corrección: Ítem vendido por un contribuyente IMEBA (valida A-C60 = 2)
-                    # 16: Sólo para ítems vendidos por contribuyentes con obligación IVA mínimo, Monotributo o Monotributo MIDES. Si A-C10=3, no puede utilizar indicadores 1, 2, 3, 4, 11 ni 12
-                    # TODO parece que tenemos estos tipos de contribuyente: IVA mínimo, Monotributo o Monotributo MIDES ver si cargarlos en el patner asi como la afip responsibility
-                }
-
+                if tax_vat_exempt & line.tax_ids:
+                    res = 1
+                if tax_vat_10 & line.tax_ids:
+                    res = 2
+                if tax_vat_22 & line.tax_ids:
+                    res = 3
                 # NOTA IMPORTANTE: Por el momento solo enviamos la informacion de los impuestos de tipo iva.
-                res = value.get(line.tax_ids.filtered(lambda x: x in vat_taxes).id)
 
         return {'IndFact': res} if res else {}
 

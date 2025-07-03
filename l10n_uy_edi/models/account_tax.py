@@ -17,4 +17,4 @@ class AccountTax(models.Model):
             raise UserError(_('No se pudo encontrar alguno de los siguientes impuestos para la compañía %s:') % company.name +
                             _('\n - IVA Ventas 22%\n - IVA Ventas 10%\n - IVA Ventas Exento'))
 
-        return tax_vat_22[0], tax_vat_10[0], tax_vat_exempt[0]
+        return tax_vat_22, tax_vat_10, tax_vat_exempt
