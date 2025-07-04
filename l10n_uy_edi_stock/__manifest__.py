@@ -1,13 +1,12 @@
 {
     "name": """Uruguay - E-Remitos""",
-    "version": "18.0.1.0.0",
+    "version": "18.0.1.1.0",
     "category": "Accounting/Localizations/EDI",
     "countries": ["uy"],
     "sequence": 12,
     "author": "ADHOC SA",
     "depends": [
         "l10n_uy_edi",  # we needed because we extend views
-        "l10n_uy_ux",
         "stock_account",
         "sale_stock",
     ],
