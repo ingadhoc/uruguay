@@ -7,10 +7,6 @@ class L10nUyEdiDocument(models.Model):
 
     picking_id = fields.Many2one("stock.picking", readonly=True)
 
-    def _get_origin_record(self):
-        self.ensure_one()
-        return self.picking_id or super()._get_origin_record()
-
     def _get_uuid(self, origin_record):
         # EXTEND from l10n_uy_edi
         """uuid to identify picking (shortcut for testing env unicity)"""
