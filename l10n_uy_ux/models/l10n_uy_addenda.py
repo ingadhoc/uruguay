@@ -12,6 +12,7 @@ class L10nUyAddenda(models.Model):
         [
             ("all", "All CFE"),
             ("account.move", "Invoices and Tickets"),
+            ("stock.picking", "Delivery Guide"),
         ],
         default="account.move",
     )
