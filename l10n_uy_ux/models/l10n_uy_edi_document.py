@@ -82,6 +82,24 @@ class L10nUyEdiDocument(models.Model):
         caracteres por línea.
         Extendemos para que los usuarios puedan definir el formato de reporte a utilizar, en casos
         diferentes a los que contempla Odoo oficial.
+        Parámetros personalizados:
+        - nombreParametros: puede contener "reporte", "formato" y/o "adenda"
+        - valoresParametros: valores correspondientes respetando el orden
+        - "reporte": nombre del reporte alternativo, "codigo" para códigos de ítems, o "ingles"
+        - "formato": valor "rollo"
+        - "adenda": valor "true" para adenda en página separada
+
+        IMPORTANTE: Los valores personalizados de "reporte" (distintos de "ingles") deben ser únicos.
+        No pueden coexistir múltiples valores para el parámetro "reporte".
+
+        Ejemplos válidos:
+        - [["adenda"], ["true"]]
+        - [["reporte"], ["ingles"]]
+        - [["reporte"], ["secundario"]]
+        - [["adenda", "reporte"], ["true", "ingles"]]
+
+        Ejemplos NO válidos:
+        - [["reporte", "reporte"], ["secundario", "ingles"]]
         """
         endpoint, params = super()._get_report_params()
         user_report_params = safe_eval.safe_eval(self.company_id.l10n_uy_report_params or "[]")
@@ -94,26 +112,27 @@ class L10nUyEdiDocument(models.Model):
             | self.env.ref("l10n_uy.dc_cn_e_inv_exp")
             | self.env.ref("l10n_uy.dc_dn_e_inv_exp")
         ).mapped("code")
+
+        user_params = {}
         if user_report_params:
             if "Parametros" not in endpoint:
                 endpoint += "ConParametros"
-                params = {
-                    "nombreParametros": {"string": []},
-                    "valoresParametros": {"string": []},
-                }
-            # Si el usuario definió separar la adenda, lo agregamos a los parámetros
-            if "adenda" in user_report_params[0]:
-                params["nombreParametros"]["string"].append("adenda")
-                params["valoresParametros"]["string"].append("true")
-            # Si el usuario definió un idioma, lo agregamos a los parámetros
-            if "ingles" in user_report_params[1] and self.l10n_latam_document_type_id.code in available_doc_codes:
-                params["nombreParametros"]["string"].append("reporte")
-                params["valoresParametros"]["string"].append("ingles")
-            if "secundario" in user_report_params[1]:
-                params["nombreParametros"]["string"].append("reporte")
-                params["valoresParametros"]["string"].append("secundario")
 
-        return endpoint, params
+            user_params["nombreParametros"] = {"string": []}
+            user_params["valoresParametros"] = {"string": []}
+
+            for param_name, param_value in zip(user_report_params[0], user_report_params[1]):
+                if param_name in ["adenda", "formato", "reporte"]:
+                    if (
+                        param_name == "reporte"
+                        and param_value == "ingles"
+                        and self.l10n_latam_document_type_id.code not in available_doc_codes
+                    ):
+                        continue
+                    user_params["nombreParametros"]["string"].append(param_name)
+                    user_params["valoresParametros"]["string"].append(param_value)
+
+        return endpoint, user_params or params
 
     # Metodos nuevos
 
