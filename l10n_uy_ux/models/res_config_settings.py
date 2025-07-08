@@ -1,6 +1,7 @@
 import pprint
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -50,3 +51,35 @@ class ResConfigSettings(models.TransientModel):
             env_data.update({"l10n_uy_edi_ucfe_test_env": pprint.pformat(env_data)})
 
         self.company_id.write(env_data)
+
+    @api.onchange("l10n_uy_report_params")
+    def uy_ux_onchange_l10n_uy_report_params(self):
+        """Corroboramos que los valores ingresados sean válidos."""
+        if not self.l10n_uy_report_params:
+            return
+
+        if len(safe_eval(self.l10n_uy_report_params or "[]")) < 2:
+            raise UserError(
+                self.env._(
+                    "El campo debe contener al menos dos valores: nombre del parámetro y valor. Por favor, verifique que los valores fueron ingresados en el formato correcto."
+                )
+            )
+
+        param_names = safe_eval(self.l10n_uy_report_params or "[]")[0]
+        valid_params = ["adenda", "reporte", "formato"]
+        invalid_params = [param for param in param_names if param not in valid_params]
+        if invalid_params:
+            raise UserError(
+                self.env._(
+                    f"Los siguientes parámetros ingresados son inválidos: {', '.join(invalid_params)}. "
+                    f"Los valores permitidos son: {', '.join(valid_params)}."
+                )
+            )
+        reporte_values = [i for i, name in enumerate(param_names) if name == "reporte"]
+        if len(reporte_values) > 1:
+            raise UserError(
+                self.env._(
+                    "El parámetro 'reporte' contiene dos valores diferentes. "
+                    "Solo se permite un valor personalizado por parámetro 'reporte'. Por favor, verifique la configuración de sus reportes."
+                )
+            )
