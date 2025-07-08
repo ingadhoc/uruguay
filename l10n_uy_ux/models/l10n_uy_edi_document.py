@@ -15,7 +15,11 @@ class L10nUyEdiDocument(models.Model):
 
     def _get_origin_record(self):
         self.ensure_one()
-        return self.move_id
+        if self.move_id:
+            return self.move_id
+        if hasattr(self, "picking_id") and self.picking_id:
+            return self.picking_id
+        return False
 
     def _compute_from_origin(self):
         for res in self:
