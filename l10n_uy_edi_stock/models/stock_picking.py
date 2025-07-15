@@ -298,10 +298,6 @@ class StockPicking(models.Model):
                     pdf_file.register_as_main_attachment(force=True)
                     self.invalidate_recordset(fnames=["edi_pdf_report_id", "edi_pdf_report_file"])
                     res_files |= pdf_file
-                if errors := pdf_result.get("errors"):
-                    msg = _("Error getting the PDF file: %s", errors)
-                    self.l10n_uy_edi_error = (self.l10n_uy_edi_error or "") + msg
-                    self.message_post(body=msg)
         else:
             self._l10n_uy_edi_get_preview_xml()
         return res_files
@@ -355,6 +351,11 @@ class StockPicking(models.Model):
                 }
             )
             res["pdf_file"] = pdf_file
+
+        if errors := result.get("errors"):
+            msg = _("Error getting the PDF file: %s", errors)
+            self.l10n_uy_edi_error = (self.l10n_uy_edi_error or "") + msg
+            self.message_post(body=msg)
 
         return res
 
