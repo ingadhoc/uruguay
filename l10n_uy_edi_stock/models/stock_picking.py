@@ -129,13 +129,14 @@ class StockPicking(models.Model):
             )
 
     def _compute_l10n_uy_is_cfe(self):
-        self.l10n_uy_is_cfe = False
-        if (
-            self.country_code == "UY"
-            and self.picking_type_code == "outgoing"
-            and self.l10n_latam_document_type_id.code in ["124", "181", "224", "281"]
-        ):
-            self.l10n_uy_is_cfe = True
+        for rec in self:
+            rec.l10n_uy_is_cfe = False
+            if (
+                rec.country_code == "UY"
+                and rec.picking_type_code == "outgoing"
+                and rec.l10n_latam_document_type_id.code in ["124", "181", "224", "281"]
+            ):
+                rec.l10n_uy_is_cfe = True
 
     @api.depends("partner_id", "company_id", "picking_type_code")
     def _compute_l10n_latam_available_document_types(self):
