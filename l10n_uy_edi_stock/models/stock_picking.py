@@ -116,7 +116,7 @@ class StockPicking(models.Model):
     def _compute_l10n_uy_edi_xml_attachment_id(self):
         for move in self:
             doc = move.l10n_uy_edi_document_id
-            move.l10n_uy_edi_xml_attachment_id = doc.state == "accepted" and doc.attachment_id
+            move.l10n_uy_edi_xml_attachment_id = doc.state in ["accepted", "received", "rejected"] and doc.attachment_id
 
     @api.depends("l10n_latam_document_number")
     def _compute_display_name(self):
