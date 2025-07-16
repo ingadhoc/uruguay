@@ -89,11 +89,17 @@ class StockPicking(models.Model):
         string="PDF File",
         copy=False,
     )
+    l10n_uy_edi_xml_attachment_id = fields.Many2one(
+        comodel_name="ir.attachment",
+        string="Uruguay E-Invoice XML",
+        compute="_compute_l10n_uy_edi_xml_attachment_id",
+        help="Uruguay: the most recent e-invoice XML returned by Uruware.",
+    )
 
     l10n_uy_cfe_xml = fields.Text("Technical field to preview the xml")
     manual_uruware_invoice = fields.Char()
 
-    # Compute methods
+    # Onchange methods
 
     @api.onchange("l10n_uy_transfer_of_goods")
     def onchange_transfer_of_goods(self):
@@ -103,6 +109,14 @@ class StockPicking(models.Model):
             )  # e-Delivery Guide Document
         else:
             self.l10n_latam_document_type_id = False
+
+    # Compute methods
+
+    @api.depends("l10n_uy_edi_document_id.state")
+    def _compute_l10n_uy_edi_xml_attachment_id(self):
+        for move in self:
+            doc = move.l10n_uy_edi_document_id
+            move.l10n_uy_edi_xml_attachment_id = doc.state == "accepted" and doc.attachment_id
 
     @api.depends("l10n_latam_document_number")
     def _compute_display_name(self):
