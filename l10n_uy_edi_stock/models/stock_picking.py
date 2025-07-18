@@ -35,6 +35,7 @@ class StockPicking(models.Model):
     l10n_uy_edi_addenda_ids = fields.Many2many(
         "l10n_uy_edi.addenda",
         string="Addenda & Disclosure",
+        domain="[('type', 'in', ['issuer', 'receiver', 'cfe_doc', 'addenda'])]",
         help="Addendas and Mandatory Disclosure to add on the CFE. They can be added either to the issuer, receiver,"
         " cfe doc additional info section or to the addenda section. However, the item type should not be set in"
         " this field; instead, it should be specified in the invoice lines.",
