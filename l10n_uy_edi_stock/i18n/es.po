@@ -1,0 +1,320 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_uy_edi_stock
+# 
+# Translators:
+# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-18 16:05+0000\n"
+"PO-Revision-Date: 2025-06-27 14:23+0000\n"
+"Last-Translator: Juan José Scarafía <scarafia.juanjose@gmail.com>, 2025\n"
+"Language-Team: Spanish (https://app.transifex.com/adhoc/teams/46451/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: l10n_uy_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
+msgid ""
+"<i class=\"fa fa-warning\" role=\"img\" title=\"EDI (Uruguay)\"/>\n"
+"                        <span class=\"mx-1\">E-invoicing (Uruguay)</span>"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_addenda_ids
+msgid "Addenda & Disclosure"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_addenda_ids
+msgid ""
+"Addendas and Mandatory Disclosure to add on the CFE. They can be added "
+"either to the issuer, receiver, cfe doc additional info section or to the "
+"addenda section. However, the item type should not be set in this field; "
+"instead, it should be specified in the invoice lines."
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,help:l10n_uy_edi_stock.field_l10n_latam_document_type__internal_type
+msgid ""
+"Analog to odoo account.move.move_type but with more options allowing to "
+"identify the kind of document we are working with. (not only related to "
+"account.move, could be for documents of other models like stock.picking)"
+msgstr ""
+"Análogo a odoo account.move.move_type pero con más opciones que permiten "
+"identificar el tipo de documento con el que estamos trabajando. (no sólo "
+"relacionado con account.move, podría ser para documentos de otros modelos "
+"como stock.picking)"
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_cfe_state
+msgid "CFE Status"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_place_of_delivery
+msgid ""
+"CFE: Indication of where the merchandise is delivered or the service is "
+"provided (Address, Branch, Port, etc.) if True then we will inform the "
+"shipping address's name and street"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_is_cfe
+msgid ""
+"Campo tecnico para saber si es un comprobante electronico o no y usarlo en "
+"la vista para mostrar o requerir ciertos campos. por los momentos lo estamos"
+" usando solo para remitos pero podemos extenderlo para otros modelos"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#. odoo-python
+#: code:addons/l10n_uy_edi_stock/models/stock_picking.py:0
+msgid "Can not cancel a Delivery Guide already process by DGI"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
+msgid "DGI"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields.selection,name:l10n_uy_edi_stock.selection__l10n_latam_document_type__internal_type__stock_picking
+msgid "Delivery Guide"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_latam_document_number
+msgid "Document Number (UY)"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_latam_document_type_id
+msgid "Document Type (UY)"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
+msgid "Download"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model,name:l10n_uy_edi_stock.model_l10n_uy_edi_document
+msgid "Electronic Fiscal Document (CFE - UY)"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#. odoo-python
+#: code:addons/l10n_uy_edi_stock/models/stock_picking.py:0
+msgid "Error creating CFẸ XML"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#. odoo-python
+#: code:addons/l10n_uy_edi_stock/models/stock_picking.py:0
+msgid ""
+"Error creating CFẸ XML\n"
+"\n"
+" %(errors)s"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#. odoo-python
+#: code:addons/l10n_uy_edi_stock/models/stock_picking.py:0
+msgid "Error getting the PDF file: %s"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
+msgid "Get Uruware Invoice"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_l10n_latam_document_type__internal_type
+msgid "Internal Type"
+msgstr "Tipo interno"
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_cfe_uuid
+msgid "Key or UUID CFE"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_latam_available_document_type_ids
+msgid "L10N Latam Available Document Type"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_is_cfe
+msgid "L10N Uy Is Cfe"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model,name:l10n_uy_edi_stock.model_l10n_latam_document_type
+msgid "Latam Document Type"
+msgstr "Tipo de Documento Latam"
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_move__l10n_uy_edi_addenda_ids
+msgid "Mandatory Disclosures"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__manual_uruware_invoice
+msgid "Manual Uruware Invoice"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#. odoo-python
+#: code:addons/l10n_uy_edi_stock/models/l10n_uy_edi_document.py:0
+msgid "Need to define the origin record of this EDI document"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__edi_pdf_report_id
+msgid "PDF Attachment"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__edi_pdf_report_file
+msgid "PDF File"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_l10n_uy_edi_document__picking_id
+msgid "Picking"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_place_of_delivery
+msgid "Place of Delivery"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
+msgid "Re-print Legal PDF"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_related_docs_ids
+msgid "Related Documents"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_related_docs_ids
+msgid "Related electronic documents"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
+msgid "Send to DGI"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_cfe_state
+msgid "State of the electronic document"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model,name:l10n_uy_edi_stock.model_stock_move
+msgid "Stock Move"
+msgstr "Movimiento de stock"
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_cfe_xml
+msgid "Technical field to preview the xml"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#. odoo-python
+#: code:addons/l10n_uy_edi_stock/models/stock_picking.py:0
+msgid "The electronic invoice was created successfully"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#. odoo-python
+#: code:addons/l10n_uy_edi_stock/models/stock_picking.py:0
+msgid ""
+"This CFE has been generated in DEMO Mode. It is considered as accepted and "
+"it won\"t be sent to DGI."
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model,name:l10n_uy_edi_stock.model_stock_picking
+msgid "Transfer"
+msgstr "Traslado"
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_transfer_of_goods
+msgid "Traslados de Bienes"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields.selection,name:l10n_uy_edi_stock.selection__stock_picking__l10n_uy_transfer_of_goods__2
+msgid "Traslados internos"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_cfe_uuid
+msgid ""
+"Unique identification per CFE in UCFE: concatenation of the model name "
+"initials plus the record id"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
+msgid "Update DGI State"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_document_id
+msgid "Uruguay E-Invoice CFE"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_error
+msgid "Uruguay E-Invoice Error"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_xml_attachment_id
+msgid "Uruguay E-Invoice XML"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_xml_attachment_id
+msgid "Uruguay: the most recent e-invoice XML returned by Uruware."
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
+msgid "Uruware UUID"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields.selection,name:l10n_uy_edi_stock.selection__stock_picking__l10n_uy_transfer_of_goods__1
+msgid "Venta"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#. odoo-python
+#: code:addons/l10n_uy_edi_stock/models/stock_picking.py:0
+msgid "XML Valido"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#. odoo-python
+#: code:addons/l10n_uy_edi_stock/models/stock_picking.py:0
+msgid "You need to define 'CFE Key or UUID' in order to continue"
+msgstr ""
+
+#. module: l10n_uy_edi_stock
+#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_error
+msgid "error details for CFEs in the 'error' state."
+msgstr ""
