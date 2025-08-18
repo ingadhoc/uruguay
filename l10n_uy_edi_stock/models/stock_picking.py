@@ -203,6 +203,8 @@ class StockPicking(models.Model):
         if not uy_delivery_guides:
             return
 
+        uy_delivery_guides.mapped("company_id")._check_env()
+
         # Send invoices to DGI and get the return info
         msg = ""
         for picking in uy_delivery_guides:
