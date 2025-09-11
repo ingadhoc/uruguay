@@ -8,7 +8,7 @@
     "category": "Localization",
     "countries": ["uy"],
     "license": "LGPL-3",
-    "version": "18.0.1.12.0",
+    "version": "18.0.1.13.0",
     "depends": [
         "l10n_uy_edi",
         "certificate",
@@ -16,6 +16,7 @@
     "data": [
         "data/l10n_latam.document.type.csv",
         "data/account_journal_data.xml",
+        "data/ir_cron.xml",
         "wizards/res_partner_update_from_padron_uy_wizard_view.xml",
         "views/account_journal_views.xml",
         "views/account_move_views.xml",
