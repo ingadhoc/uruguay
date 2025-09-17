@@ -401,6 +401,6 @@ class AccountMove(models.Model):
             .sudo()
             .search([("name", "=", "sale_require_purchase_order_number"), ("state", "in", ["installed", "to upgrade"])])
         )
-        if oca_module_installed and self.company_id.l10n_uy_edi_ucfe_env != "demo":
+        if oca_module_installed and self.company_id.l10n_uy_edi_ucfe_env != "demo" and res:
             res["CompraID"] = self.purchase_order_number and self.purchase_order_number[:50] or None
         return res
