@@ -305,7 +305,7 @@ class AccountMove(models.Model):
                 res |= rec
         return res
 
-    @api.constrains("move_type", "journal_id", "name")
+    @api.constrains("move_type", "journal_id", "state")
     def _uy_ux_check_moves_use_documents(self):
         """Do not let to create not invoices entries in journals that use documents"""
         # TODO simil to _check_moves_use_documents. integrate somehow
@@ -314,7 +314,7 @@ class AccountMove(models.Model):
             and x.journal_id.type in ["sale", "purchase"]
             and x.l10n_latam_use_documents
             and not x.is_invoice()
-            and x.name not in ["/", False]
+            and x.state == "posted"
         )
         if not_invoices:
             raise ValidationError(
