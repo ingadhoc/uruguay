@@ -23,5 +23,5 @@
         ],
     },
     "auto_install": ["l10n_uy", "account_reports"],
-    "installable": True,
+    'installable': False,
 }
