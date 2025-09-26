@@ -31,7 +31,7 @@
         "demo/res_company_demo.xml",
         "demo/res_partner_demo.xml",
     ],
-    'installable': False,
+    "installable": False,
     "auto_install": ["l10n_uy_edi"],
     "post_init_hook": "post_init_hook",
 }

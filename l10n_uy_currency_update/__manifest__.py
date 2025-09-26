@@ -33,7 +33,7 @@
     "data": [
         "views/res_currency_views.xml",
     ],
-    'installable': False,
+    "installable": False,
     "auto_install": True,
     "application": False,
 }
