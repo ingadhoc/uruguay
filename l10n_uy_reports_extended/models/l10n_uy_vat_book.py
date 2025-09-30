@@ -10,7 +10,7 @@ class UruguayanReportCustomHandler(models.AbstractModel):
 
     def _get_custom_display_config(self):
         parent_config = super()._get_custom_display_config()
-        parent_config["templates"]["AccountReportFilters"] = "l10n_uy_reports.L10nUyReportsFiltersCustomizable"
+        parent_config["templates"]["AccountReportFilters"] = "l10n_uy_reports_extended.L10nUyReportsFiltersCustomizable"
         return parent_config
 
     def _dynamic_lines_generator(self, report, options, all_column_groups_expression_totals, warnings=None):

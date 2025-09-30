@@ -7,8 +7,7 @@
     "category": "Localization",
     "summary": "Reporting for Uruguayan Localization",
     "depends": [
-        "l10n_uy",
-        "account_reports",
+        "l10n_uy_reports",
     ],
     "data": [
         "data/account_financial_report_data.xml",
@@ -19,9 +18,9 @@
     ],
     "assets": {
         "web.assets_backend": [
-            "l10n_uy_reports/static/src/components/**/*",
+            "l10n_uy_reports_extended/static/src/components/**/*",
         ],
     },
-    "auto_install": ["l10n_uy", "account_reports"],
+    "auto_install": ["l10n_uy_reports"],
     "installable": False,
 }
