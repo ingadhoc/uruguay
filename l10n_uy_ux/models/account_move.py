@@ -52,7 +52,40 @@ class AccountMove(models.Model):
 
         return errors
 
+    def action_post(self):
+        # EXTENDS l10n_uy_edi
+        res = super().action_post()
+        if electronic_moves := self.filtered(lambda m: m.journal_id.l10n_uy_edi_type == "electronic"):
+            for move in electronic_moves:
+                wizard = self.env["account.move.send.wizard"].sudo().create({"move_id": move.id})
+                if move.journal_id.mail_template_id:
+                    wizard.mail_template_id = move.journal_id.mail_template_id.id
+                else:
+                    wizard.sending_method_checkboxes["email"]["checked"] = False
+                    wizard.sending_methods = []
+                wizard.sudo().action_send_and_print()
+        return res
+
+    def action_send_invoice_mail(self):
+        """Sobreescribimos este método para que no envie mails de facturas uruguayas electrónicas
+        automáticamente al momento de la validación de la factura. Esto lo necesitamos hacer porque por un tema
+        de dependencias se corre el método action_send_invoice_mail desde account_ux y si no lo hacemos
+        se envían mails automáticamente sin respetar las plantillas de mail que el usuario haya configurado en el diario."""
+        if (
+            self.env["ir.module.module"]
+            .sudo()
+            .search([("name", "=", "account_ux"), ("state", "in", ["installed", "to upgrade"])])
+        ):
+            electronic_moves = self.filtered(lambda m: m.journal_id.l10n_uy_edi_type == "electronic")
+            super(AccountMove, self - electronic_moves).action_send_invoice_mail()
+        else:
+            super().action_send_invoice_mail()
+
     # New methods
+    def action_resend_to_dgi(self):
+        """Reenvía el documento a la DGI para su validación."""
+        for move in self:
+            move._l10n_uy_edi_send()
 
     def uy_ux_action_preview_xml(self):
         """En odoo oficial solo permite descargar el preview del xml si estamos en demo mode o si ocurrio un error.

@@ -18,7 +18,7 @@
         <field name="name">account.journal.form</field>
         <field name="inherit_id" ref="account_ux.view_account_journal_form"/>
         <field name="arch" type="xml">
-            <field name="mail_template_id" position="attributes">
+            <field name="l10n_uy_edi_send_print" position="attributes">
                 <attribute name="invisible" add="(country_code == 'UY' and l10n_uy_edi_type == 'electronic')" separator=" or "/>
             </field>
         </field>
