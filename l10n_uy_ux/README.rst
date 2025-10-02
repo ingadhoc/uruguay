@@ -6,63 +6,87 @@
 Uruguay UX
 ==========
 
-En este modulo agregamos:
+This module enhances the official Uruguayan localization with additional UX improvements and features that are not yet available in the official Odoo modules but are valuable for our clients.
 
-1. Adaptaciones y cosas que no han sido aceptadas por Odoo modulo oficial, pero que nos interesa la funcionalidad se mantenga para nuestros clientes.
-2. Cosas que estamos agregando como beta a nuestros clientes, si va todo bien luego las pasamos a Odoo
+Functional description
+======================
 
-**Funcionalidades:**
+**Problems solved:**
 
-* Almacenar dato de conexion a Uruware de test y de producción. Odoo oficial solo permite tener configurado un dato, con este cambio almacenamos ambos datos, y el usuario o soporte solo necesita cambiar en ajustes la opción producción o testing sin tener que hacer configuraciones o modificaciones extra.
+1. **Uruware Connection Configuration Issue**: This module stores both test and production connection data, allowing users to simply switch between environments in settings without additional configuration. New fields are added to the settings interface.
 
-* Padron DGI: Permite consultar los datos de un contacto en su Odoo, si este es o no emisor electronico, y los datos de padron como asistente para que les permita llenar los datos del contacto de manera mas sencilla en su odoo.
+2. **Legal PDF Report Limitations**: This module always prints the legal PDF for all print actions (invoice print, unpaid invoices, send & print, automatic sending upon validation).
 
-* Para la representacion impresa legal de una factura electronica uruguaya la obtenemos desde Uruware con modulo oficial al validar la factura en DGI (no implementado aun como reporte en Odoo), pero tiene un par de problemas
+3. **Report Parameter Limitations**: Extended functionality that:
+   - Adds company-level parameter in system settings for global PDF format configuration
 
-  1) si por alguna razon el pdf no se crea o se borra no tenemos opcion de recuperarlo de volver a attacharlo a la factura,
-  2) los botones de imprimir factura de odoo generan el reporte pdf de odoo y no el pdf legal,
+**New functionalities added:**
 
-  En este modulo siempre imprimimos el pdf legal
+1. **DGI Registry Lookup**: Allows querying contact data to check if they are electronic issuers and retrieve registry data as an assistant to help fill contact information more easily. Adds lookup functionality in contact forms.
 
-  1. accion imprimir factura y facturas sin pagos
-  2. opcion boton enviar e imprimir
-  3. envio automatico al validar la factura segun configuracion del diario
+2. **XML Preview and Validation**: Enables XML preview at any time (not just in demo mode or when errors occur). Adds "Validate XML" button for testing purposes.
 
-* Parametros de Reporte: Modulo oficial imprime solo la representacion standard del reporte, en este modulo extendenmos para que
+3. **Enhanced Addenda and Mandatory Legends Logic**:
+   - System defaults: Adds condition field to help apply addenda to documents when conditions are met
+   - Preview functionality: Button to preview how they will look before sending
 
-  1. Si vemos que la addenda del comprobante supera las 6 lineas, mandamos a imprimir el reporte pdf con adenda en hoja separada para evitar que salga cortada
-  2. Si es un e-factura o e-factura expo y el receptor tiene configurado un idioma != a español imprimimos el reporte en ingles y español
-  3. Agregamos un parametro a nivel de compania en los ajustes de sistemas que permite al usuario definir de manera global que todos los pds se generen siguiendo x formato (adenda separada siempre, ingles siempre, detalle de lineas, rollo, etc) o incluso imprimir un reporte personalizado.
+4. **Uruware Invoice Import**: Allows importing invoices created in Uruware from manual sales journals. Users can enter UUID and click "Get Uruware Invoice" to automatically retrieve document number, document type, DGI status, and legal PDF. Adds import functionality to journal interfaces.
 
-* Agregamos funcionalidad para ver el Preview del xml en todo momento (no solo si estamos en demo mode o si ocurrio un error). Agregamos tambien el boton de Validar XML para tema de pruebas.
+5. **Certificate Management**: Adds informational fields in settings to store DGI Certificate and associated key as backup for configuring them in Uruware prod/test when necessary.
 
-* Agregar mas logica a las Addendas y Leyendas Obligatorias:
+Installation
+============
 
-  * Defaults del sistema: agrega un campo condicion el cual ayuda a aplicar la adenda al comprobante si es te cumple con dicha condición.
-  * Previsualizar: boton que permite ver como quedan antes de enviarlas.
+To install this module, you need to:
 
-* Permitir desde un diario de Ventas manual poder traer facturas creadas en Uruware. Si el usuario carga el UUID y da click al boton Obtener Factura Uruware traera automaticamente el numero de docuemnto, tipo de docuemnto, estado dgi y pdf legal.
+1. Ensure you have the official Uruguay localization modules installed
+2. Install this module through the Apps menu or by updating the module list
+3. No additional external dependencies are required
 
-* En ajustes agregamos campos para almacenar como datos informativo el Certificado DGI y clave asociada, asi tenerlo de respaldo para configurarlos en Uruware prod/test en caso de ser necesario
+Configuration
+=============
 
+1. Go to Settings > Users & Companies > Companies
+2. Configure your Uruware test and production connection data
+3. Set your preferred report parameters for PDF generation
+4. Configure DGI certificate information if needed
+5. Set up addenda and mandatory legends conditions as required
 
-Configuración
--------------
+Usage
+=====
+
+**Uruware Environment Switching:**
+- Navigate to electronic invoicing settings
+- Toggle between test and production environments without reconfiguration
+
+**DGI Registry Lookup:**
+- Open any contact form
+- Use the DGI lookup feature to automatically populate contact information
+
+**XML Preview and Validation:**
+- Access XML preview from any electronic document
+- Use "Validate XML" button for testing purposes
+
+**Uruware Invoice Import:**
+- Open manual sales journal entries
+- Enter UUID and click "Get Uruware Invoice" to import invoice data
+
+**Report Configuration:**
+- Access company settings to configure global PDF parameters
+- Set addenda and legend conditions as needed
 
 Known issues / Roadmap
 ======================
 
-Credits
-=======
-
-ADHOC
+* Integration with official Odoo reporting system for legal PDF representation
+* Enhanced error handling for Uruware connection failures
 
 Contributors
-------------
+============
 
 * ADHOC
 
 Maintainer
-----------
+==========
 
 This module is maintained by ADHOC

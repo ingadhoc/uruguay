@@ -27,7 +27,7 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
     def get_partners(self):
         # TODO deberiamos buscar de otro manera estos partners
         domain = [("vat", "!=", False), ("l10n_latam_identification_type_id.l10n_uy_dgi_code", "=", "2")]
-        active_ids = self._context.get("active_ids", [])
+        active_ids = self.env.context.get("active_ids", [])
         if active_ids:
             domain.append(("id", "in", active_ids))
         return self.env["res.partner"].search(domain)
@@ -35,7 +35,7 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
-        context = self._context
+        context = self.env.context
         if context.get("active_model") == "res.partner" and context.get("active_ids"):
             partners = self.get_partners()
             if not partners:
