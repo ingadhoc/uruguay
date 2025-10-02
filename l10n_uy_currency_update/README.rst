@@ -14,16 +14,36 @@
 Uruguayan Currency Rate Update
 ==============================
 
-Este modulo agrega dos botones a las vistas de monedas, para consultar la ultima cotizacion de la moneda y para obtener las monedas disponibles.
+Este módulo permite extender el módulo de actualización automática de tipos de cambio de Odoo (currency_rate_live) de Odoo para mostrar dos botones desde la monedas
 
-En caso de no querer utilizar este modulo pueden consultar las cotizaciones en esta pagina y luego crearlas manualmente en su Odoo https://www.bcu.gub.uy/Estadisticas-e-Indicadores/Paginas/Cotizaciones.aspx
+1. Permite consultar manualmente la tasa de una moneda manualmente
+2. Permite visualizar todas las monedas disponibles en BCU, mostrando las que ya estan configuradas en el Odoo y tambien las que no junto a su codigo por si usuario quiere agregarlas.
+
+**Servicios web utilizados:**
+
+* **Cotizaciones**: https://cotizaciones.bcu.gub.uy/wscotizaciones/servlet/awsbcucotizaciones
+* **Monedas disponibles**: https://cotizaciones.bcu.gub.uy/wscotizaciones/servlet/awsbcumonedas
+* **Último cierre**: https://cotizaciones.bcu.gub.uy/wscotizaciones/servlet/awsultimocierre
+
+En caso de no querer utilizar este módulo pueden consultar las cotizaciones en esta página y luego crearlas manualmente en su Odoo: https://www.bcu.gub.uy/Estadisticas-e-Indicadores/Paginas/Cotizaciones.aspx
 
 Installation
 ============
 
 To install this module, you need to:
 
-#. Only need to install the module
+#. Install the module through Odoo Apps
+#. Ensure that the ``zeep`` Python library is installed (usually included in standard Odoo installations)
+#. The module will be automatically installed if ``l10n_uy`` is installed (auto_install: True)
+
+Requirements
+============
+
+* Odoo 19.0+
+* ``currency_rate_live`` module (Enterprise)
+* ``l10n_uy`` module
+* ``zeep`` Python library for SOAP web service communication
+* Internet connection to access BCU web services
 
 Configuration
 =============
@@ -42,6 +62,17 @@ To configure this module, you need to:
 
 Usage
 =====
+
+**Manual Currency Rate Consultation:**
+
+#. Go to *Accounting > Configuration > Currencies*
+#. Open any currency form
+#. For supported currencies, you'll see a button "⇒ (UY) Mostrar ultima cotización BCU" to check the latest rate
+#. For unsupported currencies, you'll see "⇒ (UY) Obtener info monedas disponibles" to list all available currencies
+
+**Supported Currencies:**
+
+The module can retrieve rates for all currencies available in BCU's system. To see which currencies are available, use the "Obtener info monedas disponibles" button on UYU currency's form view.
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
    :alt: Try me on Runbot

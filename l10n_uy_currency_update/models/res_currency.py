@@ -22,8 +22,6 @@ class ResCurrency(models.Model):
         This will help us hide the buttons in the view of l10n_uy_currency_update/views/res_currency_views.xml
         """
         available_currencies = self.env["res.company"]._get_bcu_currencies_mapping()
-        # Remove the currency from the available currencies list to hide the button in the form view.
-        available_currencies.pop("UYI")
         self.mapped(lambda x: x.update({"l10n_uy_have_bcu_code": x.name in available_currencies}))
 
     def action_l10n_uy_get_bcu_rate(self):
