@@ -19,7 +19,7 @@
 ##############################################################################
 {
     "name": "Uruguayan Currency Rate Update",
-    "version": "18.0.1.1.0",
+    "version": "19.0.1.0.0",
     "countries": ["uy"],
     "category": "Localization/Uruguay",
     "sequence": 14,
@@ -33,7 +33,7 @@
     "data": [
         "views/res_currency_views.xml",
     ],
-    "installable": False,
+    "installable": True,
     "auto_install": True,
     "application": False,
 }
