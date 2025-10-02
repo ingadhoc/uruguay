@@ -228,7 +228,7 @@ class AccountMove(models.Model):
             cod_rta = response.findtext(".//{*}CodRta")
             if cod_rta != "00":
                 edi_doc._update_cfe_state(result)
-                edi_doc.message = self.env._("Error creating CFẸ XML") + "\n\n" + edi_doc.message
+                edi_doc.message = self.env._("Error creating CFẸ XML") + "<br/><br/>" + edi_doc.message
                 # response.Resp.CodRta  30 o 31,   01, 12, 96, 99, ? ?
                 raise UserError(
                     self.env._("Error creating CFẸ XML\n\n %(errors)s", errors=response.findtext(".//{*}MensajeRta"))

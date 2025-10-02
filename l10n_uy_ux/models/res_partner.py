@@ -1,5 +1,4 @@
 import logging
-import re
 
 from lxml import etree
 from odoo import _, api, fields, models
@@ -137,16 +136,6 @@ class ResPartner(models.Model):
             countries = self.country_id
         return countries
 
-    def _get_uy_id_number_sanitize(self):
-        """Sanitize the identification number. Return the digits/integer value of the identification number.
-        This is made as a helper method for the '_onchange_identification_fields' method. In version
-        19 this is already implemented in the base model, so it should be deleted.
-        """
-        self.ensure_one()
-        id_number = re.sub(r"-", "", self.vat or "")
-        id_number = id_number.upper()
-        return id_number if id_number else False
-
     @api.onchange("country_id", "company_id")
     def _onchange_country(self):
         """Take into account the fiscal countries to filter the identification types,
@@ -169,18 +158,3 @@ class ResPartner(models.Model):
         puedes ver los tipos de documento"""
         for rec in self:
             rec.fiscal_countries = rec._get_countries()
-
-    @api.onchange("vat", "country_id", "l10n_latam_identification_type_id")
-    def _onchange_uy_identification_fields(self):
-        """
-        We add this onchange so that when the user modifies the VAT or the document type,
-        the VAT is automatically formatted if it is a CUIT or a DNI.
-        In v19 this is already done in this commit https://github.com/odoo/odoo/commit/ac95d2d6d80a368dfb190d0ac21da2af479a8488.
-        We bring only what is necessary here to have it available in this version.
-        """
-        l10n_uy_partners = self.filtered(
-            lambda p: p.vat and (p.l10n_latam_identification_type_id.l10n_uy_dgi_code or p.country_code == "UY")
-        )
-        for partner in l10n_uy_partners:
-            if id_number := partner._get_uy_id_number_sanitize():
-                partner.vat = str(id_number)
