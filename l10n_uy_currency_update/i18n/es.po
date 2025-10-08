@@ -3,15 +3,15 @@
 # 	* l10n_uy_currency_update
 # 
 # Translators:
-# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2024
+# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0+e\n"
+"Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-18 16:16+0000\n"
-"PO-Revision-Date: 2024-12-18 14:32+0000\n"
-"Last-Translator: Juan José Scarafía <scarafia.juanjose@gmail.com>, 2024\n"
+"POT-Creation-Date: 2025-10-08 11:49+0000\n"
+"PO-Revision-Date: 2025-10-08 11:49+0000\n"
+"Last-Translator: Juan José Scarafía <scarafia.juanjose@gmail.com>, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/adhoc/teams/46451/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,6 +23,11 @@ msgstr ""
 #: model:ir.model,name:l10n_uy_currency_update.model_res_currency
 msgid "Currency"
 msgstr "Moneda"
+
+#. module: l10n_uy_currency_update
+#: model:ir.model.fields,field_description:l10n_uy_currency_update.field_res_currency__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
 
 #. module: l10n_uy_currency_update
 #: model_terms:ir.ui.view,arch_db:l10n_uy_currency_update.view_currency_form
@@ -37,6 +42,11 @@ msgstr ""
 msgid ""
 "Fecha Ultimo Cierre: %s\n"
 "Rate: %s"
+msgstr ""
+
+#. module: l10n_uy_currency_update
+#: model:ir.model.fields,field_description:l10n_uy_currency_update.field_res_currency__id
+msgid "ID"
 msgstr ""
 
 #. module: l10n_uy_currency_update
