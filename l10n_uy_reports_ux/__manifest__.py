@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    "name": "Uruguay - Accounting Reports",
-    "version": "18.0.1.1.0",
+    "name": "Uruguay - Accounting Reports UX",
+    "version": "19.0.1.0.0",
     "author": "ADHOC SA",
     "license": "LGPL-3",
     "category": "Localization",
@@ -18,9 +18,9 @@
     ],
     "assets": {
         "web.assets_backend": [
-            "l10n_uy_reports_extended/static/src/components/**/*",
+            "l10n_uy_reports_ux/static/src/components/**/*",
         ],
     },
     "auto_install": ["l10n_uy_reports"],
-    "installable": False,
+    "installable": True,
 }

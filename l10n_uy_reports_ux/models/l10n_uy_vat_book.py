@@ -10,7 +10,7 @@ class UruguayanReportCustomHandler(models.AbstractModel):
 
     def _get_custom_display_config(self):
         parent_config = super()._get_custom_display_config()
-        parent_config["templates"]["AccountReportFilters"] = "l10n_uy_reports_extended.L10nUyReportsFiltersCustomizable"
+        parent_config["templates"]["AccountReportFilters"] = "l10n_uy_reports_ux.L10nUyReportsFiltersCustomizable"
         return parent_config
 
     def _dynamic_lines_generator(self, report, options, all_column_groups_expression_totals, warnings=None):
@@ -34,8 +34,8 @@ class UruguayanReportCustomHandler(models.AbstractModel):
             total_values_dict.setdefault(column_group_key, dict.fromkeys(number_keys, 0.0))
 
         full_query = SQL(" UNION ALL ").join(query_list)
-        self._cr.execute(full_query)
-        results = self._cr.dictfetchall()
+        self.env.cr.execute(full_query)
+        results = self.env.cr.dictfetchall()
         for result in results:
             # Iterate over these results in order to fill the move_info_dict dictionary
             move_id = result["id"]

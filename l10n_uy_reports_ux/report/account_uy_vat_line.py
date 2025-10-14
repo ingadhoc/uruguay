@@ -41,29 +41,29 @@ class AccountUyVatLine(models.Model):
     not_taxed = fields.Monetary(
         readonly=True,
         string="Not taxed/ex",
-        help="Not Taxed / Exempt. All lines that have does not have VAT",
+        help="Not Taxed / Exempt. All lines that do not have VAT",
         currency_field="company_currency_id",
     )
     other_taxes = fields.Monetary(
         readonly=True,
-        help="All the taxes tat ar not VAT taxes or iibb perceptions and that"
-        " are realted to documents that have VAT",
+        help="All the taxes that are not VAT taxes or IIBB perceptions and that"
+        " are related to documents that have VAT",
         currency_field="company_currency_id",
     )
     total = fields.Monetary(readonly=True, currency_field="company_currency_id")
     state = fields.Selection([("draft", "Unposted"), ("posted", "Posted")], "Status", readonly=True)
-    journal_id = fields.Many2one("account.journal", "Journal", readonly=True, auto_join=True)
-    partner_id = fields.Many2one("res.partner", "Partner", readonly=True, auto_join=True)
-    company_id = fields.Many2one("res.company", "Company", readonly=True, auto_join=True)
+    journal_id = fields.Many2one("account.journal", "Journal", readonly=True, bypass_search_access=True)
+    partner_id = fields.Many2one("res.partner", "Partner", readonly=True, bypass_search_access=True)
+    company_id = fields.Many2one("res.company", "Company", readonly=True, bypass_search_access=True)
     company_currency_id = fields.Many2one(related="company_id.currency_id", readonly=True)
-    move_id = fields.Many2one("account.move", string="Entry", auto_join=True)
+    move_id = fields.Many2one("account.move", string="Entry", bypass_search_access=True)
 
     def open_journal_entry(self):
         self.ensure_one()
         return self.move_id.get_formview_action()
 
     def init(self):
-        cr = self._cr
+        cr = self.env.cr
         tools.drop_view_if_exists(cr, self._table)
         # we use tax_ids for base amount instead of tax_base_amount for two reasons:
         # * zero taxes do not create any aml line so we can't get base for them with tax_base_amount
