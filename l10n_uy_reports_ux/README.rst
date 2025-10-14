@@ -10,9 +10,9 @@
    :target: https://www.gnu.org/licenses/agpl
    :alt: License: AGPL-3
 
-============================
-Uruguay - Accounting Reports
-============================
+===============================
+Uruguay - Accounting Reports UX
+===============================
 
 * Agrega la posibilidad de ver/exportar xls con el libro de IVA Compras/Ventas Uruguayo en el menu "Tax Return"
 * Agrega el menú Resumen de IVA para Uruguay, reporte que se puede usar para analizar los datos de facturación

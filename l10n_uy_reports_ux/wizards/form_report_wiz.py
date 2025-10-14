@@ -182,7 +182,7 @@ class FormReportWiz(models.TransientModel):
                 if self.company_id.vat:
                     content_data = self.company_id.vat.zfill(12) + ";"
                 else:
-                    raise UserError(_("Configure un numero de vat para su compañia"))
+                    raise UserError(_("Configure un número de ID Fiscal para su compañía"))
 
                 # Campo 2 - Formulario. Num 5
                 content_data += f"{int(self.uy_form_id):05d};"
@@ -213,7 +213,7 @@ class FormReportWiz(models.TransientModel):
         self.ensure_one()
 
         if self.company_id.country_id.code != "UY":
-            raise UserError(_("Solo puede generar este reporte para compañias Uruguayas"))
+            raise UserError(_("Solo puede generar este reporte para compañías uruguayas"))
 
         data = getattr(self, "_get_form_%s_data" % self.uy_form_id)() if self.uy_form_id else None
         if data:

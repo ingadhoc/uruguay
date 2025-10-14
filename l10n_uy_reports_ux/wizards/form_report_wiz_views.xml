@@ -8,13 +8,13 @@
         <field name="target">new</field>
     </record>
 
-    <menuitem id='form_report_wiz_menu' name='(UY) Form Declarations' action='action_form_report_wiz' parent='account_reports_uy_statements_menu' sequence="25"/>
+    <menuitem id="form_report_wiz_menu" name="(UY) Form Declarations" action="action_form_report_wiz" parent="account_reports_uy_statements_menu" sequence="25"/>
 
-    <record model='ir.ui.view' id='view_form_report_wiz_form'>
-        <field name='name'>view.form.report.wiz.form</field>
-        <field name='model'>form.report.wiz</field>
-        <field name='arch' type='xml'>
-            <form string='Generate Files'>
+    <record model="ir.ui.view" id="view_form_report_wiz_form">
+        <field name="name">view.form.report.wiz.form</field>
+        <field name="model">form.report.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Generate Files">
                 <group readonly="res_file">
                     <group>
                         <field name="company_id"/>
