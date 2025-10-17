@@ -3,15 +3,14 @@
 # 	* l10n_uy_ux
 # 
 # Translators:
-# Katherine Zaoral <katherine.zaoral@gmail.com>, 2025
 # Juan José Scarafía <scarafia.juanjose@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0+e\n"
+"Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-17 05:27+0000\n"
-"PO-Revision-Date: 2024-12-30 19:19+0000\n"
+"POT-Creation-Date: 2025-10-17 13:53+0000\n"
+"PO-Revision-Date: 2025-10-17 13:53+0000\n"
 "Last-Translator: Juan José Scarafía <scarafia.juanjose@gmail.com>, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/adhoc/teams/46451/es/)\n"
 "MIME-Version: 1.0\n"
@@ -176,12 +175,6 @@ msgid "Converts retreived text fields to Title Case."
 msgstr ""
 
 #. module: l10n_uy_ux
-#. odoo-python
-#: code:addons/l10n_uy_ux/models/res_partner.py:0
-msgid "Could not connect to DGI to extract data %s"
-msgstr ""
-
-#. module: l10n_uy_ux
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__create_uid
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__create_uid
 msgid "Created by"
@@ -216,10 +209,20 @@ msgid "Delivery Guide"
 msgstr ""
 
 #. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_account_journal__display_name
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_certificate_certificate__display_name
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_l10n_latam_document_type__display_name
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_l10n_uy_edi_addenda__display_name
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_l10n_uy_edi_document__display_name
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner__display_name
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__display_name
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nombre para mostrar"
 
 #. module: l10n_uy_ux
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_account_bank_statement_line__l10n_latam_document_type_id
@@ -309,6 +312,16 @@ msgid "Get Uruware Invoice"
 msgstr ""
 
 #. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_account_journal__id
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_certificate_certificate__id
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_l10n_latam_document_type__id
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_l10n_uy_edi_addenda__id
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_l10n_uy_edi_document__id
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_config_settings__id
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner__id
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__id
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__id
 msgid "ID"
@@ -564,7 +577,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_uy_ux/models/res_partner.py:0
 msgid ""
-"UCFE enviroment is on demo. Please set a testing enviroment to be able to "
+"UCFE environment is on demo. Please set a testing environment to be able to "
 "connect to DGI."
 msgstr ""
 
@@ -617,13 +630,6 @@ msgstr ""
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
 msgid "Validate"
-msgstr ""
-
-#. module: l10n_uy_ux
-#. odoo-python
-#: code:addons/l10n_uy_ux/models/account_move.py:0
-msgid ""
-"We found an error when cleaning the information from the invoice: id: %s."
 msgstr ""
 
 #. module: l10n_uy_ux
