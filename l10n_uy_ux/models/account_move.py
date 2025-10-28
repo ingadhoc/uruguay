@@ -39,7 +39,7 @@ class AccountMove(models.Model):
         if self.journal_id.type == "sale" and self.journal_id.l10n_uy_edi_type not in ["electronic", "manual"]:
             errors.append(self.env._("Missing uruguayan invoicing type on journal %s.", self.name))
 
-        # # VAT Configuration
+        # # VAT Config
         # for company in self.company_id:
         #     taxes = self.env["account.tax"].search([("company_id", "=", company.id), ("l10n_uy_tax_category", "=", "vat")])
         #     tax_22 = taxes.filtered(lambda x: x.amount == 22)
