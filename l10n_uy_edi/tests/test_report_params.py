@@ -7,6 +7,15 @@ class TestL10nReportParams(common.TransactionCase):
     def setUp(self):
         super().setUp()
 
+        # Create a sale journal for tests
+        self.journal = self.env['account.journal'].create({
+            'name': 'Test Sale Journal',
+            'type': 'sale',
+            'code': 'TSJ',
+            'l10n_latam_use_documents': True,
+            'l10n_uy_type': 'electronic',
+        })
+
         lang_es = self.env['res.lang'].search([['code', '=', 'en_AR']])
         lang_en = self.env['res.lang'].search([['code', '=', 'en_US']])
         self.content = """
@@ -42,6 +51,7 @@ class TestL10nReportParams(common.TransactionCase):
         })
         self.move_2 = self.env['account.move'].create({
             'move_type': 'out_invoice',
+            'journal_id': self.journal.id,
             'l10n_latam_document_type_id': self.env.ref('l10n_uy_account.dc_e_ticket').id,
             'partner_id': partner_es.id,
             'narration': adenda,
