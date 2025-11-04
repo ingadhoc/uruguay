@@ -10,6 +10,7 @@ class CheckUyVat(common.TransactionCase):
             'name': 'Partner uruguayo',
             'l10n_latam_identification_type_id': self.env.ref(f'l10n_uy_account.{identification_type}').id,
             'vat': vat,
+            'country_id': self.env.ref("base.uy").id
         })
 
     def test_01_uy_nie_invalid_vat(self):
@@ -33,8 +34,8 @@ class CheckUyVat(common.TransactionCase):
         self.assertEqual(partner._l10n_uy_check_nie_ci(), True)
 
     def test_05_uy_rut_invalid_vat(self):
-        # Invalid RUT
-        with self.assertRaisesRegex(ValidationError, 'Not a valid RUT/RUC'):
+        msg = "The VAT number.*does not seem to be valid"
+        with self.assertRaisesRegex(ValidationError, msg):
             partner = self._test_uy_create_partner('it_rut', '215521750018')
 
     def test_06_uy_rut_valid_vat(self):
