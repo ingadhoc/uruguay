@@ -8,7 +8,21 @@
         <field name="arch" type="xml">
             <!-- El campo restrict_mode_hash_table en True en 18 no permite que se validen facturas de cliente electrónicas en localización uruguaya. Esto ya fue reportado a Odoo. Lo mantenemos invisible en 16 para que no haya problemas al migrar a 18 si es que en 16 tenían dicho campo establecido. Se podría borrar esto cuando odoo solucione el problema en 18 -->
             <field name="restrict_mode_hash_table" position="attributes">
-                <attribute name="attrs">{'invisible': [('country_code', '=', 'UY'), ('type', '=', 'sale'), ('l10n_uy_type', '=', 'electronic')]}</attribute>
+                <attribute name="attrs">
+                    {
+                        'invisible': [
+                            '|',
+                            '&amp;',
+                                ('country_code', '!=', 'UY'),
+                                ('type', 'in', ['bank', 'cash']),
+                            '&amp;',
+                                ('country_code', '=', 'UY'),
+                                '&amp;',
+                                    ('l10n_uy_type', '=', 'electronic'),
+                                    ('type', '=', 'sale')
+                        ]
+                    }
+                </attribute>
             </field>
         </field>
     </record>
