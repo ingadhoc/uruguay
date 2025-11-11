@@ -9,7 +9,6 @@
 
             <xpath expr="//field[@name='vat'][hasclass('oe_inline')]" position="after">
                 <button name="action_l10n_uy_is_electronic_issuer" string="(UY) Is Electronic Issuer?" class="oe_link oe_inline" type="object" invisible="'UY' not in fiscal_country_codes"/>
-                <button name="%(action_partner_update)d" string="(UY) Update From DGI" class="oe_link oe_inline" type="action" invisible="l10n_latam_identification_type_id != %(l10n_uy.it_rut)d or vat == False or 'UY' not in fiscal_country_codes"/>
             </xpath>
 
             <!-- TODO KZ: Patch to resolve problem added in l10n_latam_base module. If you think is Ok we can move it that module in a separate PR. -->

@@ -12,6 +12,7 @@
     "depends": [
         "l10n_uy_edi",
         "certificate",
+        "partner_autocomplete_wizard",
     ],
     "data": [
         "data/l10n_latam.document.type.csv",
@@ -25,7 +26,6 @@
         "views/res_partner_view.xml",
         "views/l10n_uy_addenda_views.xml",
         "views/l10n_uy_edi_document_views.xml",
-        "security/ir.model.access.csv",
     ],
     "demo": [
         "demo/res_company_demo.xml",

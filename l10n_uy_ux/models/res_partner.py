@@ -137,12 +137,12 @@ class ResPartner(models.Model):
         return countries
 
     @api.onchange("country_id", "company_id")
-    def _onchange_country(self):
+    def _onchange_country_id(self):
         """Take into account the fiscal countries to filter the identification types,
         if not define ones, then use the partner country
         """
         # TODO Ahora que vamos a re-usar los tipos genericos toca ver de revisar esto, porque tenemos que tomar en cuenta los que no tienen pais,
-        super()._onchange_country()
+        super()._onchange_country_id()
         countries = self._get_countries()
         if countries:
             identification_type = self.l10n_latam_identification_type_id
