@@ -10,16 +10,8 @@
             <field name="refund_sequence" position="attributes">
                 <attribute name="invisible">type not in ["sale", "purchase"] or (l10n_latam_use_documents and country_code == "UY")</attribute>
             </field>
-        </field>
-    </record>
-
-    <record id="view_account_journal_form" model="ir.ui.view">
-        <field name="model">account.journal</field>
-        <field name="name">account.journal.form</field>
-        <field name="inherit_id" ref="account_ux.view_account_journal_form"/>
-        <field name="arch" type="xml">
-            <field name="mail_template_id" position="attributes">
-                <attribute name="invisible" add="(country_code == 'UY' and l10n_uy_edi_type == 'electronic')" separator=" or "/>
+            <field name="l10n_uy_edi_send_print" position="attributes">
+                <attribute name="invisible">1</attribute>
             </field>
         </field>
     </record>
