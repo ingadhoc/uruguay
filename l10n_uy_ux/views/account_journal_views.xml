@@ -10,6 +10,9 @@
             <field name="refund_sequence" position="attributes">
                 <attribute name="invisible">type not in ["sale", "purchase"] or (l10n_latam_use_documents and country_code == "UY")</attribute>
             </field>
+            <field name="l10n_uy_edi_send_print" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
         </field>
     </record>
 
