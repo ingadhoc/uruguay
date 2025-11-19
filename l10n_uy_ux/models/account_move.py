@@ -36,7 +36,10 @@ class AccountMove(models.Model):
         if not self.company_id.currency_id:
             errors.append(self.env._("You need to configure the company currency"))
 
-        if self.journal_id.type == "sale" and self.journal_id.l10n_uy_edi_type not in ["electronic", "manual"]:
+        if self.journal_id.type == "sale" and self.journal_id.l10n_uy_edi_type not in [
+            "electronic",
+            "manual",
+        ]:
             errors.append(self.env._("Missing uruguayan invoicing type on journal %s.", self.name))
 
         # # VAT Configuration
@@ -51,6 +54,65 @@ class AccountMove(models.Model):
         #             "\n - 22% Sales VAT\n - 10% Sales VAT\n - Exempt Sales VAT", company_name=company.name))
 
         return errors
+
+    def _post(self, soft=True):
+        """Extendemos el _post nativo para evitar hacer la confirmación en dos pasos con el wizard de Send & Print.
+        De esta manera, al clickear en confirmar las facturas automáticamente serán enviadas a DGI y posteadas.
+        En caso de error, se vuelven a estado borrador.
+        """
+        # EXTENDS l10n_uy_edi
+        res = super()._post(soft=soft)
+        if self.env.context.get("l10n_uy_skip_edi_send"):
+            return res
+        msg = self.env._("Error al intentar validar el documento en DGI")
+        for move in res.filtered(lambda m: m.l10n_uy_edi_is_needed):
+            move._l10n_uy_edi_send()
+            if move.l10n_uy_edi_error:
+                move.message_post(body=msg + " %s" % (move.l10n_uy_edi_error))
+                move.button_draft()
+                res = res - move
+        return res
+
+    def action_send_invoice_mail(self):
+        """Extendemos método de account_ux para que en las facturas uruguayas se adjunten los archivos en el envío de mail."""
+        if (
+            self.env["ir.module.module"]
+            .sudo()
+            .search(
+                [
+                    ("name", "=", "account_ux"),
+                    ("state", "in", ["installed", "to upgrade"]),
+                ]
+            )
+        ):
+            uy_edi_moves = self.filtered(lambda m: m.journal_id.l10n_uy_edi_type == "electronic")
+            super(AccountMove, self - uy_edi_moves).action_send_invoice_mail()
+
+            for move in uy_edi_moves.filtered(lambda x: x.journal_id.mail_template_id):
+                if move.partner_id.email:
+                    try:
+                        wizard = self.env["account.move.send.wizard"].sudo().create({"move_id": move.id})
+                        wizard.sudo().action_send_and_print()
+                    except Exception as error:
+                        title = _("ERROR: Invoice was not sent via email")
+                        move.message_post(
+                            body="<br/><br/>".join(
+                                [
+                                    "<b>" + title + "</b>",
+                                    _("Please check the email template associated with the invoice journal."),
+                                    "<code>" + str(error) + "</code>",
+                                ]
+                            ),
+                            body_is_html=True,
+                        )
+                else:
+                    move.message_post(
+                        body=_(
+                            "<b>Error sending the invoice</b>: partner %s does not have an email address defined.",
+                            move.partner_id.name,
+                        ),
+                        body_is_html=True,
+                    )
 
     # New methods
 
@@ -231,7 +293,10 @@ class AccountMove(models.Model):
                 edi_doc.message = self.env._("Error creating CFẸ XML") + "\n\n" + edi_doc.message
                 # response.Resp.CodRta  30 o 31,   01, 12, 96, 99, ? ?
                 raise UserError(
-                    self.env._("Error creating CFẸ XML\n\n %(errors)s", errors=response.findtext(".//{*}MensajeRta"))
+                    self.env._(
+                        "Error creating CFE XML\n\n %(errors)s",
+                        errors=response.findtext(".//{*}MensajeRta"),
+                    )
                 )
 
         raise UserError(self.env._("XML Valido"))
@@ -399,7 +464,12 @@ class AccountMove(models.Model):
         oca_module_installed = (
             self.env["ir.module.module"]
             .sudo()
-            .search([("name", "=", "sale_require_purchase_order_number"), ("state", "in", ["installed", "to upgrade"])])
+            .search(
+                [
+                    ("name", "=", "sale_require_purchase_order_number"),
+                    ("state", "in", ["installed", "to upgrade"]),
+                ]
+            )
         )
         if oca_module_installed and self.company_id.l10n_uy_edi_ucfe_env != "demo" and res:
             res["CompraID"] = self.purchase_order_number and self.purchase_order_number[:50] or None
