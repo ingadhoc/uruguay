@@ -1,0 +1,66 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_uy_currency_update
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-22 05:35+0000\n"
+"PO-Revision-Date: 2025-11-22 05:35+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_uy_currency_update
+#: model:ir.model,name:l10n_uy_currency_update.model_res_currency
+msgid "Currency"
+msgstr ""
+
+#. module: l10n_uy_currency_update
+#: model:ir.model.fields,field_description:l10n_uy_currency_update.field_res_currency__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_uy_currency_update
+#: model_terms:ir.ui.view,arch_db:l10n_uy_currency_update.view_currency_form
+msgid ""
+"Este boton permitira traer la última cotinzación de BCU para esta moneda."
+msgstr ""
+
+#. module: l10n_uy_currency_update
+#. odoo-python
+#: code:addons/l10n_uy_currency_update/models/res_currency.py:0
+msgid ""
+"Fecha Ultimo Cierre: %s\n"
+"Rate: %s"
+msgstr ""
+
+#. module: l10n_uy_currency_update
+#: model:ir.model.fields,field_description:l10n_uy_currency_update.field_res_currency__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_uy_currency_update
+#: model:ir.model.fields,field_description:l10n_uy_currency_update.field_res_currency__l10n_uy_have_bcu_code
+msgid "L10N Uy Have Bcu Code"
+msgstr ""
+
+#. module: l10n_uy_currency_update
+#. odoo-python
+#: code:addons/l10n_uy_currency_update/models/res_currency.py:0
+msgid "No se encontro cotizacion para esta Moneda"
+msgstr ""
+
+#. module: l10n_uy_currency_update
+#: model_terms:ir.ui.view,arch_db:l10n_uy_currency_update.view_currency_form
+msgid "⇒ (UY) Mostrar ultima cotización BCU"
+msgstr ""
+
+#. module: l10n_uy_currency_update
+#: model_terms:ir.ui.view,arch_db:l10n_uy_currency_update.view_currency_form
+msgid "⇒ (UY) Obtener info monedas disponibles"
+msgstr ""
