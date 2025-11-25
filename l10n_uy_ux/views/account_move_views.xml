@@ -29,7 +29,6 @@
             </sheet>
 
             <field name="l10n_uy_edi_cfe_uuid" position="after">
-
                 <div name="from_uruware" colspan="2" invisible="l10n_uy_edi_journal_type != 'manual'">
                     <div  invisible="state != 'draft'">
                         <button name="uy_ux_action_get_uruware_cfe" type="object" string="Get Uruware Invoice" class="oe_link oe_inline"/>
