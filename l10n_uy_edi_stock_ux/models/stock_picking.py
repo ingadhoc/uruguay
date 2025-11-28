@@ -1,12 +1,5 @@
-import base64
-
-from lxml import etree
-from markupsafe import Markup
-from odoo import _, api, fields, models
-from odoo.addons.l10n_uy_edi.models.account_move import format_float
+from odoo import _, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import html2plaintext
-from odoo.tools.xml_utils import cleanup_xml_node
 
 
 class StockPicking(models.Model):
@@ -23,8 +16,9 @@ class StockPicking(models.Model):
     def l10n_uy_edi_create_delivery_guide(self):
         """Extends l10n_uy_edi_create_invoice to create the edi document for the delivery guide
         that has been previously validated in Uruware"""
-        #TODO: validar
+        # TODO: validar
         # We check that the l10n_uy_edi_cfe_uuid has been manually set and we consult Uruware to get the invoice information
+        pickings = self.env["stock.picking"]
         validated_pickings = pickings.filtered(
             lambda x: x.l10n_uy_edi_cfe_uuid
             and not x.l10n_uy_edi_document_id.attachment_id
