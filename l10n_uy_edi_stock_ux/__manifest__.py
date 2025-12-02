@@ -8,14 +8,12 @@
     "depends": [
         "l10n_uy_edi",
         "l10n_uy_edi_stock",
-        "stock_account",
-        "sale_stock",
     ],
     "data": [
         "views/stock_picking_views.xml",
         "views/l10n_uy_edi_document_views.xml",
     ],
-    "installable": False,
+    "installable": True,
     "auto_install": False,
     "application": False,
     "license": "LGPL-3",
