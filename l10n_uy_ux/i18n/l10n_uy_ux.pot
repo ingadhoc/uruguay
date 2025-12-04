@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-22 05:35+0000\n"
-"PO-Revision-Date: 2025-11-22 05:35+0000\n"
+"POT-Creation-Date: 2025-12-04 12:17+0000\n"
+"PO-Revision-Date: 2025-12-04 12:17+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -46,6 +46,14 @@ msgstr ""
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
 msgid "(UY)Update Invoice With XML data"
+msgstr ""
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+msgid ""
+"<b>Error sending the invoice</b>: partner %s does not have an email address "
+"defined."
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -89,11 +97,6 @@ msgid "Are you sure? this action will update the invoice information."
 msgstr ""
 
 #. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_account_journal__l10n_uy_edi_send_print
-msgid "Auto pop up Send and Print"
-msgstr ""
-
-#. module: l10n_uy_ux
 #: model:ir.actions.act_window,name:l10n_uy_ux.action_partner_update
 msgid "Automatic Update from DGI"
 msgstr ""
@@ -125,14 +128,6 @@ msgstr ""
 #: model:ir.model,name:l10n_uy_ux.model_certificate_certificate
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.res_config_settings_view_form_inherit_l10n_uy_edi
 msgid "Certificate"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model:ir.model.fields,help:l10n_uy_ux.field_account_journal__l10n_uy_edi_send_print
-msgid ""
-"Check this box to automatically open the Send and Print wizard after "
-"confirming your invoice. This will help ensure you don't forget to generate "
-"and send the required CFE (electronic tax document) to the government."
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -205,7 +200,6 @@ msgid "Delivery Guide"
 msgstr ""
 
 #. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_account_journal__display_name
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_certificate_certificate__display_name
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_ir_actions_report__display_name
@@ -225,6 +219,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_account_move__l10n_latam_document_type_id
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_l10n_uy_edi_document__l10n_latam_document_type_id
 msgid "Document Type"
+msgstr ""
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+msgid "ERROR: Invoice was not sent via email"
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -253,16 +253,22 @@ msgstr ""
 #. module: l10n_uy_ux
 #. odoo-python
 #: code:addons/l10n_uy_ux/models/account_move.py:0
-msgid "Error creating CFẸ XML"
+msgid "Error al intentar validar el documento en DGI"
 msgstr ""
 
 #. module: l10n_uy_ux
 #. odoo-python
 #: code:addons/l10n_uy_ux/models/account_move.py:0
 msgid ""
-"Error creating CFẸ XML\n"
+"Error creating CFE XML\n"
 "\n"
 " %(errors)s"
+msgstr ""
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+msgid "Error creating CFẸ XML"
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -308,7 +314,6 @@ msgid "Get Uruware Invoice"
 msgstr ""
 
 #. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_account_journal__id
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_certificate_certificate__id
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_ir_actions_report__id
@@ -360,11 +365,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_uy_ux/models/account_move.py:0
 msgid "It is not possible to update the move because there is no xml file."
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model:ir.model,name:l10n_uy_ux.model_account_journal
-msgid "Journal"
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -454,6 +454,12 @@ msgstr ""
 #. module: l10n_uy_ux
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__partner_ids
 msgid "Partners"
+msgstr ""
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+msgid "Please check the email template associated with the invoice journal."
 msgstr ""
 
 #. module: l10n_uy_ux
