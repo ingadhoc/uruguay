@@ -7,7 +7,10 @@ class L10nUyEdiDocument(models.Model):
     _inherit = "l10n_uy_edi.document"
 
     l10n_latam_document_type_id = fields.Many2one(
-        "l10n_latam.document.type", "Document Type", related=False, compute="_compute_from_origin"
+        "l10n_latam.document.type",
+        "Document Type",
+        related=False,
+        compute="_compute_from_origin",
     )
     l10n_latam_document_number = fields.Char(related=False, compute="_compute_from_origin")
     company_id = fields.Many2one("res.company", related=False, compute="_compute_from_origin")
@@ -138,6 +141,23 @@ class L10nUyEdiDocument(models.Model):
 
         return endpoint, user_params or params
 
+    def unlink(self):
+        """Extendemos unlink para prevenir la eliminación de documentos EDI que tienen errores.
+
+        El módulo oficial l10n_uy_edi elimina documentos EDI con errores después del action_post,
+        pero nosotros queremos preservar esos errores para que sean visibles en la factura posteada.
+        """
+        # Prevenir eliminación de documentos que tienen errores (mensajes)
+        # Solo permitir eliminación si NO hay mensaje de error O si es eliminación manual
+        docs_with_errors = self.filtered(lambda doc: doc.message and doc.move_id.l10n_uy_edi_error)
+        docs_to_delete = self - docs_with_errors
+
+        # Solo eliminar documentos que NO tienen errores
+        if docs_to_delete:
+            return super(L10nUyEdiDocument, docs_to_delete).unlink()
+
+        return True
+
     # Metodos nuevos
 
     def ux_uy_get_last_invoice_number(self, document_type):
@@ -162,7 +182,10 @@ class L10nUyEdiDocument(models.Model):
             result = self._ucfe_inbox("660", {"TipoCfe": document_type.code})
             if errors := result.get("errors"):
                 raise UserError(
-                    self.env._("We were not able to get the info of the next invoice number: %(error)s", error=errors)
+                    self.env._(
+                        "We were not able to get the info of the next invoice number: %(error)s",
+                        error=errors,
+                    )
                 )
 
             response = result.get("response")
