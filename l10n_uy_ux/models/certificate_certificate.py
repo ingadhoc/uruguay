@@ -1,9 +1,11 @@
-from odoo import _, api, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
 class Certificate(models.Model):
     _inherit = "certificate.certificate"
+
+    content_filename = fields.Char(string="Certificate Filename")
 
     @api.constrains("content", "pkcs12_password")
     def _l10n_uy_check_private_key(self):
