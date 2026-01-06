@@ -1,12 +1,16 @@
 import { _t } from "@web/core/l10n/translation";
-import { patch } from "@web/core/utils/patch";
+
+import { AccountReport } from "@account_reports/components/account_report/account_report";
 import { AccountReportFilters } from "@account_reports/components/account_report/filters/filters";
 
-patch(AccountReportFilters.prototype, {
+export class L10nUYTaxReportFilters extends AccountReportFilters {
     get selectedUYTaxType() {
-        const availableTypes = Object.keys(this.controller.options.uy_vat_book_tax_types_available);
+        if (!this.controller.cachedFilterOptions.uy_vat_book_tax_types_available) {
+            return _t("All");
+        }
+        const availableTypes = Object.keys(this.controller.cachedFilterOptions.uy_vat_book_tax_types_available);
         const selectedTypes = Object.values(
-            this.controller.options.uy_vat_book_tax_types_available,
+            this.controller.cachedFilterOptions.uy_vat_book_tax_types_available,
         ).filter((type) => type.selected);
 
         if (selectedTypes.length === availableTypes.length || selectedTypes.length === 0) {
@@ -14,14 +18,19 @@ patch(AccountReportFilters.prototype, {
         }
 
         return selectedTypes.map((type) => type.name).join(", ");
-    },
+    }
 
     selectUyVatBookTaxType(taxType) {
-        const newUyVatBookTaxTypes = Object.assign(
+        if (!this.controller.cachedFilterOptions.uy_vat_book_tax_types_available) {
+            return;
+        }
+        const newUYVatBookTaxTypes = Object.assign(
             {},
-            this.controller.options.uy_vat_book_tax_types_available,
+            this.controller.cachedFilterOptions.uy_vat_book_tax_types_available,
         );
-        newUyVatBookTaxTypes[taxType]["selected"] = !newUyVatBookTaxTypes[taxType]["selected"];
-        this.filterClicked({ optionKey: "uy_vat_book_tax_types_available", optionValue: newUyVatBookTaxTypes, reload: true});
-    },
-});
+        newUYVatBookTaxTypes[taxType]["selected"] = !newUYVatBookTaxTypes[taxType]["selected"];
+        this.filterClicked({ optionKey: "uy_vat_book_tax_types_available", optionValue: newUYVatBookTaxTypes, reload: true});
+    }
+}
+
+AccountReport.registerCustomComponent(L10nUYTaxReportFilters);

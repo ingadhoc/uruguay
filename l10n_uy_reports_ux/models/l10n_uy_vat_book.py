@@ -77,10 +77,19 @@ class UruguayanReportCustomHandler(models.AbstractModel):
             # Exporting the file is not allowed for 'purchase'. When executing the export tests, we hence always select 'sales', to avoid raising.
             options["uy_vat_book_tax_types_available"]["purchase"]["selected"] = False
 
-            options["forced_domain"] = [
-                *options.get("forced_domain", []),
-                ("journal_id.l10n_latam_use_documents", "!=", False),
-            ]
+        options["forced_domain"] = [
+            *options.get("forced_domain", []),
+            ("journal_id.l10n_latam_use_documents", "!=", False),
+        ]
+
+        options["custom_display_config"] = {
+            "templates": {
+                "AccountReportFilters": "l10n_uy_reports_ux.L10nUyTaxReportFiltersCustomizable",
+            },
+            "components": {
+                "AccountReportFilters": "L10nUYTaxReportFilters",
+            },
+        }
 
     ####################################################
     # REPORT LINES: CORE
