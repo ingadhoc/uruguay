@@ -66,6 +66,10 @@ class AccountMove(models.Model):
             return res
         msg = self.env._("Error al intentar validar el documento en DGI")
         for move in res.filtered(lambda m: m.l10n_uy_edi_is_needed):
+            if pre_checks_errors := move._l10n_uy_edi_check_move():
+                raise ValidationError(
+                    self.env._("Errors occurred while evaluating the document: \n") + "\n".join(pre_checks_errors)
+                )
             move._l10n_uy_edi_send()
             if move.l10n_uy_edi_error:
                 move.message_post(body=msg + " %s" % (move.l10n_uy_edi_error))
