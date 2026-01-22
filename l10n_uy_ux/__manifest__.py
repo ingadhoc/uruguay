@@ -8,10 +8,11 @@
     "category": "Localization",
     "countries": ["uy"],
     "license": "LGPL-3",
-    "version": "19.0.1.2.0",
+    "version": "19.0.1.3.0",
     "depends": [
         "l10n_uy_edi",
         "certificate",
+        "account_ux",
     ],
     "data": [
         "data/l10n_latam.document.type.csv",
