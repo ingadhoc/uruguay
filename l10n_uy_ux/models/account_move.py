@@ -118,6 +118,47 @@ class AccountMove(models.Model):
                         body_is_html=True,
                     )
 
+    def action_switch_move_type(self):
+        if self:
+            in_out, old_move_type = self[0].move_type.split("_")
+            new_move_type = f"{in_out}_{'invoice' if old_move_type == 'refund' else 'refund'}"
+
+            return super(AccountMove, self.with_context(switch_move_type=new_move_type)).action_switch_move_type()
+        super().action_switch_move_type()
+
+    @api.depends("l10n_latam_available_document_type_ids", "move_type")
+    def _compute_l10n_latam_document_type(self):
+        # EXTEND l10n_uy_edi
+        """
+        The following considerations apply for determining document types based on the partner's identification:
+        RUT/RUC (Uruguay): Automatically select e-factura, e-credit note or e-debit note depending on the origin.
+        Other documents (Example: CI, PAS, NIE, NIFE, etc.): Automatically select e-ticket
+        """
+        uy_cn_dn_docs = self.env["account.move"]
+        if uy_einvoices := self.filtered(
+            lambda m: m.country_code == "UY"
+            and m.move_type in ("out_invoice", "out_refund")
+            and m.state == "draft"
+            and not m.posted_before
+            and m.journal_id.l10n_uy_edi_type == "electronic"
+            and m.partner_id.l10n_latam_identification_type_id == self.env.ref("l10n_uy.it_rut")
+        ):
+            # Set debit notes
+            if uy_debit_notes := uy_einvoices.filtered(lambda m: m.debit_origin_id):
+                uy_debit_notes.l10n_latam_document_type_id = self.env.ref("l10n_uy.dc_dn_e_inv")
+                uy_cn_dn_docs |= uy_debit_notes
+
+            # Set credit notes
+            new_move_type = self.env.context.get("switch_move_type")
+            uy_credit_notes = uy_einvoices.filtered(lambda m: m.reversed_entry_id or "refund" in m.move_type)
+            if new_move_type and "refund" in new_move_type:
+                uy_credit_notes |= uy_einvoices.filtered(lambda m: not m.reversed_entry_id)
+            if uy_credit_notes:
+                uy_credit_notes.l10n_latam_document_type_id = self.env.ref("l10n_uy.dc_cn_e_inv")
+                uy_cn_dn_docs |= uy_credit_notes
+
+        super(AccountMove, self - uy_cn_dn_docs)._compute_l10n_latam_document_type()
+
     # New methods
 
     def uy_ux_action_preview_xml(self):
