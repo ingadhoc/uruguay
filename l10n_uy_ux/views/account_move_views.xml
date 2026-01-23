@@ -72,11 +72,11 @@
         <field name="arch" type="xml">
             <!-- Hide the change currency button for Uruguay -->
             <button name='%(account_ux.action_account_change_currency)d' position="attributes">
-                <attribute name="invisible" add="company_id.country_code != 'UY'" separator="or"/>
+                <attribute name="invisible" add="country_code == 'UY'" separator="or"/>
             </button>
             <!-- Hide the currency date picker widget for Uruguay -->
             <widget name="account_pick_currency_date" position="attributes">
-                <attribute name="invisible" add="company_id.country_code != 'UY'" separator="or"/>
+                <attribute name="invisible" add="country_code == 'UY'" separator="or"/>
             </widget>
         </field>
     </record>
