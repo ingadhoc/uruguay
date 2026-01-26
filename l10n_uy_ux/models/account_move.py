@@ -2,6 +2,7 @@ import base64
 import logging
 
 from lxml import etree
+from markupsafe import Markup
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import safe_eval
@@ -55,6 +56,28 @@ class AccountMove(models.Model):
 
         return errors
 
+    def _l10n_uy_edi_send(self):
+        """Antes de enviar a DGI, corremos los chequeos previos para atrapar algunos errores conocidos y de fácil configuración.
+        Si obtenemos alguno, no continuamos con el envío a DGI y en cambio creamos el XML con el error."""
+        moves_to_send = self
+        for move in self:
+            move.l10n_uy_edi_document_id.filtered(lambda doc: doc.state == "error").unlink()
+            edi_doc = self.env["l10n_uy_edi.document"].create(
+                {
+                    "move_id": move.id,
+                    "uuid": self.env["l10n_uy_edi.document"]._get_uuid(move),
+                }
+            )
+            move.l10n_uy_edi_document_id = edi_doc
+            if pre_checks_errors := move._l10n_uy_edi_check_move():
+                edi_doc.message = self.env._("Errors occurred while evaluating the document: \n") + "\n *".join(
+                    pre_checks_errors
+                )
+                edi_doc.state = "error"
+                moves_to_send -= move
+
+        super(AccountMove, moves_to_send)._l10n_uy_edi_send()
+
     def _post(self, soft=True):
         """Extendemos el _post nativo para evitar hacer la confirmación en dos pasos con el wizard de Send & Print.
         De esta manera, al clickear en confirmar las facturas automáticamente serán enviadas a DGI y posteadas.
@@ -66,13 +89,12 @@ class AccountMove(models.Model):
             return res
         msg = self.env._("Error al intentar validar el documento en DGI")
         for move in res.filtered(lambda m: m.l10n_uy_edi_is_needed):
-            if pre_checks_errors := move._l10n_uy_edi_check_move():
-                raise ValidationError(
-                    self.env._("Errors occurred while evaluating the document: \n") + "\n".join(pre_checks_errors)
-                )
             move._l10n_uy_edi_send()
             if move.l10n_uy_edi_error:
-                move.message_post(body=msg + " %s" % (move.l10n_uy_edi_error))
+                error_msg = Markup("<font style='color:Tomato;'><strong>ERROR:</strong></font> <i>{}</i>").format(
+                    f"{msg}: {move.l10n_uy_edi_error}"
+                )
+                move.message_post(body=error_msg, body_is_html=True)
                 move.button_draft()
                 res = res - move
         return res
