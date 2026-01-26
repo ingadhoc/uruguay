@@ -187,6 +187,13 @@ msgstr "Documento Fiscal Electrónico (CFE - UY)"
 #. odoo-python
 #: code:addons/l10n_uy_ux/models/account_move.py:0
 #, python-format
+msgid "Errors occurred while evaluating the document: \n"
+msgstr "Errores ocurridos al evaluar el documento: \n"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+#, python-format
 msgid "Error creating CFẸ XML"
 msgstr ""
 
