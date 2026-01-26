@@ -10,14 +10,17 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-21 19:15+0000\n"
-"PO-Revision-Date: 2025-06-27 14:23+0000\n"
-"Last-Translator: Juan José Scarafía <scarafia.juanjose@gmail.com>, 2025\n"
-"Language-Team: Spanish (https://app.transifex.com/adhoc/teams/46451/es/)\n"
+"PO-Revision-Date: 2026-01-26 15:12+0000\n"
+"Last-Translator: julia elizondo <jue@adhoc.inc>\n"
+"Language-Team: Spanish <https://translation.dev-adhoc.com/projects/"
+"uruguay-19-0/uruguay-19-0-l10n_uy_edi_stock_ux/es/>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.10.4\n"
 
 #. module: l10n_uy_edi_stock
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
@@ -92,7 +95,7 @@ msgstr ""
 #. module: l10n_uy_edi_stock
 #: model:ir.model.fields.selection,name:l10n_uy_edi_stock.selection__l10n_latam_document_type__internal_type__stock_picking
 msgid "Delivery Guide"
-msgstr ""
+msgstr "Remito"
 
 #. module: l10n_uy_edi_stock
 #: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_latam_document_number
@@ -112,13 +115,13 @@ msgstr ""
 #. module: l10n_uy_edi_stock
 #: model:ir.model,name:l10n_uy_edi_stock.model_l10n_uy_edi_document
 msgid "Electronic Fiscal Document (CFE - UY)"
-msgstr ""
+msgstr "Documento Fiscal Electrónico (CFE - UY)"
 
 #. module: l10n_uy_edi_stock
 #. odoo-python
 #: code:addons/l10n_uy_edi_stock/models/stock_picking.py:0
 msgid "Error creating CFẸ XML"
-msgstr ""
+msgstr "Error al crear el XML CFE"
 
 #. module: l10n_uy_edi_stock
 #. odoo-python
@@ -133,12 +136,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_uy_edi_stock/models/stock_picking.py:0
 msgid "Error getting the PDF file: %s"
-msgstr ""
+msgstr "Error obteniendo el archivo PDF: %s"
 
 #. module: l10n_uy_edi_stock
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
 msgid "Get Uruware Invoice"
-msgstr ""
+msgstr "Obtener Factura Uruware"
 
 #. module: l10n_uy_edi_stock
 #: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_l10n_latam_document_type__internal_type
@@ -173,7 +176,7 @@ msgstr ""
 #. module: l10n_uy_edi_stock
 #: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__manual_uruware_invoice
 msgid "Manual Uruware Invoice"
-msgstr ""
+msgstr "Factura Manual Uruware"
 
 #. module: l10n_uy_edi_stock
 #. odoo-python
@@ -234,7 +237,7 @@ msgstr "Movimiento de stock"
 #. module: l10n_uy_edi_stock
 #: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_cfe_xml
 msgid "Technical field to preview the xml"
-msgstr ""
+msgstr "Campo técnico para previsualizar el XML"
 
 #. module: l10n_uy_edi_stock
 #. odoo-python
@@ -317,7 +320,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_uy_edi_stock/models/stock_picking.py:0
 msgid "You need to define 'CFE Key or UUID' in order to continue"
-msgstr ""
+msgstr "Necesita definir 'Clave CFE o UUID' para poder continuar"
 
 #. module: l10n_uy_edi_stock
 #: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_error
