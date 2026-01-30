@@ -64,6 +64,7 @@ class StockPicking(models.Model):
     l10n_uy_edi_related_docs_ids = fields.Many2many(
         "l10n_uy_edi.document",
         string="Related Documents",
+        domain="[('picking_id', '!=', False), ('picking_id.partner_id', '=', partner_id), ('state', 'in', ['accepted', 'received', 'rejected'])]",
         help="Related electronic documents",
     )
 
@@ -514,10 +515,12 @@ class StockPicking(models.Model):
                 "MntNoGrv",
                 "MntNetoIvaTasaMin",
                 "MntNetoIVATasaBasica",
+                "MntNetoIVAOtra",
                 "IVATasaMin",
                 "IVATasaBasica",
                 "MntIVATasaMin",
                 "MntIVATasaBasica",
+                "MntIVAOtra",
                 "MntTotal",
                 "MontoNF",
                 "MntPagar",
