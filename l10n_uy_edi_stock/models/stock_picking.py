@@ -1,4 +1,5 @@
 import base64
+import logging
 
 from lxml import etree
 from markupsafe import Markup
@@ -7,6 +8,8 @@ from odoo.addons.l10n_uy_edi.models.account_move import format_float
 from odoo.exceptions import UserError
 from odoo.tools import html2plaintext
 from odoo.tools.xml_utils import cleanup_xml_node
+
+_logger = logging.getLogger(__name__)
 
 
 class StockPicking(models.Model):
@@ -19,7 +22,8 @@ class StockPicking(models.Model):
     l10n_latam_document_type_id = fields.Many2one("l10n_latam.document.type", string="Document Type (UY)", copy=False)
     l10n_latam_document_number = fields.Char(string="Document Number (UY)", readonly=True, copy=False)
     l10n_latam_available_document_type_ids = fields.Many2many(
-        "l10n_latam.document.type", compute="_compute_l10n_latam_available_document_types"
+        "l10n_latam.document.type",
+        compute="_compute_l10n_latam_available_document_types",
     )
 
     # Need to make it work with EDI (simil to what we have in invoices)
@@ -154,7 +158,11 @@ class StockPicking(models.Model):
         attachments available to the user.
         """
         attachments = self.env["ir.attachment"].search(
-            [("res_model", "=", self._name), ("res_id", "in", self.ids), ("res_field", "=", binary_field)]
+            [
+                ("res_model", "=", self._name),
+                ("res_id", "in", self.ids),
+                ("res_field", "=", binary_field),
+            ]
         )
         move_vals = {att.res_id: att for att in attachments}
         for move in self:
@@ -171,8 +179,22 @@ class StockPicking(models.Model):
         return super().action_cancel()
 
     def l10n_uy_edi_action_get_dgi_state(self):
-        self.ensure_one()
         self.l10n_uy_edi_document_id.action_update_dgi_state()
+        rejected_pickings = self.filtered(lambda x: x.l10n_uy_edi_cfe_state == "rejected")
+        if rejected_pickings:
+            _logger.info(
+                "Rejected picking(s): %s",
+                [(rec.id, rec.name) for rec in rejected_pickings],
+            )
+            for picking in rejected_pickings:
+                picking.message_post(
+                    body=self.env._(
+                        "The CFE has been rejected by DGI. Please, manually check the reject reason "
+                        "and generate/send a new CFE with the fixes"
+                    ),
+                    message_type="comment",
+                    subtype_xmlid="mail.mt_note",
+                )
 
     def l10n_uy_edi_send_dgi(self):
         """El E-remito tiene las siguientes partes en el xml
@@ -183,19 +205,21 @@ class StockPicking(models.Model):
         """
         # Filtrar solo los e-remitos
         uy_delivery_guides = self.filtered(
-            lambda x: x.country_code == "UY"
-            and x.picking_type_code == "outgoing"
-            and x.l10n_latam_document_type_id
-            and int(x.l10n_latam_document_type_id.code) > 0
-            and x.l10n_uy_edi_cfe_state not in ["accepted", "rejected", "received"]
+            lambda x: (
+                x.country_code == "UY"
+                and x.picking_type_code == "outgoing"
+                and x.l10n_latam_document_type_id
+                and int(x.l10n_latam_document_type_id.code) > 0
+                and x.l10n_uy_edi_cfe_state not in ["accepted", "rejected", "received"]
+            )
         )
 
         # If the invoice was previously validated in Uruware and need to be link to Odoo
         # we check that the l10n_uy_edi_cfe_uuid has been manually set and we consult to get the invoice information from Uruware
         pre_validated_in_uruware = uy_delivery_guides.filtered(
-            lambda x: x.l10n_uy_edi_cfe_uuid
-            and not x.l10n_uy_edi_document_id.attachment_id
-            and not x.l10n_uy_edi_cfe_state
+            lambda x: (
+                x.l10n_uy_edi_cfe_uuid and not x.l10n_uy_edi_document_id.attachment_id and not x.l10n_uy_edi_cfe_state
+            )
         )
         if pre_validated_in_uruware:
             pre_validated_in_uruware.uy_stock_action_get_uruware_cfe()
@@ -456,7 +480,16 @@ class StockPicking(models.Model):
         #     })
 
         empty_values = {}.fromkeys(
-            ["MntBruto", "FmaPago", "FchVenc", "ClauVenta", "InfoAdicionalDoc", "ModVenta", "ViaTransp"], None
+            [
+                "MntBruto",
+                "FmaPago",
+                "FchVenc",
+                "ClauVenta",
+                "InfoAdicionalDoc",
+                "ModVenta",
+                "ViaTransp",
+            ],
+            None,
         )
         values.update(empty_values)
         return values
@@ -620,7 +653,10 @@ class StockPicking(models.Model):
                 edi_doc._update_cfe_state(result)
                 edi_doc.message = _("Error creating CFẸ XML") + "\n\n" + edi_doc.message
                 raise UserError(
-                    _("Error creating CFẸ XML\n\n %(errors)s", errors=response.findtext(".//{*}MensajeRta"))
+                    _(
+                        "Error creating CFẸ XML\n\n %(errors)s",
+                        errors=response.findtext(".//{*}MensajeRta"),
+                    )
                 )
 
         raise UserError(_("XML Valido"))
@@ -648,11 +684,13 @@ class StockPicking(models.Model):
 
         # Filtrar solo los e-remitos
         uy_pickings = self.filtered(
-            lambda x: x.country_code == "UY"
-            and x.picking_type_code == "outgoing"
-            and x.l10n_latam_document_type_id
-            and int(x.l10n_latam_document_type_id.code) > 0
-            and x.l10n_uy_edi_cfe_state not in ["accepted", "rejected", "received"]
+            lambda x: (
+                x.country_code == "UY"
+                and x.picking_type_code == "outgoing"
+                and x.l10n_latam_document_type_id
+                and int(x.l10n_latam_document_type_id.code) > 0
+                and x.l10n_uy_edi_cfe_state not in ["accepted", "rejected", "received"]
+            )
         )
 
         for picking in uy_pickings:
@@ -689,3 +727,15 @@ class StockPicking(models.Model):
                     }
                 )
                 picking.uy_stock_action_get_pdf()
+
+    def _l10n_uy_edi_stock_cron_update_dgi_status(self, batch_size=10):
+        """Cron to update the DGI status of the stock pickings"""
+        domain = [
+            ("l10n_uy_is_cfe", "=", True),
+            ("l10n_uy_edi_cfe_state", "=", "received"),
+        ]
+        pickings = self.env["stock.picking"].search(domain, limit=batch_size, order="id")
+        pickings.l10n_uy_edi_action_get_dgi_state()
+
+        if self.env["stock.picking"].search_count(domain) > batch_size:
+            self.env.ref("l10n_uy_edi_stock.ir_cron_update_dgi_state_pickings")._trigger()
