@@ -17,7 +17,6 @@ from odoo.tools.misc import formatLang
 from odoo.tools import format_amount, safe_eval, html2plaintext, cleanup_xml_node
 from . import ucfe_errors
 
-
 _logger = logging.getLogger(__name__)
 
 
@@ -128,6 +127,7 @@ class L10nUyCfe(models.AbstractModel):
         ('4', 'Bienes propios a exclaves aduaneros'),
         ('90', 'Régimen general- exportación de servicios'),
         ('99', 'Otras transacciones'),
+        ("91", "Exportación bajo mandato"),
     ], 'Modalidad de Venta', help="Este campo debe enviarse cuando se reporta un CFE de tipo e-Facutra de Exportación o su e-Remito")
     l10n_uy_cfe_transport_route = fields.Selection([
         ('1', 'Marítimo'),
@@ -1424,7 +1424,10 @@ class L10nUyCfe(models.AbstractModel):
                     'TpoDocRef': tpo_doc_ref,
                     'Serie': document_number[0],
                     'NroCFERef': document_number[1],
-                    # 'FechaCFEref': 2015-01-31, TODO inform?
+                    "FechaCFEref": related_cfe.invoice_date,  # F7
+                    "MntCFEref": float_repr(related_cfe.amount_total, 2) ,  # F8
+                    "TpoMonedaRef": related_cfe.currency_id.name if related_cfe.currency_id else related_cfe.company_id.currency_id.name,  # F9
+                    "TpoCambioRef": float_repr(related_cfe.l10n_uy_currency_rate, 2),  # F10
                 })
         return res
 
