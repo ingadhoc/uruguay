@@ -86,7 +86,10 @@
                         <TpoDocRef t-out="referencia['TpoDocRef']"/>
                         <Serie t-out="referencia['Serie']"/>
                         <NroCFERef t-out="referencia['NroCFERef']"/>
-                        <!-- <FechaCFEref t-out="referencia['FechaCFEref']"/> -->
+                        <FechaCFEref t-out="referencia['FechaCFEref']"/>
+                        <MntCFEref t-out="referencia['MntCFEref']"/>
+                        <TpoMonedaRef t-out="referencia['TpoMonedaRef']"/>
+                        <TpoCambioRef t-out="referencia['TpoCambioRef']"/>
                     </Referencia>
                 </Referencia>
             <t t-out="'&lt;/' + cfe_tag + '&gt;'"/>
