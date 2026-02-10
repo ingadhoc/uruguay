@@ -302,6 +302,25 @@ class AccountMove(models.Model):
                 name = name.split(" ")[-1]
             rec.l10n_latam_document_number = name
 
+    def _l10n_uy_edi_get_line_nom_and_desc(self, aml):
+        """
+        Sobrescribimos este método que devuelve el valor de NomItem y DscItem para cada línea del comprobante,
+        para utilizar siempre la descripción de la línea (aml.name) como está en Odoo nativo, ya que a veces se quiere
+        modificar el valor a mostrar en la factura manteniendo el producto en la línea.
+        """
+        # B7 NomItem, B8 DscItem
+        nom_item = aml.name and aml.name[:80] or "-"
+        description = aml.name and aml.name[80:] or ""
+
+        if aml.l10n_uy_edi_addenda_ids:
+            adenda = [
+                " {%s}" % addenda.content if addenda.is_legend else " " + addenda.content
+                for addenda in aml.l10n_uy_edi_addenda_ids
+            ]
+            description += "".join(adenda)
+
+        return nom_item, description
+
     # Nuevos metodos
 
     def action_l10n_uy_get_pdf(self):

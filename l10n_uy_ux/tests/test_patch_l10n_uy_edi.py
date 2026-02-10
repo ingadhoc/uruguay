@@ -50,6 +50,15 @@ if tools.config.get("test_enable"):
         original_method = getattr(TestManual, "test_default_doc_type_by_id").origin
         original_method(self)
 
+    def test_110_account_move_line_nom_and_desc_patch(self):
+        """Test skipped: l10n_uy_ux intentionally modifies the line name logic for DGI submission.
+
+        The core l10n_uy_edi test expects that line.name is used to send data to DGI, but l10n_uy_ux
+        modifies this behavior to use the product name instead. This is an intentional change,
+        so we skip this test in l10n_uy_ux.
+        """
+        self.skipTest("l10n_uy_ux changes the line name logic for DGI submission")
+
     def propagate(method1, method2):
         if method1:
             for attr in ("_returns",):
@@ -76,6 +85,7 @@ if tools.config.get("test_enable"):
         test_120_e_ticket_final_consumer_patch,
     )
     _patch_method(TestManual, "test_default_doc_type_by_id", test_default_doc_type_by_id_patch)
+    _patch_method(TestManual, "test_110_account_move_line_nom_and_desc", test_110_account_move_line_nom_and_desc_patch)
     _skip_method(
         TestAccountMoveSend,
         "test_download_with_existing_cfe",
