@@ -730,10 +730,7 @@ class StockPicking(models.Model):
 
     def _l10n_uy_edi_stock_cron_update_dgi_status(self, batch_size=10):
         """Cron to update the DGI status of the stock pickings"""
-        domain = [
-            ("l10n_uy_is_cfe", "=", True),
-            ("l10n_uy_edi_cfe_state", "=", "received"),
-        ]
+        domain = [("l10n_uy_edi_cfe_state", "=", "received")]
         pickings = self.env["stock.picking"].search(domain, limit=batch_size, order="id")
         pickings.l10n_uy_edi_action_get_dgi_state()
 
