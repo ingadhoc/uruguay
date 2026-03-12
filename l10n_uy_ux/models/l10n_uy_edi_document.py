@@ -1,5 +1,5 @@
+import odoo.tools as tools
 from odoo import api, fields, models
-from odoo.addons.server_mode.mode import get_mode
 from odoo.exceptions import UserError
 from odoo.tools import safe_eval
 
@@ -156,11 +156,16 @@ class L10nUyEdiDocument(models.Model):
 
         return True
 
-    def cron_l10n_uy_edi_get_vendor_bills(self):
-        """Agregamos chequeo del server mode para evitar que el cron se corra en modo demo, lo cual genera errores al no tener datos de producción"""
-        if get_mode():
+    def cron_l10n_uy_edi_get_vendor_bills(self, batch_size=10):
+        """Agregamos chequeo para evitar que el cron se corra en runbot, lo cual genera errores al no tener datos de producción
+
+        También prevenimos la ejecución si alguna compañía UY tiene configuración incompleta para evitar warnings innecesarios"""
+        if not tools.config.get("test_enable") and not self.env["ir.config_parameter"].sudo().get_param(
+            "saas_client.database_uuid", False
+        ):
             return
-        return super().cron_l10n_uy_edi_get_vendor_bills()
+
+        return super().cron_l10n_uy_edi_get_vendor_bills(batch_size=batch_size)
 
     # Metodos nuevos
 
