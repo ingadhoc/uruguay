@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.addons.server_mode.mode import get_mode
 from odoo.exceptions import UserError
 from odoo.tools import safe_eval
 
@@ -154,6 +155,12 @@ class L10nUyEdiDocument(models.Model):
             return super(L10nUyEdiDocument, docs_to_delete).unlink()
 
         return True
+
+    def cron_l10n_uy_edi_get_vendor_bills(self):
+        """Agregamos chequeo del server mode para evitar que el cron se corra en modo demo, lo cual genera errores al no tener datos de producción"""
+        if get_mode():
+            return
+        return super().cron_l10n_uy_edi_get_vendor_bills()
 
     # Metodos nuevos
 
