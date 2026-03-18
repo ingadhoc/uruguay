@@ -795,7 +795,8 @@ class L10nUyCfe(models.AbstractModel):
                     root = self.l10n_uy_vendor_create_xml_root(response_610, l10n_uy_idreq)
                     # Check if internal_type is not purchase
                     # Only implemented for vendor bills and vendor refunds
-                    if 'in_' in self.l10n_uy_get_cfe_document_type(root)._get_move_type():
+                    move_type = self.l10n_uy_get_cfe_document_type(root)._get_move_type()
+                    if move_type and 'in_' in move_type:
                         self.l10n_uy_create_cfe_from_xml(company, root, transport, l10n_uy_idreq, response_610, journal)
                 except Exception as exp:
                     _logger.warning('Encontramos un error al momento de sincronizar comprobantes de proveedor de la compañía: %s (id: %d): %s' % (company.name, company.id, str(exp)))
