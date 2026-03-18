@@ -44,15 +44,7 @@
                 <page name="uy_dgi" string="DGI" invisible="l10n_uy_edi_journal_type != 'electronic'">
                     <separator string="Addendas and Disclosures"/>
                     <button name="action_l10n_uy_remkark_default" type="object" string="Get Defaults"/>
-                    <field name="l10n_uy_edi_addenda_ids">
-                        <list string="Addendas">
-                            <field name="type"/>
-                            <field name="name"/>
-                            <field name="content"/>
-                            <field name="condition" optional="hide"/>
-                        </list>
-                    </field>
-                    <span>Preview: </span>
+                    <div style="margin-top: 8px; margin-bottom: 8px;"><strong>Preview:</strong></div>
                     <button name="action_l10n_uy_addenda_preview" type="object" string="Addendas"/>
                     <button name="uy_ux_action_mandatory_legend" type="object" string="Info/Disclosures"/>
                     <separator string="CFE"/>
