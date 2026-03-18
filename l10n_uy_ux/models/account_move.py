@@ -158,12 +158,14 @@ class AccountMove(models.Model):
         """
         uy_cn_dn_docs = self.env["account.move"]
         if uy_einvoices := self.filtered(
-            lambda m: m.country_code == "UY"
-            and m.move_type in ("out_invoice", "out_refund")
-            and m.state == "draft"
-            and not m.posted_before
-            and m.journal_id.l10n_uy_edi_type == "electronic"
-            and m.partner_id.l10n_latam_identification_type_id == self.env.ref("l10n_uy.it_rut")
+            lambda m: (
+                m.country_code == "UY"
+                and m.move_type in ("out_invoice", "out_refund")
+                and m.state == "draft"
+                and not m.posted_before
+                and m.journal_id.l10n_uy_edi_type == "electronic"
+                and m.partner_id.l10n_latam_identification_type_id == self.env.ref("l10n_uy.it_rut")
+            )
         ):
             # Set debit notes
             if uy_debit_notes := uy_einvoices.filtered(lambda m: m.debit_origin_id):
@@ -223,9 +225,9 @@ class AccountMove(models.Model):
         # 3. validation that is the same CFE
 
         uy_moves = self.filtered(
-            lambda x: x.country_code == "UY"
-            and x.journal_id.type == "sale"
-            and x.journal_id.l10n_uy_edi_type == "manual"
+            lambda x: (
+                x.country_code == "UY" and x.journal_id.type == "sale" and x.journal_id.l10n_uy_edi_type == "manual"
+            )
         )
         uy_docs = self.env["l10n_latam.document.type"].search([("country_id.code", "=", "UY")])
 
@@ -304,9 +306,7 @@ class AccountMove(models.Model):
 
     def _l10n_uy_edi_get_line_nom_and_desc(self, aml):
         """
-        Sobrescribimos este método que devuelve el valor de NomItem y DscItem para cada línea del comprobante,
-        para utilizar siempre la descripción de la línea (aml.name) como está en Odoo nativo, ya que a veces se quiere
-        modificar el valor a mostrar en la factura manteniendo el producto en la línea.
+        Sobrescribimos este método que devuelve el valor de NomItem y DscItem para cada línea del comprobante...
         """
         # B7 NomItem, B8 DscItem
         nom_item = aml.name and aml.name[:80] or "-"
@@ -388,20 +388,26 @@ class AccountMove(models.Model):
         raise UserError(self.env._("XML Valido"))
 
     def action_l10n_uy_remkark_default(self):
-        """Revisamos leyedas que correspondan aplicar segun las condiciones de leyenda y defaults y las agregamos a
-        la factura con un boton"""
+        """Revisamos leyendas que correspondan aplicar segun las condiciones de leyenda y defaults y las agregamos a
+        la factura y a las líneas con un boton"""
         self.ensure_one()
-        res = self.env["l10n_uy_edi.addenda"]
 
-        res |= self._uy_get_legends_recs("addenda", self)
-        res |= self._uy_get_legends_recs("cfe_doc", self)
-        res |= self._uy_get_legends_recs("emisor", self)
-        res |= self._uy_get_legends_recs("receiver", self)
+        # 1. Obtenemos las leyendas obligatorias
+        default_legends = self.env["l10n_uy_edi.addenda"]
+        default_legends |= self._uy_get_legends_recs("addenda", self)
+        default_legends |= self._uy_get_legends_recs("cfe_doc", self)
+        default_legends |= self._uy_get_legends_recs("emisor", self)
+        default_legends |= self._uy_get_legends_recs("receiver", self)
 
+        # Escribimos las leyendas en el move
+        self.l10n_uy_edi_addenda_ids = default_legends
+
+        # 2. Obtenemos y aplicamos las leyendas de tipo "item" a cada línea
         for line in self.invoice_line_ids.filtered(lambda x: x.display_type == "product"):
-            res |= self._uy_get_legends_recs("item", line)
-
-        self.l10n_uy_edi_addenda_ids = res
+            # Obtenemos las de tipo item evaluando el contexto según la línea y según el move
+            item_legends = self._uy_get_legends_recs("item", line)
+            # Escribimos explícitamente en el account.move.line
+            line.l10n_uy_edi_addenda_ids = item_legends
 
     def action_l10n_uy_addenda_preview(self):
         """Boton que permite previsualizar las addendas que seran aplicadas en en este comprobante"""
@@ -418,7 +424,7 @@ class AccountMove(models.Model):
         A68_InfoAdicionalReceptor = edi_model._get_legends("receiver", self)
         B8_DscItem = []
         for line in self.invoice_line_ids.filtered(lambda x: x.display_type == "product"):
-            value = self._l10n_uy_edi_get_line_desc(line)
+            value = self._l10n_uy_edi_get_line_nom_and_desc(line)[1]
             if value:
                 B8_DscItem.append("* line (%s) : %s" % (line.display_name, value))
 
@@ -461,11 +467,13 @@ class AccountMove(models.Model):
         """Do not let to create not invoices entries in journals that use documents"""
         # TODO simil to _check_moves_use_documents. integrate somehow
         not_invoices = self.filtered(
-            lambda x: x.company_id.country_id.code == "UY"
-            and x.journal_id.type in ["sale", "purchase"]
-            and x.l10n_latam_use_documents
-            and not x.is_invoice()
-            and x.state == "posted"
+            lambda x: (
+                x.company_id.country_id.code == "UY"
+                and x.journal_id.type in ["sale", "purchase"]
+                and x.l10n_latam_use_documents
+                and not x.is_invoice()
+                and x.state == "posted"
+            )
         )
         if not_invoices:
             raise ValidationError(
