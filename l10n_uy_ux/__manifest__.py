@@ -8,7 +8,7 @@
     "category": "Localization",
     "countries": ["uy"],
     "license": "LGPL-3",
-    "version": "18.0.1.14.0",
+    "version": "18.0.1.15.0",
     "depends": [
         "l10n_uy_edi",
         "certificate",
