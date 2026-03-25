@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-19 21:04+0000\n"
-"PO-Revision-Date: 2026-01-26 15:12+0000\n"
+"PO-Revision-Date: 2026-03-25 18:31+0000\n"
 "Last-Translator: julia elizondo <jue@adhoc.inc>\n"
 "Language-Team: Spanish <https://translation.dev-adhoc.com/projects/"
 "uruguay-19-0/uruguay-19-0-l10n_uy_ux/es/>\n"
@@ -18,8 +18,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
-"0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
 "X-Generator: Weblate 5.10.4\n"
 
 #. module: l10n_uy_ux
@@ -66,47 +66,47 @@ msgstr ""
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
 msgid "<strong>Preview:</strong>"
-msgstr ""
+msgstr "<strong>Previsualización:</strong>"
 
 #. module: l10n_uy_ux
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_l10n_uy_edi_addenda__active
 msgid "Active"
-msgstr ""
+msgstr "Activo"
 
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
 msgid "Addendas"
-msgstr ""
+msgstr "Adendas"
 
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
 msgid "Addendas and Disclosures"
-msgstr ""
+msgstr "Adendas y Leyendas"
 
 #. module: l10n_uy_ux
 #: model:ir.model.fields.selection,name:l10n_uy_ux.selection__l10n_uy_edi_addenda__apply_on__all
 msgid "All CFE"
-msgstr ""
+msgstr "Todos los CFE"
 
 #. module: l10n_uy_ux
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_l10n_uy_edi_addenda__apply_on
 msgid "Apply On"
-msgstr ""
+msgstr "Aplicar en"
 
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
 msgid "Are you sure to execute the automatic update of your partners ?"
-msgstr ""
+msgstr "Estás seguro de aplicar la actualización automática de los contactos?"
 
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
 msgid "Are you sure? this action will update the invoice information."
-msgstr ""
+msgstr "Estás seguro? Esta acción actualizará la información de la factura."
 
 #. module: l10n_uy_ux
 #: model:ir.actions.act_window,name:l10n_uy_ux.action_partner_update
 msgid "Automatic Update from DGI"
-msgstr ""
+msgstr "Actualización Automática desde DGI"
 
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.res_config_settings_view_form_inherit_l10n_uy_edi
@@ -115,6 +115,10 @@ msgid ""
 "print a different format need to define it here (Example: addenda in second "
 "page, detail invoice lines, personalizated report)"
 msgstr ""
+"De forma predeterminada (vacío) se imprimirá el informe PDF estándar de "
+"Uruware. Si desea imprimir un formato diferente, debe definirlo aquí (por "
+"ejemplo: anexos en la segunda página, detalles de las líneas de la factura, "
+"informe personalizado)"
 
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
@@ -124,12 +128,12 @@ msgstr ""
 #. module: l10n_uy_ux
 #: model:ir.model,name:l10n_uy_ux.model_l10n_uy_edi_addenda
 msgid "CFE Addenda / Disclosure"
-msgstr ""
+msgstr "CFE Adenda / Leyenda"
 
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #. module: l10n_uy_ux
 #: model:ir.model,name:l10n_uy_ux.model_certificate_certificate
@@ -140,12 +144,12 @@ msgstr "Certificado"
 #. module: l10n_uy_ux
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_certificate_certificate__content_filename
 msgid "Certificate Filename"
-msgstr ""
+msgstr "Nombre del archivo de Certificado"
 
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
 msgid "Close"
-msgstr ""
+msgstr "Cerrar"
 
 #. module: l10n_uy_ux
 #: model:ir.model,name:l10n_uy_ux.model_res_company
