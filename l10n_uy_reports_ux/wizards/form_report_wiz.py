@@ -130,7 +130,6 @@ class FormReportWiz(models.TransientModel):
             tax_code[(tax.tax_group_id.id, tax.type_tax_use)] = line_code.get(tax)
 
         invoices = self._get_invoices()
-        UYU_currency = self.env.ref("base.UYU")
 
         # Revisando que todos los impuestos esten bien configurados
         error = ""
@@ -159,16 +158,13 @@ class FormReportWiz(models.TransientModel):
             amount_total = {}
             for inv in invoices:
                 subtotals = inv.tax_totals.get("subtotals", [])
-                currency_is_uyu = inv.currency_id == UYU_currency
                 is_sale = "out_" in inv.move_type
                 sign = 1 if inv.move_type in ["out_invoice", "in_invoice", "out_receipt", "in_receipt"] else -1
 
                 for item in subtotals:
                     tax_group_ids = item.get("tax_groups", [])
-                    # No estaba ene especifcacion pero vimos via un ejemplo que los montos reportados siempre son en
-                    # pesos, aunque el comprobamte sea de otra moneda, es por eso que utilizamos el monto convertido
-                    tax_amount = item.get("tax_amount") if currency_is_uyu else item.get("tax_amount_currency")
                     for tax_group_id in tax_group_ids:
+                        tax_amount = tax_group_id.get("tax_amount")
                         tax_id = tax_group_id["id"]
                         if tax_id in taxes_group_ids:
                             key = (tax_id, "sale" if is_sale else "purchase")
