@@ -10,14 +10,17 @@ msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:56+0000\n"
-"PO-Revision-Date: 2025-10-08 11:49+0000\n"
-"Last-Translator: Juan José Scarafía <scarafia.juanjose@gmail.com>, 2025\n"
-"Language-Team: Spanish (https://app.transifex.com/adhoc/teams/46451/es/)\n"
+"PO-Revision-Date: 2026-04-07 19:31+0000\n"
+"Last-Translator: julia elizondo <jue@adhoc.inc>\n"
+"Language-Team: Spanish <https://translation.dev-adhoc.com/projects/"
+"uruguay-19-0/uruguay-19-0-l10n_uy_currency_update/es/>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.10.4\n"
 
 #. module: l10n_uy_currency_update
 #: model:ir.model,name:l10n_uy_currency_update.model_res_currency
@@ -43,31 +46,35 @@ msgid ""
 "Fecha Ultimo Cierre: %s\n"
 "Rate: %s"
 msgstr ""
+"Fecha Ultimo Cierre: %s\n"
+"Cotización: %s"
 
 #. module: l10n_uy_currency_update
 #: model:ir.model.fields,field_description:l10n_uy_currency_update.field_res_currency__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: l10n_uy_currency_update
 #: model:ir.model.fields,field_description:l10n_uy_currency_update.field_res_currency__l10n_uy_have_bcu_code
 msgid "L10N Uy Have Bcu Code"
-msgstr ""
+msgstr "L10N Uy Tiene Código Bcu"
 
 #. module: l10n_uy_currency_update
 #. odoo-python
 #: code:addons/l10n_uy_currency_update/models/res_currency.py:0
+#, fuzzy
 msgid "No se encontro cotizacion para esta Moneda"
-msgstr ""
-"No se encontró cotización para esta Moneda\n"
-" "
+msgstr "No se encontro cotizacion para esta Moneda"
 
 #. module: l10n_uy_currency_update
 #: model_terms:ir.ui.view,arch_db:l10n_uy_currency_update.view_currency_form
+#, fuzzy
 msgid "⇒ (UY) Mostrar ultima cotización BCU"
-msgstr "⇒ (UY) Mostrar última cotización BCU"
+msgstr "⇒ (UY) Mostrar ultima cotización BCU"
 
 #. module: l10n_uy_currency_update
 #: model_terms:ir.ui.view,arch_db:l10n_uy_currency_update.view_currency_form
+#, fuzzy
 msgid "⇒ (UY) Obtener info monedas disponibles"
-msgstr ""
+msgstr "⇒ (UY) Obtener info monedas disponibles"
