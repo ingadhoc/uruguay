@@ -49,6 +49,7 @@ class FormReportWiz(models.TransientModel):
         domain = [
             ("company_id", "=", self.company_id.id),
             ("state", "=", "posted"),
+            ("move_type", "!=", "entry"),
             ("date", ">=", self.date_from),
             ("date", "<=", self.date_to),
             ("partner_id.vat", "!=", False),
