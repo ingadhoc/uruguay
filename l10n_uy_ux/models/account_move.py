@@ -309,8 +309,10 @@ class AccountMove(models.Model):
         Sobrescribimos este método que devuelve el valor de NomItem y DscItem para cada línea del comprobante...
         """
         # B7 NomItem, B8 DscItem
-        nom_item = aml.name and aml.name[:80] or "-"
-        description = aml.name and aml.name[80:] or ""
+        # Limpiamos saltos de línea que pueden romper el PDF
+        clean_name = aml.name.replace("\n", " ").replace("\r", " ") if aml.name else ""
+        nom_item = clean_name[:80] or "-"
+        description = clean_name[80:] or ""
 
         if aml.l10n_uy_edi_addenda_ids:
             adenda = [
