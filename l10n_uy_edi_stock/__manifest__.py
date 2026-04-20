@@ -11,6 +11,7 @@
         "sale_stock",
     ],
     "data": [
+        "security/ir.model.access.csv",
         "data/ir_cron.xml",
         "data/l10n_latam.document.type.csv",
         "views/cfe_template.xml",
