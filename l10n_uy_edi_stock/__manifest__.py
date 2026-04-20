@@ -12,6 +12,7 @@
         'sale_stock',
         ],
     'data': [
+        'security/ir.model.access.csv',
         'data/l10n_latam.document.type.csv',
         'views/cfe_template.xml',
         'views/stock_picking_views.xml',
