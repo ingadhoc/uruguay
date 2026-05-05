@@ -6,8 +6,10 @@ import datetime
 from unittest.mock import patch
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestL10nUyCurrencyUpdate(AccountTestInvoicingCommon):
 
     @classmethod
