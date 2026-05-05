@@ -2,10 +2,9 @@
 # For copyright and license notices, see __manifest__.py file in module root
 # directory
 ##############################################################################
-import datetime
-import logging
 from unittest.mock import patch
 
+from odoo import fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 
@@ -15,7 +14,6 @@ class TestL10nUyCurrencyUpdate(AccountTestInvoicingCommon):
     @classmethod
     @AccountTestInvoicingCommon.setup_country("uy")
     def setUpClass(cls):
-        logging.getLogger("odoo.addons.account.models.chart_template").setLevel(logging.ERROR)
         super().setUpClass()
         cls.UYU = cls.env.ref("base.UYU")
         cls.UYI = cls.env.ref("base.UYI")
@@ -38,7 +36,7 @@ class TestL10nUyCurrencyUpdate(AccountTestInvoicingCommon):
 
     def test_bcu_rates(self):
         self.assertEqual(self.UYU.rate, 1.0)
-        test_date = datetime.date(2024, 9, 26)
+        test_date = fields.Date.today()
         mocked_res = {
             "ARS": (28.57142857142857, test_date),
             "EUR": (0.021456809662928324, test_date),
