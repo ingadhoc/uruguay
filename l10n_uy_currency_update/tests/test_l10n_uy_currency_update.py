@@ -21,10 +21,23 @@ class TestL10nUyCurrencyUpdate(AccountTestInvoicingCommon):
 
         (cls.UYU + cls.UYI + cls.ARS + cls.USD + cls.EUR).active = True
 
+        # Force company currency to UYU using SQL to bypass ORM constraint
+        cls.env.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", (cls.UYU.id, cls.env.company.id))
+        cls.env.company.invalidate_recordset(["currency_id"])
+
         cls.utils_path = "odoo.addons.currency_rate_live.models.res_config_settings.ResCompany"
 
     def test_bcu_rates(self):
         """When the base currency is UYU"""
+        # Verify company currency is UYU
+        self.assertEqual(self.env.company.currency_id, self.UYU)
+
+        # Set all currency rates to 1.0 to ensure a clean test state
+        (self.USD + self.EUR + self.ARS + self.UYI + self.UYU).write({"rate": 1.0})
+
+        # Configure company to use BCU currency provider
+        self.env.company.currency_provider = "bcu"
+
         self.assertEqual(self.USD.rate, 1.0)
         self.assertEqual(self.EUR.rate, 1.0)
         self.assertEqual(self.ARS.rate, 1.0)
@@ -42,7 +55,10 @@ class TestL10nUyCurrencyUpdate(AccountTestInvoicingCommon):
         with patch(f"{self.utils_path}._parse_bcu_data", return_value=mocked_res):
             self.env.company.update_currency_rates()
 
+        # UYU is the company currency, so it remains at 1.0
         self.assertEqual(self.UYU.rate, 1.0)
+
+        # Verify other currencies are updated relative to UYU
         self.assertAlmostEqual(self.USD.rate, 0.023986567522187575, places=16)
         self.assertAlmostEqual(self.EUR.rate, 0.021456809662928324, places=16)
         self.assertAlmostEqual(self.ARS.rate, 28.57142857142857, places=16)
