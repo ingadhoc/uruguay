@@ -50,6 +50,12 @@ class TestL10nUyCurrencyUpdate(AccountTestInvoicingCommon):
         with patch(f"{self.utils_path}._parse_bcu_data", return_value=mocked_res):
             self.env.company.update_currency_rates()
 
+        for currency in (self.ARS, self.USD, self.EUR, self.UYI, self.UYU):
+            # verificamos que la fecha de última sincronización se haya actualizado correctamente
+            print(f"- Currency: {currency.name}, Rate: {currency.rate}, Last Sync: {currency.date}")
+            for rate in currency.rate_ids:
+                print(f"-  Rate: {rate.rate}, Date: {rate.name}, Company: {rate.company_id.name}")
+
         # las cotizaciones se aplicaron correctamente
         self.assertEqual(self.UYU.rate, 1.0)
         self.assertAlmostEqual(self.USD.rate, 0.023986567522187575, places=16)
