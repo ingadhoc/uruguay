@@ -2,11 +2,14 @@
 # For copyright and license notices, see __manifest__.py file in module root
 # directory
 ##############################################################################
-import datetime
+import logging
 from unittest.mock import patch
 
+from odoo import fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+
+_logger = logging.getLogger(__name__)
 
 
 @tagged("post_install_l10n", "post_install", "-at_install")
@@ -36,7 +39,7 @@ class TestL10nUyCurrencyUpdate(AccountTestInvoicingCommon):
 
     def test_bcu_rates(self):
         self.assertEqual(self.UYU.rate, 1.0)
-        test_date = datetime.date(2024, 9, 26)
+        test_date = fields.Date.today()
         mocked_res = {
             "ARS": (28.57142857142857, test_date),
             "EUR": (0.021456809662928324, test_date),
@@ -50,9 +53,9 @@ class TestL10nUyCurrencyUpdate(AccountTestInvoicingCommon):
 
         for currency in (self.ARS, self.USD, self.EUR, self.UYI, self.UYU):
             # verificamos que la fecha de última sincronización se haya actualizado correctamente
-            print(f"- Currency: {currency.name}, Rate: {currency.rate}, Last Sync: {currency.date}")
+            _logger.info(f"- Currency: {currency.name}, Rate: {currency.rate}, Last Sync: {currency.date}")
             for rate in currency.rate_ids:
-                print(f"-  Rate: {rate.rate}, Date: {rate.name}, Company: {rate.company_id.name}")
+                _logger.info(f"-  Rate: {rate.rate}, Date: {rate.name}, Company: {rate.company_id.name}")
 
         # las cotizaciones se aplicaron correctamente
         self.assertEqual(self.UYU.rate, 1.0)
