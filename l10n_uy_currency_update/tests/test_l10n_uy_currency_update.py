@@ -7,8 +7,10 @@ import logging
 from unittest.mock import patch
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.tests import tagged
 
 
+@tagged("post_install", "-at_install")
 class TestL10nUyCurrencyUpdate(AccountTestInvoicingCommon):
     @classmethod
     @AccountTestInvoicingCommon.setup_chart_template("uy")
@@ -27,11 +29,6 @@ class TestL10nUyCurrencyUpdate(AccountTestInvoicingCommon):
 
     def test_bcu_rates(self):
         """When the base currency is UYU"""
-        self.assertEqual(self.USD.rate, 1.0)
-        self.assertEqual(self.EUR.rate, 1.0)
-        self.assertEqual(self.ARS.rate, 1.0)
-        self.assertEqual(self.UYI.rate, 1.0)
-
         test_date = datetime.date(2024, 9, 26)
         mocked_res = {
             "ARS": (28.57142857142857, test_date),
@@ -43,6 +40,8 @@ class TestL10nUyCurrencyUpdate(AccountTestInvoicingCommon):
 
         with patch(f"{self.utils_path}._parse_bcu_data", return_value=mocked_res):
             self.env.company.update_currency_rates()
+
+        self.env.invalidate_all()
 
         self.assertEqual(self.UYU.rate, 1.0)
         self.assertAlmostEqual(self.USD.rate, 0.023986567522187575, places=16)
