@@ -3,6 +3,7 @@
 # directory
 ##############################################################################
 import datetime
+import logging
 from unittest.mock import patch
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -12,6 +13,7 @@ class TestL10nUyCurrencyUpdate(AccountTestInvoicingCommon):
     @classmethod
     @AccountTestInvoicingCommon.setup_chart_template("uy")
     def setUpClass(cls):
+        logging.getLogger("odoo.addons.account.models.chart_template").setLevel(logging.ERROR)
         super().setUpClass()
         cls.UYU = cls.env.ref("base.UYU")
         cls.UYI = cls.env.ref("base.UYI")
