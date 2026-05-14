@@ -170,6 +170,17 @@ class L10nUyEdiDocument(models.Model):
 
         return super().cron_l10n_uy_edi_get_vendor_bills(batch_size=batch_size)
 
+    def _ucfe_ws_call(self, company, endpoint, method, *args, **kwargs):
+        # EXTEND l10n_uy_edi
+        """Al validar facturas desde _post (cualquier usuario), el company llega sin sudo.
+        Los campos de credenciales tienen groups="base.group_system", por lo que se necesita
+        elevar privilegios para acceder a ellos.
+
+        Esto es neceasrio ya que este metodo aca lo llamamos directo desde el post() en
+        Odoo Oficial lo llama desde el asistente Send and Print que ya corre con move.sudo(),
+        por eso no tenian este problema antes."""
+        return super()._ucfe_ws_call(company.sudo(), endpoint, method, *args, **kwargs)
+
     # Metodos nuevos
 
     def ux_uy_get_last_invoice_number(self, document_type):
