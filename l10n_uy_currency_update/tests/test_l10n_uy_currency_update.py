@@ -49,13 +49,12 @@ class TestL10nUyCurrencyUpdate(AccountTestInvoicingCommon):
         }
 
         with patch(f"{self.utils_path}._parse_bcu_data", return_value=mocked_res):
-            self.env.company.update_currency_rates()
+            # Use l10n_ar_force_create_rate context to avoid filtering by l10n_ar_currency_update
+            self.env.company.with_context(l10n_ar_force_create_rate=True).update_currency_rates()
 
-        for currency in (self.ARS, self.USD, self.EUR, self.UYI, self.UYU):
-            # verificamos que la fecha de última sincronización se haya actualizado correctamente
-            _logger.info(f"- Currency: {currency.name}, Rate: {currency.rate}, Last Sync: {currency.date}")
-            for rate in currency.rate_ids:
-                _logger.info(f"-  Rate: {rate.rate}, Date: {rate.name}, Company: {rate.company_id.name}")
+        # Hacer flush y invalidar cache para refrescar los campos computados
+        self.env.flush_all()
+        self.env.invalidate_all()
 
         # las cotizaciones se aplicaron correctamente
         self.assertEqual(self.UYU.rate, 1.0)
