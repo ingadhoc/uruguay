@@ -22,7 +22,7 @@ class StockPicking(models.Model):
             pdf_file.register_as_main_attachment()
             self.invalidate_recordset(fnames=["l10n_uy_edi_pdf_report_id", "l10n_uy_edi_pdf_report_file"])
         else:
-            raise UserError(_("No se pudo generar el PDF"))
+            raise UserError(_("Could not generate the PDF"))
 
     def uy_stock_action_preview_xml(self):
         """En odoo oficial solo permite descargar el preview del xml si estamos en demo mode o si ocurrio un error.
@@ -60,4 +60,4 @@ class StockPicking(models.Model):
                     _("Error creating CFẸ XML\n\n %(errors)s", errors=response.findtext(".//{*}MensajeRta"))
                 )
 
-        raise UserError(_("XML Valido"))
+        raise UserError(_("Valid XML"))

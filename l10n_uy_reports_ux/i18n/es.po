@@ -55,7 +55,7 @@ msgstr "Grav. 22%"
 
 #. module: l10n_uy_reports_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_reports_ux.view_form_report_wiz_form
-msgid "Cerrar"
+msgid "Close"
 msgstr "Cerrar"
 
 #. module: l10n_uy_reports_ux
@@ -68,8 +68,8 @@ msgstr "Compañía"
 #. module: l10n_uy_reports_ux
 #. odoo-python
 #: code:addons/l10n_uy_reports_ux/wizards/form_report_wiz.py:0
-msgid "Configure un número de VAT para su compañía"
-msgstr ""
+msgid "Please configure a Tax ID number for your company"
+msgstr "Configure un número de ID Fiscal para su compañía"
 
 #. module: l10n_uy_reports_ux
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_form_report_wiz__create_uid
@@ -169,7 +169,6 @@ msgstr "Agrupar por..."
 #. module: l10n_uy_reports_ux
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_account_uy_vat_line__id
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_form_report_wiz__id
-#, fuzzy
 msgid "ID"
 msgstr "ID"
 
@@ -321,8 +320,14 @@ msgstr "IVA Ventas"
 #. module: l10n_uy_reports_ux
 #. odoo-python
 #: code:addons/l10n_uy_reports_ux/wizards/form_report_wiz.py:0
-msgid "Solo puede generar este reporte para compañías uruguayas"
-msgstr ""
+msgid "This report can only be generated for Uruguayan companies"
+msgstr "Solo puede generar este reporte para compañías uruguayas"
+
+#. module: l10n_uy_reports_ux
+#. odoo-python
+#: code:addons/l10n_uy_reports_ux/wizards/form_report_wiz.py:0
+msgid "No file was generated"
+msgstr "Ningún archivo fue generado"
 
 #. module: l10n_uy_reports_ux
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_account_uy_vat_line__state

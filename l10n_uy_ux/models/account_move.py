@@ -87,7 +87,7 @@ class AccountMove(models.Model):
         res = super()._post(soft=soft)
         if self.env.context.get("l10n_uy_skip_edi_send"):
             return res
-        msg = self.env._("Error al intentar validar el documento en DGI")
+        msg = self.env._("Error trying to validate the document in DGI")
         for move in res.filtered(lambda m: m.l10n_uy_edi_is_needed):
             move._l10n_uy_edi_send()
             if move.l10n_uy_edi_error:
@@ -387,7 +387,7 @@ class AccountMove(models.Model):
                     )
                 )
 
-        raise UserError(self.env._("XML Valido"))
+        raise UserError(self.env._("Valid XML"))
 
     def action_l10n_uy_remkark_default(self):
         """Revisamos leyendas que correspondan aplicar segun las condiciones de leyenda y defaults y las agregamos a
@@ -430,19 +430,17 @@ class AccountMove(models.Model):
             if value:
                 B8_DscItem.append("* line (%s) : %s" % (line.display_name, value))
 
-        messge = (
-            "* Adenda\n%s\n\n*"
-            "* Info Adicional Doc\n%s\n\n*"
-            "* Info Adicional Emisor\n%s\n\n"
-            "* Info Adicional Receptor\n%s\n\n"
-            "* Info Adicional Items\n%s"
-            % (
-                addenda,
-                A16_InfoAdicionalDoc,
-                A51_InfoAdicionalEmisor,
-                A68_InfoAdicionalReceptor,
-                "\n".join(str(item) for item in B8_DscItem),
-            )
+        messge = _(
+            "* Addenda\n%(addenda)s\n\n"
+            "* Additional Doc Info\n%(doc_info)s\n\n"
+            "* Additional Issuer Info\n%(issuer_info)s\n\n"
+            "* Additional Receiver Info\n%(receiver_info)s\n\n"
+            "* Additional Items Info\n%(items)s",
+            addenda=addenda,
+            doc_info=A16_InfoAdicionalDoc,
+            issuer_info=A51_InfoAdicionalEmisor,
+            receiver_info=A68_InfoAdicionalReceptor,
+            items="\n".join(str(item) for item in B8_DscItem),
         )
 
         raise UserError(messge)
@@ -542,7 +540,7 @@ class AccountMove(models.Model):
             error = exp
             self.env.cr.rollback()
         if error:
-            msg = self.env._("We found an error when cleaning the information from the invoice: id: %s." % (str(error)))
+            msg = self.env._("We found an error when cleaning the information from the invoice: %s") % str(error)
             _logger.warning(msg)
             self.message_post(body=msg)
 

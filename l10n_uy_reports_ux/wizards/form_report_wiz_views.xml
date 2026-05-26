@@ -26,9 +26,9 @@
                 </group>
                 <footer>
                     <button string="Get Files" class="btn-primary" type="object" name="action_get_files"/>
-                    <field name="res_filename" class="oe_inline o_light_label" nolabel="1" readonly="1" invisible="res_filename != 'Ningun archivo fue generado'"/>
-                    <field name="res_file" filename="res_filename" readonly="1" />
-                    <button string="Cerrar" class="btn-secondary" special="cancel"/>
+                    <field name="res_filename" class="oe_inline o_light_label" nolabel="1" readonly="1" invisible="res_file"/>
+                    <field name="res_file" filename="res_filename" readonly="1" invisible="not res_file"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
         </field>

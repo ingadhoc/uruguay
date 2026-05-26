@@ -335,6 +335,18 @@ msgstr ""
 msgid "XML Valido"
 msgstr ""
 
+#. module: l10n_uy_edi_stock_ux
+#. odoo-python
+#: code:addons/l10n_uy_edi_stock_ux/models/stock_picking.py:0
+msgid "Could not generate the PDF"
+msgstr "No se pudo generar el PDF"
+
+#. module: l10n_uy_edi_stock_ux
+#. odoo-python
+#: code:addons/l10n_uy_edi_stock_ux/models/stock_picking.py:0
+msgid "Valid XML"
+msgstr "XML Válido"
+
 #. module: l10n_uy_edi_stock
 #. odoo-python
 #: code:addons/l10n_uy_edi_stock/models/stock_picking.py:0

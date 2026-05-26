@@ -80,7 +80,7 @@ class ResPartner(models.Model):
                 )
             result = edi_doc._ucfe_inbox("640", {"RutEmisor": self.vat})
             if errors := result.get("errors"):
-                raise UserError(self.env._("Could not connect to DGI to extract data %s".str(errors)))
+                raise UserError(self.env._("Could not connect to DGI to extract data: %s") % str(errors))
             if response := result.get("response"):
                 if response.findtext(".//{*}CodRta") == "00":
                     # TODO ver detalle de los demas campos que podemos integrar en pagin 83 Manual de integración
@@ -112,7 +112,7 @@ class ResPartner(models.Model):
                 elif response.findtext(".//{*}CodRta") == "01":
                     raise UserError(
                         _(
-                            "%s. Si está en un ambiente de testing, usted puede consultar los siguientes RUTs: "
+                            "%s. If you are in a testing environment, you can check the following RUTs: "
                             "219999830019, 219999820013, 219000090011",
                             response.findtext(".//{*}MensajeRta"),
                         )
