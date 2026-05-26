@@ -32,9 +32,9 @@ class ResCurrency(models.Model):
         rate = self.env["res.company"]._parse_bcu_data(self)
 
         if rate:
-            raise UserError(_("Fecha Ultimo Cierre: %s\nRate: %s") % (last_closing_date, 1 / rate[self.name][0]))
+            raise UserError(_("Last Closing Date: %s\nRate: %s") % (last_closing_date, 1 / rate[self.name][0]))
         else:
-            raise UserError(_("No se encontro cotizacion para esta Moneda"))
+            raise UserError(_("No exchange rate found for this currency"))
 
     def action_get_available_currencies(self):
         """Get the currency codes available in BCU
@@ -49,8 +49,8 @@ class ResCurrency(models.Model):
             response = available_currencies_client.service.Execute(Entrada)
             currencies = self.env["res.company"]._get_bcu_currencies_mapping()
         except ValueError as exp:
-            msg = "No se pudo conectar al webservice para extraer datos de moneda: " + str(exp)
-            _logger.warning(msg=msg)
+            msg = _("Could not connect to the webservice to extract currency data: %(error)s", error=str(exp))
+            _logger.warning(msg)
             raise UserError(msg)
 
         configured = {}
@@ -65,9 +65,9 @@ class ResCurrency(models.Model):
                 not_configured.update({item.Codigo: item.Nombre})
 
         message = "\n".join(
-            ["Código/ Moneda\n\n(Configuradas):"] + ["* %s - %s" % (key, value) for key, value in configured.items()]
+            [_("Code / Currency\n\n(Configured):")] + ["* %s - %s" % (key, value) for key, value in configured.items()]
         )
         message += "\n\n" + "\n".join(
-            ["(No configuradas)"] + ["* %s - %s" % (key, value) for key, value in not_configured.items()]
+            [_("(Not configured)")] + ["* %s - %s" % (key, value) for key, value in not_configured.items()]
         )
         raise UserError(message)

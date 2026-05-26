@@ -179,7 +179,7 @@ class FormReportWiz(models.TransientModel):
                 if self.company_id.vat:
                     content_data = self.company_id.vat.zfill(12) + ";"
                 else:
-                    raise UserError(_("Configure un número de ID Fiscal para su compañía"))
+                    raise UserError(_("Please configure a Tax ID number for your company"))
 
                 # Campo 2 - Formulario. Num 5
                 content_data += f"{int(self.uy_form_id):05d};"
@@ -210,7 +210,7 @@ class FormReportWiz(models.TransientModel):
         self.ensure_one()
 
         if self.company_id.country_id.code != "UY":
-            raise UserError(_("Solo puede generar este reporte para compañías uruguayas"))
+            raise UserError(_("This report can only be generated for Uruguayan companies"))
 
         data = getattr(self, "_get_form_%s_data" % self.uy_form_id)() if self.uy_form_id else None
         if data:
@@ -221,7 +221,7 @@ class FormReportWiz(models.TransientModel):
             # Ejemplo SumiFormulario2-181DGI_10_2022.txt ver de mejorarlo del periodo
             self.res_file = base64.encodebytes(data.encode("ISO-8859-1"))
         else:
-            self.res_filename = "Ningun archivo fue generado"
+            self.res_filename = _("No file was generated")
             self.res_file = False
 
         return {

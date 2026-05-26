@@ -61,7 +61,8 @@ class ResConfigSettings(models.TransientModel):
         if len(safe_eval(self.l10n_uy_report_params or "[]")) < 2:
             raise UserError(
                 self.env._(
-                    "El campo debe contener al menos dos valores: nombre del parámetro y valor. Por favor, verifique que los valores fueron ingresados en el formato correcto."
+                    "The field must contain at least two values: parameter name and value. "
+                    "Please verify that the values were entered in the correct format."
                 )
             )
 
@@ -71,15 +72,17 @@ class ResConfigSettings(models.TransientModel):
         if invalid_params:
             raise UserError(
                 self.env._(
-                    f"Los siguientes parámetros ingresados son inválidos: {', '.join(invalid_params)}. "
-                    f"Los valores permitidos son: {', '.join(valid_params)}."
+                    "The following entered parameters are invalid: %(params)s. Allowed values are: %(allowed)s.",
+                    params=", ".join(invalid_params),
+                    allowed=", ".join(valid_params),
                 )
             )
         reporte_values = [i for i, name in enumerate(param_names) if name == "reporte"]
         if len(reporte_values) > 1:
             raise UserError(
                 self.env._(
-                    "El parámetro 'reporte' contiene dos valores diferentes. "
-                    "Solo se permite un valor personalizado por parámetro 'reporte'. Por favor, verifique la configuración de sus reportes."
+                    "The 'reporte' parameter contains two different values. "
+                    "Only one custom value per 'reporte' parameter is allowed. "
+                    "Please check your report configuration."
                 )
             )

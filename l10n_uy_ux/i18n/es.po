@@ -25,10 +25,9 @@ msgstr ""
 #. module: l10n_uy_ux
 #. odoo-python
 #: code:addons/l10n_uy_ux/models/res_partner.py:0
-#, fuzzy
 msgid ""
-"%s. Si está en un ambiente de testing, usted puede consultar los siguientes "
-"RUTs: 219999830019, 219999820013, 219000090011"
+"%s. If you are in a testing environment, you can check the following RUTs: "
+"219999830019, 219999820013, 219000090011"
 msgstr ""
 "%s. Si está en un ambiente de testing, usted puede consultar los siguientes "
 "RUTs: 219999830019, 219999820013, 219000090011"
@@ -251,19 +250,24 @@ msgstr "ERROR: La factura no se envió por correo electrónico"
 #. odoo-python
 #: code:addons/l10n_uy_ux/models/res_config_settings.py:0
 msgid ""
+"The field must contain at least two values: parameter name and value. "
+"Please verify that the values were entered in the correct format."
+msgstr ""
 "El campo debe contener al menos dos valores: nombre del parámetro y valor. "
 "Por favor, verifique que los valores fueron ingresados en el formato "
 "correcto."
-msgstr ""
 
 #. module: l10n_uy_ux
 #. odoo-python
 #: code:addons/l10n_uy_ux/models/res_config_settings.py:0
 msgid ""
-"El parámetro 'reporte' contiene dos valores diferentes. Solo se permite un "
-"valor personalizado por parámetro 'reporte'. Por favor, verifique la "
-"configuración de sus reportes."
+"The 'reporte' parameter contains two different values. "
+"Only one custom value per 'reporte' parameter is allowed. "
+"Please check your report configuration."
 msgstr ""
+"El parámetro 'reporte' contiene dos valores diferentes. "
+"Solo se permite un valor personalizado por parámetro 'reporte'. "
+"Por favor, verifique la configuración de sus reportes."
 
 #. module: l10n_uy_ux
 #: model:ir.model,name:l10n_uy_ux.model_l10n_uy_edi_document
@@ -273,8 +277,8 @@ msgstr "Documento Fiscal Electrónico (CFE - UY)"
 #. module: l10n_uy_ux
 #. odoo-python
 #: code:addons/l10n_uy_ux/models/account_move.py:0
-msgid "Error al intentar validar el documento en DGI"
-msgstr ""
+msgid "Error trying to validate the document in DGI"
+msgstr "Error al intentar validar el documento en DGI"
 
 #. module: l10n_uy_ux
 #. odoo-python
@@ -354,7 +358,6 @@ msgstr "Obtener Factura Uruware"
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner__id
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__id
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__id
-#, fuzzy
 msgid "ID"
 msgstr "ID"
 
@@ -697,8 +700,62 @@ msgstr ""
 #. module: l10n_uy_ux
 #. odoo-python
 #: code:addons/l10n_uy_ux/models/account_move.py:0
-msgid "XML Valido"
+msgid "Valid XML"
+msgstr "XML Válido"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+msgid ""
+"* Addenda\n"
+"%(addenda)s\n"
+"\n"
+"* Additional Doc Info\n"
+"%(doc_info)s\n"
+"\n"
+"* Additional Issuer Info\n"
+"%(issuer_info)s\n"
+"\n"
+"* Additional Receiver Info\n"
+"%(receiver_info)s\n"
+"\n"
+"* Additional Items Info\n"
+"%(items)s"
 msgstr ""
+"* Adenda\n"
+"%(addenda)s\n"
+"\n"
+"* Info Adicional Doc\n"
+"%(doc_info)s\n"
+"\n"
+"* Info Adicional Emisor\n"
+"%(issuer_info)s\n"
+"\n"
+"* Info Adicional Receptor\n"
+"%(receiver_info)s\n"
+"\n"
+"* Info Adicional Items\n"
+"%(items)s"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+msgid "We found an error when cleaning the information from the invoice: %s"
+msgstr "Se encontró un error al limpiar la información de la factura: %s"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/res_partner.py:0
+msgid "Could not connect to DGI to extract data: %s"
+msgstr "No se pudo conectar a DGI para extraer datos: %s"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/res_config_settings.py:0
+msgid ""
+"The following entered parameters are invalid: %(params)s. Allowed values are: %(allowed)s."
+msgstr ""
+"Los siguientes parámetros ingresados son inválidos: %(params)s. Los valores permitidos son: %(allowed)s."
 
 #. module: l10n_uy_ux
 #. odoo-python

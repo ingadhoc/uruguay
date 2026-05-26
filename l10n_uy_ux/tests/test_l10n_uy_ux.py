@@ -13,7 +13,7 @@ class TestUx(TestUyEdi):
         self.company_uy.l10n_uy_edi_ucfe_env = "demo"
 
     def test_invalid_report_params(self):
-        with self.assertRaisesRegex(UserError, "El parámetro 'reporte' contiene dos valores diferentes."):
+        with self.assertRaisesRegex(UserError, "'reporte' parameter contains two different values"):
             record = self.env["res.config.settings"].create(
                 {"l10n_uy_report_params": "[['reporte', 'reporte'], ['secundario', 'ingles']]"}
             )
