@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="cfe_template" inherit_id="l10n_uy_edi.cfe_template">
+        <xpath expr="//MntExpoyAsim" position="replace">
+        <!-- Permitimos que el campo esté en 0 para facturas y notas de crédito/débito de exportación -->
+            <MntExpoyAsim t-if="int(cfe.l10n_latam_document_type_id.code) in [121, 122, 123]" t-out="format_float(totals_detail['MntExpoyAsim'], 2, valid_zero=1)"/>
+        </xpath>
+    </template>
+
+</odoo>
