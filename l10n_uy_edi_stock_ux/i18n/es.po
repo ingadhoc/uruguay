@@ -1,15 +1,15 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* l10n_uy_edi_stock
-# 
+#
 # Translators:
 # Juan José Scarafía <scarafia.juanjose@gmail.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-21 19:15+0000\n"
+"POT-Creation-Date: 2026-05-29 12:37+0000\n"
 "PO-Revision-Date: 2026-04-24 14:41+0000\n"
 "Last-Translator: julia elizondo <jue@adhoc.inc>\n"
 "Language-Team: Spanish <https://translation.dev-adhoc.com/projects/"
@@ -18,125 +18,30 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
-" ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.10.4\n"
 
-#. module: l10n_uy_edi_stock
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
-msgid ""
-"<i class=\"fa fa-warning\" role=\"img\" title=\"EDI (Uruguay)\"/>\n"
-"                        <span class=\"mx-1\">E-invoicing (Uruguay)</span>"
-msgstr ""
-"<i class=\"fa fa-warning\" role=\"img\" title=\"EDI (Uruguay)\"/>\n"
-"                        <span class=\"mx-1\">Facturación electrónica "
-"(Uruguay)</span>"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_addenda_ids
-msgid "Addenda & Disclosure"
-msgstr "Adenda & Leyenda"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_addenda_ids
-msgid ""
-"Addendas and Mandatory Disclosure to add on the CFE. They can be added "
-"either to the issuer, receiver, cfe doc additional info section or to the "
-"addenda section. However, the item type should not be set in this field; "
-"instead, it should be specified in the invoice lines."
-msgstr ""
-"Adendas y Leyendas Obligatorias que deben añadirse al CFE. Pueden añadirse "
-"en la sección de información adicional del emisor, del destinatario o del "
-"documento CFE o en la sección de anexos. Sin embargo, el tipo de item no "
-"debe indicarse en este campo, sino que debe especificarse en las líneas de "
-"la factura."
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,help:l10n_uy_edi_stock.field_l10n_latam_document_type__internal_type
-msgid ""
-"Analog to odoo account.move.move_type but with more options allowing to "
-"identify the kind of document we are working with. (not only related to "
-"account.move, could be for documents of other models like stock.picking)"
-msgstr ""
-"Análogo a odoo account.move.move_type pero con más opciones que permiten "
-"identificar el tipo de documento con el que estamos trabajando. (no sólo "
-"relacionado con account.move, podría ser para documentos de otros modelos "
-"como stock.picking)"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_cfe_state
-msgid "CFE Status"
-msgstr "Estado CFE"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_place_of_delivery
-msgid ""
-"CFE: Indication of where the merchandise is delivered or the service is "
-"provided (Address, Branch, Port, etc.) if True then we will inform the "
-"shipping address's name and street"
-msgstr ""
-"CFE: Indicación del lugar donde se entrega la mercadería o se presta el "
-"servicio (dirección, sucursal, puerto, etc.); si el valor es «True», se "
-"indicará el nombre y la calle de la dirección de envío"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_is_cfe
-msgid ""
-"Campo tecnico para saber si es un comprobante electronico o no y usarlo en "
-"la vista para mostrar o requerir ciertos campos. por los momentos lo estamos"
-" usando solo para remitos pero podemos extenderlo para otros modelos"
-msgstr ""
-
-#. module: l10n_uy_edi_stock
+#. module: l10n_uy_edi_stock_ux
 #. odoo-python
-#: code:addons/l10n_uy_edi_stock/models/stock_picking.py:0
-msgid "Can not cancel a Delivery Guide already process by DGI"
-msgstr "No se puede cancelar un Remito que ya haya sido procesado por la DGI"
+#: code:addons/l10n_uy_edi_stock_ux/models/stock_picking.py:0
+msgid "Could not generate the PDF"
+msgstr "No se pudo generar el PDF"
 
-#. module: l10n_uy_edi_stock
-#: model:ir.model,name:l10n_uy_edi_stock.model_res_company
-msgid "Companies"
-msgstr "Compañías"
-
-#. module: l10n_uy_edi_stock
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
-msgid "DGI"
+#. module: l10n_uy_edi_stock_ux
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock_ux.field_stock_picking__display_name
+msgid "Display Name"
 msgstr ""
 
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields.selection,name:l10n_uy_edi_stock.selection__l10n_latam_document_type__internal_type__stock_picking
-msgid "Delivery Guide"
-msgstr "Remito"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_latam_document_number
-msgid "Document Number (UY)"
-msgstr "Número de Documento (UY)"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_latam_document_type_id
-msgid "Document Type (UY)"
-msgstr "Tipo de Documento (UY)"
-
-#. module: l10n_uy_edi_stock
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
-msgid "Download"
-msgstr "Descargar"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model,name:l10n_uy_edi_stock.model_l10n_uy_edi_document
-msgid "Electronic Fiscal Document (CFE - UY)"
-msgstr "Documento Fiscal Electrónico (CFE - UY)"
-
-#. module: l10n_uy_edi_stock
+#. module: l10n_uy_edi_stock_ux
 #. odoo-python
-#: code:addons/l10n_uy_edi_stock/models/stock_picking.py:0
+#: code:addons/l10n_uy_edi_stock_ux/models/stock_picking.py:0
 msgid "Error creating CFẸ XML"
 msgstr "Error al crear el XML CFE"
 
-#. module: l10n_uy_edi_stock
+#. module: l10n_uy_edi_stock_ux
 #. odoo-python
-#: code:addons/l10n_uy_edi_stock/models/stock_picking.py:0
+#: code:addons/l10n_uy_edi_stock_ux/models/stock_picking.py:0
 msgid ""
 "Error creating CFẸ XML\n"
 "\n"
@@ -146,200 +51,30 @@ msgstr ""
 "\n"
 " %(errors)s"
 
-#. module: l10n_uy_edi_stock
-#. odoo-python
-#: code:addons/l10n_uy_edi_stock/models/stock_picking.py:0
-msgid "Error getting the PDF file: %s"
-msgstr "Error obteniendo el archivo PDF: %s"
-
-#. module: l10n_uy_edi_stock
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
-msgid "Get Uruware Invoice"
-msgstr "Obtener Factura Uruware"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_l10n_latam_document_type__internal_type
-msgid "Internal Type"
-msgstr "Tipo interno"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_cfe_uuid
-msgid "Key or UUID CFE"
-msgstr "Llave o UUID CFE"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_latam_available_document_type_ids
-msgid "L10N Latam Available Document Type"
-msgstr "L10N Latam Tipo de Documento Disponible"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_is_cfe
-msgid "L10N Uy Is Cfe"
-msgstr "L10N Uy Es Cfe"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model,name:l10n_uy_edi_stock.model_l10n_latam_document_type
-msgid "Latam Document Type"
-msgstr "Tipo de Documento Latam"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_move__l10n_uy_edi_addenda_ids
-msgid "Mandatory Disclosures"
-msgstr "Leyendas Obligatorias"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__manual_uruware_invoice
-msgid "Manual Uruware Invoice"
-msgstr "Factura Manual Uruware"
-
-#. module: l10n_uy_edi_stock
-#. odoo-python
-#: code:addons/l10n_uy_edi_stock/models/l10n_uy_edi_document.py:0
-msgid "Need to define the origin record of this EDI document"
-msgstr "Es necesario definir el registro de origen de este documento EDI"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__edi_pdf_report_id
-msgid "PDF Attachment"
-msgstr "PDF Adjunto"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__edi_pdf_report_file
-msgid "PDF File"
-msgstr "Archivo PDF"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_l10n_uy_edi_document__picking_id
-msgid "Picking"
-msgstr "Recolección"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_place_of_delivery
-msgid "Place of Delivery"
-msgstr "Lugar de Entrega"
-
-#. module: l10n_uy_edi_stock
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
-msgid "Re-print Legal PDF"
-msgstr "Re-Imprimir PDF Legal"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_related_docs_ids
-msgid "Related Documents"
-msgstr "Documentos Relacionados"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_related_docs_ids
-msgid "Related electronic documents"
-msgstr "Documentos electrónicos relacionados"
-
-#. module: l10n_uy_edi_stock
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
-msgid "Send to DGI"
-msgstr "Enviar a DGI"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_cfe_state
-msgid "State of the electronic document"
-msgstr "Estado del documento electrónico"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model,name:l10n_uy_edi_stock.model_stock_move
-msgid "Stock Move"
-msgstr "Movimiento de stock"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_cfe_xml
-msgid "Technical field to preview the xml"
-msgstr "Campo técnico para previsualizar el XML"
-
-#. module: l10n_uy_edi_stock
-#. odoo-python
-#: code:addons/l10n_uy_edi_stock/models/stock_picking.py:0
-msgid "The electronic invoice was created successfully"
-msgstr "El documento electrónico fue creado satisfactoriamente"
-
-#. module: l10n_uy_edi_stock
-#. odoo-python
-#: code:addons/l10n_uy_edi_stock/models/stock_picking.py:0
-msgid ""
-"This CFE has been generated in DEMO Mode. It is considered as accepted and "
-"it won\"t be sent to DGI."
-msgstr ""
-"Este CFE se ha generado en modo DEMO. Se considera aceptado y no se enviará "
-"a la DGI."
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model,name:l10n_uy_edi_stock.model_stock_picking
-msgid "Transfer"
-msgstr "Traslado"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_transfer_of_goods
-msgid "Traslados de Bienes"
-msgstr ""
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields.selection,name:l10n_uy_edi_stock.selection__stock_picking__l10n_uy_transfer_of_goods__2
-msgid "Traslados internos"
-msgstr ""
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_cfe_uuid
-msgid ""
-"Unique identification per CFE in UCFE: concatenation of the model name "
-"initials plus the record id"
-msgstr ""
-"Identificación única por CFE en UCFE: concatenación de las iniciales del "
-"nombre del modelo más el identificador del registro"
-
-#. module: l10n_uy_edi_stock
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
-msgid "Update DGI State"
-msgstr "Actualizar Estado DGI"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_document_id
-msgid "Uruguay E-Invoice CFE"
-msgstr "Uruguay e-Factura CFE"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_error
-msgid "Uruguay E-Invoice Error"
-msgstr "Uruguay E-Factura Error"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,field_description:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_xml_attachment_id
-msgid "Uruguay E-Invoice XML"
-msgstr "Uruguay E-Factura XML"
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_xml_attachment_id
-msgid "Uruguay: the most recent e-invoice XML returned by Uruware."
-msgstr ""
-"Uruguay: el último archivo XML de factura electrónica generado por Uruware."
-
-#. module: l10n_uy_edi_stock
-#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock.view_picking_edi_form
-msgid "Uruware UUID"
-msgstr ""
-
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields.selection,name:l10n_uy_edi_stock.selection__stock_picking__l10n_uy_transfer_of_goods__1
-msgid "Venta"
-msgstr ""
-
-#. module: l10n_uy_edi_stock
-#. odoo-python
-#: code:addons/l10n_uy_edi_stock/models/stock_picking.py:0
-msgid "XML Valido"
+#. module: l10n_uy_edi_stock_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock_ux.view_picking_edi_ux_form
+msgid "Get PDF"
 msgstr ""
 
 #. module: l10n_uy_edi_stock_ux
-#. odoo-python
-#: code:addons/l10n_uy_edi_stock_ux/models/stock_picking.py:0
-msgid "Could not generate the PDF"
-msgstr "No se pudo generar el PDF"
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock_ux.field_stock_picking__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_uy_edi_stock_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock_ux.view_picking_edi_ux_form
+msgid "Preview"
+msgstr ""
+
+#. module: l10n_uy_edi_stock_ux
+#: model:ir.model,name:l10n_uy_edi_stock_ux.model_stock_picking
+msgid "Stock Picking - Delivery Guide (Uruguay)"
+msgstr ""
+
+#. module: l10n_uy_edi_stock_ux
+#: model:ir.model.fields,field_description:l10n_uy_edi_stock_ux.field_stock_picking__l10n_uy_cfe_xml
+msgid "Technical field to preview the xml"
+msgstr "Campo técnico para previsualizar el XML"
 
 #. module: l10n_uy_edi_stock_ux
 #. odoo-python
@@ -347,13 +82,178 @@ msgstr "No se pudo generar el PDF"
 msgid "Valid XML"
 msgstr "XML Válido"
 
-#. module: l10n_uy_edi_stock
-#. odoo-python
-#: code:addons/l10n_uy_edi_stock/models/stock_picking.py:0
-msgid "You need to define 'CFE Key or UUID' in order to continue"
-msgstr "Necesita definir 'Clave CFE o UUID' para poder continuar"
+#. module: l10n_uy_edi_stock_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock_ux.view_picking_edi_ux_form
+msgid "Validate"
+msgstr ""
 
-#. module: l10n_uy_edi_stock
-#: model:ir.model.fields,help:l10n_uy_edi_stock.field_stock_picking__l10n_uy_edi_error
-msgid "error details for CFEs in the 'error' state."
-msgstr "Detalles de los errores de los CFE que se encuentran en estado «error»."
+#~ msgid ""
+#~ "<i class=\"fa fa-warning\" role=\"img\" title=\"EDI (Uruguay)\"/>\n"
+#~ "                        <span class=\"mx-1\">E-invoicing (Uruguay)</span>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-warning\" role=\"img\" title=\"EDI (Uruguay)\"/>\n"
+#~ "                        <span class=\"mx-1\">Facturación electrónica "
+#~ "(Uruguay)</span>"
+
+#~ msgid "Addenda & Disclosure"
+#~ msgstr "Adenda & Leyenda"
+
+#~ msgid ""
+#~ "Addendas and Mandatory Disclosure to add on the CFE. They can be added "
+#~ "either to the issuer, receiver, cfe doc additional info section or to the "
+#~ "addenda section. However, the item type should not be set in this field; "
+#~ "instead, it should be specified in the invoice lines."
+#~ msgstr ""
+#~ "Adendas y Leyendas Obligatorias que deben añadirse al CFE. Pueden "
+#~ "añadirse en la sección de información adicional del emisor, del "
+#~ "destinatario o del documento CFE o en la sección de anexos. Sin embargo, "
+#~ "el tipo de item no debe indicarse en este campo, sino que debe "
+#~ "especificarse en las líneas de la factura."
+
+#~ msgid ""
+#~ "Analog to odoo account.move.move_type but with more options allowing to "
+#~ "identify the kind of document we are working with. (not only related to "
+#~ "account.move, could be for documents of other models like stock.picking)"
+#~ msgstr ""
+#~ "Análogo a odoo account.move.move_type pero con más opciones que permiten "
+#~ "identificar el tipo de documento con el que estamos trabajando. (no sólo "
+#~ "relacionado con account.move, podría ser para documentos de otros modelos "
+#~ "como stock.picking)"
+
+#~ msgid "CFE Status"
+#~ msgstr "Estado CFE"
+
+#~ msgid ""
+#~ "CFE: Indication of where the merchandise is delivered or the service is "
+#~ "provided (Address, Branch, Port, etc.) if True then we will inform the "
+#~ "shipping address's name and street"
+#~ msgstr ""
+#~ "CFE: Indicación del lugar donde se entrega la mercadería o se presta el "
+#~ "servicio (dirección, sucursal, puerto, etc.); si el valor es «True», se "
+#~ "indicará el nombre y la calle de la dirección de envío"
+
+#~ msgid "Can not cancel a Delivery Guide already process by DGI"
+#~ msgstr ""
+#~ "No se puede cancelar un Remito que ya haya sido procesado por la DGI"
+
+#~ msgid "Companies"
+#~ msgstr "Compañías"
+
+#~ msgid "Delivery Guide"
+#~ msgstr "Remito"
+
+#~ msgid "Document Number (UY)"
+#~ msgstr "Número de Documento (UY)"
+
+#~ msgid "Document Type (UY)"
+#~ msgstr "Tipo de Documento (UY)"
+
+#~ msgid "Download"
+#~ msgstr "Descargar"
+
+#~ msgid "Electronic Fiscal Document (CFE - UY)"
+#~ msgstr "Documento Fiscal Electrónico (CFE - UY)"
+
+#~ msgid "Error getting the PDF file: %s"
+#~ msgstr "Error obteniendo el archivo PDF: %s"
+
+#~ msgid "Get Uruware Invoice"
+#~ msgstr "Obtener Factura Uruware"
+
+#~ msgid "Internal Type"
+#~ msgstr "Tipo interno"
+
+#~ msgid "Key or UUID CFE"
+#~ msgstr "Llave o UUID CFE"
+
+#~ msgid "L10N Latam Available Document Type"
+#~ msgstr "L10N Latam Tipo de Documento Disponible"
+
+#~ msgid "L10N Uy Is Cfe"
+#~ msgstr "L10N Uy Es Cfe"
+
+#~ msgid "Latam Document Type"
+#~ msgstr "Tipo de Documento Latam"
+
+#~ msgid "Mandatory Disclosures"
+#~ msgstr "Leyendas Obligatorias"
+
+#~ msgid "Manual Uruware Invoice"
+#~ msgstr "Factura Manual Uruware"
+
+#~ msgid "Need to define the origin record of this EDI document"
+#~ msgstr "Es necesario definir el registro de origen de este documento EDI"
+
+#~ msgid "PDF Attachment"
+#~ msgstr "PDF Adjunto"
+
+#~ msgid "PDF File"
+#~ msgstr "Archivo PDF"
+
+#~ msgid "Picking"
+#~ msgstr "Recolección"
+
+#~ msgid "Place of Delivery"
+#~ msgstr "Lugar de Entrega"
+
+#~ msgid "Re-print Legal PDF"
+#~ msgstr "Re-Imprimir PDF Legal"
+
+#~ msgid "Related Documents"
+#~ msgstr "Documentos Relacionados"
+
+#~ msgid "Related electronic documents"
+#~ msgstr "Documentos electrónicos relacionados"
+
+#~ msgid "Send to DGI"
+#~ msgstr "Enviar a DGI"
+
+#~ msgid "State of the electronic document"
+#~ msgstr "Estado del documento electrónico"
+
+#~ msgid "Stock Move"
+#~ msgstr "Movimiento de stock"
+
+#~ msgid "The electronic invoice was created successfully"
+#~ msgstr "El documento electrónico fue creado satisfactoriamente"
+
+#~ msgid ""
+#~ "This CFE has been generated in DEMO Mode. It is considered as accepted "
+#~ "and it won\"t be sent to DGI."
+#~ msgstr ""
+#~ "Este CFE se ha generado en modo DEMO. Se considera aceptado y no se "
+#~ "enviará a la DGI."
+
+#~ msgid "Transfer"
+#~ msgstr "Traslado"
+
+#~ msgid ""
+#~ "Unique identification per CFE in UCFE: concatenation of the model name "
+#~ "initials plus the record id"
+#~ msgstr ""
+#~ "Identificación única por CFE en UCFE: concatenación de las iniciales del "
+#~ "nombre del modelo más el identificador del registro"
+
+#~ msgid "Update DGI State"
+#~ msgstr "Actualizar Estado DGI"
+
+#~ msgid "Uruguay E-Invoice CFE"
+#~ msgstr "Uruguay e-Factura CFE"
+
+#~ msgid "Uruguay E-Invoice Error"
+#~ msgstr "Uruguay E-Factura Error"
+
+#~ msgid "Uruguay E-Invoice XML"
+#~ msgstr "Uruguay E-Factura XML"
+
+#~ msgid "Uruguay: the most recent e-invoice XML returned by Uruware."
+#~ msgstr ""
+#~ "Uruguay: el último archivo XML de factura electrónica generado por "
+#~ "Uruware."
+
+#~ msgid "You need to define 'CFE Key or UUID' in order to continue"
+#~ msgstr "Necesita definir 'Clave CFE o UUID' para poder continuar"
+
+#~ msgid "error details for CFEs in the 'error' state."
+#~ msgstr ""
+#~ "Detalles de los errores de los CFE que se encuentran en estado «error»."
