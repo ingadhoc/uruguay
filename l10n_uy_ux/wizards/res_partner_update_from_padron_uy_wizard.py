@@ -58,7 +58,6 @@ class ResPartnerUpdateFromPadronWizard(models.TransientModel):
             "country_id",
             "comment",
             "phone",
-            "mobile",
             "email",
             "ref",
         ]
