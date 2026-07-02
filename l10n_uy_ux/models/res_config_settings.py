@@ -1,6 +1,7 @@
 import pprint
 
 from odoo import api, fields, models
+from odoo.addons.server_mode.mode import get_mode
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
 
@@ -10,6 +11,12 @@ class ResConfigSettings(models.TransientModel):
 
     l10n_uy_dgi_crt_id = fields.Many2one(related="company_id.l10n_uy_dgi_crt_id", readonly=False)
     l10n_uy_report_params = fields.Char(related="company_id.l10n_uy_report_params", readonly=False)
+    l10n_uy_edi_is_prod_db = fields.Boolean(
+        default=lambda self: not get_mode(),
+        help="Technical field. True when running on a real production database (server_mode not set)."
+        " Used to hide the UCFE environment selector, since on production the environment is always"
+        " 'production'.",
+    )
 
     @api.onchange("l10n_uy_edi_ucfe_env")
     def uy_ux_onchange_ufce_env(self):

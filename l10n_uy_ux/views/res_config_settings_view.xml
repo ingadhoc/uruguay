@@ -7,6 +7,16 @@
         <field name="inherit_id" ref="l10n_uy_edi.res_config_settings_view_form_inherit_l10n_uy_edi"/>
         <field name="arch" type="xml">
 
+            <!-- On production databases the UCFE environment is always "production",
+                 so hide the environment selector to avoid changing it by mistake. -->
+            <xpath expr="//setting[@id='uy_env']//field[@name='l10n_uy_edi_ucfe_env']" position="after">
+                <field name="l10n_uy_edi_is_prod_db" invisible="1"/>
+            </xpath>
+
+            <setting id="uy_env" position="attributes">
+                <attribute name="invisible">l10n_uy_edi_is_prod_db</attribute>
+            </setting>
+
             <setting id="uy_ucfe" position="after">
 
                 <!-- Formato de reporte -->

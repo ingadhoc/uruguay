@@ -13,6 +13,7 @@
         "l10n_uy_edi",
         "certificate",
         "account_ux",
+        "server_mode",
     ],
     "data": [
         "data/l10n_latam.document.type.csv",
