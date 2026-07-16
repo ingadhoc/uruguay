@@ -307,12 +307,31 @@ class AccountMove(models.Model):
     def _l10n_uy_edi_get_line_nom_and_desc(self, aml):
         """
         Sobrescribimos este método que devuelve el valor de NomItem y DscItem para cada línea del comprobante...
+
+        NomItem (B7) tiene un máximo de 80 caracteres y el resto se traslada a DscItem (B8). Para no cortar la
+        última palabra en dos (una parte en NomItem y otra en DscItem), si el límite de 80 caracteres cae dentro
+        de una palabra, esa palabra se traslada completa a la descripción. NomItem queda con longitud <= 80.
         """
         # B7 NomItem, B8 DscItem
         # Limpiamos saltos de línea que pueden romper el PDF
         clean_name = aml.name.replace("\n", " ").replace("\r", " ") if aml.name else ""
-        nom_item = clean_name[:80] or "-"
-        description = clean_name[80:] or ""
+
+        max_len = 80
+        if len(clean_name) <= max_len:
+            nom_item = clean_name
+            description = ""
+        else:
+            cut = max_len
+            # Si el corte cae dentro de una palabra (el caracter límite no es un espacio), retrocedemos hasta el
+            # último espacio para trasladar la palabra completa a la descripción.
+            if not clean_name[max_len].isspace():
+                last_space = clean_name.rfind(" ", 0, max_len)
+                if last_space != -1:
+                    cut = last_space + 1
+            nom_item = clean_name[:cut]
+            description = clean_name[cut:]
+
+        nom_item = nom_item or "-"
 
         if aml.l10n_uy_edi_addenda_ids:
             adenda = [

@@ -183,11 +183,14 @@ class TestUx(TestUyEdi):
                 self.assertEqual(nom_item, "Custom Description"[:80], "NomItem mismatch for line with description")
                 self.assertEqual(description, "", "Description mismatch for line with description")
             elif idx == 2:  # +80 chars without description
+                # El corte de 80 cae dentro de la palabra "chars", por lo que se traslada completa a la descripción
                 self.assertEqual(
-                    nom_item, long_name[:80], "NomItem mismatch for line with long name without description"
+                    nom_item,
+                    "Product name for testing purposes that intentionally contains more than eighty ",
+                    "NomItem mismatch for line with long name without description",
                 )
                 self.assertEqual(
-                    description, long_name[80:], "Description mismatch for line with long name without description"
+                    description, "chars", "Description mismatch for line with long name without description"
                 )
             elif idx == 3:  # +80 chars with custom description (aml.name is the custom description)
                 self.assertEqual(
@@ -199,7 +202,11 @@ class TestUx(TestUyEdi):
                     "Description mismatch for line with long name and description",
                 )
             elif idx == 4:  # +80 chars with addenda
-                self.assertEqual(nom_item, long_name[:80], "NomItem mismatch for line with long name and addenda")
+                self.assertEqual(
+                    nom_item,
+                    "Product name for testing purposes that intentionally contains more than eighty ",
+                    "NomItem mismatch for line with long name and addenda",
+                )
                 self.assertIn(
                     "Addenda Content", description, "Addenda content missing in description for line with addenda"
                 )
@@ -218,3 +225,46 @@ class TestUx(TestUyEdi):
             elif idx == 6 or idx == 7:  # With description deleted by user or "" (aml.name is False or empty)
                 self.assertEqual(nom_item, "-", "NomItem mismatch for line with deleted description")
                 self.assertEqual(description, "", "Description mismatch for line with deleted description")
+
+    def test_120_nom_item_does_not_split_last_word(self):
+        """NomItem no debe cortar la última palabra en dos: si el límite de 80 caracteres cae dentro de una
+        palabra, esa palabra se traslada completa a la descripción (DscItem). NomItem queda con longitud <= 80."""
+        product = self.env["product.product"].create({"name": "Simple Product"})
+
+        # El name limpio (sin saltos de línea) es:
+        # "Premium Package Marketing services for Global Retail Partners Inc Contract ABC 728 - ..."
+        # Un corte ingenuo en el caracter 80 partiría "728" en "7" | "28"; en cambio debe trasladarse completo.
+        line_name = (
+            "Premium Package\n"
+            "Marketing services for Global Retail Partners Inc\n"
+            "Contract ABC 728 - SUMMER LAUNCH EVENT - Enero 2028 "
+        )
+
+        invoice = self._create_move(
+            invoice_line_ids=[
+                Command.create(
+                    {
+                        "product_id": product.id,
+                        "name": line_name,
+                        "price_unit": 100.0,
+                    }
+                ),
+            ],
+        )
+        line = invoice.invoice_line_ids[0]
+
+        nom_item, description = invoice._l10n_uy_edi_get_line_nom_and_desc(line)
+
+        self.assertLessEqual(len(nom_item), 80, "NomItem no debe superar los 80 caracteres")
+        self.assertEqual(
+            nom_item,
+            "Premium Package Marketing services for Global Retail Partners Inc Contract ABC ",
+            "NomItem no debe cortar la última palabra en dos",
+        )
+        self.assertEqual(
+            description,
+            "728 - SUMMER LAUNCH EVENT - Enero 2028 ",
+            "La palabra que excede el máximo debe trasladarse completa a la descripción",
+        )
+        # La concatenación de NomItem + DscItem debe reconstruir el nombre limpio original
+        self.assertEqual(nom_item + description, line_name.replace("\n", " "))
