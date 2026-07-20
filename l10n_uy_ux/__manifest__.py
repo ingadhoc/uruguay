@@ -26,7 +26,6 @@
         "views/res_partner_view.xml",
         "views/l10n_uy_addenda_views.xml",
         "views/l10n_uy_edi_document_views.xml",
-        "views/cfe_template.xml",
         "security/ir.model.access.csv",
     ],
     "demo": [
