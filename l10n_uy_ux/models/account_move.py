@@ -568,25 +568,6 @@ class AccountMove(models.Model):
         self.l10n_uy_edi_document_id._compute_from_origin()
         return super()._l10n_uy_edi_update_xml_and_pdf_file(response)
 
-    def _l10n_uy_edi_cfe_D_global_discount(self, tax_details):
-        # EXTENDS l10n_uy_edi
-        """Sobreescribimos para que ValorDR considere la cantidad de items en la línea."""
-        self.ensure_one()
-        res = []
-        for k, line in enumerate(self.invoice_line_ids.filtered(lambda line: line.price_unit < 0), 1):
-            invoice_ind = self._get_invoice_indicator(line, tax_details)
-            res.append(
-                {
-                    "NroLinDR": k,  # D1
-                    "TpoMovDR": "D",  # D2
-                    "TpoDR": 1,  # D3
-                    "GlosaDR": line.name[:100] if line.name else _("Discount"),  # D5
-                    "ValorDR": abs(line.price_unit * line.quantity),  # D6
-                    "IndFactDR": invoice_ind,  # D7
-                }
-            )
-        return res
-
     def _l10n_uy_edi_cfe_A_receptor(self):
         # EXTENDS: l10n_uy_edi
         """If sale_require_purchase_order_number OCA module is installed we change the value of the CompraID tag.
