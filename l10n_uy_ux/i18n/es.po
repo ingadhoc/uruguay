@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-01 20:12+0000\n"
+"POT-Creation-Date: 2026-07-28 14:54+0000\n"
 "PO-Revision-Date: 2026-04-24 14:41+0000\n"
 "Last-Translator: julia elizondo <jue@adhoc.inc>\n"
 "Language-Team: Spanish <https://translation.dev-adhoc.com/projects/"
@@ -257,12 +257,6 @@ msgstr "Certificado DGI"
 #: model:ir.model.fields.selection,name:l10n_uy_ux.selection__l10n_uy_edi_addenda__apply_on__stock_picking
 msgid "Delivery Guide"
 msgstr "Remito"
-
-#. module: l10n_uy_ux
-#. odoo-python
-#: code:addons/l10n_uy_ux/models/account_move.py:0
-msgid "Discount"
-msgstr ""
 
 #. module: l10n_uy_ux
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_account_move__display_name
