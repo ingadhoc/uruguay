@@ -248,6 +248,16 @@ class AccountMove(models.Model):
                 uy_doc_code = response.findtext(".//{*}TipoCfe")
                 serie = response.findtext(".//{*}Serie")
                 doc_number = response.findtext(".//{*}NumeroCfe")
+                if not serie or not doc_number:
+                    raise UserError(
+                        self.env._(
+                            "No CFE was found in Uruware for the key '%s'. Please check that the"
+                            " 'Uruware UUID' field contains the CFE key assigned in Uruware"
+                            " (for documents issued from Odoo it looks like 'account.move-12345'),"
+                            " not the document number.",
+                            move.manual_uruware_invoice,
+                        )
+                    )
                 move.write(
                     {
                         "l10n_latam_document_number": serie + "%07d" % int(doc_number),
