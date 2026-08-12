@@ -438,6 +438,20 @@ msgstr ""
 
 #. module: l10n_uy_ux
 #. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+msgid ""
+"No CFE was found in Uruware for the key '%s'. Please check that the "
+"'Uruware UUID' field contains the CFE key assigned in Uruware (for "
+"documents issued from Odoo it looks like 'account.move-12345'), not the "
+"document number."
+msgstr ""
+"No se encontró un CFE en Uruware para la clave '%s'. Verifique que el campo "
+"'Uruware UUID' contenga la clave del CFE asignada en Uruware (para "
+"documentos emitidos desde Odoo tiene la forma 'account.move-12345'), no el "
+"número de documento."
+
+#. module: l10n_uy_ux
+#. odoo-python
 #: code:addons/l10n_uy_ux/wizards/res_partner_update_from_padron_uy_wizard.py:0
 msgid "No partner with RUT was found to update"
 msgstr ""
