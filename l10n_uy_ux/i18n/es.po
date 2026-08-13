@@ -472,10 +472,9 @@ msgstr "Nuevo Valor"
 #. odoo-python
 #: code:addons/l10n_uy_ux/models/account_move.py:0
 msgid ""
-"No CFE was found in Uruware for the key '%s'. Please check that the "
-"'Uruware UUID' field contains the CFE key assigned in Uruware (for "
-"documents issued from Odoo it looks like 'account.move-12345'), not the "
-"document number."
+"No CFE was found in Uruware for the key '%s'. Please check that the 'Uruware "
+"UUID' field contains the CFE key assigned in Uruware (for documents issued "
+"from Odoo it looks like 'account.move-12345'), not the document number."
 msgstr ""
 "No se encontró un CFE en Uruware para la clave '%s'. Verifique que el campo "
 "'Uruware UUID' contenga la clave del CFE asignada en Uruware (para "
