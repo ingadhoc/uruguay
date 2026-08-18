@@ -23,6 +23,25 @@ class AccountMove(models.Model):
 
     # EXTENDS
 
+    def _get_invoice_currency_rate_date(self):
+        # EXTENDS account
+        # NC que revierte otra factura debe usar el TC de la factura original
+        if self.reversed_entry_id:
+            return self.reversed_entry_id.invoice_date or self.reversed_entry_id.date
+        return super()._get_invoice_currency_rate_date()
+
+    def _l10n_uy_edi_get_used_rate(self):
+        # EXTENDS l10n_uy_edi
+        # Usa la misma fecha que invoice_currency_rate para mantener consistencia entre contabilidad y XML
+        self.ensure_one()
+        UYU = self.env.ref("base.UYU")
+        res = 0.0
+        if self.currency_id != UYU:
+            res = self.currency_id._convert(
+                1.0, UYU, self.company_id, self._get_invoice_currency_rate_date() or fields.Date.today(), round=False
+            )
+        return res
+
     def _l10n_uy_edi_check_move(self):
         # EXTEND l10n_uy_edi
         """Validaciones previas a enviar a DGI que Odoo no nos acepto
