@@ -20,6 +20,7 @@
         "wizards/res_partner_update_from_padron_uy_wizard_view.xml",
         "views/account_journal_views.xml",
         "views/account_move_views.xml",
+        "views/cfe_template.xml",
         "views/certificate_certificate_view.xml",
         "views/res_company_views.xml",
         "views/res_config_settings_view.xml",

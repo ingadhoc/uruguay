@@ -8,6 +8,7 @@
     "depends": [
         "l10n_uy_edi",
         "l10n_uy_edi_stock",
+        "l10n_uy_ux",
     ],
     "data": [
         "views/stock_picking_views.xml",

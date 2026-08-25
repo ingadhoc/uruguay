@@ -124,6 +124,7 @@ class AccountMove(models.Model):
         """Cash rounding is reported as a non billable item (DGI FAQ 4.7): IndFact 6 if it adds, 7 if it
         subtracts."""
         res = super()._l10n_uy_edi_cfe_B_details(tax_details)
+        res = self._l10n_uy_ux_add_cod_items(res, tax_details)
         for line in self._l10n_uy_ux_get_cash_rounding_lines():
             amount = self.direction_sign * line.amount_currency
             res.append(
@@ -565,6 +566,34 @@ class AccountMove(models.Model):
             description += "".join(adenda)
 
         return nom_item, description
+
+    def _l10n_uy_ux_add_cod_items(self, res, tax_details):
+        """Agregamos a cada línea del detalle los códigos del ítem (B2 TpoCod, B3 Cod: nodo <CodItem>), que Odoo
+        no informa: referencia interna (INT1) y código de barras (GTIN13). Ver product.product._l10n_uy_edi_get_cod_items.
+
+        El método original devuelve una lista de dicts sin referencia a la línea, así que reconstruimos las líneas
+        informadas con el mismo criterio que usa l10n_uy_edi (las de precio negativo no se informan). Si por algún
+        otro override las cantidades no coinciden, no agregamos códigos antes que asignarlos a la línea equivocada.
+        """
+        # TODO 20.0: remove, it is native in Odoo from 20.0 (odoo/enterprise master, https://github.com/odoo/enterprise/pull/129215)
+        # Solo aplica a detalles de productos: en el e-Resguardo (l10n_uy_edi_withholding) los ítems son líneas
+        # RetencPercep sin NomItem.
+        if any("NomItem" not in item for item in res):
+            return res
+        lines = [base_line["record"] for base_line in tax_details["base_lines"] if base_line["record"].price_unit >= 0]
+        if len(lines) != len(res):
+            _logger.warning(
+                "CFE %s: cannot match the detail lines to add the item codes (%s lines, %s items)",
+                self.display_name,
+                len(lines),
+                len(res),
+            )
+            return res
+        for line, item in zip(lines, res):
+            # l10n_uy_edi may already report them natively (odoo/enterprise#129215)
+            if "CodItem" not in item:
+                item["l10n_uy_ux_cod_items"] = line.product_id._l10n_uy_edi_get_cod_items()
+        return res
 
     # Nuevos metodos
 
