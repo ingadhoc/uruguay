@@ -10,6 +10,20 @@ class StockPicking(models.Model):
 
     l10n_uy_cfe_xml = fields.Text("Technical field to preview the xml")
 
+    def _l10n_uy_stock_cfe_B_details(self):
+        """Agregamos a cada línea del detalle del e-Remito los códigos del ítem (B2 TpoCod, B3 Cod: nodo <CodItem>),
+        que Odoo no informa, y dejamos NomItem sin el prefijo de la referencia interna (el código viaja en CodItem).
+        Ver product.product._l10n_uy_edi_get_cod_items (l10n_uy_ux)."""
+        # TODO 20.0: remove, it is native in Odoo from 20.0 (odoo/enterprise master, https://github.com/odoo/enterprise/pull/129215)
+        res = super()._l10n_uy_stock_cfe_B_details()
+        # l10n_uy_edi_stock arma un ítem por cada move_line_ids, en el mismo orden
+        for line, item in zip(self.move_line_ids, res):
+            product = line.product_id
+            item["CodItem"] = product._l10n_uy_edi_get_cod_items()
+            nom_item = product.with_context(display_default_code=False).display_name or line.display_name
+            item["NomItem"] = nom_item[:80]
+        return res
+
     # Buttons
 
     def uy_stock_action_get_pdf(self):
