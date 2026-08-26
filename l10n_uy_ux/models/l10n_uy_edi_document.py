@@ -116,6 +116,7 @@ class L10nUyEdiDocument(models.Model):
             | self.env.ref("l10n_uy.dc_e_inv_exp")
             | self.env.ref("l10n_uy.dc_cn_e_inv_exp")
             | self.env.ref("l10n_uy.dc_dn_e_inv_exp")
+            | self.env.ref("l10n_uy.dc_e_remito")
         ).mapped("code")
 
         user_params = {}
