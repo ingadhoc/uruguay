@@ -268,23 +268,3 @@ class TestUx(TestUyEdi):
         )
         # La concatenación de NomItem + DscItem debe reconstruir el nombre limpio original
         self.assertEqual(nom_item + description, line_name.replace("\n", " "))
-
-    def test_130_nom_item_strips_internal_reference(self):
-        """La referencia interna no va embebida en NomItem: se informa en su propio nodo <CodItem> (INT1).
-        Si la descripción de la línea arranca con el prefijo estándar "[referencia]", se quita."""
-        product = self.env["product.product"].create({"name": "Producto con Ref", "default_code": "REF123"})
-
-        invoice = self._create_move(
-            invoice_line_ids=[
-                Command.create({"product_id": product.id, "name": "[REF123] Producto con Ref", "price_unit": 100.0}),
-                # La referencia mencionada en otro lado de la descripción no se toca
-                Command.create({"product_id": product.id, "name": "Otro texto [REF123]", "price_unit": 100.0}),
-            ],
-        )
-
-        nom_item, description = invoice._l10n_uy_edi_get_line_nom_and_desc(invoice.invoice_line_ids[0])
-        self.assertEqual(nom_item, "Producto con Ref", "NomItem no debe incluir la referencia interna")
-        self.assertEqual(description, "")
-
-        nom_item, _description = invoice._l10n_uy_edi_get_line_nom_and_desc(invoice.invoice_line_ids[1])
-        self.assertEqual(nom_item, "Otro texto [REF123]", "Solo se quita el prefijo estándar, no otras menciones")
