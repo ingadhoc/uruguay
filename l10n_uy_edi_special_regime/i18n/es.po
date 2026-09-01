@@ -1,0 +1,73 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_uy_edi_special_regime
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_uy_edi_special_regime
+#: model:ir.model,name:l10n_uy_edi_special_regime.model_res_company
+msgid "Companies"
+msgstr "Empresas"
+
+#. module: l10n_uy_edi_special_regime
+#: model:ir.model.fields,field_description:l10n_uy_edi_special_regime.field_res_company__l10n_uy_edi_taxpayer_regime
+msgid "DGI Taxpayer Regime"
+msgstr "Régimen de contribuyente DGI"
+
+#. module: l10n_uy_edi_special_regime
+#: model:ir.model.fields,field_description:l10n_uy_edi_special_regime.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_uy_edi_special_regime.field_res_company__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: l10n_uy_edi_special_regime
+#: model:ir.model.fields.selection,name:l10n_uy_edi_special_regime.selection__res_company__l10n_uy_edi_taxpayer_regime__general
+msgid "General Regime"
+msgstr "Régimen general"
+
+#. module: l10n_uy_edi_special_regime
+#: model:ir.model.fields,field_description:l10n_uy_edi_special_regime.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_uy_edi_special_regime.field_res_company__id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_uy_edi_special_regime
+#: model:ir.model,name:l10n_uy_edi_special_regime.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: l10n_uy_edi_special_regime
+#: model:ir.model.fields.selection,name:l10n_uy_edi_special_regime.selection__res_company__l10n_uy_edi_taxpayer_regime__iva_minimo
+msgid "Minimum VAT (Literal E)"
+msgstr "IVA mínimo (Literal E)"
+
+#. module: l10n_uy_edi_special_regime
+#: model:ir.model.fields,help:l10n_uy_edi_special_regime.field_res_company__l10n_uy_edi_taxpayer_regime
+msgid ""
+"Tax regime of the company before DGI. For the Minimum VAT (Literal E) regime the CFE is built with gross amount indicator (MntBruto) = 3 and billing indicator (IndFact) = 16 on every line, as DGI requires when the CFE is signed with a special CAE.\n"
+"IMPORTANT: the option 'Literal E o monotributo' must also be enabled in the Uruware company settings ('Información Extra' section) so Uruware signs the CFE with the special CAE."
+msgstr ""
+"Régimen tributario de la compañía frente a DGI. Para el régimen de IVA mínimo (Literal E) el CFE se genera con indicador de montos brutos (MntBruto) = 3 e indicador de facturación (IndFact) = 16 en todas las líneas, como exige DGI cuando el CFE se firma con un CAE especial.\n"
+"IMPORTANTE: la opción 'Literal E o monotributo' también debe activarse en la configuración de la empresa en Uruware (sección 'Información Extra') para que Uruware firme el CFE con el CAE especial."
+
+#. module: l10n_uy_edi_special_regime
+#. odoo-python
+#: code:addons/l10n_uy_edi_special_regime/models/account_move.py:0
+msgid ""
+"The company %(company)s is registered under a special DGI taxpayer regime "
+"(Literal E), so CFE lines can not include VAT taxes with a rate other than "
+"0%% (exempt). Please fix the taxes on the invoice lines before sending "
+"(%(taxes)s)"
+msgstr ""
+"La compañía %(company)s está inscripta en un régimen especial de DGI "
+"(Literal E), por lo que las líneas del CFE no pueden incluir impuestos de "
+"IVA con tasa distinta de 0%% (exento). Corrija los impuestos de las líneas "
+"de la factura antes de enviar (%(taxes)s)"
