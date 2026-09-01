@@ -1,0 +1,65 @@
+<CFE xmlns="http://cfe.dgi.gub.uy" version="1.0">
+  <eFact>
+    <Encabezado>
+      <IdDoc>
+        <TipoCFE>112</TipoCFE>
+        <FchEmis>2024-06-15</FchEmis>
+        <MntBruto>3</MntBruto>
+        <FmaPago>1</FmaPago>
+        <FchVenc>2024-06-15</FchVenc>
+      </IdDoc>
+      <Emisor>
+        <RUCEmisor>215521750017</RUCEmisor>
+        <RznSoc>(UY) Uruguay Company (Unit Tests)</RznSoc>
+        <CdgDGISucur>1</CdgDGISucur>
+        <DomFiscal>Calle Falsa 254</DomFiscal>
+        <Ciudad>Montevideo</Ciudad>
+        <Departamento>Montevideo</Departamento>
+      </Emisor>
+      <Receptor>
+        <TipoDocRecep>2</TipoDocRecep>
+        <CodPaisRecep>UY</CodPaisRecep>
+        <DocRecep>218435730016</DocRecep>
+        <RznSocRecep>IEB Internacional</RznSocRecep>
+        <DirRecep>Bach 0</DirRecep>
+        <CiudadRecep>Aeroparque</CiudadRecep>
+        <DeptoRecep>Canelones</DeptoRecep>
+        <PaisRecep>Uruguay</PaisRecep>
+        <CompraID>*DEMO</CompraID>
+      </Receptor>
+      <Totales>
+        <TpoMoneda>UYU</TpoMoneda>
+        <MntNoGrv>100.00</MntNoGrv>
+        <MntTotal>100.00</MntTotal>
+        <CantLinDet>1</CantLinDet>
+        <MntPagar>100.00</MntPagar>
+      </Totales>
+    </Encabezado>
+    <Detalle>
+      <Item>
+        <NroLinDet>1</NroLinDet>
+        <CodItem>
+            <TpoCod>INT1</TpoCod>
+            <Cod>EXEMPT</Cod>
+        </CodItem>
+        <IndFact>16</IndFact>
+        <NomItem>Service Exempt (Literal E)</NomItem>
+        <Cantidad>1.000</Cantidad>
+        <UniMed>Unit</UniMed>
+        <PrecioUnitario>100.000000</PrecioUnitario>
+        <MontoItem>100.00</MontoItem>
+      </Item>
+    </Detalle>
+    <Referencia>
+      <Referencia>
+        <NroLinRef>1</NroLinRef>
+        <TpoDocRef>111</TpoDocRef>
+        <Serie>DE</Serie>
+        <NroCFERef>9999999</NroCFERef>
+        <FechaCFEref>2024-06-15</FechaCFEref>
+        <MntCFEref>100.00</MntCFEref>
+        <TpoMonedaRef>UYU</TpoMonedaRef>
+      </Referencia>
+    </Referencia>
+  </eFact>
+</CFE>
