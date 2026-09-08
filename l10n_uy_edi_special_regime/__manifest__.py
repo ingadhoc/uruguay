@@ -1,6 +1,6 @@
 {
     "name": """Uruguay - CFE Special Taxpayer Regimes""",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.1.0",
     "category": "Accounting/Localizations/EDI",
     "countries": ["uy"],
     "author": "ADHOC SA",
