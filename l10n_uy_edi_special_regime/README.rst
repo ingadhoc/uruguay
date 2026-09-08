@@ -24,8 +24,11 @@ Sin estos indicadores DGI rechaza el comprobante con el error
 *"Si el valor del CAE Especial es 2, 3 o 4 entonces el Ind. Mnt Bruto debe ser 3"* (código 05,
 rechazo definitivo que quema el número de CAE).
 
-Aplica a todos los tipos de CFE domésticos: e-Ticket (101), e-Factura (111) y sus notas de
-crédito y débito (102, 103, 112, 113). Los CFE de exportación mantienen el comportamiento estándar.
+El indicador ``MntBruto = 3`` aplica a todos los tipos de CFE que emite la compañía —
+e-Ticket (101), e-Factura (111), sus notas de crédito y débito (102, 103, 112, 113) y también
+los CFE de exportación (121, 122, 123): el CAE especial es una propiedad del contribuyente, por
+lo que Uruware firma todos los comprobantes con él y DGI exige el indicador en todos. Las líneas
+de exportación conservan su indicador de facturación propio (``IndFact = 10``).
 
 Además, el módulo valida que las líneas del comprobante no tengan IVA a tasa distinta de 0%
 (exento): al confirmar la factura se le avisa al usuario con un error bloqueante, y el mismo

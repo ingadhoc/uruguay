@@ -149,9 +149,9 @@ class TestUyEdiSpecialRegime(TestUyEdi):
         self._check_cfe(invoice, "e-FC", "100_literal_e_global_discount")
 
     def test_110_literal_e_expo_invoice(self):
-        """Export CFEs keep the standard behavior under the special regime (IndFact = 10, no
-        MntBruto = 3): the generated XML must be identical to the l10n_uy_edi standard one."""
-        self.mocked_cfes_path = "l10n_uy_edi/tests/expected_cfes/"
+        """Export CFEs under the special regime report MntBruto = 3 like every other CFE of the
+        company (Uruware signs them with the special CAE too), but keep their own billing
+        indicator (IndFact = 10): the XML must be the l10n_uy_edi standard one plus MntBruto."""
         invoice = self._create_move(
             l10n_latam_document_type_id=self.env.ref("l10n_uy.dc_e_inv_exp").id,
             partner_id=self.foreign_partner.id,
@@ -163,7 +163,7 @@ class TestUyEdiSpecialRegime(TestUyEdi):
         self.assertEqual(invoice.l10n_latam_document_type_id.code, "121", "Not Expo e-invoice")
         invoice.action_post()
         self._send_and_print(invoice)
-        self._check_cfe(invoice, "e-FCE", "40_e_expo_invoice")
+        self._check_cfe(invoice, "e-FCE", "110_literal_e_expo_invoice")
 
     def test_80_check_move_blocks_taxed_lines(self):
         """A special regime company must not be able to send a CFE with 10% / 22% VAT lines:
