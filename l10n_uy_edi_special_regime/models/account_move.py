@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import _, fields, models
 from odoo.exceptions import UserError
 
 
@@ -8,10 +8,14 @@ class AccountMove(models.Model):
     def _l10n_uy_edi_apply_special_regime(self):
         """Whether this CFE must report the special regime gross amount indicator (MntBruto = 3).
 
-        Export CFEs keep the standard behavior: they have their own indicators (e.g. IndFact = 10) and are not
-        part of the special regime treatment defined by DGI for domestic documents."""
+        It applies to every CFE type the company issues, export ones included: the special CAE is
+        a property of the taxpayer (Uruware signs all the company CFEs with it), and DGI requires
+        MntBruto = 3 whenever a special CAE is used (Formato CFE, zone A field 10 conditional on
+        e-Fac Exp too; zone G field 5: "Si G-C5=2, 3 o 4, A-C10 debe ser igual a 3"). Export
+        lines keep their own billing indicator (IndFact = 10): the 16 mapping only replaces the
+        VAT rate indicators."""
         self.ensure_one()
-        return self.company_id._l10n_uy_edi_is_special_regime() and not self._l10n_uy_edi_is_expo_cfe()
+        return self.company_id._l10n_uy_edi_is_special_regime()
 
     def _l10n_uy_edi_cfe_A_iddoc(self):
         res = super()._l10n_uy_edi_cfe_A_iddoc()
@@ -40,10 +44,14 @@ class AccountMove(models.Model):
         Gated by l10n_uy_edi_is_needed: only electronic sale documents that will actually become
         a CFE (vendor bills, non-electronic journals and already sent/accepted CFEs are out —
         the latter keeps the re-post inside l10n_uy_edi_action_update_dgi_state working).
-        Export CFEs are also excluded: they keep the standard behavior and the native
-        _l10n_uy_edi_check_move already rejects taxed lines on them."""
+        Export CFEs are also excluded from THIS check only: the native _l10n_uy_edi_check_move
+        already rejects taxed lines on any export CFE, whatever the company regime."""
         self.ensure_one()
-        if not (self.l10n_uy_edi_is_needed and self._l10n_uy_edi_apply_special_regime()):
+        if not (
+            self.l10n_uy_edi_is_needed
+            and self.company_id._l10n_uy_edi_is_special_regime()
+            and not self._l10n_uy_edi_is_expo_cfe()
+        ):
             return False
         lines = self.invoice_line_ids.filtered(lambda x: x.display_type not in ("line_section", "line_note"))
         if taxed := lines.tax_ids.filtered(lambda x: x.l10n_uy_tax_category == "vat" and x.amount):
@@ -61,8 +69,13 @@ class AccountMove(models.Model):
         # Block at validation time: do not let the user post a CFE we already know DGI will
         # reject. All the offending moves are reported at once so a batch posting can be fixed
         # in one pass instead of one error at a time.
+        to_check = self
+        if soft:
+            # Mirror the soft filter of super(): future-dated moves are not posted in this pass
+            # (they are scheduled for auto-post), so they must not abort the rest of the batch
+            to_check = self.filtered(lambda move: move.date <= fields.Date.context_today(self))
         errors = []
-        for move in self:
+        for move in to_check:
             if error := move._l10n_uy_edi_special_regime_taxed_lines_error():
                 errors.append("%s:\n%s" % (move.display_name, error))
         if errors:
