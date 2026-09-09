@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- B2 TpoCod, B3 Cod: códigos del ítem (referencia interna / código de barras) en su propio nodo <CodItem>.
+         Se usa .get() porque otros módulos reutilizan este template con su propio armado del detalle
+         (ej. l10n_uy_edi_withholding para los ítems de e-Resguardo), que puede no traer la clave. -->
+    <!-- TODO 20.0: remove, it is native in Odoo from 20.0 (odoo/enterprise master,
+         https://github.com/odoo/enterprise/pull/129215) -->
+    <template id="cfe_template" inherit_id="l10n_uy_edi.cfe_template">
+        <xpath expr="//Detalle/Item/NroLinDet" position="after">
+            <CodItem t-foreach="item_line.get('CodItem') or []" t-as="cod_item">
+                <TpoCod t-out="cod_item['TpoCod']"/>
+                <Cod t-out="cod_item['Cod']"/>
+            </CodItem>
+        </xpath>
+    </template>
+
+</odoo>
