@@ -345,13 +345,6 @@ class AccountMove(models.Model):
         # Limpiamos saltos de línea que pueden romper el PDF
         clean_name = aml.name.replace("\n", " ").replace("\r", " ") if aml.name else ""
 
-        # La referencia interna no va embebida en NomItem: se informa en su propio nodo
-        # <CodItem> (TpoCod INT1). Si la descripción de la línea arranca con el prefijo
-        # estándar "[referencia]" del producto, lo quitamos.
-        default_code = aml.product_id.default_code
-        if default_code and clean_name.startswith("[%s]" % default_code):
-            clean_name = clean_name[len(default_code) + 2 :].lstrip()
-
         max_len = 80
         if len(clean_name) <= max_len:
             nom_item = clean_name
