@@ -1,11 +1,26 @@
+import logging
+
 import odoo.tools as tools
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import safe_eval
 
+_logger = logging.getLogger(__name__)
+
+# States given by DGI: they cannot be changed and the CFE cannot be sent again
+UY_EDI_IRREVERSIBLE_STATES = ["received", "accepted", "rejected"]
+
 
 class L10nUyEdiDocument(models.Model):
     _inherit = "l10n_uy_edi.document"
+
+    connection_error = fields.Boolean(
+        "Uruware Connection Failed",
+        copy=False,
+        readonly=True,
+        help="The last call to Uruware failed on transport (timeout, connection reset, HTTP error). We do not know"
+        " whether the CFE reached DGI, so it must not be sent again until its state is queried successfully.",
+    )
 
     l10n_latam_document_type_id = fields.Many2one(
         "l10n_latam.document.type",
@@ -48,16 +63,58 @@ class L10nUyEdiDocument(models.Model):
 
     # Methods extend for l10n_uy_edi
 
+    @api.model
+    def _process_response(self, soap_response, errors):
+        # EXTEND l10n_uy_edi
+        """Flag a transport failure. It is the only way the call reaches this point with errors and no response
+        at all: missing credentials return before, and anything the provider answered brings a response."""
+        res = super()._process_response(soap_response, errors)
+        if errors and soap_response is None:
+            res["connection_error"] = True
+        return res
+
+    def _update_cfe_state(self, result):
+        # EXTEND l10n_uy_edi
+        """A transport failure is not an answer about the CFE: it must not overwrite a state given by DGI, and it
+        leaves the document flagged so that it is queried again instead of being sent a second time."""
+        if result.get("connection_error"):
+            message = "\n - ".join(result.get("errors") or [])
+            for doc in self:
+                doc._register_connection_error(message)
+            return None
+        self.connection_error = False
+        return super()._update_cfe_state(result)
+
+    def _can_edit(self):
+        # EXTEND l10n_uy_edi
+        """While we ignore whether the CFE reached DGI, the document cannot be edited nor sent again"""
+        return super()._can_edit() and not self.connection_error
+
+    def _register_connection_error(self, message):
+        """Leave a trace of the failed call without touching the diagnosis of the CFE itself"""
+        self.ensure_one()
+        _logger.warning("UY EDI (CFE %s, state %s): %s", self.uuid, self.state or "new", message)
+        if self.state in UY_EDI_IRREVERSIBLE_STATES:
+            if self.move_id:
+                self.move_id.message_post(
+                    body=self.env._(
+                        "The CFE status could not be refreshed, the state confirmed by DGI is kept: %s", message
+                    )
+                )
+            return
+        self.write({"state": "error", "message": message, "connection_error": True})
+
     def action_update_dgi_state(self):
         # EXTEND l10n_uy_edi
         """Permitimos actualizar estado solo si tenemos UUID y solo si esta en esperando respuesta.
-        Si hay error no hay nada que consultar, y si fue aceptado rechazado ya no necesita ser actualizado"""
+        Si hay error no hay nada que consultar, y si fue aceptado rechazado ya no necesita ser actualizado.
+        La excepcion es el error de conexion: ahi no sabemos si el CFE llego a DGI y consultar es la unica salida"""
         for doc in self.filtered(lambda x: x.move_id.move_type not in ["in_invoice", "in_refund"]):
             if not doc.uuid:
                 raise UserError(self.env._("Please return a 'UUID CFE Key' in order to continue"))
-            if doc.state == "error":
+            if doc.state == "error" and not doc.connection_error:
                 raise UserError(self.env._("You can not obtain the invoice with errors"))
-            if doc.state != "received":
+            if doc.state not in ["received", "error"]:
                 raise UserError(self.env._("You can not update the state of a accepted/rejected invoice"))
 
         super().action_update_dgi_state()

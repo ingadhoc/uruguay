@@ -16,6 +16,12 @@
             </field>
 
             <sheet position="before">
+                <field name="l10n_uy_edi_connection_error" invisible="1"/>
+                <div class="alert alert-warning" role="alert" style="margin-bottom:0px;"
+                    invisible="not l10n_uy_edi_connection_error">
+                        <bold>The connection with Uruware failed, so we do not know whether this CFE reached DGI.
+                        Do not send it again: use "Update DGI Status" to know its real state, the scheduled action
+                        also retries it on its own.</bold></div>
                 <div class="alert alert-danger" role="alert" style="margin-bottom:0px;"
                     invisible="not (l10n_uy_edi_journal_type == 'electronic' and l10n_uy_edi_cfe_state in ['received', 'accepted', 'rejected'] and not invoice_pdf_report_id)">
                         <bold>This invoice is validated but it is missing the associated legal PDF, please try to regenerate it</bold>
