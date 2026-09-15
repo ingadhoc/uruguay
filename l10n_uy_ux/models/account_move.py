@@ -20,6 +20,7 @@ class AccountMove(models.Model):
 
     l10n_uy_cfe_xml = fields.Text("Technical field to preview the xml")
     manual_uruware_invoice = fields.Char()
+    l10n_uy_edi_connection_error = fields.Boolean(related="l10n_uy_edi_document_id.connection_error")
 
     # EXTENDS
 
@@ -75,11 +76,48 @@ class AccountMove(models.Model):
 
         return errors
 
+    @api.depends("l10n_uy_edi_cfe_state", "l10n_uy_edi_document_id.connection_error", "country_code", "move_type")
+    def _compute_l10n_uy_edi_is_needed(self):
+        # EXTEND l10n_uy_edi
+        """An invoice whose CFE may already be at DGI is not offered to be e-invoiced again"""
+        super()._compute_l10n_uy_edi_is_needed()
+        for move in self.filtered("l10n_uy_edi_document_id.connection_error"):
+            move.l10n_uy_edi_is_needed = False
+
+    def _l10n_uy_edi_cron_update_dgi_status(self, batch_size=10):
+        # EXTEND l10n_uy_edi
+        """The documents left in error by a connection failure are queried too, so they recover on their own:
+        either DGI confirms the CFE, or the answer says it does not exist and the resend is enabled again."""
+        res = self.search(
+            [
+                ("journal_id.type", "=", "sale"),
+                "|",
+                ("l10n_uy_edi_cfe_state", "=", "received"),
+                ("l10n_uy_edi_document_id.connection_error", "=", True),
+            ],
+            limit=batch_size + 1,
+        )
+        res[:batch_size].l10n_uy_edi_action_update_dgi_state()
+        if len(res) > batch_size:
+            self.env.ref("l10n_uy_edi.ir_cron_update_dgi_state")._trigger()
+
     def _l10n_uy_edi_send(self):
         """Antes de enviar a DGI, corremos los chequeos previos para atrapar algunos errores conocidos y de fácil configuración.
         Si obtenemos alguno, no continuamos con el envío a DGI y en cambio creamos el XML con el error."""
         moves_to_send = self
         for move in self:
+            edi_doc = move.l10n_uy_edi_document_id
+            if edi_doc and not edi_doc._can_edit():
+                # A second CFE must not be issued. Say it out loud: the resend is reachable from buttons of
+                # other modules, that cannot read this state from their own views
+                if edi_doc.connection_error:
+                    raise UserError(
+                        self.env._(
+                            "We do not know whether this CFE reached DGI, so it cannot be sent again. Use"
+                            ' "Update DGI Status" to know its real state, the scheduled action also retries it.'
+                        )
+                    )
+                raise UserError(self.env._("DGI already answered this CFE, it cannot be sent again."))
             move.l10n_uy_edi_document_id.filtered(lambda doc: doc.state == "error").unlink()
             edi_doc = self.env["l10n_uy_edi.document"].create(
                 {
@@ -100,7 +138,8 @@ class AccountMove(models.Model):
     def _post(self, soft=True):
         """Extendemos el _post nativo para evitar hacer la confirmación en dos pasos con el wizard de Send & Print.
         De esta manera, al clickear en confirmar las facturas automáticamente serán enviadas a DGI y posteadas.
-        En caso de error, se vuelven a estado borrador.
+        En caso de error, se vuelven a estado borrador, salvo que se haya cortado la conexión con
+        Uruware: ahí no sabemos si el CFE llegó a DGI y reenviarlo podría duplicarlo.
         """
         # EXTENDS l10n_uy_edi
         res = super()._post(soft=soft)
@@ -113,9 +152,10 @@ class AccountMove(models.Model):
                 error_msg = Markup("<font style='color:Tomato;'><strong>ERROR:</strong></font> <i>{}</i>").format(
                     f"{msg}: {move.l10n_uy_edi_error}"
                 )
-                move.message_post(body=error_msg, body_is_html=True)
-                move.button_draft()
-                res = res - move
+                move.message_post(body=error_msg)
+                if move.l10n_uy_edi_document_id._can_edit():
+                    move.button_draft()
+                    res = res - move
         return res
 
     def action_send_invoice_mail(self):

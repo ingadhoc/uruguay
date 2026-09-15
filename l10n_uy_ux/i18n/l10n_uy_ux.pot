@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-13 19:51+0000\n"
-"PO-Revision-Date: 2026-08-13 19:51+0000\n"
+"POT-Creation-Date: 2026-09-16 12:54+0000\n"
+"PO-Revision-Date: 2026-09-16 12:54+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -223,6 +223,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_company__l10n_uy_dgi_crt_id
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_config_settings__l10n_uy_dgi_crt_id
 msgid "DGI Certificate"
+msgstr ""
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+msgid "DGI already answered this CFE, it cannot be sent again."
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -567,6 +573,14 @@ msgstr ""
 
 #. module: l10n_uy_ux
 #. odoo-python
+#: code:addons/l10n_uy_ux/models/l10n_uy_edi_document.py:0
+msgid ""
+"The CFE status could not be refreshed, the state confirmed by DGI is kept: "
+"%s"
+msgstr ""
+
+#. module: l10n_uy_ux
+#. odoo-python
 #: code:addons/l10n_uy_ux/models/res_config_settings.py:0
 msgid ""
 "The field must contain at least two values: parameter name and value. Please"
@@ -579,6 +593,16 @@ msgstr ""
 msgid ""
 "The following entered parameters are invalid: %(params)s. Allowed values "
 "are: %(allowed)s."
+msgstr ""
+
+#. module: l10n_uy_ux
+#: model:ir.model.fields,help:l10n_uy_ux.field_account_bank_statement_line__l10n_uy_edi_connection_error
+#: model:ir.model.fields,help:l10n_uy_ux.field_account_move__l10n_uy_edi_connection_error
+#: model:ir.model.fields,help:l10n_uy_ux.field_l10n_uy_edi_document__connection_error
+msgid ""
+"The last call to Uruware failed on transport (timeout, connection reset, "
+"HTTP error). We do not know whether the CFE reached DGI, so it must not be "
+"sent again until its state is queried successfully."
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -667,6 +691,13 @@ msgid "Uplad Certificate and Password"
 msgstr ""
 
 #. module: l10n_uy_ux
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_account_bank_statement_line__l10n_uy_edi_connection_error
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_account_move__l10n_uy_edi_connection_error
+#: model:ir.model.fields,field_description:l10n_uy_ux.field_l10n_uy_edi_document__connection_error
+msgid "Uruware Connection Failed"
+msgstr ""
+
+#. module: l10n_uy_ux
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_company__l10n_uy_edi_ucfe_prod_env
 msgid "Uruware Production Data"
 msgstr ""
@@ -690,6 +721,16 @@ msgstr ""
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
 msgid "Validate"
+msgstr ""
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
+msgid ""
+"We do not know whether this CFE reached DGI, so it cannot be sent again. Use"
+" \"Update DGI Status\" to know its real state, the scheduled action also "
+"retries it."
 msgstr ""
 
 #. module: l10n_uy_ux
