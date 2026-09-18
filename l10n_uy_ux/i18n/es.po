@@ -12,12 +12,14 @@ msgstr ""
 "POT-Creation-Date: 2026-09-16 12:54+0000\n"
 "PO-Revision-Date: 2026-09-16 12:54+0000\n"
 "Last-Translator: julia elizondo <jue@adhoc.inc>\n"
-"Language-Team: Spanish <https://translation.dev-adhoc.com/projects/uruguay-19-0/uruguay-19-0-l10n_uy_ux/es/>\n"
+"Language-Team: Spanish <https://translation.dev-adhoc.com/projects/"
+"uruguay-19-0/uruguay-19-0-l10n_uy_ux/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.10.4\n"
 
 #. module: l10n_uy_ux
@@ -481,9 +483,9 @@ msgid ""
 "from Odoo it looks like 'account.move-12345'), not the document number."
 msgstr ""
 "No se encontró un CFE en Uruware para la clave '%s'. Verifique que el campo "
-"'Uruware UUID' contenga la clave del CFE asignada en Uruware (para documentos"
-" emitidos desde Odoo tiene la forma 'account.move-12345'), no el número de "
-"documento."
+"'Uruware UUID' contenga la clave del CFE asignada en Uruware (para "
+"documentos emitidos desde Odoo tiene la forma 'account.move-12345'), no el "
+"número de documento."
 
 #. module: l10n_uy_ux
 #. odoo-python
@@ -621,8 +623,8 @@ msgstr ""
 msgid ""
 "The CFE status could not be refreshed, the state confirmed by DGI is kept: %s"
 msgstr ""
-"No se pudo actualizar el estado del CFE, se conserva el estado confirmado por"
-" DGI: %s"
+"No se pudo actualizar el estado del CFE, se conserva el estado confirmado "
+"por DGI: %s"
 
 #. module: l10n_uy_ux
 #. odoo-python
@@ -639,8 +641,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_uy_ux/models/res_config_settings.py:0
 msgid ""
-"The following entered parameters are invalid: %(params)s. Allowed values are:"
-" %(allowed)s."
+"The following entered parameters are invalid: %(params)s. Allowed values "
+"are: %(allowed)s."
 msgstr ""
 "Los siguientes parámetros ingresados son inválidos: %(params)s. Los valores "
 "permitidos son: %(allowed)s."
@@ -650,9 +652,9 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_uy_ux.field_account_move__l10n_uy_edi_connection_error
 #: model:ir.model.fields,help:l10n_uy_ux.field_l10n_uy_edi_document__connection_error
 msgid ""
-"The last call to Uruware failed on transport (timeout, connection reset, HTTP"
-" error). We do not know whether the CFE reached DGI, so it must not be sent "
-"again until its state is queried successfully."
+"The last call to Uruware failed on transport (timeout, connection reset, "
+"HTTP error). We do not know whether the CFE reached DGI, so it must not be "
+"sent again until its state is queried successfully."
 msgstr ""
 "La última llamada a Uruware falló en el transporte (timeout, conexión "
 "cortada, error HTTP). No sabemos si el CFE llegó a DGI, así que no se debe "
@@ -789,6 +791,7 @@ msgstr "Validar"
 #. module: l10n_uy_ux
 #. odoo-python
 #: code:addons/l10n_uy_ux/models/account_move.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
 msgid ""
 "We do not know whether this CFE reached DGI, so it cannot be sent again. Use "
 "\"Update DGI Status\" to know its real state, the scheduled action also "
