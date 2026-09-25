@@ -288,3 +288,54 @@ class TestUx(TestUyEdi):
 
         nom_item, _description = invoice._l10n_uy_edi_get_line_nom_and_desc(invoice.invoice_line_ids[1])
         self.assertEqual(nom_item, "Otro texto [REF123]", "Solo se quita el prefijo estándar, no otras menciones")
+
+    def test_140_related_cfe_from_sale_order(self):
+        """Una NC sin documento de origen (ej. creada desde la orden de venta) informa como referencia la factura
+        de las mismas líneas de venta. Sin vínculo con una venta no se inventa ninguna."""
+        if "sale_line_ids" not in self.env["account.move.line"]._fields:
+            self.skipTest("Requiere el módulo sale")
+
+        self.env.user.group_ids |= self.env.ref("sales_team.group_sale_salesman")
+        order = self.env["sale.order"].create(
+            {
+                "partner_id": self.partner_local.id,
+                "company_id": self.company_uy.id,
+                "order_line": [Command.create({"product_id": self.service_vat_22.id, "price_unit": 100.0})],
+            }
+        )
+        order.action_confirm()
+        # Linked by hand instead of order._create_invoices(): what can be invoiced depends on the invoicing
+        # policy, that other modules change (e.g. by sale order type), and the lookup only needs the link
+        invoice = self._create_move(
+            partner_id=self.partner_local.id,
+            invoice_line_ids=[
+                Command.create(
+                    {
+                        "product_id": self.service_vat_22.id,
+                        "price_unit": 100.0,
+                        "sale_line_ids": [Command.set(order.order_line.ids)],
+                    }
+                ),
+            ],
+        )
+        invoice.action_post()
+        self._send_and_print(invoice)
+
+        refund = self._create_move(
+            move_type="out_refund",
+            partner_id=self.partner_local.id,
+            invoice_line_ids=[
+                Command.create(
+                    {
+                        "product_id": self.service_vat_22.id,
+                        "price_unit": 100.0,
+                        "sale_line_ids": [Command.set(order.order_line.ids)],
+                    }
+                ),
+            ],
+        )
+        self.assertFalse(refund.reversed_entry_id)
+        self.assertEqual(refund._l10n_uy_edi_found_related_cfe(), invoice)
+
+        refund_wo_sale = self._create_move(move_type="out_refund", partner_id=self.partner_local.id)
+        self.assertFalse(refund_wo_sale._l10n_uy_edi_found_related_cfe())
