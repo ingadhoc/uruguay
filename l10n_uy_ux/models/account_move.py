@@ -76,11 +76,23 @@ class AccountMove(models.Model):
 
         return errors
 
-    @api.depends("l10n_uy_edi_cfe_state", "l10n_uy_edi_document_id.connection_error", "country_code", "move_type")
+    @api.depends(
+        "l10n_uy_edi_cfe_state", "l10n_uy_edi_document_id.connection_error", "country_code", "move_type", "journal_id"
+    )
     def _compute_l10n_uy_edi_is_needed(self):
         # EXTEND l10n_uy_edi
         """An invoice whose CFE may already be at DGI is not offered to be e-invoiced again"""
         super()._compute_l10n_uy_edi_is_needed()
+        # country_code reads empty while company_id is being recomputed (e.g. inside action_switch_move_type) and
+        # that False stays cached until posting, so take the country from the journal company instead
+        for move in self.filtered(lambda m: not m.country_code):
+            move.l10n_uy_edi_is_needed = (
+                move.journal_id.company_id.account_fiscal_country_id.code == "UY"
+                and move.l10n_latam_use_documents
+                and move.journal_id.l10n_uy_edi_type == "electronic"
+                and move.is_sale_document()
+                and move.l10n_uy_edi_cfe_state in (False, "error")
+            )
         for move in self.filtered("l10n_uy_edi_document_id.connection_error"):
             move.l10n_uy_edi_is_needed = False
 
