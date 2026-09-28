@@ -20,6 +20,8 @@ Functional description
 3. **Report Parameter Limitations**: Extended functionality that:
    - Adds company-level parameter in system settings for global PDF format configuration
 
+4. **Credit/Debit Notes Without Origin Document**: DGI requires credit and debit notes to report the original document they refer to. When the note has no origin document set (for example, a credit note created from the sale order), the module looks for the posted invoice of the same sale order lines and reports it in the reference section of the CFE. Requires the Sales app.
+
 **New functionalities added:**
 
 1. **DGI Registry Lookup**: Allows querying contact data to check if they are electronic issuers and retrieve registry data as an assistant to help fill contact information more easily. Adds lookup functionality in contact forms.

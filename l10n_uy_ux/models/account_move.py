@@ -76,11 +76,23 @@ class AccountMove(models.Model):
 
         return errors
 
-    @api.depends("l10n_uy_edi_cfe_state", "l10n_uy_edi_document_id.connection_error", "country_code", "move_type")
+    @api.depends(
+        "l10n_uy_edi_cfe_state", "l10n_uy_edi_document_id.connection_error", "country_code", "move_type", "journal_id"
+    )
     def _compute_l10n_uy_edi_is_needed(self):
         # EXTEND l10n_uy_edi
         """An invoice whose CFE may already be at DGI is not offered to be e-invoiced again"""
         super()._compute_l10n_uy_edi_is_needed()
+        # country_code reads empty while company_id is being recomputed (e.g. inside action_switch_move_type) and
+        # that False stays cached until posting, so take the country from the journal company instead
+        for move in self.filtered(lambda m: not m.country_code):
+            move.l10n_uy_edi_is_needed = (
+                move.journal_id.company_id.account_fiscal_country_id.code == "UY"
+                and move.l10n_latam_use_documents
+                and move.journal_id.l10n_uy_edi_type == "electronic"
+                and move.is_sale_document()
+                and move.l10n_uy_edi_cfe_state in (False, "error")
+            )
         for move in self.filtered("l10n_uy_edi_document_id.connection_error"):
             move.l10n_uy_edi_is_needed = False
 
@@ -241,6 +253,30 @@ class AccountMove(models.Model):
                 uy_cn_dn_docs |= uy_credit_notes
 
         super(AccountMove, self - uy_cn_dn_docs)._compute_l10n_latam_document_type()
+
+    def _l10n_uy_edi_found_related_cfe(self):
+        # EXTENDS l10n_uy_edi
+        """If the CN/DN has no origin document set (for eg. a CN created from the sale order), look for the
+        invoice of the same sale order lines, so it can be reported in the reference section of the CFE.
+        This also lets the CN generated from a delivery return be issued, since it has no origin document set."""
+        res = super()._l10n_uy_edi_found_related_cfe()
+        if (
+            not res
+            and self.l10n_latam_document_type_id.internal_type in ["credit_note", "debit_note"]
+            and "sale_line_ids" in self.env["account.move.line"]._fields
+        ):
+            res = self.invoice_line_ids.sale_line_ids.invoice_lines.move_id.filtered(
+                lambda m: (
+                    m != self
+                    and m.country_code == "UY"
+                    and m.state == "posted"
+                    and m.move_type == "out_invoice"
+                    and m.l10n_latam_document_type_id.internal_type == "invoice"
+                )
+            ).sorted(lambda m: (m.invoice_date, m.id))[:1]
+            if res and res.l10n_uy_edi_cfe_state != "accepted":
+                res.l10n_uy_edi_document_id.action_update_dgi_state()
+        return res
 
     # New methods
 
