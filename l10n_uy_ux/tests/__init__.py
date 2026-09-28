@@ -3,4 +3,4 @@
 # directory
 ##############################################################################
 from . import test_l10n_uy_ux, test_patch_l10n_uy, test_patch_l10n_uy_edi
-from . import test_connection_error
+from . import test_connection_error, test_switch_move_type
