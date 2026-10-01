@@ -22,5 +22,5 @@
         ],
     },
     "auto_install": ["l10n_uy_reports"],
-    "installable": True,
+    "installable": False,
 }
