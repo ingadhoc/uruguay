@@ -87,7 +87,7 @@ class AccountMove(models.Model):
         # that False stays cached until posting, so take the country from the journal company instead
         for move in self.filtered(lambda m: not m.country_code):
             move.l10n_uy_edi_is_needed = (
-                move.journal_id.company_id.account_fiscal_country_id.code == "UY"
+                move.journal_id.company_id.sudo().account_fiscal_country_id.code == "UY"
                 and move.l10n_latam_use_documents
                 and move.journal_id.l10n_uy_edi_type == "electronic"
                 and move.is_sale_document()
