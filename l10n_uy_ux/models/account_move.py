@@ -34,6 +34,9 @@ class AccountMove(models.Model):
         # EXTENDS l10n_uy_edi
         # Usa la misma fecha que invoice_currency_rate para mantener consistencia entre contabilidad y XML
         self.ensure_one()
+        # Accepted CFE: upstream returns the rate already sent to DGI (read from the XML)
+        if self.l10n_uy_edi_cfe_state == "accepted" and self.l10n_uy_edi_xml_attachment_id:
+            return super()._l10n_uy_edi_get_used_rate()
         UYU = self.env.ref("base.UYU")
         res = 0.0
         if self.currency_id != UYU:
