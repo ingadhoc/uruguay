@@ -4,16 +4,59 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0+e\n"
+"Project-Id-Version: Odoo Server 20.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 12:37+0000\n"
-"PO-Revision-Date: 2026-05-29 12:37+0000\n"
+"POT-Creation-Date: 2026-10-22 15:42+0000\n"
+"PO-Revision-Date: 2026-10-22 15:42+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: l10n_uy_edi_stock_ux
+#: model:ir.module.module,description:base.module_l10n_uy_edi_stock_ux
+msgid ""
+".. image:: https://img.shields.io/badge/licence-LGPL--3-blue.svg\n"
+"   :target: https://www.gnu.org/licenses/lgpl-3.0-standalone.html\n"
+"   :alt: License: LGPL-3\n"
+"\n"
+"===================\n"
+"Uruguay - E-Remitos\n"
+"===================\n"
+"\n"
+"Este módulo extiende los e-Remitos de Odoo (``l10n_uy_edi_stock``) con tres botones en la pestaña \"UY EDI\" de la transferencia validada:\n"
+"\n"
+"* **Preview**: muestra el XML del CFE que se enviaría a la DGI, antes de generar el e-Remito.\n"
+"* **Validate**: valida la estructura de ese XML contra Uruware (consulta 350), sin emitir el e-Remito. Si Uruware no responde o falta configuración, muestra el error.\n"
+"* **Get PDF**: vuelve a pedir a Uruware el PDF de un e-Remito aceptado o recibido, si no se generó o se borró.\n"
+"\n"
+"Además muestra la transferencia relacionada en el formulario del documento EDI.\n"
+"\n"
+"NOTA: Todas estas conexiones se hacen a través de un servicio de tercero llamado Uruware\n"
+"\n"
+"Configuración\n"
+"-------------\n"
+"\n"
+"Known issues / Roadmap\n"
+"======================\n"
+"\n"
+"Credits\n"
+"=======\n"
+"\n"
+"ADHOC\n"
+"\n"
+"Contributors\n"
+"------------\n"
+"\n"
+"* ADHOC\n"
+"\n"
+"Maintainer\n"
+"----------\n"
+"\n"
+"This module is maintained by ADHOC\n"
+msgstr ""
 
 #. module: l10n_uy_edi_stock_ux
 #. odoo-python
@@ -64,6 +107,11 @@ msgstr ""
 #. module: l10n_uy_edi_stock_ux
 #: model:ir.model.fields,field_description:l10n_uy_edi_stock_ux.field_stock_picking__l10n_uy_cfe_xml
 msgid "Technical field to preview the xml"
+msgstr ""
+
+#. module: l10n_uy_edi_stock_ux
+#: model:ir.module.module,shortdesc:base.module_l10n_uy_edi_stock_ux
+msgid "Uruguay - E-Remitos"
 msgstr ""
 
 #. module: l10n_uy_edi_stock_ux
