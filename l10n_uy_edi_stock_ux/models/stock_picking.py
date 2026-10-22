@@ -29,7 +29,7 @@ class StockPicking(models.Model):
 
         Este es un nuevo boton preview que permite pre visualizar el contenido del xml en cualquier momento, incluso
         cuando la factura aun esta en estado borrador."""
-        self.l10n_uy_cfe_xml = self._l10n_uy_edi_get_xml_content().encode()
+        self.l10n_uy_cfe_xml = self._l10n_uy_edi_get_xml_content().decode()
 
     def uy_stock_action_validate_cfe(self):
         """Check CFE XML valid files: 350: Validación de estructura de CFE
@@ -51,6 +51,14 @@ class StockPicking(models.Model):
 
         result = edi_doc._ucfe_inbox("350", {"CfeXmlOTexto": self.l10n_uy_cfe_xml})
         response = result.get("response")
+        errors = result.get("errors")
+        if response is None and errors:
+            raise UserError(
+                _(
+                    "Error creating CFẸ XML\n\n %(errors)s",
+                    errors="\n".join(errors) if isinstance(errors, list) else errors,
+                )
+            )
         if response is not None:
             cod_rta = response.findtext(".//{*}CodRta")
             if cod_rta != "00":

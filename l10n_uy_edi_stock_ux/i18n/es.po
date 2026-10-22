@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 12:37+0000\n"
-"PO-Revision-Date: 2026-04-24 14:41+0000\n"
+"POT-Creation-Date: 2026-10-22 15:42+0000\n"
+"PO-Revision-Date: 2026-10-22 15:42+0000\n"
 "Last-Translator: julia elizondo <jue@adhoc.inc>\n"
 "Language-Team: Spanish <https://translation.dev-adhoc.com/projects/"
 "uruguay-19-0/uruguay-19-0-l10n_uy_edi_stock_ux/es/>\n"
@@ -23,6 +23,49 @@ msgstr ""
 "X-Generator: Weblate 5.10.4\n"
 
 #. module: l10n_uy_edi_stock_ux
+#: model:ir.module.module,description:base.module_l10n_uy_edi_stock_ux
+msgid ""
+".. image:: https://img.shields.io/badge/licence-LGPL--3-blue.svg\n"
+"   :target: https://www.gnu.org/licenses/lgpl-3.0-standalone.html\n"
+"   :alt: License: LGPL-3\n"
+"\n"
+"===================\n"
+"Uruguay - E-Remitos\n"
+"===================\n"
+"\n"
+"Este módulo extiende los e-Remitos de Odoo (``l10n_uy_edi_stock``) con tres botones en la pestaña \"UY EDI\" de la transferencia validada:\n"
+"\n"
+"* **Preview**: muestra el XML del CFE que se enviaría a la DGI, antes de generar el e-Remito.\n"
+"* **Validate**: valida la estructura de ese XML contra Uruware (consulta 350), sin emitir el e-Remito. Si Uruware no responde o falta configuración, muestra el error.\n"
+"* **Get PDF**: vuelve a pedir a Uruware el PDF de un e-Remito aceptado o recibido, si no se generó o se borró.\n"
+"\n"
+"Además muestra la transferencia relacionada en el formulario del documento EDI.\n"
+"\n"
+"NOTA: Todas estas conexiones se hacen a través de un servicio de tercero llamado Uruware\n"
+"\n"
+"Configuración\n"
+"-------------\n"
+"\n"
+"Known issues / Roadmap\n"
+"======================\n"
+"\n"
+"Credits\n"
+"=======\n"
+"\n"
+"ADHOC\n"
+"\n"
+"Contributors\n"
+"------------\n"
+"\n"
+"* ADHOC\n"
+"\n"
+"Maintainer\n"
+"----------\n"
+"\n"
+"This module is maintained by ADHOC\n"
+msgstr ""
+
+#. module: l10n_uy_edi_stock_ux
 #. odoo-python
 #: code:addons/l10n_uy_edi_stock_ux/models/stock_picking.py:0
 msgid "Could not generate the PDF"
@@ -31,7 +74,7 @@ msgstr "No se pudo generar el PDF"
 #. module: l10n_uy_edi_stock_ux
 #: model:ir.model.fields,field_description:l10n_uy_edi_stock_ux.field_stock_picking__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nombre en pantalla"
 
 #. module: l10n_uy_edi_stock_ux
 #. odoo-python
@@ -54,7 +97,7 @@ msgstr ""
 #. module: l10n_uy_edi_stock_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock_ux.view_picking_edi_ux_form
 msgid "Get PDF"
-msgstr ""
+msgstr "Obtener PDF"
 
 #. module: l10n_uy_edi_stock_ux
 #: model:ir.model.fields,field_description:l10n_uy_edi_stock_ux.field_stock_picking__id
@@ -64,7 +107,7 @@ msgstr ""
 #. module: l10n_uy_edi_stock_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock_ux.view_picking_edi_ux_form
 msgid "Preview"
-msgstr ""
+msgstr "Vista previa"
 
 #. module: l10n_uy_edi_stock_ux
 #: model:ir.model,name:l10n_uy_edi_stock_ux.model_stock_picking
@@ -77,6 +120,11 @@ msgid "Technical field to preview the xml"
 msgstr "Campo técnico para previsualizar el XML"
 
 #. module: l10n_uy_edi_stock_ux
+#: model:ir.module.module,shortdesc:base.module_l10n_uy_edi_stock_ux
+msgid "Uruguay - E-Remitos"
+msgstr ""
+
+#. module: l10n_uy_edi_stock_ux
 #. odoo-python
 #: code:addons/l10n_uy_edi_stock_ux/models/stock_picking.py:0
 msgid "Valid XML"
@@ -85,175 +133,4 @@ msgstr "XML Válido"
 #. module: l10n_uy_edi_stock_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_edi_stock_ux.view_picking_edi_ux_form
 msgid "Validate"
-msgstr ""
-
-#~ msgid ""
-#~ "<i class=\"fa fa-warning\" role=\"img\" title=\"EDI (Uruguay)\"/>\n"
-#~ "                        <span class=\"mx-1\">E-invoicing (Uruguay)</span>"
-#~ msgstr ""
-#~ "<i class=\"fa fa-warning\" role=\"img\" title=\"EDI (Uruguay)\"/>\n"
-#~ "                        <span class=\"mx-1\">Facturación electrónica "
-#~ "(Uruguay)</span>"
-
-#~ msgid "Addenda & Disclosure"
-#~ msgstr "Adenda & Leyenda"
-
-#~ msgid ""
-#~ "Addendas and Mandatory Disclosure to add on the CFE. They can be added "
-#~ "either to the issuer, receiver, cfe doc additional info section or to the "
-#~ "addenda section. However, the item type should not be set in this field; "
-#~ "instead, it should be specified in the invoice lines."
-#~ msgstr ""
-#~ "Adendas y Leyendas Obligatorias que deben añadirse al CFE. Pueden "
-#~ "añadirse en la sección de información adicional del emisor, del "
-#~ "destinatario o del documento CFE o en la sección de anexos. Sin embargo, "
-#~ "el tipo de item no debe indicarse en este campo, sino que debe "
-#~ "especificarse en las líneas de la factura."
-
-#~ msgid ""
-#~ "Analog to odoo account.move.move_type but with more options allowing to "
-#~ "identify the kind of document we are working with. (not only related to "
-#~ "account.move, could be for documents of other models like stock.picking)"
-#~ msgstr ""
-#~ "Análogo a odoo account.move.move_type pero con más opciones que permiten "
-#~ "identificar el tipo de documento con el que estamos trabajando. (no sólo "
-#~ "relacionado con account.move, podría ser para documentos de otros modelos "
-#~ "como stock.picking)"
-
-#~ msgid "CFE Status"
-#~ msgstr "Estado CFE"
-
-#~ msgid ""
-#~ "CFE: Indication of where the merchandise is delivered or the service is "
-#~ "provided (Address, Branch, Port, etc.) if True then we will inform the "
-#~ "shipping address's name and street"
-#~ msgstr ""
-#~ "CFE: Indicación del lugar donde se entrega la mercadería o se presta el "
-#~ "servicio (dirección, sucursal, puerto, etc.); si el valor es «True», se "
-#~ "indicará el nombre y la calle de la dirección de envío"
-
-#~ msgid "Can not cancel a Delivery Guide already process by DGI"
-#~ msgstr ""
-#~ "No se puede cancelar un Remito que ya haya sido procesado por la DGI"
-
-#~ msgid "Companies"
-#~ msgstr "Compañías"
-
-#~ msgid "Delivery Guide"
-#~ msgstr "Remito"
-
-#~ msgid "Document Number (UY)"
-#~ msgstr "Número de Documento (UY)"
-
-#~ msgid "Document Type (UY)"
-#~ msgstr "Tipo de Documento (UY)"
-
-#~ msgid "Download"
-#~ msgstr "Descargar"
-
-#~ msgid "Electronic Fiscal Document (CFE - UY)"
-#~ msgstr "Documento Fiscal Electrónico (CFE - UY)"
-
-#~ msgid "Error getting the PDF file: %s"
-#~ msgstr "Error obteniendo el archivo PDF: %s"
-
-#~ msgid "Get Uruware Invoice"
-#~ msgstr "Obtener Factura Uruware"
-
-#~ msgid "Internal Type"
-#~ msgstr "Tipo interno"
-
-#~ msgid "Key or UUID CFE"
-#~ msgstr "Llave o UUID CFE"
-
-#~ msgid "L10N Latam Available Document Type"
-#~ msgstr "L10N Latam Tipo de Documento Disponible"
-
-#~ msgid "L10N Uy Is Cfe"
-#~ msgstr "L10N Uy Es Cfe"
-
-#~ msgid "Latam Document Type"
-#~ msgstr "Tipo de Documento Latam"
-
-#~ msgid "Mandatory Disclosures"
-#~ msgstr "Leyendas Obligatorias"
-
-#~ msgid "Manual Uruware Invoice"
-#~ msgstr "Factura Manual Uruware"
-
-#~ msgid "Need to define the origin record of this EDI document"
-#~ msgstr "Es necesario definir el registro de origen de este documento EDI"
-
-#~ msgid "PDF Attachment"
-#~ msgstr "PDF Adjunto"
-
-#~ msgid "PDF File"
-#~ msgstr "Archivo PDF"
-
-#~ msgid "Picking"
-#~ msgstr "Recolección"
-
-#~ msgid "Place of Delivery"
-#~ msgstr "Lugar de Entrega"
-
-#~ msgid "Re-print Legal PDF"
-#~ msgstr "Re-Imprimir PDF Legal"
-
-#~ msgid "Related Documents"
-#~ msgstr "Documentos Relacionados"
-
-#~ msgid "Related electronic documents"
-#~ msgstr "Documentos electrónicos relacionados"
-
-#~ msgid "Send to DGI"
-#~ msgstr "Enviar a DGI"
-
-#~ msgid "State of the electronic document"
-#~ msgstr "Estado del documento electrónico"
-
-#~ msgid "Stock Move"
-#~ msgstr "Movimiento de stock"
-
-#~ msgid "The electronic invoice was created successfully"
-#~ msgstr "El documento electrónico fue creado satisfactoriamente"
-
-#~ msgid ""
-#~ "This CFE has been generated in DEMO Mode. It is considered as accepted "
-#~ "and it won\"t be sent to DGI."
-#~ msgstr ""
-#~ "Este CFE se ha generado en modo DEMO. Se considera aceptado y no se "
-#~ "enviará a la DGI."
-
-#~ msgid "Transfer"
-#~ msgstr "Traslado"
-
-#~ msgid ""
-#~ "Unique identification per CFE in UCFE: concatenation of the model name "
-#~ "initials plus the record id"
-#~ msgstr ""
-#~ "Identificación única por CFE en UCFE: concatenación de las iniciales del "
-#~ "nombre del modelo más el identificador del registro"
-
-#~ msgid "Update DGI State"
-#~ msgstr "Actualizar Estado DGI"
-
-#~ msgid "Uruguay E-Invoice CFE"
-#~ msgstr "Uruguay e-Factura CFE"
-
-#~ msgid "Uruguay E-Invoice Error"
-#~ msgstr "Uruguay E-Factura Error"
-
-#~ msgid "Uruguay E-Invoice XML"
-#~ msgstr "Uruguay E-Factura XML"
-
-#~ msgid "Uruguay: the most recent e-invoice XML returned by Uruware."
-#~ msgstr ""
-#~ "Uruguay: el último archivo XML de factura electrónica generado por "
-#~ "Uruware."
-
-#~ msgid "You need to define 'CFE Key or UUID' in order to continue"
-#~ msgstr "Necesita definir 'Clave CFE o UUID' para poder continuar"
-
-#~ msgid "error details for CFEs in the 'error' state."
-#~ msgstr ""
-#~ "Detalles de los errores de los CFE que se encuentran en estado «error»."
+msgstr "Validar"
