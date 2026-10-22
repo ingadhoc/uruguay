@@ -1,3 +1,4 @@
+from lxml import etree
 from odoo import Command
 from odoo.addons.l10n_uy_edi.tests.common import TestUyEdi
 from odoo.exceptions import UserError
@@ -288,3 +289,46 @@ class TestUx(TestUyEdi):
 
         nom_item, _description = invoice._l10n_uy_edi_get_line_nom_and_desc(invoice.invoice_line_ids[1])
         self.assertEqual(nom_item, "Otro texto [REF123]", "Solo se quita el prefijo estándar, no otras menciones")
+
+    def test_140_cfe_cod_items(self):
+        # TODO 20.0: remove, it is native in Odoo from 20.0 (odoo/enterprise master, https://github.com/odoo/enterprise/pull/129215)
+        """Los códigos del producto se informan en su propio nodo <CodItem> (INT1 referencia interna, GTIN13 código de
+        barras EAN-13 válido) y NomItem queda sin el prefijo de la referencia."""
+        products = [
+            self.env["product.product"].create({"name": "No Codes"}),
+            self.env["product.product"].create({"name": "Internal Ref", "default_code": "INTREF"}),
+            self.env["product.product"].create(
+                {"name": "Ref and Barcode", "default_code": "INTREF2", "barcode": "7730912350032"}
+            ),
+            self.env["product.product"].create(
+                {"name": "Invalid Barcode", "default_code": "INTREF3", "barcode": "NOT-AN-EAN"}
+            ),
+        ]
+        invoice = self._create_move(
+            invoice_line_ids=[Command.create({"product_id": product.id}) for product in products],
+        )
+        expected = [
+            [],
+            [{"TpoCod": "INT1", "Cod": "INTREF"}],
+            [{"TpoCod": "INT1", "Cod": "INTREF2"}, {"TpoCod": "GTIN13", "Cod": "7730912350032"}],
+            [{"TpoCod": "INT1", "Cod": "INTREF3"}],  # un EAN-13 inválido no se informa
+        ]
+        for product, expected_cod_items in zip(products, expected):
+            self.assertEqual(product._l10n_uy_edi_get_cod_items(), expected_cod_items)
+
+        invoice.action_post()
+        self._send_and_print(invoice)
+        result_xml = self.get_xml_tree_from_attachment(invoice.l10n_uy_edi_document_id.attachment_id)
+        ns = {"cfe": "http://cfe.dgi.gub.uy"}
+        items = result_xml.findall(".//cfe:Detalle/cfe:Item", ns)
+        self.assertEqual(len(items), 4)
+        for item, expected_cod_items in zip(items, expected):
+            cod_items = [
+                {"TpoCod": cod.findtext("cfe:TpoCod", namespaces=ns), "Cod": cod.findtext("cfe:Cod", namespaces=ns)}
+                for cod in item.findall("cfe:CodItem", ns)
+            ]
+            self.assertEqual(cod_items, expected_cod_items)
+            self.assertFalse(item.findtext("cfe:NomItem", namespaces=ns).startswith("["))
+            if cod_items:
+                # El nodo va inmediatamente después de NroLinDet, como indica el formato CFE
+                self.assertEqual(etree.QName(item[1]).localname, "CodItem")
