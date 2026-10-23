@@ -6,44 +6,43 @@
 Uruguay - CFE Special Taxpayer Regimes
 ======================================
 
-Este módulo permite emitir CFE válidos para compañías bajo régimen especial de DGI
-(Literal E / IVA mínimo o monotributo).
+This module allows companies under a DGI special regime (Literal E / minimum VAT or
+monotributo) to issue valid CFEs.
 
-Cuando la compañía está bajo un régimen especial, Uruware firma los CFE con un CAE especial
-(valores 2, 3 o 4) y DGI exige que el comprobante cumpla dos condiciones que el módulo estándar
-``l10n_uy_edi`` no contempla:
+When the company is under a special regime, Uruware signs the CFEs with a special CAE
+(values 2, 3 or 4) and DGI requires the document to meet two conditions that the standard
+``l10n_uy_edi`` module does not cover:
 
-* Indicador de montos brutos ``MntBruto = 3`` (zona A10 del encabezado).
-* Indicador de facturación ``IndFact = 16`` (IVA mínimo, Monotributo u otros) en lugar de los
-  indicadores de tasa de IVA (1 exento, 2 tasa mínima, 3 tasa básica, 4 otra tasa). Los
-  indicadores conceptuales se siguen usando igual que en el régimen general: 5 (entrega
-  gratuita), 6/7 (no facturable, ej. anticipos y líneas de descuento) y 10 (exportación) —
-  confirmado por Uruware.
+* Gross amounts indicator ``MntBruto = 3`` (zone A10 of the header).
+* Invoicing indicator ``IndFact = 16`` (minimum VAT, Monotributo or others) instead of the
+  VAT rate indicators (1 exempt, 2 minimum rate, 3 basic rate, 4 other rate). The conceptual
+  indicators are still used as in the general regime: 5 (free delivery), 6/7 (non-billable,
+  e.g. down payments and discount lines) and 10 (export) — confirmed by Uruware.
 
-Sin estos indicadores DGI rechaza el comprobante con el error
-*"Si el valor del CAE Especial es 2, 3 o 4 entonces el Ind. Mnt Bruto debe ser 3"* (código 05,
-rechazo definitivo que quema el número de CAE).
+Without these indicators DGI rejects the document with the error
+*"Si el valor del CAE Especial es 2, 3 o 4 entonces el Ind. Mnt Bruto debe ser 3"* (code 05,
+a definitive rejection that burns the CAE number).
 
-El indicador ``MntBruto = 3`` aplica a todos los tipos de CFE que emite la compañía —
-e-Ticket (101), e-Factura (111), sus notas de crédito y débito (102, 103, 112, 113) y también
-los CFE de exportación (121, 122, 123): el CAE especial es una propiedad del contribuyente, por
-lo que Uruware firma todos los comprobantes con él y DGI exige el indicador en todos. Las líneas
-de exportación conservan su indicador de facturación propio (``IndFact = 10``).
+The ``MntBruto = 3`` indicator applies to every CFE type the company issues —
+e-Ticket (101), e-Invoice (111), their credit and debit notes (102, 103, 112, 113) and also
+the export CFEs (121, 122, 123): the special CAE is a property of the taxpayer, so Uruware
+signs every document with it and DGI requires the indicator on all of them. Export lines keep
+their own invoicing indicator (``IndFact = 10``).
 
-Además, el módulo valida que las líneas del comprobante no tengan IVA a tasa distinta de 0%
-(exento): al confirmar la factura se le avisa al usuario con un error bloqueante, y el mismo
-chequeo corre antes del envío. Cada rechazo de DGI quema un número de CAE, por lo que conviene
-frenar el error en Odoo lo antes posible.
+The module also validates that the document lines do not carry VAT at a rate other than 0%
+(exempt): the user gets a blocking error when the invoice is confirmed, and the same check
+runs before sending. Every DGI rejection burns a CAE number, so it is better to stop the
+error in Odoo as early as possible.
 
-Configuración
+Configuration
 -------------
 
-#. En Odoo: en la compañía, campo **Régimen de contribuyente DGI**, seleccionar el régimen que
-   corresponda (por defecto: régimen general, que no cambia ningún comportamiento).
-#. En Uruware: menú **Empresa** → sección **Información Extra** → marcar **"Literal E o
-   monotributo"** en *Sí*. Sin esta configuración Uruware no firma con el CAE especial.
+#. In Odoo: on the company, field **DGI Taxpayer Regime**, select the regime that applies
+   (default: general regime, which does not change any behaviour).
+#. In Uruware: menu **Empresa** → section **Información Extra** → set **"Literal E o
+   monotributo"** to *Sí*. Without this setting Uruware does not sign with the special CAE.
 
-Ambas configuraciones deben estar alineadas: son espejo una de la otra.
+Both settings must be aligned: they mirror each other.
 
 Known issues / Roadmap
 ======================
