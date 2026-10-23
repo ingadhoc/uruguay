@@ -19,13 +19,13 @@
 ##############################################################################
 {
     "name": "Uruguayan Currency Rate Update",
-    "version": "19.0.1.0.0",
+    "version": "20.0.1.0.0",
     "countries": ["uy"],
     "category": "Localization/Uruguay",
     "sequence": 14,
     "author": "ADHOC SA",
     "website": "www.adhoc.com.ar",
-    "license": "AGPL-3",
+    "license": "LGPL-3",
     "depends": [
         "currency_rate_live",
         "l10n_uy",
@@ -33,7 +33,7 @@
     "data": [
         "views/res_currency_views.xml",
     ],
-    "installable": False,
+    "installable": True,
     "auto_install": True,
     "application": False,
 }
