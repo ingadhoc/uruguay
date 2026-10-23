@@ -6,9 +6,9 @@
 
 .. |icon| image:: https://raw.githubusercontent.com/ingadhoc/maintainer-tools/master/resources/adhoc-icon.png
 
-.. image:: https://img.shields.io/badge/license-AGPL--3-blue.png
-   :target: https://www.gnu.org/licenses/agpl
-   :alt: License: AGPL-3
+.. image:: https://img.shields.io/badge/license-LGPL--3-blue.png
+   :target: https://www.gnu.org/licenses/lgpl
+   :alt: License: LGPL-3
 
 ==============================
 Uruguayan Currency Rate Update
@@ -34,12 +34,12 @@ To install this module, you need to:
 
 #. Install the module through Odoo Apps
 #. Ensure that the ``zeep`` Python library is installed (usually included in standard Odoo installations)
-#. The module will be automatically installed if ``l10n_uy`` is installed (auto_install: True)
+#. The module will be automatically installed when both ``l10n_uy`` and ``currency_rate_live`` are installed (auto_install: True)
 
 Requirements
 ============
 
-* Odoo 19.0+
+* Odoo 20.0+
 * ``currency_rate_live`` module (Enterprise)
 * ``l10n_uy`` module
 * ``zeep`` Python library for SOAP web service communication
@@ -67,12 +67,13 @@ Usage
 
 #. Go to *Accounting > Configuration > Currencies*
 #. Open any currency form
-#. For supported currencies, you'll see a button "⇒ (UY) Mostrar ultima cotización BCU" to check the latest rate
-#. For unsupported currencies, you'll see "⇒ (UY) Obtener info monedas disponibles" to list all available currencies
+#. For supported currencies, you'll see a button "⇒ (UY) Show last BCU exchange rate" to check the latest rate
+#. For unsupported currencies, you'll see "⇒ (UY) Get available currencies info" to list all available currencies
+#. Both buttons are only shown when the fiscal country of the current company is Uruguay
 
 **Supported Currencies:**
 
-The module can retrieve rates for all currencies available in BCU's system. To see which currencies are available, use the "Obtener info monedas disponibles" button on UYU currency's form view.
+The module can retrieve rates for all currencies available in BCU's system. To see which currencies are available, use the "⇒ (UY) Get available currencies info" button on UYU currency's form view.
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
    :alt: Try me on Runbot
