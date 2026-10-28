@@ -24,7 +24,7 @@
                     invisible="not (l10n_uy_edi_journal_type == 'electronic' and l10n_uy_edi_cfe_state in ['received', 'accepted', 'rejected'] and not invoice_pdf_report_id)">
                         <bold>This invoice is validated but it is missing the associated legal PDF, please try to regenerate it</bold>
                     <button name="action_l10n_uy_get_pdf" type="object" string="(UY) Reprint Legal PDF"
-                        class="oe_inline oe_link" icon="fa-print"
+                        class="oe_inline oe_link" icon="print"
                     />
                 </div>
                 <div class="alert alert-warning" role="alert" style="margin-bottom:0px;"
@@ -40,7 +40,7 @@
                         <field name="manual_uruware_invoice" placeholder="Uruware UUID" class="oe_inline"/>
                     </div>
                     <field name="l10n_uy_edi_document_id" readonly="1" class="oe_inline"/> - <field name="l10n_uy_edi_cfe_state" class="oe_inline" invisible="not l10n_uy_edi_document_id"/>
-                    <button name="uy_ux_action_uy_get_pdf" type="object" string="(UY) Print Legal PDF" class="oe_inline oe_link" icon="fa-print" groups="base.group_no_one" invisible="not l10n_uy_edi_document_id"/>
+                    <button name="uy_ux_action_uy_get_pdf" type="object" string="(UY) Print Legal PDF" class="oe_inline oe_link" icon="print" groups="base.group_no_one" invisible="not l10n_uy_edi_document_id"/>
                 </div>
             </field>
 

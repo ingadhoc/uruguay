@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0+e\n"
+"Project-Id-Version: Odoo Server 20.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-16 12:54+0000\n"
-"PO-Revision-Date: 2026-09-16 12:54+0000\n"
+"POT-Creation-Date: 2026-10-28 15:59+0000\n"
+"PO-Revision-Date: 2026-10-28 15:59+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,14 +18,7 @@ msgstr ""
 #. module: l10n_uy_ux
 #. odoo-python
 #: code:addons/l10n_uy_ux/models/res_partner.py:0
-msgid ""
-"%s. If you are in a testing environment, you can check the following RUTs: "
-"219999830019, 219999820013, 219000090011"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_partner_form
-msgid "(UY) Is Electronic Issuer?"
+msgid "%s partners updated from DGI"
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -36,11 +29,6 @@ msgstr ""
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
 msgid "(UY) Reprint Legal PDF"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_partner_form
-msgid "(UY) Update From DGI"
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -66,6 +54,110 @@ msgid ""
 "\n"
 "* Additional Items Info\n"
 "%(items)s"
+msgstr ""
+
+#. module: l10n_uy_ux
+#: model:ir.module.module,description:base.module_l10n_uy_ux
+msgid ""
+".. image:: https://img.shields.io/badge/licence-LGPL--3-blue.svg\n"
+"   :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html\n"
+"   :alt: License: LGPL-3\n"
+"\n"
+"==========\n"
+"Uruguay UX\n"
+"==========\n"
+"\n"
+"This module enhances the official Uruguayan localization with additional UX improvements and features that are not yet available in the official Odoo modules but are valuable for our clients.\n"
+"\n"
+"Functional description\n"
+"======================\n"
+"\n"
+"**Problems solved:**\n"
+"\n"
+"1. **Uruware Connection Configuration Issue**: This module stores both test and production connection data, allowing users to simply switch between environments in settings without additional configuration. New fields are added to the settings interface.\n"
+"\n"
+"2. **Legal PDF Report Limitations**: This module always prints the legal PDF for all print actions (invoice print, unpaid invoices, send & print, automatic sending upon validation).\n"
+"\n"
+"3. **Report Parameter Limitations**: Extended functionality that:\n"
+"   - Adds company-level parameter in system settings for global PDF format configuration\n"
+"\n"
+"4. **Credit/Debit Notes Without Origin Document**: DGI requires credit and debit notes to report the original document they refer to. When the note has no origin document set (for example, a credit note created from the sale order), the module looks for the posted invoice of the same sale order lines and reports it in the reference section of the CFE. Requires the Sales app.\n"
+"\n"
+"5. **Document Type by Contact**: For contacts with RUT, credit and debit notes are set as e-Invoice credit and debit notes instead of e-Ticket ones.\n"
+"\n"
+"6. **CFE Status in DGI**: The status of the CFEs in DGI is queried every 10 minutes, instead of once a day.\n"
+"\n"
+"**New functionalities added:**\n"
+"\n"
+"1. **DGI Registry Lookup**: Adds a \"Check Electronic Issuer in DGI\" action in the contact form to check in DGI if a contact with RUT is an electronic issuer. Adds an \"Update from DGI\" action in the contact list, and a \"Update Partners From DGI\" menu for all the contacts with RUT, that fill the contact data with the DGI registry query of the official module. The data DGI does not inform is kept as it is.\n"
+"\n"
+"2. **XML Preview and Validation**: Enables XML preview at any time (not just in demo mode or when errors occur). Adds \"Validate XML\" button for testing purposes.\n"
+"\n"
+"3. **Enhanced Addenda and Mandatory Legends Logic**:\n"
+"   - System defaults: Adds condition field to help apply addenda to documents when conditions are met\n"
+"   - Preview functionality: Button to preview how they will look before sending\n"
+"\n"
+"4. **Uruware Invoice Import**: Allows importing invoices created in Uruware from manual sales journals. Users can enter UUID and click \"Get Uruware Invoice\" to automatically retrieve document number, document type, DGI status, and legal PDF. Adds import functionality to journal interfaces.\n"
+"\n"
+"5. **Certificate Management**: Adds informational fields in settings to store DGI Certificate and associated key as backup for configuring them in Uruware prod/test when necessary.\n"
+"\n"
+"Installation\n"
+"============\n"
+"\n"
+"To install this module, you need to:\n"
+"\n"
+"1. Ensure you have the official Uruguay localization modules installed\n"
+"2. Install this module through the Apps menu or by updating the module list\n"
+"3. No additional external dependencies are required\n"
+"\n"
+"Configuration\n"
+"=============\n"
+"\n"
+"1. Go to Settings > Users & Companies > Companies\n"
+"2. Configure your Uruware test and production connection data\n"
+"3. Set your preferred report parameters for PDF generation\n"
+"4. Configure DGI certificate information if needed\n"
+"5. Set up addenda and mandatory legends conditions as required\n"
+"\n"
+"Usage\n"
+"=====\n"
+"\n"
+"**Uruware Environment Switching:**\n"
+"- Navigate to electronic invoicing settings\n"
+"- Toggle between test and production environments without reconfiguration\n"
+"\n"
+"**DGI Registry Lookup:**\n"
+"- Open a contact with RUT and use the \"Check Electronic Issuer in DGI\" action to check it in DGI\n"
+"- Select contacts in the list view and use the \"Update from DGI\" action to update their data\n"
+"- Use Contacts > Configuration > Update Partners From DGI to update all the contacts with RUT\n"
+"\n"
+"**XML Preview and Validation:**\n"
+"- Access XML preview from any electronic document\n"
+"- Use \"Validate XML\" button for testing purposes\n"
+"\n"
+"**Uruware Invoice Import:**\n"
+"- Open manual sales journal entries\n"
+"- Enter UUID and click \"Get Uruware Invoice\" to import invoice data\n"
+"\n"
+"**Report Configuration:**\n"
+"- Access company settings to configure global PDF parameters\n"
+"- Set addenda and legend conditions as needed\n"
+"\n"
+"Known issues / Roadmap\n"
+"======================\n"
+"\n"
+"* Integration with official Odoo reporting system for legal PDF representation\n"
+"* Enhanced error handling for Uruware connection failures\n"
+"\n"
+"Contributors\n"
+"============\n"
+"\n"
+"* ADHOC\n"
+"\n"
+"Maintainer\n"
+"==========\n"
+"\n"
+"This module is maintained by ADHOC\n"
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -107,18 +199,8 @@ msgid "Apply On"
 msgstr ""
 
 #. module: l10n_uy_ux
-#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
-msgid "Are you sure to execute the automatic update of your partners ?"
-msgstr ""
-
-#. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
 msgid "Are you sure? this action will update the invoice information."
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model:ir.actions.act_window,name:l10n_uy_ux.action_partner_update
-msgid "Automatic Update from DGI"
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -140,11 +222,6 @@ msgid "CFE Addenda / Disclosure"
 msgstr ""
 
 #. module: l10n_uy_ux
-#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
-msgid "Cancel"
-msgstr ""
-
-#. module: l10n_uy_ux
 #: model:ir.model,name:l10n_uy_ux.model_certificate_certificate
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.res_config_settings_view_form_inherit_l10n_uy_edi
 msgid "Certificate"
@@ -156,16 +233,12 @@ msgid "Certificate Filename"
 msgstr ""
 
 #. module: l10n_uy_ux
-#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
-msgid "Close"
+#: model:ir.actions.server,name:l10n_uy_ux.action_partner_is_electronic_issuer
+msgid "Check Electronic Issuer in DGI"
 msgstr ""
 
 #. module: l10n_uy_ux
 #: model:ir.model,name:l10n_uy_ux.model_res_company
-msgid "Companies"
-msgstr ""
-
-#. module: l10n_uy_ux
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_l10n_uy_edi_document__company_id
 msgid "Company"
 msgstr ""
@@ -183,29 +256,6 @@ msgstr ""
 #. module: l10n_uy_ux
 #: model:ir.model,name:l10n_uy_ux.model_res_partner
 msgid "Contact"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model:ir.model.fields,help:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__title_case
-msgid "Converts retreived text fields to Title Case."
-msgstr ""
-
-#. module: l10n_uy_ux
-#. odoo-python
-#: code:addons/l10n_uy_ux/models/res_partner.py:0
-msgid "Could not connect to DGI to extract data: %s"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__create_uid
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__create_uid
-msgid "Created by"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__create_date
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__create_date
-msgid "Created on"
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -246,8 +296,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_company__display_name
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner__display_name
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__display_name
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -303,32 +351,6 @@ msgid "Errors occurred while evaluating the document: \n"
 msgstr ""
 
 #. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__field
-msgid "Field"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__field_ids
-msgid "Fields"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__field_to_update_ids
-msgid "Fields To Update"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model:ir.model.fields.selection,name:l10n_uy_ux.selection__res_partner_update_from_padron_uy_wizard__state__finished
-msgid "Finished"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner__fiscal_countries
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_users__fiscal_countries
-msgid "Fiscal Countries"
-msgstr ""
-
-#. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
 msgid "Get Defaults"
 msgstr ""
@@ -348,8 +370,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_company__id
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_config_settings__id
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner__id
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__id
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__id
 msgid "ID"
 msgstr ""
 
@@ -409,18 +429,6 @@ msgid "L10N Uy Report Params"
 msgstr ""
 
 #. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__write_uid
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__write_uid
-msgid "Last Updated by"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__write_date
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__write_date
-msgid "Last Updated on"
-msgstr ""
-
-#. module: l10n_uy_ux
 #: model:ir.model,name:l10n_uy_ux.model_l10n_latam_document_type
 msgid "Latam Document Type"
 msgstr ""
@@ -438,11 +446,6 @@ msgid "Missing uruguayan invoicing type on journal %s."
 msgstr ""
 
 #. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__new_value
-msgid "New Value"
-msgstr ""
-
-#. module: l10n_uy_ux
 #. odoo-python
 #: code:addons/l10n_uy_ux/models/account_move.py:0
 msgid ""
@@ -453,41 +456,25 @@ msgstr ""
 
 #. module: l10n_uy_ux
 #. odoo-python
-#: code:addons/l10n_uy_ux/wizards/res_partner_update_from_padron_uy_wizard.py:0
+#: code:addons/l10n_uy_ux/models/res_partner.py:0
 msgid "No partner with RUT was found to update"
 msgstr ""
 
 #. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__old_value
-msgid "Old Value"
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/res_partner.py:0
+msgid "Not updated (no data in DGI or country is not Uruguay): %s"
 msgstr ""
 
 #. module: l10n_uy_ux
-#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
-msgid ""
-"Only Partners with RUT/RUC are going to be updated.<br/>\n"
-"                        Select the list of fields you want to update."
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model:ir.model.fields,help:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__field_to_update_ids
-msgid "Only this fields are going to be retrieved and updated"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model:ir.model.fields.selection,name:l10n_uy_ux.selection__res_partner_update_from_padron_uy_wizard__state__option
-msgid "Option"
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/res_partner.py:0
+msgid "Only a partner with a Uruguayan RUT can be checked in DGI"
 msgstr ""
 
 #. module: l10n_uy_ux
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_l10n_uy_edi_document__partner_id
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__partner_id
 msgid "Partner"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__partner_ids
-msgid "Partners"
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -530,23 +517,8 @@ msgid "Report's Parameters"
 msgstr ""
 
 #. module: l10n_uy_ux
-#: model:ir.model.fields.selection,name:l10n_uy_ux.selection__res_partner_update_from_padron_uy_wizard__state__selection
-msgid "Selection"
-msgstr ""
-
-#. module: l10n_uy_ux
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_l10n_uy_edi_addenda__sequence
 msgid "Sequence"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
-msgid "Skip these partner"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__state
-msgid "State"
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -614,17 +586,6 @@ msgid ""
 msgstr ""
 
 #. module: l10n_uy_ux
-#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
-msgid "There are no more partners to update for this request..."
-msgstr ""
-
-#. module: l10n_uy_ux
-#. odoo-python
-#: code:addons/l10n_uy_ux/models/res_partner.py:0
-msgid "There was an error in the response %s"
-msgstr ""
-
-#. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
 msgid ""
 "This CFE (Electronic Document) is not created yet, so if you try to print it"
@@ -647,47 +608,24 @@ msgid ""
 msgstr ""
 
 #. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_wizard__title_case
-msgid "Title Case"
-msgstr ""
-
-#. module: l10n_uy_ux
-#. odoo-python
-#: code:addons/l10n_uy_ux/models/res_partner.py:0
-msgid ""
-"UCFE environment is on demo. Please set a testing environment to be able to "
-"connect to DGI."
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
-msgid "Update Automatically"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
-msgid "Update From DGI"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model:ir.actions.act_window,name:l10n_uy_ux.action_base_partner_update_from_padron_uy
+#: model:ir.actions.server,name:l10n_uy_ux.action_partner_update_all_from_dgi
 #: model:ir.ui.menu,name:l10n_uy_ux.menu_base_partner_update_from_padron_uy
 msgid "Update Partners From DGI"
 msgstr ""
 
 #. module: l10n_uy_ux
-#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
-msgid "Update Selection"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
-msgid "Update with Manual Check"
+#: model:ir.actions.server,name:l10n_uy_ux.action_partner_update_from_dgi
+msgid "Update from DGI"
 msgstr ""
 
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.res_config_settings_view_form_inherit_l10n_uy_edi
 msgid "Uplad Certificate and Password"
+msgstr ""
+
+#. module: l10n_uy_ux
+#: model:ir.module.module,shortdesc:base.module_l10n_uy_ux
+msgid "Uruguay UX"
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -746,11 +684,6 @@ msgid "We were not able to get the info of the next invoice number: %(error)s"
 msgstr ""
 
 #. module: l10n_uy_ux
-#: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__wizard_id
-msgid "Wizard"
-msgstr ""
-
-#. module: l10n_uy_ux
 #. odoo-python
 #: code:addons/l10n_uy_ux/models/l10n_uy_edi_document.py:0
 msgid ""
@@ -772,12 +705,6 @@ msgstr ""
 
 #. module: l10n_uy_ux
 #. odoo-python
-#: code:addons/l10n_uy_ux/models/res_partner.py:0
-msgid "You can only check if the partner has a RUT identification type"
-msgstr ""
-
-#. module: l10n_uy_ux
-#. odoo-python
 #: code:addons/l10n_uy_ux/models/account_move.py:0
 msgid "You need to configure the company currency"
 msgstr ""
@@ -791,19 +718,4 @@ msgstr ""
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.res_config_settings_view_form_inherit_l10n_uy_edi
 msgid "[['nombreparam1', 'nombreparam2'], ['valorparam1', 'valorparam2']]"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
-msgid "or"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model:ir.model,name:l10n_uy_ux.model_res_partner_update_from_padron_uy_field
-msgid "res.partner.update.from.padron.uy.field"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model:ir.model,name:l10n_uy_ux.model_res_partner_update_from_padron_uy_wizard
-msgid "res.partner.update.from.padron.uy.wizard"
 msgstr ""

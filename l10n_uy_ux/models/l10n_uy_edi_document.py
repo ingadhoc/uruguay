@@ -121,7 +121,7 @@ class L10nUyEdiDocument(models.Model):
         super().action_update_dgi_state()
 
     @api.model
-    def _is_connection_info_incomplete(self, company):
+    def _is_connection_info_incomplete(self, company, **extra_connection_info):
         # EXTEND l10n_uy_edi
         """Intenta mandar mensaje de error de alerta si estas en ambiente de testing con datos
         de producción
@@ -129,7 +129,7 @@ class L10nUyEdiDocument(models.Model):
         Return:
             False if everything is ok,
             Message if there is a problem or something missing"""
-        res = super()._is_connection_info_incomplete(company)
+        res = super()._is_connection_info_incomplete(company, **extra_connection_info)
         inbox_url = self._get_ws_url("inbox", company)
         query_url = self._get_ws_url("query", company)
 
@@ -221,8 +221,8 @@ class L10nUyEdiDocument(models.Model):
         """Agregamos chequeo para evitar que el cron se corra en runbot, lo cual genera errores al no tener datos de producción
 
         También prevenimos la ejecución si alguna compañía UY tiene configuración incompleta para evitar warnings innecesarios"""
-        if not tools.config.get("test_enable") and not self.env["ir.config_parameter"].sudo().get_param(
-            "saas_client.database_uuid", False
+        if not tools.config.get("test_enable") and not self.env["ir.config_parameter"].sudo().get_str(
+            "saas_client.database_uuid"
         ):
             return
 

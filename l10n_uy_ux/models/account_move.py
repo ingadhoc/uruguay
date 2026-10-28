@@ -1,9 +1,9 @@
-import base64
 import logging
 
 from lxml import etree
 from markupsafe import Markup
 from odoo import _, api, fields, models
+from odoo.addons.l10n_uy_edi.models.res_partner import UY_RUT_DGI_CODE
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import safe_eval
 
@@ -238,7 +238,8 @@ class AccountMove(models.Model):
                 and m.state == "draft"
                 and not m.posted_before
                 and m.journal_id.l10n_uy_edi_type == "electronic"
-                and m.partner_id.l10n_latam_identification_type_id == self.env.ref("l10n_uy.it_rut")
+                and m.partner_id
+                and m.partner_id._l10n_uy_edi_get_dgi_code() == UY_RUT_DGI_CODE
             )
         ):
             # Set debit notes
@@ -295,7 +296,7 @@ class AccountMove(models.Model):
         not_invoice_date = not self.invoice_date
         if not_invoice_date:
             self.invoice_date = fields.Date.today()
-        self.l10n_uy_cfe_xml = self._l10n_uy_edi_get_xml_content().encode()
+        self.l10n_uy_cfe_xml = self._l10n_uy_edi_get_xml_content().decode()
         if not_invoice_date:
             self.invoice_date = False
 
@@ -382,7 +383,7 @@ class AccountMove(models.Model):
                         "res_field": "invoice_pdf_report_file",
                         "name": (self.name or self.env._("INV")).replace("/", "_") + ".pdf",
                         "type": "binary",
-                        "datas": file_content,
+                        "raw": file_content,
                     }
                 )
                 res["pdf_file"] = pdf_file
@@ -422,7 +423,19 @@ class AccountMove(models.Model):
         """
         # B7 NomItem, B8 DscItem
         # Limpiamos saltos de línea que pueden romper el PDF
-        clean_name = aml.name.replace("\n", " ").replace("\r", " ") if aml.name else ""
+        name = aml.name or ""
+        if aml.product_id:
+            product = aml.product_id.with_context(display_default_code=False)
+            if lang := aml.move_id._get_lang():
+                product = product.with_context(lang=lang)
+            default_description = {
+                "sale": product.description_sale,
+                "purchase": product.description_purchase,
+            }.get(aml.journal_id.type)
+            # Since 20.0 the default line name no longer starts with the product name, as it did in 19.0
+            if not name or name == default_description:
+                name = "\n".join(filter(None, [product.display_name, name]))
+        clean_name = name.replace("\n", " ").replace("\r", " ")
 
         # La referencia interna no va embebida en NomItem: se informa en su propio nodo
         # <CodItem> (TpoCod INT1). Si la descripción de la línea arranca con el prefijo
@@ -508,6 +521,14 @@ class AccountMove(models.Model):
 
         result = edi_doc._ucfe_inbox("350", {"CfeXmlOTexto": self.l10n_uy_cfe_xml})
         response = result.get("response")
+        errors = result.get("errors")
+        if response is None and errors:
+            raise UserError(
+                self.env._(
+                    "Error creating CFE XML\n\n %(errors)s",
+                    errors="\n".join(errors) if isinstance(errors, list) else errors,
+                )
+            )
         if response is not None:
             cod_rta = response.findtext(".//{*}CodRta")
             if cod_rta != "00":
@@ -532,7 +553,7 @@ class AccountMove(models.Model):
         default_legends = self.env["l10n_uy_edi.addenda"]
         default_legends |= self._uy_get_legends_recs("addenda", self)
         default_legends |= self._uy_get_legends_recs("cfe_doc", self)
-        default_legends |= self._uy_get_legends_recs("emisor", self)
+        default_legends |= self._uy_get_legends_recs("issuer", self)
         default_legends |= self._uy_get_legends_recs("receiver", self)
 
         # Escribimos las leyendas en el move
@@ -657,7 +678,7 @@ class AccountMove(models.Model):
             self.clear_l10n_uy_invoice_fields()
         else:
             raise UserError(_("It is not possible to update the move because there is no xml file."))
-        xml = base64.b64decode(self.l10n_uy_edi_xml_attachment_id.datas)
+        xml = bytes(self.l10n_uy_edi_xml_attachment_id.raw)
         self._l10n_uy_edi_complete_cfe_from_xml(etree.fromstring(xml))
 
     def clear_l10n_uy_invoice_fields(self):

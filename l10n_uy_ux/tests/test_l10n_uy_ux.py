@@ -223,7 +223,10 @@ class TestUx(TestUyEdi):
                     "Addenda content missing in description for line with desc and addenda",
                 )
             elif idx == 6 or idx == 7:  # With description deleted by user or "" (aml.name is False or empty)
-                self.assertEqual(nom_item, "-", "NomItem mismatch for line with deleted description")
+                # Since 20.0 the line name no longer carries the product name: without one, the product name is used
+                self.assertEqual(
+                    nom_item, "Product Without Description", "NomItem mismatch for line with deleted description"
+                )
                 self.assertEqual(description, "", "Description mismatch for line with deleted description")
 
     def test_120_nom_item_does_not_split_last_word(self):
@@ -288,3 +291,32 @@ class TestUx(TestUyEdi):
 
         nom_item, _description = invoice._l10n_uy_edi_get_line_nom_and_desc(invoice.invoice_line_ids[1])
         self.assertEqual(nom_item, "Otro texto [REF123]", "Solo se quita el prefijo estándar, no otras menciones")
+
+    def test_140_nom_item_keeps_product_name_with_sale_description(self):
+        """Con la descripción de venta del producto, la línea toma solo esa descripción: el nombre del producto
+        tiene que seguir yendo en NomItem, delante de la descripción"""
+        product = self.env["product.product"].create(
+            {"name": "Tuerca", "default_code": "T02", "description_sale": "Acero 5mm"}
+        )
+        invoice = self._create_move(
+            invoice_line_ids=[
+                Command.create({"product_id": product.id, "price_unit": 100.0}),
+                Command.create({"product_id": product.id, "name": "Descripción propia", "price_unit": 100.0}),
+            ],
+        )
+
+        nom_item, description = invoice._l10n_uy_edi_get_line_nom_and_desc(invoice.invoice_line_ids[0])
+        self.assertEqual(nom_item, "Tuerca Acero 5mm")
+        self.assertEqual(description, "")
+
+        nom_item, _description = invoice._l10n_uy_edi_get_line_nom_and_desc(invoice.invoice_line_ids[1])
+        self.assertEqual(nom_item, "Descripción propia", "Una descripción propia reemplaza al nombre, como en 19")
+
+    def test_150_get_defaults_applies_issuer_addenda(self):
+        """Get Defaults aplica las adendas de emisor que cumplen su condición, como las de los demás tipos"""
+        addenda = self.env["l10n_uy_edi.addenda"].create(
+            {"type": "issuer", "content": "Leyenda del emisor", "condition": "True", "company_id": self.company_uy.id}
+        )
+        invoice = self._create_move()
+        invoice.action_l10n_uy_remkark_default()
+        self.assertIn(addenda, invoice.l10n_uy_edi_addenda_ids)

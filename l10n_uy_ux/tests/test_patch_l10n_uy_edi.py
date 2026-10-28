@@ -36,7 +36,6 @@ if tools.config.get("test_enable"):
 
     def test_120_e_ticket_final_consumer_patch(self):
         partner = self.env.ref("l10n_uy.partner_cfu")
-        partner.l10n_latam_identification_type_id = self.env.ref("l10n_uy.it_dni").id
         partner.vat = ""
         # Get the original method and call it
         original_method = getattr(TestManual, "test_120_e_ticket_final_consumer").origin
@@ -44,7 +43,6 @@ if tools.config.get("test_enable"):
 
     def test_default_doc_type_by_id_patch(self):
         partner = self.env.ref("l10n_uy.partner_cfu")
-        partner.l10n_latam_identification_type_id = self.env.ref("l10n_uy.it_dni").id
         partner.vat = ""
         # Get the original method and call it
         original_method = getattr(TestManual, "test_default_doc_type_by_id").origin
