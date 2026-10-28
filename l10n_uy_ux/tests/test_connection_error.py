@@ -1,3 +1,4 @@
+import unittest
 from unittest.mock import patch
 
 from odoo.addons.l10n_uy_edi.tests import common
@@ -37,7 +38,8 @@ class TestConnectionError(common.TestUyEdi):
         """A posted invoice whose CFE was cut on its way to Uruware: the state the bug leaves behind"""
         invoice = self._create_uy_move()
         invoice.action_post()
-        with self.assertRaisesRegex(UserError, "Timeout"):
+        # Odoo's assertRaisesRegex rolls back since 20.0, and this case needs the state the failed send leaves
+        with unittest.TestCase.assertRaisesRegex(self, UserError, "Timeout"):
             self._mock_send_and_print(invoice, exception="Timeout", expected_xml_file="NO_RESPONSE")
         return invoice
 

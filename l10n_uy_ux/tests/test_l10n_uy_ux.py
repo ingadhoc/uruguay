@@ -223,7 +223,10 @@ class TestUx(TestUyEdi):
                     "Addenda content missing in description for line with desc and addenda",
                 )
             elif idx == 6 or idx == 7:  # With description deleted by user or "" (aml.name is False or empty)
-                self.assertEqual(nom_item, "-", "NomItem mismatch for line with deleted description")
+                # Since 20.0 the line name no longer carries the product name: without one, the product name is used
+                self.assertEqual(
+                    nom_item, "Product Without Description", "NomItem mismatch for line with deleted description"
+                )
                 self.assertEqual(description, "", "Description mismatch for line with deleted description")
 
     def test_120_nom_item_does_not_split_last_word(self):

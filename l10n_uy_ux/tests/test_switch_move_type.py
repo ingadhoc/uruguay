@@ -18,6 +18,10 @@ class TestSwitchMoveType(common.TestUyEdi):
     def setUpClass(cls):
         super().setUpClass()
         # Exempt lines: with 22% VAT a later write of the lines recomputes the EDI flag and hides the bug
+        # Since 20.0 the local fiscal position drops the exempt tax, that the chart ties to exportation only
+        cls.tax_0.fiscal_position_ids |= cls.env.ref(
+            "account.%s_account_fiscal_position_local_uruguay" % cls.company_uy.id
+        )
         cls.product_vat_0 = cls.env["product.product"].create(
             {"name": "Exempt product", "type": "service", "taxes_id": [Command.set(cls.tax_0.ids)]}
         )

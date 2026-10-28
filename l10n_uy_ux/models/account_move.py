@@ -297,7 +297,7 @@ class AccountMove(models.Model):
         not_invoice_date = not self.invoice_date
         if not_invoice_date:
             self.invoice_date = fields.Date.today()
-        self.l10n_uy_cfe_xml = self._l10n_uy_edi_get_xml_content().encode()
+        self.l10n_uy_cfe_xml = self._l10n_uy_edi_get_xml_content().decode()
         if not_invoice_date:
             self.invoice_date = False
 
@@ -384,7 +384,7 @@ class AccountMove(models.Model):
                         "res_field": "invoice_pdf_report_file",
                         "name": (self.name or self.env._("INV")).replace("/", "_") + ".pdf",
                         "type": "binary",
-                        "datas": file_content,
+                        "raw": file_content,
                     }
                 )
                 res["pdf_file"] = pdf_file
@@ -425,6 +425,12 @@ class AccountMove(models.Model):
         # B7 NomItem, B8 DscItem
         # Limpiamos saltos de línea que pueden romper el PDF
         clean_name = aml.name.replace("\n", " ").replace("\r", " ") if aml.name else ""
+        # Since 20.0 the line name no longer starts with the product name
+        if not clean_name and aml.product_id:
+            product = aml.product_id.with_context(display_default_code=False)
+            if lang := aml.move_id._get_lang():
+                product = product.with_context(lang=lang)
+            clean_name = product.display_name
 
         # La referencia interna no va embebida en NomItem: se informa en su propio nodo
         # <CodItem> (TpoCod INT1). Si la descripción de la línea arranca con el prefijo
@@ -510,6 +516,14 @@ class AccountMove(models.Model):
 
         result = edi_doc._ucfe_inbox("350", {"CfeXmlOTexto": self.l10n_uy_cfe_xml})
         response = result.get("response")
+        errors = result.get("errors")
+        if response is None and errors:
+            raise UserError(
+                self.env._(
+                    "Error creating CFE XML\n\n %(errors)s",
+                    errors="\n".join(errors) if isinstance(errors, list) else errors,
+                )
+            )
         if response is not None:
             cod_rta = response.findtext(".//{*}CodRta")
             if cod_rta != "00":
