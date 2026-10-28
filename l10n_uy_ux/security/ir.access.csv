@@ -1,3 +1,0 @@
-id,name,model_id,group_id/id,operation,domain
-access_res_partner_update_from_padron_uy_field,access_res_partner_update_from_padron_uy_field,res.partner.update.from.padron.uy.field,base.group_user,crud,
-access_res_partner_update_from_padron_uy_wizard,access_res_partner_update_from_padron_uy_wizard,res.partner.update.from.padron.uy.wizard,base.group_user,crud,

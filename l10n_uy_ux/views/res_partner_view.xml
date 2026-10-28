@@ -3,37 +3,34 @@
 
     <record id="view_partner_form" model="ir.ui.view">
         <field name="name">partner_documents.view_partner_form</field>
-        <field name="inherit_id" ref="l10n_latam_base.view_partner_latam_form"/>
+        <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="model">res.partner</field>
         <field type="xml" name="arch">
-
-            <xpath expr="//field[@name='vat'][hasclass('oe_inline')]" position="after">
+            <div id="vat_div" position="after">
                 <button name="action_l10n_uy_is_electronic_issuer" string="(UY) Is Electronic Issuer?" class="oe_link oe_inline" type="object" invisible="'UY' not in fiscal_country_codes"/>
-                <button name="%(action_partner_update)d" string="(UY) Update From DGI" class="oe_link oe_inline" type="action" invisible="l10n_latam_identification_type_id != %(l10n_uy.it_rut)d or vat == False or 'UY' not in fiscal_country_codes"/>
-            </xpath>
-
-            <!-- TODO KZ: Patch to resolve problem added in l10n_latam_base module. If you think is Ok we can move it that module in a separate PR. -->
-            <field name="l10n_latam_identification_type_id" position="before">
-                <!-- we need this field invisible because we used in an onchange -->
-                <field name="fiscal_countries" invisible="1"/>
-            </field>
-            <field name="l10n_latam_identification_type_id" position="attributes">
-                <attribute name="domain">fiscal_countries and ["|", ("country_id", "=", False), ("country_id", "in", fiscal_countries)] or []</attribute>
-            </field>
-
+            </div>
         </field>
     </record>
 
-    <!-- TODO Not suse if this going to the last commit. By the moment this let us to filter easier the kind of partner we are looking for Uruguay. Maybe it is usefull we can move it to latam module -->
-    <record id="view_res_partner_filter" model="ir.ui.view">
-        <field name="name">base.view_res_partner_filter</field>
-        <field name="inherit_id" ref="base.view_res_partner_filter"/>
-        <field name="model">res.partner</field>
-        <field type="xml" name="arch">
-            <search>
-                <field name="l10n_latam_identification_type_id"/>
-            </search>
-        </field>
+    <record id="action_partner_update_from_dgi" model="ir.actions.server">
+        <field name="name">Update from DGI</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.l10n_uy_ux_update_from_dgi()</field>
     </record>
+
+    <record id="action_partner_update_all_from_dgi" model="ir.actions.server">
+        <field name="name">Update Partners From DGI</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="state">code</field>
+        <field name="code">action = model.l10n_uy_ux_update_all_from_dgi()</field>
+    </record>
+
+    <menuitem id="menu_base_partner_update_from_padron_uy"
+        action="action_partner_update_all_from_dgi"
+        groups="base.group_system"
+        parent="contacts.res_partner_menu_config"/>
 
 </odoo>

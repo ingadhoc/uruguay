@@ -17,7 +17,6 @@
     "data": [
         "data/l10n_latam.document.type.csv",
         "data/ir_cron.xml",
-        "wizards/res_partner_update_from_padron_uy_wizard_view.xml",
         "views/account_journal_views.xml",
         "views/account_move_views.xml",
         "views/certificate_certificate_view.xml",
@@ -26,7 +25,6 @@
         "views/res_partner_view.xml",
         "views/l10n_uy_addenda_views.xml",
         "views/l10n_uy_edi_document_views.xml",
-        'security/ir.access.csv',
     ],
     "demo": [
         "demo/res_company_demo.xml",

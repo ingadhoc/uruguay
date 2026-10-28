@@ -4,6 +4,7 @@ import logging
 from lxml import etree
 from markupsafe import Markup
 from odoo import _, api, fields, models
+from odoo.addons.l10n_uy_edi.models.res_partner import UY_RUT_DGI_CODE
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import safe_eval
 
@@ -238,7 +239,8 @@ class AccountMove(models.Model):
                 and m.state == "draft"
                 and not m.posted_before
                 and m.journal_id.l10n_uy_edi_type == "electronic"
-                and m.partner_id.l10n_latam_identification_type_id == self.env.ref("l10n_uy.it_rut")
+                and m.partner_id
+                and m.partner_id._l10n_uy_edi_get_dgi_code() == UY_RUT_DGI_CODE
             )
         ):
             # Set debit notes
