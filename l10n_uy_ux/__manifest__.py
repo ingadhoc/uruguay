@@ -26,7 +26,7 @@
         "views/res_partner_view.xml",
         "views/l10n_uy_addenda_views.xml",
         "views/l10n_uy_edi_document_views.xml",
-        "security/ir.model.access.csv",
+        'security/ir.access.csv',
     ],
     "demo": [
         "demo/res_company_demo.xml",
