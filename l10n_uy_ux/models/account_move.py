@@ -553,7 +553,7 @@ class AccountMove(models.Model):
         default_legends = self.env["l10n_uy_edi.addenda"]
         default_legends |= self._uy_get_legends_recs("addenda", self)
         default_legends |= self._uy_get_legends_recs("cfe_doc", self)
-        default_legends |= self._uy_get_legends_recs("emisor", self)
+        default_legends |= self._uy_get_legends_recs("issuer", self)
         default_legends |= self._uy_get_legends_recs("receiver", self)
 
         # Escribimos las leyendas en el move

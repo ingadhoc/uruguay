@@ -311,3 +311,12 @@ class TestUx(TestUyEdi):
 
         nom_item, _description = invoice._l10n_uy_edi_get_line_nom_and_desc(invoice.invoice_line_ids[1])
         self.assertEqual(nom_item, "Descripción propia", "Una descripción propia reemplaza al nombre, como en 19")
+
+    def test_150_get_defaults_applies_issuer_addenda(self):
+        """Get Defaults aplica las adendas de emisor que cumplen su condición, como las de los demás tipos"""
+        addenda = self.env["l10n_uy_edi.addenda"].create(
+            {"type": "issuer", "content": "Leyenda del emisor", "condition": "True", "company_id": self.company_uy.id}
+        )
+        invoice = self._create_move()
+        invoice.action_l10n_uy_remkark_default()
+        self.assertIn(addenda, invoice.l10n_uy_edi_addenda_ids)
