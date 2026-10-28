@@ -52,7 +52,10 @@ class ResPartner(models.Model):
 
     def l10n_uy_ux_update_from_dgi(self):
         """Update the partners with RUT using the DGI query of l10n_uy_edi, keeping the data DGI does not inform"""
-        partners = self.filtered(lambda p: p.vat and p._l10n_uy_edi_get_dgi_code() == UY_RUT_DGI_CODE)
+        # Contacts of a company take its RUT: DGI data is for the company, not for them
+        partners = self.filtered(
+            lambda p: p == p.commercial_partner_id and p.vat and p._l10n_uy_edi_get_dgi_code() == UY_RUT_DGI_CODE
+        )
         if not partners:
             raise UserError(self.env._("No partner with RUT was found to update"))
         not_updated = self.env["res.partner"]
