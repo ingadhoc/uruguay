@@ -1,6 +1,6 @@
-.. image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
-   :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
-   :alt: License: AGPL-3
+.. image:: https://img.shields.io/badge/licence-LGPL--3-blue.svg
+   :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
+   :alt: License: LGPL-3
 
 ==========
 Uruguay UX
@@ -22,9 +22,13 @@ Functional description
 
 4. **Credit/Debit Notes Without Origin Document**: DGI requires credit and debit notes to report the original document they refer to. When the note has no origin document set (for example, a credit note created from the sale order), the module looks for the posted invoice of the same sale order lines and reports it in the reference section of the CFE. Requires the Sales app.
 
+5. **Document Type by Contact**: For contacts with RUT, credit and debit notes are set as e-Invoice credit and debit notes instead of e-Ticket ones.
+
+6. **CFE Status in DGI**: The status of the CFEs in DGI is queried every 10 minutes, instead of once a day.
+
 **New functionalities added:**
 
-1. **DGI Registry Lookup**: Allows querying contact data to check if they are electronic issuers and retrieve registry data as an assistant to help fill contact information more easily. Adds lookup functionality in contact forms.
+1. **DGI Registry Lookup**: Adds a button in the contact form to check in DGI if a contact with RUT is an electronic issuer. Adds an "Update from DGI" action in the contact list, and a "Update Partners From DGI" menu for all the contacts with RUT, that fill the contact data with the DGI registry query of the official module. The data DGI does not inform is kept as it is.
 
 2. **XML Preview and Validation**: Enables XML preview at any time (not just in demo mode or when errors occur). Adds "Validate XML" button for testing purposes.
 
@@ -62,8 +66,9 @@ Usage
 - Toggle between test and production environments without reconfiguration
 
 **DGI Registry Lookup:**
-- Open any contact form
-- Use the DGI lookup feature to automatically populate contact information
+- Open a contact with RUT and click "(UY) Is Electronic Issuer?" to check it in DGI
+- Select contacts in the list view and use the "Update from DGI" action to update their data
+- Use Contacts > Configuration > Update Partners From DGI to update all the contacts with RUT
 
 **XML Preview and Validation:**
 - Access XML preview from any electronic document
