@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <record id="view_partner_form" model="ir.ui.view">
-        <field name="name">partner_documents.view_partner_form</field>
-        <field name="inherit_id" ref="base.view_partner_form"/>
-        <field name="model">res.partner</field>
-        <field type="xml" name="arch">
-            <div id="vat_div" position="after">
-                <button name="action_l10n_uy_is_electronic_issuer" string="(UY) Is Electronic Issuer?" class="oe_link oe_inline" type="object" invisible="'UY' not in fiscal_country_codes"/>
-            </div>
-        </field>
+    <record id="action_partner_is_electronic_issuer" model="ir.actions.server">
+        <field name="name">Check Electronic Issuer in DGI</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">action = record.action_l10n_uy_is_electronic_issuer()</field>
     </record>
 
     <record id="action_partner_update_from_dgi" model="ir.actions.server">

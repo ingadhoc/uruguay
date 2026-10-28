@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-28 13:47+0000\n"
-"PO-Revision-Date: 2026-10-28 13:47+0000\n"
+"POT-Creation-Date: 2026-10-28 15:59+0000\n"
+"PO-Revision-Date: 2026-10-28 15:59+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -19,11 +19,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_uy_ux/models/res_partner.py:0
 msgid "%s partners updated from DGI"
-msgstr ""
-
-#. module: l10n_uy_ux
-#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_partner_form
-msgid "(UY) Is Electronic Issuer?"
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -94,7 +89,7 @@ msgid ""
 "\n"
 "**New functionalities added:**\n"
 "\n"
-"1. **DGI Registry Lookup**: Adds a button in the contact form to check in DGI if a contact with RUT is an electronic issuer. Adds an \"Update from DGI\" action in the contact list, and a \"Update Partners From DGI\" menu for all the contacts with RUT, that fill the contact data with the DGI registry query of the official module. The data DGI does not inform is kept as it is.\n"
+"1. **DGI Registry Lookup**: Adds a \"Check Electronic Issuer in DGI\" action in the contact form to check in DGI if a contact with RUT is an electronic issuer. Adds an \"Update from DGI\" action in the contact list, and a \"Update Partners From DGI\" menu for all the contacts with RUT, that fill the contact data with the DGI registry query of the official module. The data DGI does not inform is kept as it is.\n"
 "\n"
 "2. **XML Preview and Validation**: Enables XML preview at any time (not just in demo mode or when errors occur). Adds \"Validate XML\" button for testing purposes.\n"
 "\n"
@@ -132,7 +127,7 @@ msgid ""
 "- Toggle between test and production environments without reconfiguration\n"
 "\n"
 "**DGI Registry Lookup:**\n"
-"- Open a contact with RUT and click \"(UY) Is Electronic Issuer?\" to check it in DGI\n"
+"- Open a contact with RUT and use the \"Check Electronic Issuer in DGI\" action to check it in DGI\n"
 "- Select contacts in the list view and use the \"Update from DGI\" action to update their data\n"
 "- Use Contacts > Configuration > Update Partners From DGI to update all the contacts with RUT\n"
 "\n"
@@ -235,6 +230,11 @@ msgstr ""
 #. module: l10n_uy_ux
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_certificate_certificate__content_filename
 msgid "Certificate Filename"
+msgstr ""
+
+#. module: l10n_uy_ux
+#: model:ir.actions.server,name:l10n_uy_ux.action_partner_is_electronic_issuer
+msgid "Check Electronic Issuer in DGI"
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -467,6 +467,12 @@ msgid "Not updated (no data in DGI or country is not Uruguay): %s"
 msgstr ""
 
 #. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/res_partner.py:0
+msgid "Only a partner with a Uruguayan RUT can be checked in DGI"
+msgstr ""
+
+#. module: l10n_uy_ux
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_l10n_uy_edi_document__partner_id
 msgid "Partner"
 msgstr ""
@@ -695,12 +701,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_uy_ux/models/l10n_uy_edi_document.py:0
 msgid "You can not update the state of a accepted/rejected invoice"
-msgstr ""
-
-#. module: l10n_uy_ux
-#. odoo-python
-#: code:addons/l10n_uy_ux/models/res_partner.py:0
-msgid "You can only check if the partner has a RUT identification type"
 msgstr ""
 
 #. module: l10n_uy_ux

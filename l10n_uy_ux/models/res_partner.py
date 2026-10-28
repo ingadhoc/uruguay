@@ -48,7 +48,7 @@ class ResPartner(models.Model):
                     },
                 }
         else:
-            raise UserError(self.env._("You can only check if the partner has a RUT identification type"))
+            raise UserError(self.env._("Only a partner with a Uruguayan RUT can be checked in DGI"))
 
     def l10n_uy_ux_update_from_dgi(self):
         """Update the partners with RUT using the DGI query of l10n_uy_edi, keeping the data DGI does not inform"""

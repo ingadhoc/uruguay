@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-28 13:47+0000\n"
-"PO-Revision-Date: 2026-10-28 13:47+0000\n"
+"POT-Creation-Date: 2026-10-28 15:59+0000\n"
+"PO-Revision-Date: 2026-10-28 15:59+0000\n"
 "Last-Translator: julia elizondo <jue@adhoc.inc>\n"
 "Language-Team: Spanish <https://translation.dev-adhoc.com/projects/"
 "uruguay-19-0/uruguay-19-0-l10n_uy_ux/es/>\n"
@@ -27,11 +27,6 @@ msgstr ""
 #: code:addons/l10n_uy_ux/models/res_partner.py:0
 msgid "%s partners updated from DGI"
 msgstr "%s contactos actualizados desde DGI"
-
-#. module: l10n_uy_ux
-#: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_partner_form
-msgid "(UY) Is Electronic Issuer?"
-msgstr "(UY) Es Emisor Electrónico?"
 
 #. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
@@ -115,7 +110,7 @@ msgid ""
 "\n"
 "**New functionalities added:**\n"
 "\n"
-"1. **DGI Registry Lookup**: Adds a button in the contact form to check in DGI if a contact with RUT is an electronic issuer. Adds an \"Update from DGI\" action in the contact list, and a \"Update Partners From DGI\" menu for all the contacts with RUT, that fill the contact data with the DGI registry query of the official module. The data DGI does not inform is kept as it is.\n"
+"1. **DGI Registry Lookup**: Adds a \"Check Electronic Issuer in DGI\" action in the contact form to check in DGI if a contact with RUT is an electronic issuer. Adds an \"Update from DGI\" action in the contact list, and a \"Update Partners From DGI\" menu for all the contacts with RUT, that fill the contact data with the DGI registry query of the official module. The data DGI does not inform is kept as it is.\n"
 "\n"
 "2. **XML Preview and Validation**: Enables XML preview at any time (not just in demo mode or when errors occur). Adds \"Validate XML\" button for testing purposes.\n"
 "\n"
@@ -153,7 +148,7 @@ msgid ""
 "- Toggle between test and production environments without reconfiguration\n"
 "\n"
 "**DGI Registry Lookup:**\n"
-"- Open a contact with RUT and click \"(UY) Is Electronic Issuer?\" to check it in DGI\n"
+"- Open a contact with RUT and use the \"Check Electronic Issuer in DGI\" action to check it in DGI\n"
 "- Select contacts in the list view and use the \"Update from DGI\" action to update their data\n"
 "- Use Contacts > Configuration > Update Partners From DGI to update all the contacts with RUT\n"
 "\n"
@@ -262,6 +257,11 @@ msgstr "Certificado"
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_certificate_certificate__content_filename
 msgid "Certificate Filename"
 msgstr "Nombre del archivo de Certificado"
+
+#. module: l10n_uy_ux
+#: model:ir.actions.server,name:l10n_uy_ux.action_partner_is_electronic_issuer
+msgid "Check Electronic Issuer in DGI"
+msgstr "Consultar emisor electrónico en DGI"
 
 #. module: l10n_uy_ux
 #: model:ir.model,name:l10n_uy_ux.model_res_company
@@ -499,6 +499,12 @@ msgstr "No se encontró ningún contacto con RUT para actualizar"
 #: code:addons/l10n_uy_ux/models/res_partner.py:0
 msgid "Not updated (no data in DGI or country is not Uruguay): %s"
 msgstr "No actualizados (sin datos en DGI o el país no es Uruguay): %s"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/res_partner.py:0
+msgid "Only a partner with a Uruguayan RUT can be checked in DGI"
+msgstr "Solo se puede consultar en DGI un contacto con RUT uruguayo"
 
 #. module: l10n_uy_ux
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_l10n_uy_edi_document__partner_id
@@ -762,13 +768,6 @@ msgstr "No puede obtener una factura con errores"
 #: code:addons/l10n_uy_ux/models/l10n_uy_edi_document.py:0
 msgid "You can not update the state of a accepted/rejected invoice"
 msgstr "No puede actualizar el estado de una factura aceptada/rechazada"
-
-#. module: l10n_uy_ux
-#. odoo-python
-#: code:addons/l10n_uy_ux/models/res_partner.py:0
-msgid "You can only check if the partner has a RUT identification type"
-msgstr ""
-"Sólo puede tildar un contacto que tenga RUT como Tipo de Identificación"
 
 #. module: l10n_uy_ux
 #. odoo-python

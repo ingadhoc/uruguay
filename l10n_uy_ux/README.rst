@@ -28,7 +28,7 @@ Functional description
 
 **New functionalities added:**
 
-1. **DGI Registry Lookup**: Adds a button in the contact form to check in DGI if a contact with RUT is an electronic issuer. Adds an "Update from DGI" action in the contact list, and a "Update Partners From DGI" menu for all the contacts with RUT, that fill the contact data with the DGI registry query of the official module. The data DGI does not inform is kept as it is.
+1. **DGI Registry Lookup**: Adds a "Check Electronic Issuer in DGI" action in the contact form to check in DGI if a contact with RUT is an electronic issuer. Adds an "Update from DGI" action in the contact list, and a "Update Partners From DGI" menu for all the contacts with RUT, that fill the contact data with the DGI registry query of the official module. The data DGI does not inform is kept as it is.
 
 2. **XML Preview and Validation**: Enables XML preview at any time (not just in demo mode or when errors occur). Adds "Validate XML" button for testing purposes.
 
@@ -66,7 +66,7 @@ Usage
 - Toggle between test and production environments without reconfiguration
 
 **DGI Registry Lookup:**
-- Open a contact with RUT and click "(UY) Is Electronic Issuer?" to check it in DGI
+- Open a contact with RUT and use the "Check Electronic Issuer in DGI" action to check it in DGI
 - Select contacts in the list view and use the "Update from DGI" action to update their data
 - Use Contacts > Configuration > Update Partners From DGI to update all the contacts with RUT
 
