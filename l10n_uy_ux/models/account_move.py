@@ -1,4 +1,3 @@
-import base64
 import logging
 
 from lxml import etree
@@ -424,13 +423,19 @@ class AccountMove(models.Model):
         """
         # B7 NomItem, B8 DscItem
         # Limpiamos saltos de línea que pueden romper el PDF
-        clean_name = aml.name.replace("\n", " ").replace("\r", " ") if aml.name else ""
-        # Since 20.0 the line name no longer starts with the product name
-        if not clean_name and aml.product_id:
+        name = aml.name or ""
+        if aml.product_id:
             product = aml.product_id.with_context(display_default_code=False)
             if lang := aml.move_id._get_lang():
                 product = product.with_context(lang=lang)
-            clean_name = product.display_name
+            default_description = {
+                "sale": product.description_sale,
+                "purchase": product.description_purchase,
+            }.get(aml.journal_id.type)
+            # Since 20.0 the default line name no longer starts with the product name, as it did in 19.0
+            if not name or name == default_description:
+                name = "\n".join(filter(None, [product.display_name, name]))
+        clean_name = name.replace("\n", " ").replace("\r", " ")
 
         # La referencia interna no va embebida en NomItem: se informa en su propio nodo
         # <CodItem> (TpoCod INT1). Si la descripción de la línea arranca con el prefijo
@@ -673,7 +678,7 @@ class AccountMove(models.Model):
             self.clear_l10n_uy_invoice_fields()
         else:
             raise UserError(_("It is not possible to update the move because there is no xml file."))
-        xml = base64.b64decode(self.l10n_uy_edi_xml_attachment_id.datas)
+        xml = bytes(self.l10n_uy_edi_xml_attachment_id.raw)
         self._l10n_uy_edi_complete_cfe_from_xml(etree.fromstring(xml))
 
     def clear_l10n_uy_invoice_fields(self):

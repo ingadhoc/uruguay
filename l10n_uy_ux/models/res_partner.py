@@ -55,14 +55,24 @@ class ResPartner(models.Model):
         partners = self.filtered(lambda p: p.vat and p._l10n_uy_edi_get_dgi_code() == UY_RUT_DGI_CODE)
         if not partners:
             raise UserError(self.env._("No partner with RUT was found to update"))
+        not_updated = self.env["res.partner"]
         for partner in partners.with_context(l10n_uy_ux_keep_values=True):
-            partner.button_l10n_uy_populate_from_vat()
+            # l10n_uy_edi returns False when it does not update the partner (no UY country, RUT not found in DGI)
+            if partner.button_l10n_uy_populate_from_vat() is False:
+                not_updated |= partner
+        message = self.env._("%s partners updated from DGI", len(partners - not_updated))
+        if not_updated:
+            message += "\n" + self.env._(
+                "Not updated (no data in DGI or country is not Uruguay): %s",
+                ", ".join(not_updated.mapped("display_name")),
+            )
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
             "params": {
-                "type": "success",
-                "message": self.env._("%s partners updated from DGI", len(partners)),
+                "type": "warning" if not_updated else "success",
+                "message": message,
+                "sticky": bool(not_updated),
                 "next": {"type": "ir.actions.act_window_close"},
             },
         }
