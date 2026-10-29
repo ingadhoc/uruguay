@@ -1,3 +1,4 @@
+from lxml import etree
 from odoo import Command
 from odoo.addons.l10n_uy_edi.tests.common import TestUyEdi
 from odoo.exceptions import UserError
@@ -268,3 +269,35 @@ class TestUx(TestUyEdi):
         )
         # La concatenación de NomItem + DscItem debe reconstruir el nombre limpio original
         self.assertEqual(nom_item + description, line_name.replace("\n", " "))
+
+    def _create_vendor_bill_from_cron(self, xml_tree):
+        """Create the vendor bill the same way the Uruware sync cron does before completing it from the XML"""
+        doc_type = self.env["account.move"]._l10n_uy_edi_get_cfe_document_type(xml_tree)
+        return self.env["l10n_uy_edi.document"]._create_edi_move(
+            xml_tree, company=self.company_uy, doc_type=doc_type, l10n_uy_idreq="131270-notification"
+        )
+
+    def test_130_cron_vendor_bill_error_does_not_stop_sync(self):
+        """A CFE that can not be completed must not break the sync cron: the bill stays in draft and the error is
+        posted in the chatter. Outside the cron the error is still raised."""
+        # Without FchEmis the completion fails after the partner was already created
+        xml_tree = etree.fromstring(
+            b"""<CFE>
+                <TipoCFE>111</TipoCFE><Serie>A</Serie><NumeroCfe>82100</NumeroCfe>
+                <RUCEmisor>218655000017</RUCEmisor><RznSoc>RENENUTET SAS</RznSoc><TpoMoneda>UYU</TpoMoneda>
+            </CFE>"""
+        )
+        move = self._create_vendor_bill_from_cron(xml_tree)
+        # Capture the expected warning so it does not reach the build log
+        with self.assertLogs("odoo.addons.l10n_uy_ux.models.account_move", level="WARNING"):
+            move.with_context(l10n_uy_ux_vendor_bills_cron=True)._l10n_uy_edi_complete_cfe_from_xml(xml_tree)
+
+        self.assertEqual(move.state, "draft")
+        self.assertFalse(move.partner_id, "Changes of the failed completion must be rolled back")
+        self.assertFalse(self.env["res.partner"].search([("vat", "=", "218655000017")]))
+        self.assertEqual(move.ref, "A0082100", "The CFE number must be kept to find the bill")
+        self.assertIn("A0082100", move.l10n_uy_edi_error, "The error must be visible on the bill")
+        self.assertIn("A0082100", move.message_ids[0].body)
+
+        with self.assertRaises(TypeError):
+            self._create_vendor_bill_from_cron(xml_tree)._l10n_uy_edi_complete_cfe_from_xml(xml_tree)
