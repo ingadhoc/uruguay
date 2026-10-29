@@ -165,7 +165,10 @@ class L10nUyEdiDocument(models.Model):
         ):
             return
 
-        return super().cron_l10n_uy_edi_get_vendor_bills(batch_size=batch_size)
+        # Isolate each CFE so a single failing one does not stop the whole sync (see account.move)
+        return super(
+            L10nUyEdiDocument, self.with_context(l10n_uy_ux_vendor_bills_cron=True)
+        ).cron_l10n_uy_edi_get_vendor_bills(batch_size=batch_size)
 
     # Metodos nuevos
 

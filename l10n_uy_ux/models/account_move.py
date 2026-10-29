@@ -572,12 +572,54 @@ class AccountMove(models.Model):
     def action_l10n_uy_update_fields(self):
         """Sync with Uruware and complete vendor bill information."""
         self.ensure_one()
-        if self.l10n_uy_edi_xml_attachment_id:
+        # Bills left incomplete by the sync cron have the XML but their EDI document is not accepted yet
+        attachment = self.l10n_uy_edi_xml_attachment_id or self.l10n_uy_edi_document_id.attachment_id
+        if attachment:
             self.clear_l10n_uy_invoice_fields()
+            self.l10n_uy_edi_document_id.message = False
         else:
             raise UserError(_("It is not possible to update the move because there is no xml file."))
-        xml = base64.b64decode(self.l10n_uy_edi_xml_attachment_id.datas)
+        xml = base64.b64decode(attachment.datas)
         self._l10n_uy_edi_complete_cfe_from_xml(etree.fromstring(xml))
+
+    def _l10n_uy_edi_complete_cfe_from_xml(self, xml_tree, l10n_uy_idreq=False):
+        # EXTENDS l10n_uy_edi
+        """En el cron de sincronización de facturas de proveedor, si un CFE no se puede completar (por ejemplo, el
+        contacto pertenece a otra compañía) la excepción cortaba toda la corrida: la notificación no se descartaba,
+        el cron fallaba siempre en el mismo CFE y Odoo lo desactivaba sin que nadie se enterara (con 5 fallos
+        seguidos y al menos 7 días desde el primero).
+
+        Desde el cron aislamos cada CFE: si falla, dejamos la factura en borrador con su XML, el error en el aviso
+        de facturación electrónica y en el chatter, y el número de CFE en la referencia para poder encontrarla. El
+        cron sigue con el resto y la factura se completa después con el botón de actualizar desde el XML."""
+        if not self.env.context.get("l10n_uy_ux_vendor_bills_cron"):
+            return super()._l10n_uy_edi_complete_cfe_from_xml(xml_tree, l10n_uy_idreq=l10n_uy_idreq)
+        try:
+            with self.env.cr.savepoint():
+                return super()._l10n_uy_edi_complete_cfe_from_xml(xml_tree, l10n_uy_idreq=l10n_uy_idreq)
+        except Exception as error:  # noqa: BLE001
+            cfe_number = (xml_tree.findtext(".//{*}Serie") or "") + (
+                xml_tree.findtext(".//{*}NumeroCfe") or xml_tree.findtext(".//{*}Nro") or ""
+            ).zfill(7)
+            issuer_vat = xml_tree.findtext(".//{*}RUCEmisor")
+            _logger.warning(
+                "Vendor bill %s (CFE %s, RUT %s) could not be completed from Uruware: %s",
+                self.id,
+                cfe_number,
+                issuer_vat,
+                error,
+            )
+            msg = _(
+                "The vendor bill could not be completed from the CFE %(cfe_number)s (issuer RUT %(issuer_vat)s) "
+                "received from Uruware. Error: %(error)s. Fix the data and use the button "
+                "'(UY)Update Invoice With XML data' to complete it.",
+                cfe_number=cfe_number,
+                issuer_vat=issuer_vat,
+                error=error,
+            )
+            self.l10n_uy_edi_document_id.message = msg
+            self.ref = cfe_number
+            self.message_post(body=msg)
 
     def clear_l10n_uy_invoice_fields(self):
         """When click the button "Update fields" in the vendor bill form view, firstly is neccessary to clean the

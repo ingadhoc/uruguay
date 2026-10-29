@@ -537,6 +537,18 @@ msgid ""
 msgstr ""
 
 #. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+msgid ""
+"The vendor bill could not be completed from the CFE %(cfe_number)s (issuer "
+"RUT %(issuer_vat)s) received from Uruware. Error: %(error)s. Fix the data "
+"and use the button '(UY)Update Invoice With XML data' to complete it."
+msgstr ""
+"No se pudo completar la factura de proveedor con el CFE %(cfe_number)s (RUT "
+"del emisor %(issuer_vat)s) recibido de Uruware. Error: %(error)s. Corrija "
+"los datos y use el botón 'Actualizar desde XML' para completarla."
+
+#. module: l10n_uy_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_base_partner_update_from_padron_uy_form
 msgid "There are no more partners to update for this request..."
 msgstr ""
