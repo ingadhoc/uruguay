@@ -99,6 +99,24 @@ class AccountMove(models.Model):
         for move in self.filtered("l10n_uy_edi_document_id.connection_error"):
             move.l10n_uy_edi_is_needed = False
 
+    def l10n_uy_edi_action_update_dgi_state(self):
+        # EXTEND l10n_uy_edi
+        """DGI can accept a CFE it rejected before. Its invoice was already cancelled on the rejection, so it is
+        posted again, keeping its number and without sending a new CFE. While DGI keeps rejecting it, it is left
+        as is instead of being cancelled again."""
+        rejected = self.filtered(lambda m: m.state == "cancel" and m.l10n_uy_edi_cfe_state == "rejected")
+        res = super(AccountMove, self - rejected).l10n_uy_edi_action_update_dgi_state()
+        if rejected:
+            rejected.l10n_uy_edi_document_id.action_update_dgi_state()
+            to_post = rejected.filtered(lambda m: m.l10n_uy_edi_cfe_state == "accepted")
+            if to_post:
+                to_post.button_draft()
+                to_post.action_post()
+                to_post.message_post(
+                    body=self.env._("DGI accepted the CFE it had rejected, the invoice is posted again")
+                )
+        return res
+
     def _l10n_uy_edi_cron_update_dgi_status(self, batch_size=10):
         # EXTEND l10n_uy_edi
         """The documents left in error by a connection failure are queried too, so they recover on their own:

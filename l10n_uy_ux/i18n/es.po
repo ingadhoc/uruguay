@@ -838,8 +838,8 @@ msgstr "No puede obtener una factura con errores"
 #. module: l10n_uy_ux
 #. odoo-python
 #: code:addons/l10n_uy_ux/models/l10n_uy_edi_document.py:0
-msgid "You can not update the state of a accepted/rejected invoice"
-msgstr "No puede actualizar el estado de una factura aceptada/rechazada"
+msgid "You can not update the state of an accepted invoice"
+msgstr "No puede actualizar el estado de una factura aceptada"
 
 #. module: l10n_uy_ux
 #. odoo-python
@@ -879,3 +879,9 @@ msgstr ""
 #: model:ir.model,name:l10n_uy_ux.model_res_partner_update_from_padron_uy_wizard
 msgid "res.partner.update.from.padron.uy.wizard"
 msgstr ""
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+msgid "DGI accepted the CFE it had rejected, the invoice is posted again"
+msgstr "DGI aceptó el CFE que había rechazado, la factura se vuelve a publicar"

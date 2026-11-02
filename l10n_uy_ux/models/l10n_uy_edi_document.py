@@ -107,16 +107,17 @@ class L10nUyEdiDocument(models.Model):
 
     def action_update_dgi_state(self):
         # EXTEND l10n_uy_edi
-        """Permitimos actualizar estado solo si tenemos UUID y solo si esta en esperando respuesta.
-        Si hay error no hay nada que consultar, y si fue aceptado rechazado ya no necesita ser actualizado.
-        La excepcion es el error de conexion: ahi no sabemos si el CFE llego a DGI y consultar es la unica salida"""
+        """Permitimos actualizar estado solo si tenemos UUID y si DGI todavia puede cambiarlo.
+        Si hay error no hay nada que consultar, y si fue aceptado ya es definitivo.
+        La excepcion es el error de conexion: ahi no sabemos si el CFE llego a DGI y consultar es la unica salida.
+        Un rechazado se puede volver a consultar: DGI puede aceptarlo despues (ej. E06, monto mayor al habitual)"""
         for doc in self.filtered(lambda x: x.move_id.move_type not in ["in_invoice", "in_refund"]):
             if not doc.uuid:
                 raise UserError(self.env._("Please return a 'UUID CFE Key' in order to continue"))
             if doc.state == "error" and not doc.connection_error:
                 raise UserError(self.env._("You can not obtain the invoice with errors"))
-            if doc.state not in ["received", "error"]:
-                raise UserError(self.env._("You can not update the state of a accepted/rejected invoice"))
+            if doc.state not in ["received", "error", "rejected"]:
+                raise UserError(self.env._("You can not update the state of an accepted invoice"))
 
         super().action_update_dgi_state()
 
