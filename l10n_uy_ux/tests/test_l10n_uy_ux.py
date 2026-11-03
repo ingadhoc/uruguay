@@ -288,3 +288,34 @@ class TestUx(TestUyEdi):
 
         nom_item, _description = invoice._l10n_uy_edi_get_line_nom_and_desc(invoice.invoice_line_ids[1])
         self.assertEqual(nom_item, "Otro texto [REF123]", "Solo se quita el prefijo estándar, no otras menciones")
+
+    def test_140_global_discount_tax_included(self):
+        """Con impuesto incluido, ValorDR del descuento global se informa con impuesto, igual que MontoItem,
+        para que A117 (MntNetoIVATasaBasica) cierre con la cuenta que hace DGI"""
+        tax_22_included = self.tax_22.copy({"price_include_override": "tax_included", "name": "22% VAT (included)"})
+        invoice = self._create_move(
+            partner_id=self.partner_local.id,
+            l10n_latam_document_type_id=self.env.ref("l10n_uy.dc_e_inv").id,
+            invoice_line_ids=[
+                Command.create(
+                    {
+                        "product_id": self.service_vat_22.id,
+                        "quantity": 2,
+                        "price_unit": 590.0,
+                        "tax_ids": tax_22_included,
+                    }
+                ),
+                Command.create({"name": "Descuento", "price_unit": -60.0, "tax_ids": tax_22_included}),
+            ],
+        )
+        invoice.action_post()
+        self._send_and_print(invoice)
+        cfe = self.get_xml_tree_from_attachment(invoice.l10n_uy_edi_document_id.attachment_id)
+
+        self.assertEqual(cfe.findtext(".//{*}MntBruto"), "1")
+        monto_item = float(cfe.findtext(".//{*}MontoItem"))
+        valor_dr = float(cfe.findtext(".//{*}ValorDR"))
+        neto_basica = float(cfe.findtext(".//{*}MntNetoIVATasaBasica"))
+        self.assertAlmostEqual(monto_item, 1180.0)
+        self.assertAlmostEqual(valor_dr, 60.0)
+        self.assertAlmostEqual((monto_item - valor_dr) / 1.22, neto_basica, places=2)
