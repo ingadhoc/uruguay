@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-16 12:54+0000\n"
-"PO-Revision-Date: 2026-09-16 12:54+0000\n"
+"POT-Creation-Date: 2026-11-03 21:41+0000\n"
+"PO-Revision-Date: 2026-11-03 21:41+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -223,6 +223,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_company__l10n_uy_dgi_crt_id
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_config_settings__l10n_uy_dgi_crt_id
 msgid "DGI Certificate"
+msgstr ""
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+msgid "DGI accepted the CFE it had rejected, the invoice is posted again"
 msgstr ""
 
 #. module: l10n_uy_ux
@@ -806,10 +812,4 @@ msgstr ""
 #. module: l10n_uy_ux
 #: model:ir.model,name:l10n_uy_ux.model_res_partner_update_from_padron_uy_wizard
 msgid "res.partner.update.from.padron.uy.wizard"
-msgstr ""
-
-#. module: l10n_uy_ux
-#. odoo-python
-#: code:addons/l10n_uy_ux/models/account_move.py:0
-msgid "DGI accepted the CFE it had rejected, the invoice is posted again"
 msgstr ""
