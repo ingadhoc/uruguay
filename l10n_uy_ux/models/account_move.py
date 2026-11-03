@@ -683,6 +683,18 @@ class AccountMove(models.Model):
         self.l10n_uy_edi_document_id._compute_from_origin()
         return super()._l10n_uy_edi_update_xml_and_pdf_file(response)
 
+    def _l10n_uy_edi_cfe_D_global_discount(self, tax_details):
+        # EXTENDS: l10n_uy_edi
+        """With tax included prices, B24 (MontoItem) is reported with taxes, so ValorDR (D6) must also include
+        them; otherwise DGI rejects the CFE (E05, A117 MntNetoIVATasaBasica)."""
+        res = super()._l10n_uy_edi_cfe_D_global_discount(tax_details)
+        discount_base_lines = [bl for bl in tax_details["base_lines"] if bl["record"].price_unit < 0]
+        for discount, base_line in zip(res, discount_base_lines):
+            tax_info = tax_details["tax_details_per_record"][base_line["record"]]["tax_details"].values()
+            if tax_info and next(iter(tax_info))["_tax_price_include"]:
+                discount["ValorDR"] = abs(base_line["tax_details"]["raw_total_included_currency"])
+        return res
+
     def _l10n_uy_edi_cfe_A_receptor(self):
         # EXTENDS: l10n_uy_edi
         """If sale_require_purchase_order_number OCA module is installed we change the value of the CompraID tag.
