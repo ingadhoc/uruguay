@@ -112,9 +112,12 @@ class AccountMove(models.Model):
             if to_post:
                 to_post.button_draft()
                 to_post.action_post()
-                to_post.message_post(
-                    body=self.env._("DGI accepted the CFE it had rejected, the invoice is posted again")
-                )
+                for move in to_post:
+                    move.message_post(
+                        body=self.env._("DGI accepted the CFE it had rejected, the invoice is posted again"),
+                        message_type="comment",
+                        subtype_xmlid="mail.mt_note",
+                    )
         return res
 
     def _l10n_uy_edi_cron_update_dgi_status(self, batch_size=10):
