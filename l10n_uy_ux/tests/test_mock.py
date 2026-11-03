@@ -6,9 +6,14 @@ from odoo.tests import tagged
 
 
 @tagged("-at_install", "post_install", "post_install_l10n", "mock")
-class TestConnectionError(common.TestUyEdi):
-    """A transport failure against Uruware says nothing about the CFE: it must not overwrite a state given by
-    DGI, and it must not enable a second CFE for an invoice whose first one may already be there."""
+class TestMock(common.TestUyEdi):
+    """Flows against Uruware in testing, with mocked responses.
+
+    - A transport failure says nothing about the CFE: it must not overwrite a state given by DGI, and it must not
+      enable a second CFE for an invoice whose first one may already be there.
+    - DGI can reject a CFE and accept it later (E06: amount over the usual ones for the RUT). The invoice was
+      cancelled on the rejection and has to be posted again with the same CFE, not issued again.
+    """
 
     @classmethod
     def setUpClass(cls):
@@ -39,6 +44,20 @@ class TestConnectionError(common.TestUyEdi):
         invoice.action_post()
         with self.assertRaisesRegex(UserError, "Timeout"):
             self._mock_send_and_print(invoice, exception="Timeout", expected_xml_file="NO_RESPONSE")
+        return invoice
+
+    def _invoice_with_dgi_state(self, status_mock):
+        """A sent invoice whose state was then updated from DGI with the given response"""
+        invoice = self._create_uy_move()
+        invoice.action_post()
+        self._mock_send_and_print(invoice, "mock_90_invoice_received")
+        self._mock_update_dgi_state(invoice, status_mock)
+        return invoice
+
+    def _rejected_invoice(self):
+        invoice = self._invoice_with_dgi_state("mock_invoice_rejected")
+        self.assertEqual(invoice.l10n_uy_edi_cfe_state, "rejected")
+        self.assertEqual(invoice.state, "cancel")
         return invoice
 
     def test_10_connection_error_does_not_degrade_dgi_state(self):
@@ -105,3 +124,35 @@ class TestConnectionError(common.TestUyEdi):
         self.assertEqual(invoice.l10n_uy_edi_cfe_state, "accepted", "The cron did not recover the CFE")
         self.assertFalse(invoice.l10n_uy_edi_document_id.connection_error)
         self.assertFalse(invoice.l10n_uy_edi_error)
+
+    def test_60_rejected_invoice_is_posted_again_when_accepted(self):
+        invoice = self._rejected_invoice()
+        edi_doc = invoice.l10n_uy_edi_document_id
+        number = invoice.name
+
+        self._mock_update_dgi_state(invoice, "mock_90_invoice_received")
+
+        self.assertEqual(invoice.l10n_uy_edi_cfe_state, "accepted")
+        self.assertEqual(invoice.state, "posted", "The accepted invoice was left cancelled")
+        self.assertEqual(invoice.name, number, "The invoice lost the number of its CFE")
+        self.assertEqual(invoice.l10n_uy_edi_document_id, edi_doc, "A new CFE was created")
+        self.assertFalse(invoice.l10n_uy_edi_error)
+
+    def test_70_still_rejected_invoice_is_not_cancelled_again(self):
+        invoice = self._rejected_invoice()
+
+        def cancel_notes():
+            return invoice.message_ids.filtered(lambda m: "automatically cancel" in (m.body or ""))
+
+        notes_before = cancel_notes()
+        self._mock_update_dgi_state(invoice, "mock_invoice_rejected")
+
+        self.assertEqual(invoice.state, "cancel")
+        self.assertEqual(cancel_notes(), notes_before, "The rejection was processed twice")
+
+    def test_80_accepted_invoice_cannot_be_updated(self):
+        invoice = self._invoice_with_dgi_state("mock_90_invoice_received")
+        self.assertEqual(invoice.l10n_uy_edi_cfe_state, "accepted")
+
+        with self.assertRaisesRegex(UserError, "accepted invoice"):
+            invoice.l10n_uy_edi_action_update_dgi_state()
