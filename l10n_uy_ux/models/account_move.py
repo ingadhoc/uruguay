@@ -106,18 +106,17 @@ class AccountMove(models.Model):
         as is instead of being cancelled again."""
         rejected = self.filtered(lambda m: m.state == "cancel" and m.l10n_uy_edi_cfe_state == "rejected")
         res = super(AccountMove, self - rejected).l10n_uy_edi_action_update_dgi_state()
-        if rejected:
-            rejected.l10n_uy_edi_document_id.action_update_dgi_state()
-            to_post = rejected.filtered(lambda m: m.l10n_uy_edi_cfe_state == "accepted")
-            if to_post:
-                to_post.button_draft()
-                to_post.action_post()
-                for move in to_post:
-                    move.message_post(
-                        body=self.env._("DGI accepted the CFE it had rejected, the invoice is posted again"),
-                        message_type="comment",
-                        subtype_xmlid="mail.mt_note",
-                    )
+        rejected.l10n_uy_edi_document_id.action_update_dgi_state()
+        to_post = rejected.filtered(lambda m: m.l10n_uy_edi_cfe_state == "accepted")
+        if to_post:
+            to_post.button_draft()
+            to_post.action_post()
+            for move in to_post:
+                move.message_post(
+                    body=self.env._("DGI accepted the CFE it had rejected, the invoice is posted again"),
+                    message_type="comment",
+                    subtype_xmlid="mail.mt_note",
+                )
         return res
 
     def _l10n_uy_edi_cron_update_dgi_status(self, batch_size=10):
