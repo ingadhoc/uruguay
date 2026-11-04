@@ -3,17 +3,17 @@
     <t t-name="l10n_uy_reports_ux.L10nUyReportsFilterTaxType">
         <Dropdown>
             <button class="btn btn-secondary">
-                <span class="oi oi-filled me-1" data-icon="filter_alt"/>Tax Type: <t t-out="selectedUYTaxType"/>
+                <span class="oi oi-filled me-1" data-icon="filter_alt"/>Tax Type: <t t-out="this.selectedUYTaxType"/>
             </button>
 
             <t t-set-slot="content">
-                <t t-foreach="Object.entries(controller.cachedFilterOptions.uy_vat_book_tax_types_available)" t-as="taxTypeUy" t-key="taxTypeUy[0]">
+                <t t-foreach="Object.entries(this.controller.cachedFilterOptions.uy_vat_book_tax_types_available)" t-as="taxTypeUy" t-key="taxTypeUy[0]">
                     <DropdownItem
                         class="{ 'selected': taxTypeUy[1]['selected'] }"
                         onSelected="() => this.selectUyVatBookTaxType(taxTypeUy[0])"
                         closingMode="'none'"
                     >
-                        <t t-esc="taxTypeUy[1]['name']"/>
+                        <t t-out="taxTypeUy[1]['name']"/>
                     </DropdownItem>
                 </t>
             </t>
