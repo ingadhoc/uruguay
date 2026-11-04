@@ -1,0 +1,4 @@
+id,name,model_id,group_id/id,operation,domain
+access_account_uy_vat_line,access_account_uy_vat_line,account.uy.vat.line,account.group_account_user,r,
+account_uy_vat_line_rule,VAT line for Analysis in Uruguayan Localization,account.uy.vat.line,,crud,"[('company_id', 'in', company_ids)]"
+access_form_report_wiz,access_form_report_wiz,form.report.wiz,base.group_user,crud,
