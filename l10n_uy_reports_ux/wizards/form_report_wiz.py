@@ -52,7 +52,9 @@ class FormReportWiz(models.TransientModel):
             ("move_type", "!=", "entry"),
             ("date", ">=", self.date_from),
             ("date", "<=", self.date_to),
+            "|",
             ("partner_id.vat", "!=", False),
+            ("partner_id.additional_identifiers", "!=", False),
             ("l10n_latam_document_type_id.code", "!=", "0"),
             ("l10n_latam_document_type_id.code", "!=", False),
             ("l10n_latam_document_type_id.code", "not in", ["121", "122", "123", "124", "221", "222", "223", "224"]),
@@ -76,7 +78,12 @@ class FormReportWiz(models.TransientModel):
         self.ensure_one()
         domain = self._get_invoices_domain()
         res = self.env["account.move"].search(domain, order="invoice_date asc, name asc, id asc")
-        return res
+        return res.filtered(lambda inv: self._get_partner_identification(inv.partner_id))
+
+    def _get_partner_identification(self, partner):
+        """Number that identifies the informed partner: the RUT, or the CI or NIE when it has no RUT."""
+        identifiers = partner.additional_identifiers or {}
+        return partner.vat or identifiers.get("UY_CI") or identifiers.get("UY_NIE") or False
 
     def _search_tax(self, tax_amount, tax_type):
         res = (
@@ -150,10 +157,11 @@ class FormReportWiz(models.TransientModel):
             # temp = inv._uy_cfe_A_receptor()
             # if not temp:
             #    continue
-            if inv.partner_id.vat in data:
-                data[inv.partner_id.vat] |= inv
+            identification = self._get_partner_identification(inv.partner_id)
+            if identification in data:
+                data[identification] |= inv
             else:
-                data[inv.partner_id.vat] = inv
+                data[identification] = inv
 
         for rut_partner, invoices in data.items():
             amount_total = {}
