@@ -81,9 +81,11 @@ class FormReportWiz(models.TransientModel):
         return res.filtered(lambda inv: self._get_partner_identification(inv.partner_id))
 
     def _get_partner_identification(self, partner):
-        """Number that identifies the informed partner: the RUT, or the CI or NIE when it has no RUT."""
+        """Number that identifies the informed partner: its tax ID, or else the first identification document
+        it has (in 19.0 all of them were stored in the VAT)."""
         identifiers = partner.additional_identifiers or {}
-        return partner.vat or identifiers.get("UY_CI") or identifiers.get("UY_NIE") or False
+        keys = ("UY_CI", "UY_NIE", "UY_NIFE", "UY_DNI", "PASSPORT", "UY_OTR")
+        return partner.vat or next((identifiers[key] for key in keys if identifiers.get(key)), False)
 
     def _search_tax(self, tax_amount, tax_type):
         res = (
