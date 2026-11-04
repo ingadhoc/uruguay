@@ -13,7 +13,7 @@
         "data/account_financial_report_data.xml",
         "report/account_uy_vat_line_views.xml",
         "wizards/form_report_wiz_views.xml",
-        'security/ir.access.csv',
+        "security/ir.access.csv",
     ],
     "assets": {
         "web.assets_backend": [

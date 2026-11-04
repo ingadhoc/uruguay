@@ -7,7 +7,7 @@
             </button>
 
             <t t-set-slot="content">
-                <t t-foreach="Object.entries(this.controller.cachedFilterOptions.uy_vat_book_tax_types_available)" t-as="taxTypeUy" t-key="taxTypeUy[0]">
+                <t t-foreach="Object.entries(this.controller.cachedFilterOptions().uy_vat_book_tax_types_available)" t-as="taxTypeUy" t-key="taxTypeUy[0]">
                     <DropdownItem
                         class="{ 'selected': taxTypeUy[1]['selected'] }"
                         onSelected="() => this.selectUyVatBookTaxType(taxTypeUy[0])"

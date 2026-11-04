@@ -1,8 +1,8 @@
-import base64
 import logging
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import BinaryBytes
 
 _logger = logging.getLogger(__name__)
 
@@ -219,7 +219,7 @@ class FormReportWiz(models.TransientModel):
             )
             # TODO No sabemos realmente cual es el formato, solo tomamos de ejemplo el que genera uruware
             # Ejemplo SumiFormulario2-181DGI_10_2022.txt ver de mejorarlo del periodo
-            self.res_file = base64.encodebytes(data.encode("ISO-8859-1"))
+            self.res_file = BinaryBytes(data.encode("ISO-8859-1"))
         else:
             self.res_filename = _("No file was generated")
             self.res_file = False

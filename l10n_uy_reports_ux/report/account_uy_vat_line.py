@@ -60,7 +60,7 @@ class AccountUyVatLine(models.Model):
 
     def open_journal_entry(self):
         self.ensure_one()
-        return self.move_id.get_formview_action()
+        return self.move_id.get_record_default_action()
 
     def init(self):
         cr = self.env.cr
@@ -74,7 +74,7 @@ class AccountUyVatLine(models.Model):
 
     @api.model
     def _uy_vat_line_build_query(
-        self, table_references=None, search_condition=None, column_group_key="", tax_types=("sale", "purchase")
+        self, table_references=None, search_condition=None, column_group_index="", tax_types=("sale", "purchase")
     ):
         """Returns the SQL Select query fetching account_move_lines info in order to build the pivot view for the VAT summary.
         This method is also meant to be used outside this model, which is the reason why it gives the opportunity to
@@ -88,9 +88,9 @@ class AccountUyVatLine(models.Model):
         query = SQL(
             """
                 SELECT
-                    %(column_group_key)s AS column_group_key,
+                    %(column_group_index)s AS column_group_index,
                     account_move.id,
-                    (CASE WHEN lit.l10n_uy_dgi_code = '2' THEN rp.vat ELSE NULL END) AS rut,
+                    (CASE WHEN rc.code = 'UY' THEN rp.vat ELSE NULL END) AS rut,
                     account_move.name as move_name,
                     rp.name AS partner_name,
                     account_move.id AS move_id,
@@ -126,18 +126,18 @@ class AccountUyVatLine(models.Model):
                     LEFT JOIN
                         res_partner AS rp ON rp.id = account_move.commercial_partner_id
                     LEFT JOIN
-                        l10n_latam_identification_type AS lit ON rp.l10n_latam_identification_type_id = lit.id
+                        res_country AS rc ON rp.country_id = rc.id
                     WHERE
                         (account_move_line.tax_line_id is not NULL OR bt.amount IN (22.0, 10.0, 0.0) AND bt.l10n_uy_tax_category = 'vat') AND
                         account_move.move_type IN ('out_invoice', 'in_invoice', 'out_refund', 'in_refund')
                         AND (nt.type_tax_use in %(tax_types)s OR bt.type_tax_use in %(tax_types)s)
                     %(search_condition)s
                 GROUP BY
-                    account_move.id, rp.id, lit.id, tax_type
+                    account_move.id, rp.id, rc.id, tax_type
                 ORDER BY
                     account_move.invoice_date, account_move.name
             """,
-            column_group_key=column_group_key,
+            column_group_index=column_group_index,
             table_references=table_references,
             tax_types=tax_types,
             search_condition=search_condition,
