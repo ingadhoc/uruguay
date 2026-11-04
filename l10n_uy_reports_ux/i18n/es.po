@@ -7,19 +7,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0+e\n"
+"Project-Id-Version: Odoo Server 20.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 12:37+0000\n"
-"PO-Revision-Date: 2026-04-07 19:31+0000\n"
+"POT-Creation-Date: 2026-11-04 12:26+0000\n"
+"PO-Revision-Date: 2026-11-04 12:26+0000\n"
 "Last-Translator: julia elizondo <jue@adhoc.inc>\n"
-"Language-Team: Spanish <https://translation.dev-adhoc.com/projects/"
-"uruguay-19-0/uruguay-19-0-l10n_uy_reports_ux/es/>\n"
+"Language-Team: Spanish <https://translation.dev-adhoc.com/projects/uruguay-20-0/uruguay-20-0-l10n_uy_reports_ux/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
-"0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.10.4\n"
 
 #. module: l10n_uy_reports_ux
@@ -27,6 +25,89 @@ msgstr ""
 #: model:ir.ui.menu,name:l10n_uy_reports_ux.form_report_wiz_menu
 msgid "(UY) Form Declarations"
 msgstr "(UY) Declaraciones Formulario"
+
+#. module: l10n_uy_reports_ux
+#: model:ir.module.module,description:base.module_l10n_uy_reports_ux
+msgid ""
+".. |company| replace:: ADHOC SA\n"
+"\n"
+".. |company_logo| image:: https://raw.githubusercontent.com/ingadhoc/maintainer-tools/master/resources/adhoc-logo.png\n"
+"   :alt: ADHOC SA\n"
+"   :target: https://www.adhoc.com.ar\n"
+"\n"
+".. |icon| image:: https://raw.githubusercontent.com/ingadhoc/maintainer-tools/master/resources/adhoc-icon.png\n"
+"\n"
+".. image:: https://img.shields.io/badge/license-LGPL--3-blue.png\n"
+"   :target: https://www.gnu.org/licenses/lgpl\n"
+"   :alt: License: LGPL-3\n"
+"\n"
+"===============================\n"
+"Uruguay - Accounting Reports UX\n"
+"===============================\n"
+"\n"
+"* Agrega la posibilidad de ver/exportar xls con el libro de IVA Compras/Ventas Uruguayo en el menu \"Tax Return\"\n"
+"* Agrega el menú Resumen de IVA para Uruguay, reporte que se puede usar para analizar los datos de facturación\n"
+"* Nuevo asistente que permite generar los archivos TXT para presentar el Formulario 2/181 (hasta el momento solo repota impuestos de iva compra/venta). Instructivos: https://www.gub.uy/direccion-general-impositiva/comunicacion/publicaciones/instructivo-para-confeccion-presentacion-declaraciones-aplicacion-beta y https://www.gub.uy/direccion-general-impositiva/comunicacion/publicaciones/informacion-sobre-formulario-2181\n"
+"\n"
+"\n"
+"Detalle de implementacion\n"
+"=========================\n"
+"\n"
+"* Detalle completo aplicativo B https://www.gub.uy/direccion-general-impositiva/politicas-y-gestion/aplicacion-beta-version-990\n"
+"* Especificacion de formularios https://www.gub.uy/direccion-general-impositiva/comunicacion/publicaciones/instructivo-para-confeccion-presentacion-declaraciones-beta\n"
+"* Agentes de Informacion https://www.gub.uy/direccion-general-impositiva/sites/direccion-general-impositiva/files/documentos/publicaciones/Agentes%20de%20informaci%C3%B3n.%20Cuadro%20formulario%202181_1.pdf\n"
+"* Contactos de referencia:\n"
+"   - Telefónicas: 1344 opción 5 (21344 desde el interior del país).\n"
+"   - Correo electrónico: dacontri@dgi.gub.uy o a través del servicio Consultas Web (\"restantes impuestos\")\n"
+"   - Por incidentes informáticos: SAC - Registro de Incidentes\n"
+"\n"
+"Installation\n"
+"============\n"
+"\n"
+"To install this module, you need to:\n"
+"\n"
+"#. Only need to install the module\n"
+"\n"
+"Configuration\n"
+"=============\n"
+"\n"
+"Nothing to configure\n"
+"\n"
+"Usage\n"
+"=====\n"
+"\n"
+".. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas\n"
+"   :alt: Try me on Runbot\n"
+"   :target: http://runbot.adhoc.com.ar/\n"
+"\n"
+"Bug Tracker\n"
+"===========\n"
+"\n"
+"Bugs are tracked on `GitHub Issues\n"
+"<https://github.com/ingadhoc/uruguay/issues>`_. In case of trouble, please\n"
+"check there if your issue has already been reported. If you spotted it first,\n"
+"help us smashing it by providing a detailed and welcomed feedback.\n"
+"\n"
+"Credits\n"
+"=======\n"
+"\n"
+"Images\n"
+"------\n"
+"\n"
+"* |company| |icon|\n"
+"\n"
+"Contributors\n"
+"------------\n"
+"\n"
+"Maintainer\n"
+"----------\n"
+"\n"
+"|company_logo|\n"
+"\n"
+"This module is maintained by the |company|.\n"
+"\n"
+"To contribute to this module, please visit https://www.adhoc.com.ar.\n"
+msgstr ""
 
 #. module: l10n_uy_reports_ux
 #. odoo-javascript
@@ -117,7 +198,7 @@ msgstr "Fecha Hasta"
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_form_report_wiz__display_name
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_l10n_uy_tax_report_handler__display_name
 msgid "Display Name"
-msgstr "Nombre para mostrar"
+msgstr "Mostrar nombre"
 
 #. module: l10n_uy_reports_ux
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_account_uy_vat_line__document_type_id
@@ -287,7 +368,12 @@ msgstr "Compras"
 #. module: l10n_uy_reports_ux
 #: model:account.report.column,name:l10n_uy_reports_ux.l10n_uy_vat_book_report_column_rut
 msgid "RUT"
-msgstr ""
+msgstr "RUT"
+
+#. module: l10n_uy_reports_ux
+#: model:ir.module.module,summary:base.module_l10n_uy_reports_ux
+msgid "Reporting for Uruguayan Localization"
+msgstr "Reportes para la localización uruguaya"
 
 #. module: l10n_uy_reports_ux
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_form_report_wiz__res_file
@@ -302,7 +388,7 @@ msgstr "Nombre del Archivo Reg"
 #. module: l10n_uy_reports_ux
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_account_uy_vat_line__rut
 msgid "Rut"
-msgstr ""
+msgstr "RUT"
 
 #. module: l10n_uy_reports_ux
 #. odoo-python
@@ -349,7 +435,7 @@ msgstr "Solo puede generar este reporte para compañías uruguayas"
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_account_uy_vat_line__total
 #: model_terms:ir.ui.view,arch_db:l10n_uy_reports_ux.view_account_uy_vat_line_tree
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: l10n_uy_reports_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_reports_ux.view_account_uy_vat_line_search
@@ -360,6 +446,11 @@ msgstr "Tipo"
 #: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__account_uy_vat_line__state__draft
 msgid "Unposted"
 msgstr "Sin asentar"
+
+#. module: l10n_uy_reports_ux
+#: model:ir.module.module,shortdesc:base.module_l10n_uy_reports_ux
+msgid "Uruguay - Accounting Reports UX"
+msgstr "Uruguay - Reportes contables UX"
 
 #. module: l10n_uy_reports_ux
 #: model:ir.model,name:l10n_uy_reports_ux.model_l10n_uy_tax_report_handler
@@ -413,6 +504,3 @@ msgstr "Nota de Crédito Proveedor"
 #: model_terms:ir.ui.view,arch_db:l10n_uy_reports_ux.view_account_uy_vat_line_search
 msgid "With Document Type"
 msgstr "Con Tipo de Documento"
-
-#~ msgid "Group By..."
-#~ msgstr "Agrupar por..."
