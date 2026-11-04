@@ -157,13 +157,13 @@ class FormReportWiz(models.TransientModel):
             # temp = inv._uy_cfe_A_receptor()
             # if not temp:
             #    continue
-            identification = self._get_partner_identification(inv.partner_id)
-            if identification in data:
-                data[identification] |= inv
+            key = (self._get_partner_identification(inv.partner_id), inv.date.strftime("%Y%m"))
+            if key in data:
+                data[key] |= inv
             else:
-                data[identification] = inv
+                data[key] = inv
 
-        for rut_partner, invoices in data.items():
+        for (rut_partner, invoice_period), invoices in data.items():
             amount_total = {}
             for inv in invoices:
                 subtotals = inv.tax_totals.get("subtotals", [])
@@ -199,7 +199,7 @@ class FormReportWiz(models.TransientModel):
                 content_data += rut_partner.zfill(12) + ";"
 
                 # Campo 5 - Factura AAAAMM Num 6. Ejemplo: 202405
-                content_data += "{};".format(line.move_id.date.strftime("%Y%m"))
+                content_data += f"{invoice_period};"
 
                 # Campo 6 - Línea del Rubro 5 del Formulario
                 content_data += f"{tax_code.get(tax)};"

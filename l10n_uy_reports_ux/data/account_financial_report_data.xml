@@ -24,7 +24,7 @@
             <record id="l10n_uy_vat_book_report_column_rut" model="account.report.column">
                 <field name="name">RUT</field>
                 <field name="expression_label">rut</field>
-                <field name="figure_type">float</field>
+                <field name="figure_type">string</field>
             </record>
             <record id="l10n_uy_vat_book_report_column_taxed" model="account.report.column">
                 <field name="name">Taxed</field>
