@@ -78,7 +78,7 @@ class FormReportWiz(models.TransientModel):
         self.ensure_one()
         domain = self._get_invoices_domain()
         res = self.env["account.move"].search(domain, order="invoice_date asc, name asc, id asc")
-        return res.filtered(lambda inv: self._get_partner_identification(inv.partner_id))
+        return res
 
     def _get_partner_identification(self, partner):
         """Number that identifies the informed partner: its tax ID, or else the first identification document
@@ -159,11 +159,14 @@ class FormReportWiz(models.TransientModel):
             # temp = inv._uy_cfe_A_receptor()
             # if not temp:
             #    continue
-            key = (self._get_partner_identification(inv.partner_id), inv.date.strftime("%Y%m"))
-            if key in data:
-                data[key] |= inv
+            identification = self._get_partner_identification(inv.partner_id)
+            if not identification:
+                continue
+            group_key = (identification, inv.date.strftime("%Y%m"))
+            if group_key in data:
+                data[group_key] |= inv
             else:
-                data[key] = inv
+                data[group_key] = inv
 
         for (rut_partner, invoice_period), invoices in data.items():
             amount_total = {}
