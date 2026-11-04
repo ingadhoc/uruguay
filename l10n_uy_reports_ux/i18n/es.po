@@ -198,7 +198,7 @@ msgstr "Fecha Hasta"
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_form_report_wiz__display_name
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_l10n_uy_tax_report_handler__display_name
 msgid "Display Name"
-msgstr "Mostrar nombre"
+msgstr "Nombre para mostrar"
 
 #. module: l10n_uy_reports_ux
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_account_uy_vat_line__document_type_id
