@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from odoo import Command
 from odoo.addons.l10n_uy_edi.tests.common import TestUyEdi
 from odoo.exceptions import UserError
@@ -223,7 +225,10 @@ class TestUx(TestUyEdi):
                     "Addenda content missing in description for line with desc and addenda",
                 )
             elif idx == 6 or idx == 7:  # With description deleted by user or "" (aml.name is False or empty)
-                self.assertEqual(nom_item, "-", "NomItem mismatch for line with deleted description")
+                # Since 20.0 the line name no longer carries the product name: without one, the product name is used
+                self.assertEqual(
+                    nom_item, "Product Without Description", "NomItem mismatch for line with deleted description"
+                )
                 self.assertEqual(description, "", "Description mismatch for line with deleted description")
 
     def test_120_nom_item_does_not_split_last_word(self):
@@ -319,3 +324,70 @@ class TestUx(TestUyEdi):
         self.assertAlmostEqual(monto_item, 1180.0)
         self.assertAlmostEqual(valor_dr, 60.0)
         self.assertAlmostEqual((monto_item - valor_dr) / 1.22, neto_basica, places=2)
+
+    def test_150_nom_item_keeps_product_name_with_sale_description(self):
+        """Con la descripción de venta del producto, la línea toma solo esa descripción: el nombre del producto
+        tiene que seguir yendo en NomItem, delante de la descripción"""
+        product = self.env["product.product"].create(
+            {"name": "Tuerca", "default_code": "T02", "description_sale": "Acero 5mm"}
+        )
+        invoice = self._create_move(
+            invoice_line_ids=[
+                Command.create({"product_id": product.id, "price_unit": 100.0}),
+                Command.create({"product_id": product.id, "name": "Descripción propia", "price_unit": 100.0}),
+            ],
+        )
+
+        nom_item, description = invoice._l10n_uy_edi_get_line_nom_and_desc(invoice.invoice_line_ids[0])
+        self.assertEqual(nom_item, "Tuerca Acero 5mm")
+        self.assertEqual(description, "")
+
+        nom_item, _description = invoice._l10n_uy_edi_get_line_nom_and_desc(invoice.invoice_line_ids[1])
+        self.assertEqual(nom_item, "Descripción propia", "Una descripción propia reemplaza al nombre, como en 19")
+
+    def test_160_get_defaults_applies_issuer_addenda(self):
+        """Get Defaults aplica las adendas de emisor que cumplen su condición, como las de los demás tipos"""
+        addenda = self.env["l10n_uy_edi.addenda"].create(
+            {"type": "issuer", "content": "Leyenda del emisor", "condition": "True", "company_id": self.company_uy.id}
+        )
+        invoice = self._create_move()
+        invoice.action_l10n_uy_remkark_default()
+        self.assertIn(addenda, invoice.l10n_uy_edi_addenda_ids)
+
+    def test_170_cfe_without_invoice_or_picking(self):
+        """A CFE with no invoice or picking, as the ones of a POS order, reads its origin without breaking"""
+        doc = self.env["l10n_uy_edi.document"].create({"uuid": "no-origin"})
+        self.assertFalse(doc.company_id)
+        self.assertFalse(doc.l10n_latam_document_number)
+
+        invoice = self._create_move()
+        doc.move_id = invoice
+        self.assertEqual(doc.company_id, invoice.company_id, "The CFE does not follow its invoice")
+
+    def test_180_update_from_dgi(self):
+        """The mass update keeps what DGI does not inform, and an error of one partner does not undo the others"""
+        uy = self.env.ref("base.uy")
+        ok, failing = self.env["res.partner"].create(
+            [
+                {"name": "Ok", "vat": "219000090011", "country_id": uy.id, "city": "Vieja", "email": "a@b.com"},
+                {"name": "Failing", "vat": "219999820013", "country_id": uy.id, "city": "Vieja"},
+            ]
+        )
+        contact = self.env["res.partner"].create({"name": "Contact", "parent_id": ok.id, "type": "contact"})
+
+        def fake_populate(partner):
+            if partner == failing:
+                partner.write({"city": "Nueva"})
+                raise UserError("UCFE error")
+            partner.write({"city": "Nueva", "email": False})
+
+        with patch.object(
+            self.registry["res.partner"], "button_l10n_uy_populate_from_vat", autospec=True, side_effect=fake_populate
+        ):
+            action = (ok | failing).l10n_uy_ux_update_from_dgi()
+
+        self.assertEqual(ok.city, "Nueva")
+        self.assertEqual(ok.email, "a@b.com", "The update erased a value DGI does not inform")
+        self.assertEqual(contact.city, "Nueva", "The address did not reach the contacts of the company")
+        self.assertEqual(failing.city, "Vieja", "The partner with error was half updated")
+        self.assertIn("Failing: UCFE error", action["params"]["message"])
