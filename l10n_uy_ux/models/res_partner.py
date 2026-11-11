@@ -1,16 +1,20 @@
-import logging
-
-from lxml import etree
-from odoo import _, api, fields, models
+from odoo import models
+from odoo.addons.l10n_uy_edi.models.res_partner import UY_RUT_DGI_CODE
 from odoo.exceptions import UserError
 
-_logger = logging.getLogger(__name__)
+DGI_FIELDS = ("name", "ref", "street", "street2", "city", "zip", "state_id", "phone", "email")
 
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    fiscal_countries = fields.Many2many("res.country", compute="_compute_fiscal_countries")
+    def write(self, vals):
+        # The update from DGI must not erase the data DGI does not inform: only on the partner being updated, and
+        # only for the fields button_l10n_uy_populate_from_vat() writes
+        if self.env.context.get("l10n_uy_ux_keep_values") and self.ids == [self.env.context["l10n_uy_ux_keep_values"]]:
+            vals = {key: value for key, value in vals.items() if value is not False or key not in DGI_FIELDS}
+            self = self.with_context(l10n_uy_ux_keep_values=False)
+        return super().write(vals)
 
     def action_l10n_uy_is_electronic_issuer(self):
         """Return True/False if the partner is an electronic issuer or not
@@ -18,7 +22,7 @@ class ResPartner(models.Model):
         self.ensure_one()
         # TODO KZ need to ensure that use the proper company
         edi_doc = self.env["l10n_uy_edi.document"]
-        if self.l10n_latam_identification_type_id.l10n_uy_dgi_code == "2":
+        if self._l10n_uy_edi_get_dgi_code() == UY_RUT_DGI_CODE:
             result = edi_doc._ucfe_inbox("630", {"RutEmisor": self.vat})
 
             cod_rta = False
@@ -47,113 +51,55 @@ class ResPartner(models.Model):
                     },
                 }
         else:
-            raise UserError(self.env._("You can only check if the partner has a RUT identification type"))
+            raise UserError(self.env._("Only a partner with a Uruguayan RUT can be checked in DGI"))
 
-    def action_l10n_uy_get_data_from_dgi(self):
-        """640 - Consulta a DGI por datos de RUT"""
-        self.ensure_one()
-        company = self.company_id or self.env.companies.filtered(lambda x: x.country_id.code == "UY")[:1]
-        values = {}
-
-        data_mapping = {
-            "street": ".//{*}Calle_Nom",
-            "city": ".//{*}Loc_Nom",
-            "zip": ".//{*}Dom_Pst_Cod",
-            "phone": ".//{*}WS_Domicilio.WS_DomicilioItem.Contacto[{*}TipoCtt_Des='TELEFONO MOVIL']/{*}DomCtt_Val",
-            "email": ".//{*}WS_Domicilio.WS_DomicilioItem.Contacto[{*}TipoCtt_Des='CORREO ELECTRONICO']/{*}DomCtt_Val",
-            "name": ".//{*}Denominacion",
-            "ref": ".//{*}NombreFantasia",
-            "street2": ".//{*}Dom_Coment",
-            # TODO remove
-            "street_number": ".//{*}Dom_Pta_Nro",
-            "state": ".//{*}Dpto_Nom",
+    def l10n_uy_ux_update_from_dgi(self):
+        """Update the partners with RUT using the DGI query of l10n_uy_edi, keeping the data DGI does not inform"""
+        # Contacts of a company take its RUT: DGI data is for the company, not for them
+        partners = self.filtered(
+            lambda p: p == p.commercial_partner_id and p.vat and p._l10n_uy_edi_get_dgi_code() == UY_RUT_DGI_CODE
+        )
+        if not partners:
+            raise UserError(self.env._("No partner with RUT was found to update"))
+        not_updated = self.env["res.partner"]
+        errors = []
+        for partner in partners:
+            # An error of one partner (UCFE answered with errors) must not undo the ones already updated
+            try:
+                with self.env.cr.savepoint():
+                    updated = partner.with_context(l10n_uy_ux_keep_values=partner.id).button_l10n_uy_populate_from_vat()
+            except UserError as error:
+                errors.append("%s: %s" % (partner.display_name, error))
+                continue
+            # l10n_uy_edi returns False when it does not update the partner (no UY country, RUT not found in DGI)
+            if updated is False:
+                not_updated |= partner
+        message = self.env._("%s partners updated from DGI", len(partners) - len(not_updated) - len(errors))
+        if not_updated:
+            message += "\n" + self.env._(
+                "Not updated (no data in DGI or country is not Uruguay): %s",
+                ", ".join(not_updated.mapped("display_name")),
+            )
+        if errors:
+            message += "\n" + self.env._("Not updated because of an error: %s", "\n".join(errors))
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "type": "warning" if not_updated or errors else "success",
+                "message": message,
+                "sticky": bool(not_updated or errors),
+                "next": {"type": "ir.actions.act_window_close"},
+            },
         }
 
-        # If partner has RUC
-        edi_doc = self.env["l10n_uy_edi.document"]
-        # TODO KZ need to ensure that use the proper company
-        if self.l10n_latam_identification_type_id.l10n_uy_dgi_code == "2":
-            if company.l10n_uy_edi_ucfe_env == "demo":
-                raise UserError(
-                    _("UCFE environment is on demo. Please set a testing environment to be able to connect to DGI.")
-                )
-            result = edi_doc._ucfe_inbox("640", {"RutEmisor": self.vat})
-            if errors := result.get("errors"):
-                raise UserError(self.env._("Could not connect to DGI to extract data: %s") % str(errors))
-            if response := result.get("response"):
-                if response.findtext(".//{*}CodRta") == "00":
-                    # TODO ver detalle de los demas campos que podemos integrar en pagin 83 Manual de integración
-                    tree = etree.fromstring(response.findtext(".//{*}XmlCfeFirmado").encode("utf-8"))
-
-                    # TODO delete after finish the tests
-                    _logger.info(etree.tostring(tree, pretty_print=True))
-
-                    values = {}
-                    for odoo_field, mapping_value in data_mapping.items():
-                        val = tree.findtext(mapping_value)
-                        if val:
-                            values.update({odoo_field: val})
-
-                    state_name = values.pop("state")
-                    state_id = state_name and self.env["res.country.state"].search(
-                        [("name", "=ilike", state_name)], limit=1
-                    )
-
-                    values["state_id"] = state_id.id or False
-                    if state_id:
-                        values["country_id"] = state_id.country_id.id
-                    if "street" in values:
-                        values["street"] += " " + values.get("street_number")
-
-                    # Este campo no existe en odoo base, asi que tenemos que
-                    # removerlo siempre del values
-                    values.pop("street_number")
-                elif response.findtext(".//{*}CodRta") == "01":
-                    raise UserError(
-                        _(
-                            "%s. If you are in a testing environment, you can check the following RUTs: "
-                            "219999830019, 219999820013, 219000090011",
-                            response.findtext(".//{*}MensajeRta"),
-                        )
-                    )
-                else:
-                    raise UserError(
-                        _("There was an error in the response %s", etree.tostring(response, pretty_print=True))
-                    )
-        else:
-            raise UserError(self.env._("You can only check if the partner has a RUT identification type"))
-
-        return values
-
-    # TODO KZ From here to to bottom is a patch, we think this should be fixed directly
-    # in l10n_latam_base module, if approved, then we need to move it to l10n_latam_base.
-    # meanwhile we leave here as a patch
-    def _get_countries(self):
-        self.ensure_one()
-        countries = self.env["res.country"].search([("code", "in", self.fiscal_country_codes.split(","))])
-        if not countries:
-            countries = self.country_id
-        return countries
-
-    @api.onchange("country_id", "company_id")
-    def _onchange_country_id(self):
-        """Take into account the fiscal countries to filter the identification types,
-        if not define ones, then use the partner country
-        """
-        # TODO Ahora que vamos a re-usar los tipos genericos toca ver de revisar esto, porque tenemos que tomar en cuenta los que no tienen pais,
-        super()._onchange_country_id()
-        countries = self._get_countries()
-        if countries:
-            identification_type = self.l10n_latam_identification_type_id
-            if not identification_type or (identification_type.country_id not in countries):
-                self.l10n_latam_identification_type_id = self.env["l10n_latam.identification.type"].search(
-                    [("country_id", "in", countries.ids), ("is_vat", "=", True)], limit=1
-                ) or self.env.ref("l10n_latam_base.it_vat", raise_if_not_found=False)
-
-    # Do not remember
-    @api.onchange("company_id")
-    def _compute_fiscal_countries(self):
-        """Esto es usado en la vista para poder filtrar correctamente los tipos de documentos, En odoo oficial solo
-        puedes ver los tipos de documento"""
-        for rec in self:
-            rec.fiscal_countries = rec._get_countries()
+    def l10n_uy_ux_update_all_from_dgi(self):
+        """Update from DGI every Uruguayan company with RUT of the current company"""
+        return self.search(
+            [
+                ("vat", "!=", False),
+                ("is_company", "=", True),
+                ("country_id.code", "=", "UY"),
+                ("company_id", "in", [False, self.env.company.id]),
+            ]
+        ).l10n_uy_ux_update_from_dgi()
