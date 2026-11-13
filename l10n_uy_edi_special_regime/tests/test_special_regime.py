@@ -31,6 +31,7 @@ class TestUyEdiSpecialRegime(TestUyEdi):
                         "product_id": self.service_exempt.id,
                         "quantity": 1.0,
                         "price_unit": 100.0,
+                        "tax_ids": [Command.set(self.tax_0.ids)],
                     }
                 )
             ],
@@ -118,6 +119,7 @@ class TestUyEdiSpecialRegime(TestUyEdi):
                         "product_id": self.service_exempt.id,
                         "price_unit": 100.0,
                         "discount": 100.0,
+                        "tax_ids": [Command.set(self.tax_0.ids)],
                     }
                 )
             ],
@@ -133,7 +135,13 @@ class TestUyEdiSpecialRegime(TestUyEdi):
         invoice = self._create_move(
             partner_id=self.partner_local.id,
             invoice_line_ids=[
-                Command.create({"product_id": self.service_exempt.id, "price_unit": 100.0}),
+                Command.create(
+                    {
+                        "product_id": self.service_exempt.id,
+                        "price_unit": 100.0,
+                        "tax_ids": [Command.set(self.tax_0.ids)],
+                    }
+                ),
                 Command.create(
                     {
                         "name": "Global Discount",
