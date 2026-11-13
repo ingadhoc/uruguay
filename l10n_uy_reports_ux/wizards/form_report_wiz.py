@@ -1,7 +1,9 @@
 import base64
 import logging
 import re
+import unicodedata
 
+from markupsafe import Markup
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare
@@ -16,6 +18,23 @@ L10N_UY_3150_DOC_CODES = ("1", "3", "5", "6")
 
 # NIE and CI always belong to Uruguay, whatever country the contact has.
 L10N_UY_3150_UY_DOC_CODES = ("1", "3")
+
+# Charset of both files. The name and the street are the only free text that travels in them.
+L10N_UY_ENCODING = "ISO-8859-1"
+L10N_UY_3150_TEXT_LENGTH = 35
+
+# Characters outside ISO-8859-1 that have a faithful substitute inside it: typographic quotes and dashes.
+L10N_UY_CHAR_REPLACEMENTS = {
+    "\u2018": "'",
+    "\u2019": "'",
+    "\u201a": "'",
+    "\u201c": '"',
+    "\u201d": '"',
+    "\u201e": '"',
+    "\u2013": "-",
+    "\u2014": "-",
+    "\u2026": "...",
+}
 
 # Trailing "/1105", "apto 204", "ap. 3" and friends: what is left of the street is the door number.
 L10N_UY_UNIT_RE = re.compile(r"(?:\s*/|\s+(?:apto|apt|ap|dpto)\.?)\s*([A-Za-z0-9]{1,4})\s*$", re.IGNORECASE)
@@ -243,7 +262,7 @@ class FormReportWiz(models.TransientModel):
 
     # Form 3150 - Declaración de instituciones de enseñanza privada
 
-    def _get_form_3150_invoices(self):
+    def _get_form_3150_invoices_domain(self):
         """Customer invoices and credit notes of the year, whether they were paid or not"""
         self.ensure_one()
         domain = [
@@ -255,7 +274,11 @@ class FormReportWiz(models.TransientModel):
         ]
         if self._l10n_uy_edi_installed():
             domain.append(("l10n_uy_edi_cfe_state", "=", "accepted"))
-        return self.env["account.move"].search(domain)
+        return domain
+
+    def _get_form_3150_invoices(self):
+        # The company of the declaration may not be among the ones active on the company selector
+        return self.env["account.move"].with_company(self.company_id).search(self._get_form_3150_invoices_domain())
 
     def _get_form_3150_persons(self, moves):
         """How many people the payment responsible is informing for.
@@ -291,26 +314,76 @@ class FormReportWiz(models.TransientModel):
         if len(rest) < 3:
             problems.append(_("the street has less than 3 characters"))
 
-        return rest[:35], door, unit, problems
+        return rest, door, unit, problems
+
+    def _l10n_uy_fits_charset(self, value):
+        try:
+            value.encode(L10N_UY_ENCODING)
+        except UnicodeEncodeError:
+            return False
+        return True
+
+    def _l10n_uy_to_charset(self, value):
+        """The file is written in ISO-8859-1: returns the text and whether a character was lost on the way"""
+        chars = []
+        lost = False
+        for char in value:
+            if self._l10n_uy_fits_charset(char):
+                chars.append(char)
+                continue
+            replacement = L10N_UY_CHAR_REPLACEMENTS.get(char)
+            if replacement is None:
+                # A letter with an accent out of the charset keeps its letter, the rest cannot be written
+                replacement = "".join(
+                    part for part in unicodedata.normalize("NFKD", char) if not unicodedata.combining(part)
+                )
+                if not replacement or not self._l10n_uy_fits_charset(replacement):
+                    replacement = "?"
+                lost = True
+            chars.append(replacement)
+        return "".join(chars), lost
+
+    def _l10n_uy_format_text(self, value, length, field_name):
+        """A free text field as the file takes it, plus what had to change to fit it in.
+
+        ";" separates the fields of the file and a line break would cut the record in two, so neither of them
+        can travel inside a value.
+        """
+        problems = []
+        text, lost = self._l10n_uy_to_charset(" ".join((value or "").replace(";", " ").split()))
+        if lost:
+            problems.append(_("its %s has characters that the file cannot write, they go as '?'", field_name))
+        if len(text) > length:
+            text = text[:length]
+            problems.append(
+                _("its %(field)s is longer than %(length)s characters and is cut", field=field_name, length=length)
+            )
+        return text, problems
 
     def _get_form_3150_partner_problems(self, partner, moves):
         """What Sigma would reject about this payment responsible, in plain words"""
         problems = []
         doc_code = partner.l10n_latam_identification_type_id.l10n_uy_dgi_code
-        vat = re.sub(r"\D", "", partner.vat or "")
+        raw_vat = (partner.vat or "").strip()
+        vat = re.sub(r"\D", "", raw_vat)
 
         if not vat:
             problems.append(_("it has no identification number"))
         elif len(vat) > 12:
             problems.append(_("its identification number has more than 12 digits"))
+        if re.search("[A-Za-z]", raw_vat):
+            problems.append(_("its identification number has letters, and the file only reports digits"))
         if doc_code not in L10N_UY_3150_DOC_CODES:
             problems.append(_("its document type is not CI, NIE, DNI nor passport"))
         elif doc_code not in L10N_UY_3150_UY_DOC_CODES and not partner.country_id:
             problems.append(_("it has no country, and its document type does not imply one"))
         if len((partner.name or "").strip()) < 3:
             problems.append(_("its name has less than 3 characters"))
+        problems += self._l10n_uy_format_text(partner.name, L10N_UY_3150_TEXT_LENGTH, _("name"))[1]
 
-        problems += self._l10n_uy_split_street(partner.street)[3]
+        street, _door, _unit, street_problems = self._l10n_uy_split_street(partner.street)
+        problems += street_problems
+        problems += self._l10n_uy_format_text(street, L10N_UY_3150_TEXT_LENGTH, _("address"))[1]
         return problems
 
     def _get_form_3150_root(self, partner, line):
@@ -343,10 +416,24 @@ class FormReportWiz(models.TransientModel):
 
         if not company.vat:
             raise UserError(_("Please configure a Tax ID number for your company"))
+        if company.currency_id != self.env.ref("base.UYU"):
+            raise UserError(
+                _(
+                    "The form 3150 reports the amounts in uruguayan pesos, and %(company)s keeps its accounting"
+                    " in %(currency)s.",
+                    company=company.name,
+                    currency=company.currency_id.name,
+                )
+            )
         if not company.l10n_uy_dgi_department_code or not company.l10n_uy_dgi_locality_code:
             raise UserError(
                 _("Please configure the DGI department and locality codes in the settings of %s", company.name)
             )
+
+        # The period, the UI rate and the name of the file all come from date_to, and the 3150 always covers a
+        # full calendar year: a wizard built by code with any other range would write the wrong file.
+        self.date_from = fields.Date.start_of(self.date_to, "year")
+        self.date_to = fields.Date.end_of(self.date_to, "year")
 
         ui_currency = self.env.ref("base.UYI")
         if not self.env["res.currency.rate"].search_count(
@@ -359,8 +446,9 @@ class FormReportWiz(models.TransientModel):
         ):
             raise UserError(
                 _(
-                    "There is no UI (Unidad Indexada) rate for %(date)s. Load it before generating the file,"
-                    " the threshold of the declaration is measured in UI.",
+                    "There is no UI (Unidad Indexada) rate for %(date)s. Activate the currency if it is"
+                    " archived and load the rate before generating the file: the threshold of the declaration"
+                    " is measured in UI.",
                     date=self.date_to,
                 )
             )
@@ -382,8 +470,10 @@ class FormReportWiz(models.TransientModel):
             if partner_problems:
                 problems.append((partner, partner_problems))
 
+            name = self._l10n_uy_format_text(partner.name, L10N_UY_3150_TEXT_LENGTH, _("name"))[0]
             street, door, unit = self._l10n_uy_split_street(partner.street)[:3]
-            lines.append(self._get_form_3150_root(partner, "A") + (partner.name or "")[:35])
+            street = self._l10n_uy_format_text(street, L10N_UY_3150_TEXT_LENGTH, _("address"))[0]
+            lines.append(self._get_form_3150_root(partner, "A") + name)
             lines.append(
                 self._get_form_3150_root(partner, "B")
                 + f"{company.l10n_uy_dgi_department_code};{company.l10n_uy_dgi_locality_code}"
@@ -412,14 +502,14 @@ class FormReportWiz(models.TransientModel):
         """One line per payment responsible, linking the contact so that someone can go and fix it"""
         if not problems:
             return False
-        items = [
-            "<li><a href='/odoo/res.partner/%s'>%s</a>: %s</li>"
+        items = Markup("").join(
+            Markup("<li><a href='/odoo/res.partner/%s' target='_blank'>%s</a>: %s</li>")
             % (partner.id, partner.display_name, ", ".join(reasons))
             for partner, reasons in problems
-        ]
-        return "<p>%s</p><ul>%s</ul>" % (
+        )
+        return Markup("<p>%s</p><ul>%s</ul>") % (
             _("Sigma may reject these payment responsibles. You can download the file anyway."),
-            "".join(items),
+            items,
         )
 
     def _get_res_filename(self):
@@ -440,7 +530,7 @@ class FormReportWiz(models.TransientModel):
         data = getattr(self, "_get_form_%s_data" % self.uy_form_id)() if self.uy_form_id else None
         if data:
             self.res_filename = self._get_res_filename()
-            self.res_file = base64.encodebytes(data.encode("ISO-8859-1", errors="replace"))
+            self.res_file = base64.encodebytes(data.encode(L10N_UY_ENCODING))
         else:
             self.res_filename = _("No file was generated")
             self.res_file = False
