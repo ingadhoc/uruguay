@@ -18,12 +18,16 @@
                 <group readonly="res_file">
                     <group>
                         <field name="company_id"/>
+                        <field name="uy_form_id"/>
                         <field name="date_from"/>
                         <field name="date_to"/>
                         <field name="date_period"/>
-                        <field name="uy_form_id"/>
+                        <field name="l10n_uy_form_3102" invisible="uy_form_id != '3150'"/>
                     </group>
                 </group>
+                <div class="alert alert-warning" role="alert" invisible="not l10n_uy_warnings">
+                    <field name="l10n_uy_warnings" nolabel="1" readonly="1"/>
+                </div>
                 <footer>
                     <button string="Get Files" class="btn-primary" type="object" name="action_get_files"/>
                     <field name="res_filename" class="oe_inline o_light_label" nolabel="1" readonly="1" invisible="res_file"/>
