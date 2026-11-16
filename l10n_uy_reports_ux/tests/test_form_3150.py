@@ -315,19 +315,17 @@ class TestForm3150(AccountTestInvoicingCommon):
 
     def test_company_currency_is_not_uyu(self):
         """The amounts of the file are uruguayan pesos: there is nothing to report from another currency"""
-        dollar = self.env.ref("base.USD")
-        dollar.active = True
-        company = self.env["res.company"].create(
-            {
-                "name": "Colegio en dolares",
-                "country_id": self.env.ref("base.uy").id,
-                "currency_id": dollar.id,
-                "vat": "214164660014",
-            }
+        # The currency is written by SQL because saas_client_account, installed on the runbot, does not let
+        # a company keep a currency that is not the one of its country. What is under test is the wizard.
+        self.env.flush_all()
+        self.env.cr.execute(
+            "UPDATE res_company SET currency_id = %s WHERE id = %s",
+            (self.env.ref("base.USD").id, self.company.id),
         )
-        wizard = self._get_wizard(company_id=company.id)
+        self.company.invalidate_recordset(["currency_id"])
+
         with self.assertRaisesRegex(UserError, "uruguayan pesos"):
-            wizard.action_get_files()
+            self._get_wizard().action_get_files()
 
     def test_missing_ui_rate(self):
         wizard = self._get_wizard()
