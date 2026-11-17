@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-04 12:26+0000\n"
-"PO-Revision-Date: 2026-11-04 12:26+0000\n"
+"POT-Creation-Date: 2026-11-17 14:11+0000\n"
+"PO-Revision-Date: 2026-11-17 14:11+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -105,6 +105,11 @@ msgid ""
 msgstr ""
 
 #. module: l10n_uy_reports_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_reports_ux.res_config_settings_view_form_inherit_l10n_uy_reports_ux
+msgid "AA"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
 #. odoo-javascript
 #: code:addons/l10n_uy_reports_ux/static/src/components/uruguayan_report/filters.js:0
 msgid "All"
@@ -118,6 +123,11 @@ msgid ""
 msgstr ""
 
 #. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__res_company__l10n_uy_dgi_department_code__g
+msgid "Artigas"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_account_uy_vat_line__base_10
 msgid "Base 10%"
 msgstr ""
@@ -128,15 +138,36 @@ msgid "Base 22%"
 msgstr ""
 
 #. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__res_company__l10n_uy_dgi_department_code__a
+msgid "Canelones"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__res_company__l10n_uy_dgi_department_code__e
+msgid "Cerro Largo"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_reports_ux.view_form_report_wiz_form
 msgid "Close"
 msgstr ""
 
 #. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__res_company__l10n_uy_dgi_department_code__l
+msgid "Colonia"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#: model:ir.model,name:l10n_uy_reports_ux.model_res_company
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_account_uy_vat_line__company_id
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_form_report_wiz__company_id
 #: model_terms:ir.ui.view,arch_db:l10n_uy_reports_ux.view_account_uy_vat_line_search
 msgid "Company"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#: model:ir.model,name:l10n_uy_reports_ux.model_res_config_settings
+msgid "Config Settings"
 msgstr ""
 
 #. module: l10n_uy_reports_ux
@@ -165,6 +196,23 @@ msgid "Customer Invoice"
 msgstr ""
 
 #. module: l10n_uy_reports_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_reports_ux.res_config_settings_view_form_inherit_l10n_uy_reports_ux
+msgid "DGI Address Codes"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_res_company__l10n_uy_dgi_department_code
+#: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_res_config_settings__l10n_uy_dgi_department_code
+msgid "DGI Department"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_res_company__l10n_uy_dgi_locality_code
+#: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_res_config_settings__l10n_uy_dgi_locality_code
+msgid "DGI Locality Code"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
 #: model:account.report.column,name:l10n_uy_reports_ux.l10n_uy_vat_book_report_column_invoice_date
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_account_uy_vat_line__date
 #: model_terms:ir.ui.view,arch_db:l10n_uy_reports_ux.view_account_uy_vat_line_search
@@ -187,9 +235,23 @@ msgid "Date To"
 msgstr ""
 
 #. module: l10n_uy_reports_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_reports_ux.res_config_settings_view_form_inherit_l10n_uy_reports_ux
+msgid ""
+"Department and locality reported on every record of the form 3150 file."
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#: model:ir.model.fields,help:l10n_uy_reports_ux.field_res_company__l10n_uy_dgi_department_code
+#: model:ir.model.fields,help:l10n_uy_reports_ux.field_res_config_settings__l10n_uy_dgi_department_code
+msgid "Department code reported on every line B of the form 3150 file."
+msgstr ""
+
+#. module: l10n_uy_reports_ux
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_account_uy_vat_line__display_name
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_form_report_wiz__display_name
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_l10n_uy_tax_report_handler__display_name
+#: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -200,9 +262,24 @@ msgid "Document Type"
 msgstr ""
 
 #. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__res_company__l10n_uy_dgi_department_code__q
+msgid "Durazno"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_account_uy_vat_line__move_id
 #: model_terms:ir.ui.view,arch_db:l10n_uy_reports_ux.view_account_uy_vat_line_search
 msgid "Entry"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__res_company__l10n_uy_dgi_department_code__n
+msgid "Flores"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__res_company__l10n_uy_dgi_department_code__o
+msgid "Florida"
 msgstr ""
 
 #. module: l10n_uy_reports_ux
@@ -213,6 +290,16 @@ msgstr ""
 #. module: l10n_uy_reports_ux
 #: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__form_report_wiz__uy_form_id__2181
 msgid "Form 2181"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_form_report_wiz__l10n_uy_form_3102
+msgid "Form 3102"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__form_report_wiz__uy_form_id__3150
+msgid "Form 3150"
 msgstr ""
 
 #. module: l10n_uy_reports_ux
@@ -234,6 +321,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_account_uy_vat_line__id
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_form_report_wiz__id
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_l10n_uy_tax_report_handler__id
+#: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_res_config_settings__id
 msgid "ID"
 msgstr ""
 
@@ -253,6 +342,11 @@ msgid "Journal Entry"
 msgstr ""
 
 #. module: l10n_uy_reports_ux
+#: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_form_report_wiz__l10n_uy_warnings
+msgid "L10N Uy Warnings"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_form_report_wiz__write_uid
 msgid "Last Updated by"
 msgstr ""
@@ -260,6 +354,21 @@ msgstr ""
 #. module: l10n_uy_reports_ux
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_form_report_wiz__write_date
 msgid "Last Updated on"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__res_company__l10n_uy_dgi_department_code__p
+msgid "Lavalleja"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__res_company__l10n_uy_dgi_department_code__b
+msgid "Maldonado"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__res_company__l10n_uy_dgi_department_code__v
+msgid "Montevideo"
 msgstr ""
 
 #. module: l10n_uy_reports_ux
@@ -278,6 +387,11 @@ msgid "Name"
 msgstr ""
 
 #. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__form_report_wiz__l10n_uy_form_3102__2
+msgid "No"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
 #. odoo-python
 #: code:addons/l10n_uy_reports_ux/wizards/form_report_wiz.py:0
 msgid "No file was generated"
@@ -291,6 +405,11 @@ msgstr ""
 #. module: l10n_uy_reports_ux
 #: model:ir.model.fields,help:l10n_uy_reports_ux.field_account_uy_vat_line__not_taxed
 msgid "Not Taxed / Exempt. All lines that do not have VAT"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__form_report_wiz__l10n_uy_form_3102__3
+msgid "Not submitted"
 msgstr ""
 
 #. module: l10n_uy_reports_ux
@@ -326,9 +445,21 @@ msgid "Partner Name"
 msgstr ""
 
 #. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__res_company__l10n_uy_dgi_department_code__i
+msgid "Paysandú"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
 #. odoo-python
 #: code:addons/l10n_uy_reports_ux/wizards/form_report_wiz.py:0
 msgid "Please configure a Tax ID number for your company"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#. odoo-python
+#: code:addons/l10n_uy_reports_ux/wizards/form_report_wiz.py:0
+msgid ""
+"Please configure the DGI department and locality codes in the settings of %s"
 msgstr ""
 
 #. module: l10n_uy_reports_ux
@@ -379,8 +510,23 @@ msgid "Res Filename"
 msgstr ""
 
 #. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__res_company__l10n_uy_dgi_department_code__f
+msgid "Rivera"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__res_company__l10n_uy_dgi_department_code__c
+msgid "Rocha"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_account_uy_vat_line__rut
 msgid "Rut"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__res_company__l10n_uy_dgi_department_code__j
+msgid "Río Negro"
 msgstr ""
 
 #. module: l10n_uy_reports_ux
@@ -400,8 +546,36 @@ msgid "Sales VAT"
 msgstr ""
 
 #. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__res_company__l10n_uy_dgi_department_code__h
+msgid "Salto"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__res_company__l10n_uy_dgi_department_code__m
+msgid "San José"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#. odoo-python
+#: code:addons/l10n_uy_reports_ux/wizards/form_report_wiz.py:0
+msgid ""
+"Sigma may reject these payment responsibles. You can download the file "
+"anyway."
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__res_company__l10n_uy_dgi_department_code__k
+msgid "Soriano"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
 #: model:ir.model.fields,field_description:l10n_uy_reports_ux.field_account_uy_vat_line__state
 msgid "Status"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__res_company__l10n_uy_dgi_department_code__r
+msgid "Tacuarembó"
 msgstr ""
 
 #. module: l10n_uy_reports_ux
@@ -413,6 +587,31 @@ msgstr ""
 #. module: l10n_uy_reports_ux
 #: model:account.report.column,name:l10n_uy_reports_ux.l10n_uy_vat_book_report_column_taxed
 msgid "Taxed"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#. odoo-python
+#: code:addons/l10n_uy_reports_ux/models/res_company.py:0
+msgid ""
+"The DGI locality code of %s has two characters, in upper case, as the AA of "
+"Montevideo."
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#. odoo-python
+#: code:addons/l10n_uy_reports_ux/wizards/form_report_wiz.py:0
+msgid ""
+"The form 3150 reports the amounts in uruguayan pesos, and %(company)s keeps "
+"its accounting in %(currency)s."
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#. odoo-python
+#: code:addons/l10n_uy_reports_ux/wizards/form_report_wiz.py:0
+msgid ""
+"There is no UI (Unidad Indexada) rate for %(date)s. Activate the currency if"
+" it is archived and load the rate before generating the file: the threshold "
+"of the declaration is measured in UI."
 msgstr ""
 
 #. module: l10n_uy_reports_ux
@@ -431,6 +630,19 @@ msgid "Total"
 msgstr ""
 
 #. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__res_company__l10n_uy_dgi_department_code__d
+msgid "Treinta y Tres"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#: model:ir.model.fields,help:l10n_uy_reports_ux.field_res_company__l10n_uy_dgi_locality_code
+#: model:ir.model.fields,help:l10n_uy_reports_ux.field_res_config_settings__l10n_uy_dgi_locality_code
+msgid ""
+"Two character locality code of the DGI table, reported on every line B of "
+"the form 3150 file. For Montevideo it is AA."
+msgstr ""
+
+#. module: l10n_uy_reports_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_reports_ux.view_account_uy_vat_line_search
 msgid "Type"
 msgstr ""
@@ -443,6 +655,11 @@ msgstr ""
 #. module: l10n_uy_reports_ux
 #: model:ir.module.module,shortdesc:base.module_l10n_uy_reports_ux
 msgid "Uruguay - Accounting Reports UX"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_reports_ux.res_config_settings_view_form_inherit_l10n_uy_reports_ux
+msgid "Uruguayan Declarations"
 msgstr ""
 
 #. module: l10n_uy_reports_ux
@@ -494,6 +711,97 @@ msgid "Vendor Credit Note"
 msgstr ""
 
 #. module: l10n_uy_reports_ux
+#: model:ir.model.fields,help:l10n_uy_reports_ux.field_form_report_wiz__l10n_uy_form_3102
+msgid ""
+"Whether the payment responsibles submitted the form 3102. Reported as is on "
+"every record."
+msgstr ""
+
+#. module: l10n_uy_reports_ux
 #: model_terms:ir.ui.view,arch_db:l10n_uy_reports_ux.view_account_uy_vat_line_search
 msgid "With Document Type"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#: model:ir.model.fields.selection,name:l10n_uy_reports_ux.selection__form_report_wiz__l10n_uy_form_3102__1
+msgid "Yes"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#. odoo-python
+#: code:addons/l10n_uy_reports_ux/wizards/form_report_wiz.py:0
+msgid "address"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#. odoo-python
+#: code:addons/l10n_uy_reports_ux/wizards/form_report_wiz.py:0
+msgid "it has no CI, NIE, DNI nor passport, the only documents the file takes"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#. odoo-python
+#: code:addons/l10n_uy_reports_ux/wizards/form_report_wiz.py:0
+msgid "it has no country, and its document type does not imply one"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#. odoo-python
+#: code:addons/l10n_uy_reports_ux/wizards/form_report_wiz.py:0
+msgid "it has no identification number"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#. odoo-python
+#: code:addons/l10n_uy_reports_ux/wizards/form_report_wiz.py:0
+msgid "its %(field)s is longer than %(length)s characters and is cut"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#. odoo-python
+#: code:addons/l10n_uy_reports_ux/wizards/form_report_wiz.py:0
+msgid "its %s has characters that the file cannot write, they go as '?'"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#. odoo-python
+#: code:addons/l10n_uy_reports_ux/wizards/form_report_wiz.py:0
+msgid ""
+"its identification number has letters, and the file only reports digits"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#. odoo-python
+#: code:addons/l10n_uy_reports_ux/wizards/form_report_wiz.py:0
+msgid "its identification number has more than 12 digits"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#. odoo-python
+#: code:addons/l10n_uy_reports_ux/wizards/form_report_wiz.py:0
+msgid "its name has less than 3 characters"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#. odoo-python
+#: code:addons/l10n_uy_reports_ux/wizards/form_report_wiz.py:0
+msgid "name"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#. odoo-python
+#: code:addons/l10n_uy_reports_ux/wizards/form_report_wiz.py:0
+msgid "no door number could be read from the address"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#. odoo-python
+#: code:addons/l10n_uy_reports_ux/wizards/form_report_wiz.py:0
+msgid "the door number cannot be told apart from the street name"
+msgstr ""
+
+#. module: l10n_uy_reports_ux
+#. odoo-python
+#: code:addons/l10n_uy_reports_ux/wizards/form_report_wiz.py:0
+msgid "the street has less than 3 characters"
 msgstr ""
