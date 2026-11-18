@@ -355,7 +355,7 @@ class AccountMove(models.Model):
             edi_doc = self.env["l10n_uy_edi.document"].create(
                 {
                     "move_id": move.id,
-                    "uuid": self.manual_uruware_invoice,
+                    "uuid": move.manual_uruware_invoice,
                 }
             )
             move.l10n_uy_edi_document_id = edi_doc
@@ -374,6 +374,15 @@ class AccountMove(models.Model):
                             " (for documents issued from Odoo it looks like 'account.move-12345'),"
                             " not the document number.",
                             move.manual_uruware_invoice,
+                        )
+                    )
+                if edi_doc.state == "rejected":
+                    raise UserError(
+                        self.env._(
+                            "DGI rejected the CFE '%(uuid)s', so it cannot be registered (%(reason)s). Check the"
+                            " rejection reason in Uruware and issue a new CFE.",
+                            uuid=move.manual_uruware_invoice,
+                            reason=edi_doc.message,
                         )
                     )
                 move.write(

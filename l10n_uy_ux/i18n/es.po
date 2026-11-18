@@ -266,6 +266,16 @@ msgid "DGI already answered this CFE, it cannot be sent again."
 msgstr "DGI ya respondió este CFE, no se puede enviar de nuevo."
 
 #. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+msgid ""
+"DGI rejected the CFE '%(uuid)s', so it cannot be registered (%(reason)s). "
+"Check the rejection reason in Uruware and issue a new CFE."
+msgstr ""
+"DGI rechazó el CFE '%(uuid)s', por lo que no se puede registrar "
+"(%(reason)s). Revise el motivo del rechazo en Uruware y emita un nuevo CFE."
+
+#. module: l10n_uy_ux
 #: model:ir.model.fields.selection,name:l10n_uy_ux.selection__l10n_uy_edi_addenda__apply_on__stock_picking
 msgid "Delivery Guide"
 msgstr "Remito"

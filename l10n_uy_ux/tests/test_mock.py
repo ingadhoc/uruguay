@@ -156,3 +156,39 @@ class TestMock(common.TestUyEdi):
 
         with self.assertRaisesRegex(UserError, "accepted invoice"):
             invoice.l10n_uy_edi_action_update_dgi_state()
+
+    def _manual_invoice(self):
+        """An invoice of a manual journal, where the CFE is issued in Uruware and loaded by its UUID"""
+        journal = self.company_data["default_journal_sale"].copy({"l10n_uy_edi_type": "manual"})
+        invoice = self._create_uy_move()
+        invoice.write({"journal_id": journal.id, "manual_uruware_invoice": "am1777-17_uy_edi_test"})
+        return invoice
+
+    def test_90_manual_journal_rejected_cfe_cannot_be_loaded(self):
+        invoice = self._manual_invoice()
+
+        with (
+            self._mock_inbox("mock_invoice_rejected_status"),
+            patch(f"{self.utils_path}._get_pdf", return_value={}),
+            self.assertRaises(UserError) as error,
+        ):
+            invoice.uy_ux_action_get_uruware_cfe()
+
+        self.assertIn("DGI rejected the CFE", str(error.exception))
+        self.assertFalse(invoice.l10n_uy_edi_document_id, "The rejected CFE was loaded in the invoice")
+        self.assertEqual(invoice.state, "draft")
+
+    def test_100_manual_journal_invoice_rejected_later_is_cancelled(self):
+        """The rejection can arrive after the invoice was registered with its CFE waiting for DGI: updating the
+        state cancels it, like in an electronic journal"""
+        invoice = self._manual_invoice()
+        invoice.l10n_latam_document_number = "A0000130"
+        invoice.action_post()
+        invoice.l10n_uy_edi_document_id = self.env["l10n_uy_edi.document"].create(
+            {"move_id": invoice.id, "uuid": invoice.manual_uruware_invoice, "state": "received"}
+        )
+
+        self._mock_update_dgi_state(invoice, "mock_invoice_rejected")
+
+        self.assertEqual(invoice.l10n_uy_edi_cfe_state, "rejected")
+        self.assertEqual(invoice.state, "cancel", "The rejected invoice is still registered")
