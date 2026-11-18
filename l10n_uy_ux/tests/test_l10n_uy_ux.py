@@ -334,6 +334,26 @@ class TestUx(TestUyEdi):
                 self.assertAlmostEqual(float(cfe.findtext(".//{*}MontoNF")), monto_nf)
                 self.assertAlmostEqual(float(cfe.findtext(".//{*}MntPagar")), mnt_pagar)
 
+        # Exportación: 100.40 se redondea a 100.00 y MntExpoyAsim no incluye el redondeo, que va en MontoNF
+        invoice = self._create_move(
+            l10n_latam_document_type_id=self.env.ref("l10n_uy.dc_e_inv_exp").id,
+            partner_id=self.foreign_partner.id,
+            invoice_incoterm_id=self.env.ref("account.incoterm_FOB").id,
+            l10n_uy_edi_cfe_sale_mode="1",
+            l10n_uy_edi_cfe_transport_route="1",
+            invoice_cash_rounding_id=cash_rounding.id,
+            invoice_line_ids=[Command.create({"product_id": self.product_vat_22.id, "price_unit": 100.40})],
+        )
+        invoice.action_post()
+        self.assertEqual(invoice.amount_total, 100.0, "No se aplicó el redondeo al total")
+        self._send_and_print(invoice)
+        cfe = self.get_xml_tree_from_attachment(invoice.l10n_uy_edi_document_id.attachment_id)
+        self.assertEqual(cfe.findall(".//{*}Item")[1].findtext("{*}IndFact"), "7")
+        self.assertAlmostEqual(float(cfe.findtext(".//{*}MntExpoyAsim")), 100.40)
+        self.assertAlmostEqual(float(cfe.findtext(".//{*}MntTotal")), 100.40)
+        self.assertAlmostEqual(float(cfe.findtext(".//{*}MontoNF")), -0.40)
+        self.assertAlmostEqual(float(cfe.findtext(".//{*}MntPagar")), 100.0)
+
     def test_150_e_ticket_max_lines(self):
         """Los e-Tickets admiten hasta 700 líneas; el límite de 200 es para los otros tipos de CFE"""
         invoice = self._create_move(

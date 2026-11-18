@@ -149,13 +149,14 @@ class AccountMove(models.Model):
         res = super()._l10n_uy_edi_cfe_C_totals(tax_details)
         cash_rounding_lines = self._l10n_uy_ux_get_cash_rounding_lines()
         if cash_rounding_lines:
-            nf_amount = self.currency_id.round(
-                (res["MontoNF"] or 0.0)
-                + sum(self.direction_sign * line.amount_currency for line in cash_rounding_lines)
-            )
+            rounding_amount = sum(self.direction_sign * line.amount_currency for line in cash_rounding_lines)
+            nf_amount = self.currency_id.round((res["MontoNF"] or 0.0) + rounding_amount)
             res["MontoNF"] = nf_amount or None
-            res["MntTotal"] = self.amount_total - nf_amount
+            res["MntTotal"] = self.currency_id.round(self.amount_total - nf_amount)
             res["CantLinDet"] += len(cash_rounding_lines)
+            # Export CFE: A113 comes with the rounded total, the rounding is already reported in MontoNF
+            if res.get("MntExpoyAsim") is not None:
+                res["MntExpoyAsim"] = self.currency_id.round(res["MntExpoyAsim"] - rounding_amount)
         return res
 
     @api.depends(
