@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-03 21:41+0000\n"
-"PO-Revision-Date: 2026-09-16 12:54+0000\n"
+"POT-Creation-Date: 2026-11-18 12:44+0000\n"
+"PO-Revision-Date: 2026-11-18 12:44+0000\n"
 "Last-Translator: julia elizondo <jue@adhoc.inc>\n"
 "Language-Team: Spanish <https://translation.dev-adhoc.com/projects/"
 "uruguay-19-0/uruguay-19-0-l10n_uy_ux/es/>\n"
@@ -105,6 +105,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.view_move_form_inherit_l10n_uy_edi
 msgid "<strong>Preview:</strong>"
 msgstr "<strong>Previsualización:</strong>"
+
+#. module: l10n_uy_ux
+#: model:ir.model,name:l10n_uy_ux.model_account_cash_rounding
+msgid "Account Cash Rounding"
+msgstr "Redondeo de efectivo de la cuenta"
 
 #. module: l10n_uy_ux
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_l10n_uy_edi_addenda__active
@@ -500,6 +505,12 @@ msgid "No partner with RUT was found to update"
 msgstr "No se encontró ningún contacto con RUT para actualizar"
 
 #. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_cash_rounding.py:0
+msgid "Not supported in electronic invoicing"
+msgstr "No soportado en la facturación electrónica"
+
+#. module: l10n_uy_ux
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_res_partner_update_from_padron_uy_field__old_value
 msgid "Old Value"
 msgstr "Valor Antiguo"
@@ -575,6 +586,12 @@ msgstr "Acción de informe"
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.res_config_settings_view_form_inherit_l10n_uy_edi
 msgid "Report's Parameters"
 msgstr "Parámetros de Reporte"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_move.py:0
+msgid "Rounding"
+msgstr "Redondeo"
 
 #. module: l10n_uy_ux
 #: model:ir.model.fields.selection,name:l10n_uy_ux.selection__res_partner_update_from_padron_uy_wizard__state__selection
@@ -760,6 +777,20 @@ msgstr "Actualizar con chequeo manual"
 #: model_terms:ir.ui.view,arch_db:l10n_uy_ux.res_config_settings_view_form_inherit_l10n_uy_edi
 msgid "Uplad Certificate and Password"
 msgstr "Cargar Certificado y Clave"
+
+#. module: l10n_uy_ux
+#. odoo-python
+#: code:addons/l10n_uy_ux/models/account_cash_rounding.py:0
+msgid ""
+"Uruguayan electronic invoices (CFE) do not support the 'Modify tax amount' "
+"strategy: the rounding must be reported as a non billable item. Use 'Add a "
+"rounding line' for electronic journals. You can keep this strategy for "
+"manual invoices."
+msgstr ""
+"Los comprobantes electrónicos uruguayos (CFE) no soportan la estrategia "
+"'Modificar importe del impuesto': el redondeo se debe informar como un ítem "
+"no facturable. Use 'Agregar una línea de redondeo' en los diarios "
+"electrónicos. Puede mantener esta estrategia para las facturas manuales."
 
 #. module: l10n_uy_ux
 #: model:ir.model.fields,field_description:l10n_uy_ux.field_account_bank_statement_line__l10n_uy_edi_connection_error
