@@ -391,3 +391,78 @@ class TestUx(TestUyEdi):
         self.assertEqual(contact.city, "Nueva", "The address did not reach the contacts of the company")
         self.assertEqual(failing.city, "Vieja", "The partner with error was half updated")
         self.assertIn("Failing: UCFE error", action["params"]["message"])
+
+    def test_190_cash_rounding(self):
+        """El redondeo de efectivo ('Agregar línea de redondeo') se informa como ítem no facturable (IndFact 7 si
+        resta, 6 si suma) y en MontoNF, así MntTotal es neto + IVA y MntPagar es el total redondeado"""
+        cash_rounding = self.env["account.cash.rounding"].create(
+            {
+                "name": "Rounding UY",
+                "rounding": 1.0,
+                "strategy": "add_invoice_line",
+                "profit_account_id": self.company_data["default_account_revenue"].copy().id,
+                "loss_account_id": self.company_data["default_account_expense"].copy().id,
+                "rounding_method": "HALF-UP",
+            }
+        )
+        tax_22_included = self.tax_22.copy({"price_include_override": "tax_included", "name": "22% VAT (included)"})
+        cases = [
+            # 122.05 con IVA incluido se redondea a 122.00
+            (122.05, tax_22_included, "7", 0.05, 122.05, -0.05, 122.0),
+            # 100.45 + 22.10 de IVA = 122.55 se redondea a 123.00
+            (100.45, self.tax_22, "6", 0.45, 122.55, 0.45, 123.0),
+        ]
+        for price_unit, tax, ind_fact, rounding, mnt_total, monto_nf, mnt_pagar in cases:
+            with self.subTest(price_unit=price_unit):
+                invoice = self._create_move(
+                    invoice_cash_rounding_id=cash_rounding.id,
+                    invoice_line_ids=[
+                        Command.create(
+                            {"product_id": self.service_vat_22.id, "price_unit": price_unit, "tax_ids": tax}
+                        ),
+                    ],
+                )
+                invoice.action_post()
+                self.assertEqual(invoice.amount_total, mnt_pagar, "No se aplicó el redondeo al total")
+                self.assertFalse(invoice._l10n_uy_edi_check_move(), "La línea de redondeo no es un descuento")
+                self._send_and_print(invoice)
+                cfe = self.get_xml_tree_from_attachment(invoice.l10n_uy_edi_document_id.attachment_id)
+                items = cfe.findall(".//{*}Item")
+                self.assertEqual(len(items), 2)
+                self.assertEqual(items[1].findtext("{*}NroLinDet"), "2")
+                self.assertEqual(items[1].findtext("{*}IndFact"), ind_fact)
+                self.assertAlmostEqual(float(items[1].findtext("{*}MontoItem")), rounding)
+                self.assertEqual(cfe.findtext(".//{*}CantLinDet"), "2")
+                self.assertAlmostEqual(float(cfe.findtext(".//{*}MntTotal")), mnt_total)
+                self.assertAlmostEqual(float(cfe.findtext(".//{*}MontoNF")), monto_nf)
+                self.assertAlmostEqual(float(cfe.findtext(".//{*}MntPagar")), mnt_pagar)
+
+        # Exportación: 100.40 se redondea a 100.00 y MntExpoyAsim no incluye el redondeo, que va en MontoNF
+        invoice = self._create_move(
+            l10n_latam_document_type_id=self.env.ref("l10n_uy.dc_e_inv_exp").id,
+            partner_id=self.foreign_partner.id,
+            invoice_incoterm_id=self.env.ref("account.incoterm_FOB").id,
+            l10n_uy_edi_cfe_sale_mode="1",
+            l10n_uy_edi_cfe_transport_route="1",
+            invoice_cash_rounding_id=cash_rounding.id,
+            invoice_line_ids=[Command.create({"product_id": self.product_vat_22.id, "price_unit": 100.40})],
+        )
+        invoice.action_post()
+        self.assertEqual(invoice.amount_total, 100.0, "No se aplicó el redondeo al total")
+        self._send_and_print(invoice)
+        cfe = self.get_xml_tree_from_attachment(invoice.l10n_uy_edi_document_id.attachment_id)
+        self.assertEqual(cfe.findall(".//{*}Item")[1].findtext("{*}IndFact"), "7")
+        self.assertAlmostEqual(float(cfe.findtext(".//{*}MntExpoyAsim")), 100.40)
+        self.assertAlmostEqual(float(cfe.findtext(".//{*}MntTotal")), 100.40)
+        self.assertAlmostEqual(float(cfe.findtext(".//{*}MontoNF")), -0.40)
+        self.assertAlmostEqual(float(cfe.findtext(".//{*}MntPagar")), 100.0)
+
+    def test_200_e_ticket_max_lines(self):
+        """Los e-Tickets admiten hasta 700 líneas; el límite de 200 es para los otros tipos de CFE"""
+        invoice = self._create_move(
+            invoice_line_ids=[
+                Command.create({"product_id": self.service_vat_22.id, "price_unit": 1.0}) for _i in range(201)
+            ],
+        )
+        self.assertEqual(invoice.l10n_latam_document_type_id.code, "101")
+        self.assertNotIn("For this type of CFE you can only report up to 200 lines", invoice._l10n_uy_edi_check_move())

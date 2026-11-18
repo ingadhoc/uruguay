@@ -6,6 +6,7 @@ from odoo import _, api, fields, models
 from odoo.addons.l10n_uy_edi.models.res_partner import UY_RUT_DGI_CODE
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import safe_eval
+from odoo.tools.translate import code_translations
 
 _logger = logging.getLogger(__name__)
 
@@ -54,7 +55,9 @@ class AccountMove(models.Model):
         - Que las momendas esten bien configuradas
         - Que los impuestos IVA 0 10 y 22 existan en la companñia
         """
-        errors = super()._l10n_uy_edi_check_move()
+        # The cash rounding line is not a discount line, so it is left out of the native discount lines check
+        errors = super(AccountMove, self.with_context(l10n_uy_ux_skip_cash_rounding=True))._l10n_uy_edi_check_move()
+        errors = self._l10n_uy_ux_check_lines_limit(errors)
 
         # TODO KZ estaria bueno revisar que este acitva UYI? self.env.ref('base.UYI').active
         if not self.company_id.currency_id:
@@ -78,6 +81,83 @@ class AccountMove(models.Model):
         #             "\n - 22% Sales VAT\n - 10% Sales VAT\n - Exempt Sales VAT", company_name=company.name))
 
         return errors
+
+    def _l10n_uy_ux_check_lines_limit(self, errors):
+        """Native check compares the document type code (a string) with integers, so e-Tickets get the 200 lines
+        limit instead of 700, and it does not count the cash rounding items. The native errors are replaced by
+        this check."""
+        if not (self.company_id.country_code == "UY" and self.l10n_latam_use_documents):
+            return errors
+        translations = code_translations.get_python_translations("l10n_uy_edi", self.env.lang or "en_US")
+        msg_700 = "For e-Ticket and related DN and CN you can only report up to 700 lines"
+        msg_200 = "For this type of CFE you can only report up to 200 lines"
+        native_errors = {msg_700, msg_200, translations.get(msg_700, msg_700), translations.get(msg_200, msg_200)}
+        errors = [error for error in errors if error not in native_errors]
+
+        lines = self.invoice_line_ids.filtered(lambda x: x.display_type not in ("line_section", "line_note"))
+        lines_count = len(lines) + len(self._l10n_uy_ux_get_cash_rounding_lines())
+        if int(self.l10n_latam_document_type_id.code) in [101, 102, 103, 131, 132, 133]:
+            if lines_count > 700:
+                errors.append(translations.get(msg_700, msg_700))
+        elif lines_count > 200:
+            errors.append(translations.get(msg_200, msg_200))
+        return errors
+
+    def _l10n_uy_ux_get_cash_rounding_lines(self):
+        """Cash rounding lines added by the 'add_invoice_line' strategy, without the zero ones"""
+        self.ensure_one()
+        return self.line_ids.filtered(
+            lambda line: line.display_type == "rounding"
+            and not line.tax_repartition_line_id
+            and not line.currency_id.is_zero(line.amount_currency)
+        )
+
+    def _get_rounded_base_and_tax_lines(self, round_from_tax_lines=True):
+        # EXTENDS account
+        base_lines, tax_lines = super()._get_rounded_base_and_tax_lines(round_from_tax_lines=round_from_tax_lines)
+        if self.env.context.get("l10n_uy_ux_skip_cash_rounding"):
+            base_lines = [base_line for base_line in base_lines if base_line.get("special_type") != "cash_rounding"]
+        return base_lines, tax_lines
+
+    def _l10n_uy_edi_cfe_B_details(self, tax_details):
+        # EXTENDS l10n_uy_edi
+        """Cash rounding is reported as a non billable item (DGI FAQ 4.7): IndFact 6 if it adds, 7 if it
+        subtracts."""
+        res = super()._l10n_uy_edi_cfe_B_details(tax_details)
+        for line in self._l10n_uy_ux_get_cash_rounding_lines():
+            amount = self.direction_sign * line.amount_currency
+            res.append(
+                {
+                    "NroLinDet": len(res) + 1,  # B1
+                    "IndFact": 6 if amount > 0 else 7,  # B4
+                    "NomItem": line.name and line.name[:80] or self.env._("Rounding"),  # B7
+                    "DscItem": None,  # B8
+                    "Cantidad": 1.0,  # B9
+                    "UniMed": "N/A",  # B10
+                    "PrecioUnitario": abs(amount),  # B11
+                    "DescuentoPct": None,  # B12
+                    "DescuentoMonto": None,  # B13
+                    "MontoItem": abs(amount),  # B24
+                }
+            )
+        return res
+
+    def _l10n_uy_edi_cfe_C_totals(self, tax_details):
+        # EXTENDS l10n_uy_edi
+        """Cash rounding items go to MontoNF (A129) and CantLinDet (A126), so MntTotal (A124) keeps the sum of net
+        amounts and VAT and MntPagar (A130) is the rounded total."""
+        res = super()._l10n_uy_edi_cfe_C_totals(tax_details)
+        cash_rounding_lines = self._l10n_uy_ux_get_cash_rounding_lines()
+        if cash_rounding_lines:
+            rounding_amount = sum(self.direction_sign * line.amount_currency for line in cash_rounding_lines)
+            nf_amount = self.currency_id.round((res["MontoNF"] or 0.0) + rounding_amount)
+            res["MontoNF"] = nf_amount or None
+            res["MntTotal"] = self.currency_id.round(self.amount_total - nf_amount)
+            res["CantLinDet"] += len(cash_rounding_lines)
+            # Export CFE: A113 comes with the rounded total, the rounding is already reported in MontoNF
+            if res.get("MntExpoyAsim") is not None:
+                res["MntExpoyAsim"] = self.currency_id.round(res["MntExpoyAsim"] - rounding_amount)
+        return res
 
     @api.depends(
         "l10n_uy_edi_cfe_state", "l10n_uy_edi_document_id.connection_error", "country_code", "move_type", "journal_id"
