@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension">
+        <xpath expr="//InvoiceButton" position="before">
+            <button t-if="l10nUyCanRetryCfe(_selectedSyncedOrder)"
+                    class="control-button btn btn-danger btn-lg lh-lg flex-grow-1 flex-shrink-1"
+                    t-on-click="() => this.l10nUyRetryCfe(_selectedSyncedOrder)">
+                <i class="fa fa-refresh me-1"/>Retry CFE
+            </button>
+        </xpath>
+    </t>
+</templates>

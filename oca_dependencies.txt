@@ -1,1 +1,2 @@
 ingadhoc-odoo-saas https://github.com/ingadhoc/odoo-saas.git
+ingadhoc-sale https://github.com/ingadhoc/sale.git

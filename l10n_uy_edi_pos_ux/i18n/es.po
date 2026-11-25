@@ -1,0 +1,337 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 16:50+0000\n"
+"PO-Revision-Date: 2026-11-18 16:50+0000\n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields,help:l10n_uy_edi_pos_ux.field_pos_config__l10n_uy_allow_close_with_cfe_error
+#: model:ir.model.fields,help:l10n_uy_edi_pos_ux.field_res_config_settings__pos_l10n_uy_allow_close_with_cfe_error
+msgid ""
+"Allow closing the session when some invoices are in draft because their CFE "
+"was not validated in DGI."
+msgstr ""
+"Permite cerrar la sesión cuando hay facturas en borrador porque DGI no "
+"validó su CFE."
+
+#. module: l10n_uy_edi_pos_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_pos_ux.res_config_settings_view_form
+msgid ""
+"Before paying, ask for an identified customer when the sale exceeds the "
+"amount DGI allows for an unidentified one."
+msgstr ""
+"Antes de cobrar, pide un cliente identificado cuando la venta supera el "
+"monto que DGI permite sin identificar."
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields,help:l10n_uy_edi_pos_ux.field_pos_config__l10n_uy_check_final_consumer_limit
+#: model:ir.model.fields,help:l10n_uy_edi_pos_ux.field_res_config_settings__pos_l10n_uy_check_final_consumer_limit
+msgid ""
+"Before paying, the POS asks for an identified customer when the sale exceeds"
+" the amount DGI allows for an unidentified one (5000 UI, converted with the "
+"rate of the indexed unit), instead of letting the CFE fail."
+msgstr ""
+"Antes de cobrar, el punto de venta pide un cliente identificado cuando la "
+"venta supera el monto que DGI permite sin identificar (5000 UI, convertidas "
+"con la cotización de la unidad indexada), en lugar de dejar que falle el "
+"CFE."
+
+#. module: l10n_uy_edi_pos_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_pos_ux.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_pos_ux.view_pos_order_search
+msgid "CFE in error"
+msgstr "CFE con error"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/js/order_payment_validation.js:0
+msgid "CFE not validated in DGI"
+msgstr "CFE no validado en DGI"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/js/order_payment_validation.js:0
+msgid "CFE not validated: contingency mode"
+msgstr "CFE no validado: modo contingencia"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/js/ticket_screen.js:0
+msgid "CFE still not validated"
+msgstr "El CFE sigue sin validarse"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/js/ticket_screen.js:0
+msgid "CFE validated"
+msgstr "CFE validado"
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields,field_description:l10n_uy_edi_pos_ux.field_pos_config__l10n_uy_check_final_consumer_limit
+#: model:ir.model.fields,field_description:l10n_uy_edi_pos_ux.field_res_config_settings__pos_l10n_uy_check_final_consumer_limit
+msgid "Check the final consumer limit"
+msgstr "Controlar el tope de consumidor final"
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields,field_description:l10n_uy_edi_pos_ux.field_pos_config__l10n_uy_allow_close_with_cfe_error
+#: model:ir.model.fields,field_description:l10n_uy_edi_pos_ux.field_res_config_settings__pos_l10n_uy_allow_close_with_cfe_error
+msgid "Close with CFE in error"
+msgstr "Cerrar con CFE con error"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-python
+#: code:addons/l10n_uy_edi_pos_ux/models/pos_session.py:0
+msgid "Contingency mode activated automatically: %s"
+msgstr "Modo contingencia activado automáticamente: %s"
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields.selection,name:l10n_uy_edi_pos_ux.selection__pos_config__l10n_uy_cfe_error_flow__native
+msgid "Current: posted without number, the POS downloads a proforma"
+msgstr "Actual: publicada sin número, el punto de venta descarga una proforma"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-python
+#: code:addons/l10n_uy_edi_pos_ux/models/pos_session.py:0
+msgid ""
+"DGI did not validate the CFE of these sales, so their invoices are still in draft:\n"
+"%(sales)s\n"
+"\n"
+"Retry them from Orders (Retry CFE) before closing the session."
+msgstr ""
+"DGI no validó el CFE de estas ventas, por eso sus facturas siguen en borrador:\n"
+"%(sales)s\n"
+"\n"
+"Reintentalas desde Órdenes (Reintentar CFE) antes de cerrar la sesión."
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-python
+#: code:addons/l10n_uy_edi_pos_ux/models/account_move.py:0
+msgid "DGI did not validate this invoice yet. Retry the CFE first."
+msgstr "DGI todavía no validó esta factura. Primero reintentá el CFE."
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/js/ticket_screen.js:0
+msgid "DGI validated the invoice %s."
+msgstr "DGI validó la factura %s."
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields,field_description:l10n_uy_edi_pos_ux.field_pos_config__l10n_uy_final_consumer_limit
+msgid "Final consumer limit"
+msgstr "Tope de consumidor final"
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields,field_description:l10n_uy_edi_pos_ux.field_pos_config__l10n_uy_cfe_error_flow
+#: model:ir.model.fields,field_description:l10n_uy_edi_pos_ux.field_res_config_settings__pos_l10n_uy_cfe_error_flow
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_pos_ux.res_config_settings_view_form
+msgid "Flow when the CFE fails"
+msgstr "Circuito cuando falla el CFE"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/js/order_payment_validation.js:0
+msgid "Identified customer required"
+msgstr "Se requiere un cliente identificado"
+
+#. module: l10n_uy_edi_pos_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_pos_ux.portal_invoice_page
+msgid ""
+"If you need the invoice, leave us a comment below and we will send it to "
+"you."
+msgstr ""
+"Si necesitás la factura, dejanos un comentario abajo y te la enviamos."
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-python
+#: code:addons/l10n_uy_edi_pos_ux/models/account_move.py:0
+msgid "Invoice PDF not available"
+msgstr "PDF de la factura no disponible"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-python
+#: code:addons/l10n_uy_edi_pos_ux/models/pos_session.py:0
+msgid "Invoices without CFE"
+msgstr "Facturas sin CFE"
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields,field_description:l10n_uy_edi_pos_ux.field_pos_session__l10n_uy_contingency_reason
+msgid "L10N Uy Contingency Reason"
+msgstr "Motivo de la contingencia"
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields.selection,name:l10n_uy_edi_pos_ux.selection__pos_config__l10n_uy_cfe_error_flow__draft
+msgid ""
+"POC 1: back to draft until DGI validates it, the payment is reconciled then"
+msgstr ""
+"POC 1: vuelve a borrador hasta que DGI la valide, el pago se concilia ahí"
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields.selection,name:l10n_uy_edi_pos_ux.selection__pos_config__l10n_uy_cfe_error_flow__posted_then_draft
+msgid "POC 2: posted and paid, then back to draft until DGI validates it"
+msgstr ""
+"POC 2: publicada y pagada, y vuelve a borrador hasta que DGI la valide"
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields.selection,name:l10n_uy_edi_pos_ux.selection__pos_config__l10n_uy_cfe_error_flow__no_odoo_pdf
+msgid "POC 3: posted, Odoo never renders a PDF, only the one from Uruware"
+msgstr "POC 3: publicada, Odoo nunca genera el PDF, solo el de Uruware"
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields.selection,name:l10n_uy_edi_pos_ux.selection__pos_config__l10n_uy_cfe_error_flow__posted_no_pdf
+msgid "POC 4: posted without number or PDF until DGI validates it"
+msgstr "POC 4: publicada sin número ni PDF hasta que DGI la valide"
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields.selection,name:l10n_uy_edi_pos_ux.selection__pos_config__l10n_uy_cfe_error_flow__contingency
+msgid "POC 5: back to draft, and contingency mode on CAE or Uruware errors"
+msgstr ""
+"POC 5: vuelve a borrador, y modo contingencia ante errores de CAE o de "
+"Uruware"
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields,help:l10n_uy_edi_pos_ux.field_pos_config__l10n_uy_simulate_cfe_error
+#: model:ir.model.fields,help:l10n_uy_edi_pos_ux.field_res_config_settings__pos_l10n_uy_simulate_cfe_error
+msgid ""
+"PoC only, and only with Uruware in demo mode: Uruware answers every CFE of "
+"this POS with an error, as if the CAE had expired and there were no "
+"numbering left."
+msgstr ""
+"Solo para la prueba de concepto, y solo con Uruware en modo demo: Uruware "
+"responde con error a todos los CFE de este punto de venta, como si el CAE "
+"estuviera vencido y no quedara numeración."
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields,help:l10n_uy_edi_pos_ux.field_pos_config__l10n_uy_cfe_error_flow
+#: model:ir.model.fields,help:l10n_uy_edi_pos_ux.field_res_config_settings__pos_l10n_uy_cfe_error_flow
+msgid ""
+"PoC only: what happens to the invoice of a sale when DGI does not validate its CFE.\n"
+"- Current: the invoice stays posted without number and the POS downloads a proforma (not a legal document).\n"
+"- POC 1: the invoice goes back to draft, without number or PDF. The payment is registered and it is reconciled once the CFE is validated.\n"
+"- POC 2: the invoice is posted and reconciled as usual, then it goes back to draft. It stays paid while in draft.\n"
+"- POC 3: the invoice stays posted. From the POS, Odoo never renders the PDF of a Uruguayan e-invoice, neither the invoice nor the proforma: only the PDF Uruware returns is downloaded.\n"
+"- POC 4: the invoice stays posted with the CFE in error, without number and without proforma.\n"
+"- POC 5: like POC 1, and when the error comes from the CAE (expired, no numbering left) or Uruware does not answer, the session enters contingency mode: the next sales are not invoiced until the cashier ends it, and the pending invoices are generated afterwards. Other errors (customer or product data) are fixed in the moment.\n"
+"In every POC the cashier is warned, no proforma is downloaded and the CFE can be retried from Orders."
+msgstr ""
+"Solo para la prueba de concepto: qué pasa con la factura de una venta cuando DGI no valida su CFE.\n"
+"- Actual: la factura queda publicada sin número y el punto de venta descarga una proforma (no es un documento legal).\n"
+"- POC 1: la factura vuelve a borrador, sin número ni PDF. El pago queda registrado y se concilia cuando se valida el CFE.\n"
+"- POC 2: la factura se publica y se concilia como siempre, y después vuelve a borrador. Queda pagada mientras está en borrador.\n"
+"- POC 3: la factura queda publicada. Desde el punto de venta, Odoo nunca genera el PDF de una factura electrónica uruguaya, ni la factura ni la proforma: solo se descarga el PDF que devuelve Uruware.\n"
+"- POC 4: la factura queda publicada con el CFE con error, sin número y sin proforma.\n"
+"- POC 5: como la POC 1, y cuando el error viene del CAE (vencido, sin numeración) o Uruware no responde, la sesión entra en modo contingencia: las ventas siguientes no se facturan hasta que el cajero lo termine, y las facturas pendientes se generan después. Los demás errores (datos del cliente o de los productos) se corrigen en el momento.\n"
+"En todas las POC se avisa al cajero, no se descarga la proforma y el CFE se puede reintentar desde Órdenes."
+
+#. module: l10n_uy_edi_pos_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_pos_ux.res_config_settings_view_form
+msgid ""
+"PoC: what happens to the invoice when DGI does not validate its CFE. Hover "
+"the field to read what each option does."
+msgstr ""
+"Prueba de concepto: qué pasa con la factura cuando DGI no valida su CFE. "
+"Pasá el mouse por el campo para leer qué hace cada opción."
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/xml/ticket_screen.xml:0
+msgid "Retry CFE"
+msgstr "Reintentar CFE"
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields,field_description:l10n_uy_edi_pos_ux.field_pos_config__l10n_uy_simulate_cfe_error
+#: model:ir.model.fields,field_description:l10n_uy_edi_pos_ux.field_res_config_settings__pos_l10n_uy_simulate_cfe_error
+msgid "Simulate a DGI error"
+msgstr "Simular un error de DGI"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-python
+#: code:addons/l10n_uy_edi_pos_ux/models/account_move.py:0
+msgid ""
+"The invoice was created, but Uruware did not return its PDF. It can be "
+"printed from the invoice once Uruware returns it."
+msgstr ""
+"La factura se creó, pero Uruware no devolvió su PDF. Se puede imprimir desde"
+" la factura cuando Uruware lo devuelva."
+
+#. module: l10n_uy_edi_pos_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_pos_ux.portal_invoice_page
+msgid "The printable version of this sale is not available yet"
+msgstr "La versión imprimible de esta venta todavía no está disponible"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/js/order_payment_validation.js:0
+msgid ""
+"This sale exceeds the amount DGI allows for an unidentified customer (%(limit)s).\n"
+"Select a customer with ID number, address, city, state and country before paying."
+msgstr ""
+"Esta venta supera el monto que DGI permite sin identificar al cliente (%(limit)s).\n"
+"Elegí un cliente con documento, dirección, ciudad, departamento y país antes de cobrar."
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/js/order_payment_validation.js:0
+msgid ""
+"The sale was registered, but DGI did not validate its invoice, so it has no "
+"number or PDF yet."
+msgstr ""
+"La venta quedó registrada, pero DGI no validó su factura, por eso todavía no"
+" tiene número ni PDF."
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/js/order_payment_validation.js:0
+msgid ""
+"The sale was registered, but DGI did not validate its invoice, so it has no number or PDF yet.\n"
+"The cash register entered contingency mode: it keeps selling without invoicing. Once the problem is solved, end the contingency mode, retry this CFE and generate the pending invoices from the session."
+msgstr ""
+"La venta quedó registrada, pero DGI no validó su factura, por eso todavía no tiene número ni PDF.\n"
+"La caja entró en modo contingencia: sigue vendiendo sin facturar. Cuando se resuelva el problema, terminá el modo contingencia, reintentá este CFE y generá las facturas pendientes desde la sesión."
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/js/ticket_screen.js:0
+msgid "DGI did not validate the invoice again."
+msgstr "DGI volvió a no validar la factura."
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/js/cfe_error_dialog.js:0
+msgid ""
+"%(intro)s\n"
+"\n"
+"What to do:\n"
+"1. Fix what DGI rejects (below). Customer data can be edited from the POS (Customer, then Edit); anything else is fixed on the invoice in the backend.\n"
+"2. Retry it from Orders: select the order and press Retry CFE.\n"
+"\n"
+"DGI error:\n"
+"%(error)s"
+msgstr ""
+"%(intro)s\n"
+"\n"
+"Qué hacer:\n"
+"1. Corregí lo que rechaza DGI (abajo). Los datos del cliente se editan desde el POS (Cliente y después Editar); lo demás se corrige en la factura, en el backend.\n"
+"2. Reintentala desde Órdenes: elegí la orden y tocá Reintentar CFE.\n"
+"\n"
+"Error de DGI:\n"
+"%(error)s"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/js/cfe_error_dialog.js:0
+msgid "Open the invoice in the backend"
+msgstr "Abrir la factura en el backend"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/js/cfe_error_dialog.js:0
+msgid "Close"
+msgstr "Cerrar"
