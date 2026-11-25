@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension">
+        <!-- Own column before the order status: the sale can be paid while its CFE failed -->
+        <xpath expr="//tr[hasclass('order-row')]//t[@t-set='status']/.." position="before">
+            <td t-if="l10nUyShowCfeColumn()" class="align-middle l10n_uy_cfe_state">
+                <t t-set="cfe_state" t-value="l10nUyGetCfeState(order)"/>
+                <t t-if="cfe_state">
+                    <div class="small text-muted">CFE</div>
+                    <div t-attf-class="fw-bolder {{ l10nUyGetCfeStateClass(order) }}">
+                        <i t-if="order.l10n_uy_edi_cfe_state === 'error'" class="fa fa-exclamation-triangle me-1" role="img" aria-label="Error"/>
+                        <t t-out="cfe_state"/>
+                    </div>
+                </t>
+            </td>
+        </xpath>
+    </t>
+</templates>

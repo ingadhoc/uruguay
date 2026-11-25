@@ -1,0 +1,228 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_uy_edi_pos_ux
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-25 23:04+0000\n"
+"PO-Revision-Date: 2026-11-25 16:57+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/js/ticket_screen.js:0
+msgid "Accepted"
+msgstr "Aceptado"
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model,name:l10n_uy_edi_pos_ux.model_account_move_send
+msgid "Account Move Send"
+msgstr "Envío de asiento contable"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/xml/ticket_screen.xml:0
+msgid "CFE"
+msgstr "CFE"
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields,field_description:l10n_uy_edi_pos_ux.field_pos_order__l10n_uy_edi_cfe_state
+msgid "CFE Status"
+msgstr "Estado del CFE"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/xml/cfe_error_dialog.xml:0
+msgid "CFE error detail"
+msgstr "Detalle del error del CFE"
+
+#. module: l10n_uy_edi_pos_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_pos_ux.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_pos_ux.view_pos_order_search
+msgid "CFE in error"
+msgstr "CFE con error"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/xml/cfe_error_dialog.xml:0
+msgid "Close"
+msgstr "Cerrar"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-python
+#: code:addons/l10n_uy_edi_pos_ux/models/account_move.py:0
+msgid "DGI did not validate this CFE."
+msgstr "DGI no validó este CFE."
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields,field_description:l10n_uy_edi_pos_ux.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_uy_edi_pos_ux.field_account_move_send__display_name
+#: model:ir.model.fields,field_description:l10n_uy_edi_pos_ux.field_pos_config__display_name
+#: model:ir.model.fields,field_description:l10n_uy_edi_pos_ux.field_pos_order__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/xml/ticket_screen.xml:0
+msgid "Error"
+msgstr "Error"
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields,field_description:l10n_uy_edi_pos_ux.field_pos_config__l10n_uy_final_consumer_limit
+msgid "Final consumer limit"
+msgstr "Tope de consumidor final"
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields,field_description:l10n_uy_edi_pos_ux.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_uy_edi_pos_ux.field_account_move_send__id
+#: model:ir.model.fields,field_description:l10n_uy_edi_pos_ux.field_pos_config__id
+#: model:ir.model.fields,field_description:l10n_uy_edi_pos_ux.field_pos_order__id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/js/order_payment_validation.js:0
+msgid "Identified customer required"
+msgstr "Se requiere un cliente identificado"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/js/ticket_screen.js:0
+msgid "In error"
+msgstr "Con error"
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model,name:l10n_uy_edi_pos_ux.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model,name:l10n_uy_edi_pos_ux.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Configuración del punto de venta"
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model,name:l10n_uy_edi_pos_ux.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Pedidos del punto de venta"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/js/ticket_screen.js:0
+msgid "Rejected"
+msgstr "Rechazado"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/js/order_payment_validation.js:0
+msgid "Sale registered, but its tax receipt was not issued"
+msgstr "Venta registrada, pero su comprobante fiscal no se emitió"
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields,help:l10n_uy_edi_pos_ux.field_pos_order__l10n_uy_edi_cfe_state
+msgid "State of the electronic document"
+msgstr "Estado del documento electrónico"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-python
+#: code:addons/l10n_uy_edi_pos_ux/models/account_move.py:0
+msgid ""
+"The CFE was issued, but Uruware did not return its PDF. Try again in a few "
+"minutes, or print it from the invoice in the backend."
+msgstr ""
+"El CFE se emitió, pero Uruware no devolvió su PDF. Vuelva a intentarlo en "
+"unos minutos o imprímalo desde la factura en el backend."
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/js/account_move_service.js:0
+msgid "The invoice cannot be printed"
+msgstr "La factura no se puede imprimir"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/js/order_payment_validation.js:0
+msgid ""
+"The sale was registered, but its tax receipt (CFE) was not issued because of "
+"an error, so there is nothing to print. Ask your supervisor to fix the tax "
+"receipt from the backend. To do so, give them the order number: %s"
+msgstr ""
+"La venta se registró, pero su comprobante fiscal (CFE) no se emitió por un "
+"error, así que no hay nada para imprimir. Pídale a su supervisor que corrija "
+"el comprobante fiscal desde el backend. Para ello, indíquele el número de "
+"pedido: %s"
+
+#. module: l10n_uy_edi_pos_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_pos_ux.portal_invoice_page
+msgid ""
+"The tax receipt (CFE) of this sale could not be issued because of an error, "
+"so there is no printable version yet. If you need it, leave us a comment "
+"below and we will send it to you."
+msgstr ""
+"El comprobante fiscal (CFE) de esta venta no se pudo emitir por un error, "
+"así que todavía no hay una versión imprimible. Si lo necesita, déjenos un "
+"comentario abajo y se lo enviaremos."
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-python
+#: code:addons/l10n_uy_edi_pos_ux/models/account_move.py:0
+msgid ""
+"The tax receipt (CFE) of this sale was not issued because of an error, so "
+"there is no legal PDF to print. Ask your supervisor to fix the tax receipt "
+"from the backend. To do so, give them the order number: %(order)s"
+msgstr ""
+"El comprobante fiscal (CFE) de esta venta no se emitió por un error, así que "
+"no hay un PDF legal para imprimir. Pídale a su supervisor que corrija el "
+"comprobante fiscal desde el backend. Para ello, indíquele el número de "
+"pedido: %(order)s"
+
+#. module: l10n_uy_edi_pos_ux
+#: model_terms:ir.ui.view,arch_db:l10n_uy_edi_pos_ux.portal_invoice_page
+msgid "The tax receipt was not issued"
+msgstr "El comprobante fiscal no se emitió"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/js/order_payment_validation.js:0
+msgid ""
+"This sale exceeds the amount DGI allows for an unidentified customer "
+"(%(limit)s).\n"
+"Select a customer with ID number, address, city, state and country before "
+"paying."
+msgstr ""
+"Esta venta supera el monto que DGI permite para un cliente sin identificar "
+"(%(limit)s).\n"
+"Seleccione un cliente con número de documento, dirección, ciudad, "
+"departamento y país antes de cobrar."
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields,field_description:l10n_uy_edi_pos_ux.field_pos_order__l10n_uy_edi_error
+msgid "Uruguay E-Invoice Error"
+msgstr "Error de factura electrónica de Uruguay"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/js/ticket_screen.js:0
+msgid "Waiting for DGI"
+msgstr "Esperando a DGI"
+
+#. module: l10n_uy_edi_pos_ux
+#. odoo-javascript
+#: code:addons/l10n_uy_edi_pos_ux/static/src/xml/cfe_error_dialog.xml:0
+msgid "Warning"
+msgstr "Advertencia"
+
+#. module: l10n_uy_edi_pos_ux
+#: model:ir.model.fields,help:l10n_uy_edi_pos_ux.field_pos_order__l10n_uy_edi_error
+msgid "error details for CFEs in the 'error' state."
+msgstr "detalle del error de los CFE en estado «error»."

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_invoice_page" inherit_id="account.portal_invoice_page">
+        <xpath expr="//div[hasclass('o_download_pdf')]" position="attributes">
+            <attribute name="t-if">not invoice._l10n_uy_edi_pos_without_cfe()</attribute>
+        </xpath>
+        <!-- The sidebar script reads <main> and #wrapwrap of the iframe: hide it with an empty page that has them -->
+        <xpath expr="//iframe[@id='invoice_html']" position="attributes">
+            <attribute name="t-att-src">'about:blank' if invoice._l10n_uy_edi_pos_without_cfe() else invoice.get_portal_url(report_type='html')</attribute>
+            <attribute name="t-att-srcdoc">'&lt;div id=&quot;wrapwrap&quot;&gt;&lt;main&gt;&lt;/main&gt;&lt;/div&gt;' if invoice._l10n_uy_edi_pos_without_cfe() else None</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_portal_html_view')]" position="attributes">
+            <attribute name="class"/>
+            <attribute name="t-attf-class">o_portal_html_view position-relative bg-white shadow overflow-hidden #{'d-none' if invoice._l10n_uy_edi_pos_without_cfe() else ''}</attribute>
+        </xpath>
+        <xpath expr="//iframe[@id='invoice_html']/.." position="after">
+            <div t-if="invoice._l10n_uy_edi_pos_without_cfe()" class="alert alert-danger" role="status">
+                <h4 class="alert-heading">The tax receipt was not issued</h4>
+                <p class="mb-0">The tax receipt (CFE) of this sale could not be issued because of an error, so there is no printable version yet. If you need it, leave us a comment below and we will send it to you.</p>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

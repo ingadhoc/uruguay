@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_uy_edi_pos_ux.CfeErrorDialog">
+        <Dialog size="'md'">
+            <t t-set-slot="header" t-slot-scope="scope">
+                <h4 class="modal-title text-break flex-grow-1">
+                    <i class="fa fa-exclamation-triangle text-warning me-2" role="img" aria-label="Warning"/>
+                    <t t-out="props.title"/>
+                </h4>
+                <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="scope.close"/>
+            </t>
+            <p class="text-body" t-out="props.message"/>
+            <t t-if="props.error">
+                <h5 class="text-danger fw-bolder fs-4 mt-3 mb-2">CFE error detail</h5>
+                <p class="text-body mb-0" style="white-space: pre-line;" t-out="props.error"/>
+            </t>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="props.close">Close</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
